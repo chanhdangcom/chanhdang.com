@@ -62,7 +62,7 @@ export const TodoList = () => {
     });
   }, [])
 
-  const handleUpdate = useCallback((id: number, title: string) => {
+  const handleUpdate = useCallback((id: number, title: string, dueDate: string) => {
     setTodoList((prevTodoList) => {
       const todo = prevTodoList.find((todoItem) => todoItem.id === id);
 
@@ -71,7 +71,7 @@ export const TodoList = () => {
       }
 
       todo.title = title;
-
+      todo.dueDate = dueDate;
       return [...prevTodoList];
     });
   }, [])
@@ -96,6 +96,7 @@ export const TodoList = () => {
               id={item.id}
               title={item.title}
               isDone={item.isDone}
+              dueDate={item.dueDate}
               onTick={handleTick}
               onDelete={handleDelete}
               onUpdate={handleUpdate}

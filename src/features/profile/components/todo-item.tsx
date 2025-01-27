@@ -9,13 +9,15 @@ type IProps = {
   isDone: boolean;
   onTick: (id: number, isDone: boolean) => void;
   onDelete: (id: number) => void;
-  onUpdate: (id: number, title: string) => void;
+  onUpdate: (id: number, title: string, dueDate: string) => void;
+  dueDate?: string;
 }
 
-export const TodoItem = memo(({ id, title, isDone, onTick, onDelete, onUpdate }: IProps) => {
+export const TodoItem = memo(({ id, title, isDone, dueDate, onTick, onDelete, onUpdate }: IProps) => {
   const [isEdit, setIsEdit] = useState(false)
 
   console.log("Render TodoItem", title);
+  console.log("Render dueDate", dueDate);
 
   const handleTickChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     const newIsDone = event.target.checked;
@@ -39,6 +41,7 @@ export const TodoItem = memo(({ id, title, isDone, onTick, onDelete, onUpdate }:
       <TodoItemForm
         id={id}
         title={title}
+        dueDate={dueDate}
         onCancelEditClick={handleCancelEditClick}
         onUpdate={onUpdate}
       />
