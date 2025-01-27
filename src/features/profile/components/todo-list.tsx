@@ -2,11 +2,13 @@
 
 import React, { useCallback, useState } from 'react'
 import { TodoItem } from './todo-item'
+import { TodoForm } from './todo-form';
 
 type ITodoItem = {
   id: number;
   title: string;
   isDone: boolean;
+  dueDate?: string;
 }
 
 const DEFAULT_TODO_LIST: ITodoItem[] = [
@@ -44,6 +46,36 @@ export const TodoList = () => {
     });
   }, []);
 
+  const handleAdd = useCallback((title: string) => {
+    setTodoList((prevTodoList) => {
+      return [...prevTodoList, {
+        id: prevTodoList.length + 1,
+        title: title,
+        isDone: false
+      }]
+    })
+  }, []);
+
+  const handleDelete = useCallback((id: number) => {
+    setTodoList((prevTodoList) => {
+      return prevTodoList.filter((todoItem) => todoItem.id !== id);
+    });
+  }, [])
+
+  const handleUpdate = useCallback((id: number, title: string) => {
+    setTodoList((prevTodoList) => {
+      const todo = prevTodoList.find((todoItem) => todoItem.id === id);
+
+      if (!todo) {
+        return prevTodoList;
+      }
+
+      todo.title = title;
+
+      return [...prevTodoList];
+    });
+  }, [])
+
   const countDone = todoList.reduce((prevValue, currentValue) => prevValue + (currentValue.isDone ? 1 : 0), 0)
   const countNot = todoList.length - countDone;
 
@@ -59,10 +91,20 @@ export const TodoList = () => {
       <div>
         {todoList.map((item) => {
           return (
-            <TodoItem key={item.id} id={item.id} title={item.title} isDone={item.isDone} onTick={handleTick} />
+            <TodoItem
+              key={item.id}
+              id={item.id}
+              title={item.title}
+              isDone={item.isDone}
+              onTick={handleTick}
+              onDelete={handleDelete}
+              onUpdate={handleUpdate}
+            />
           )
         })}
       </div>
+
+      <TodoForm onAdd={handleAdd} />
     </div>
   )
 }
