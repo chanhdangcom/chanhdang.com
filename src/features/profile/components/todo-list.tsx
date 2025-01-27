@@ -72,6 +72,7 @@ export const TodoList = () => {
 
       todo.title = title;
       todo.dueDate = dueDate;
+
       return [...prevTodoList];
     });
   }, [])
@@ -93,10 +94,12 @@ export const TodoList = () => {
           return (
             <TodoItem
               key={item.id}
+
               id={item.id}
               title={item.title}
               isDone={item.isDone}
               dueDate={item.dueDate}
+
               onTick={handleTick}
               onDelete={handleDelete}
               onUpdate={handleUpdate}

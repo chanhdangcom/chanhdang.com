@@ -8,9 +8,9 @@ type IProps = {
   onUpdate: (id: number, title: string, dueDate: string) => void;
 }
 
-export const TodoItemForm = ({ id, title, onCancelEditClick, onUpdate }: IProps) => {
+export const TodoItemForm = ({ id, title, dueDate, onCancelEditClick, onUpdate }: IProps) => {
   const [inputTitle, setInputTitle] = useState<string>(title)
-  const [inputDate, setInputDate] = useState('')
+  const [inputDate, setInputDate] = useState<string>(dueDate || "")
 
   const handleInputTitleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     const inputValue = event.target.value;

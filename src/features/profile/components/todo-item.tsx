@@ -7,10 +7,11 @@ type IProps = {
   id: number;
   title: string;
   isDone: boolean;
+  dueDate?: string;
+
   onTick: (id: number, isDone: boolean) => void;
   onDelete: (id: number) => void;
   onUpdate: (id: number, title: string, dueDate: string) => void;
-  dueDate?: string;
 }
 
 export const TodoItem = memo(({ id, title, isDone, dueDate, onTick, onDelete, onUpdate }: IProps) => {
@@ -55,7 +56,10 @@ export const TodoItem = memo(({ id, title, isDone, dueDate, onTick, onDelete, on
         defaultChecked={isDone}
         onChange={handleTickChange}
       />
+
       <div className={isDone ? "line-through text-gray-500" : ""}>{title}</div>
+      <div className='underline'>{dueDate}</div>
+
       <button className='text-blue-500' onClick={handleEditClick}>Edit</button>
       <button className='text-red-500' onClick={handleDeleteClick}>Delete</button>
     </div>
