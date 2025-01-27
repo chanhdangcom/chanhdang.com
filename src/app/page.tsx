@@ -1,8 +1,7 @@
-import { NotesPage } from "@/features/notes/page";
+import { ProfilePage } from "@/features/profile/page";
 
-export default function Home() {
+export default function Page() {
   return (
-    <div><NotesPage /></div>
-
+    <ProfilePage />
   );
 }

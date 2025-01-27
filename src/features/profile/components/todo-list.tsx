@@ -2,7 +2,8 @@
 
 import React, { useCallback, useState } from 'react'
 import { TodoItem } from './todo-item'
-import { TodoForm } from './todo-form';
+// import { TodoForm } from './todo-form';
+import { TodoFormUncontrolled } from './todo-form-uncontrolled';
 
 type ITodoItem = {
   id: number;
@@ -10,6 +11,11 @@ type ITodoItem = {
   isDone: boolean;
   dueDate?: string;
 }
+
+// [x] useState
+// [x] useRef
+// [x] useCallback
+// useEffect
 
 const DEFAULT_TODO_LIST: ITodoItem[] = [
   {
@@ -108,7 +114,7 @@ export const TodoList = () => {
         })}
       </div>
 
-      <TodoForm onAdd={handleAdd} />
+      <TodoFormUncontrolled onAdd={handleAdd} />
     </div>
   )
 }
