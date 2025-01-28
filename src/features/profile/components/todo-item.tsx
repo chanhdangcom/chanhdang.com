@@ -1,6 +1,6 @@
 "use client"
 
-import React, { memo, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { TodoItemForm } from './todo-item-form';
 
 type IProps = {
@@ -36,6 +36,14 @@ export const TodoItem = memo(({ id, title, isDone, dueDate, onTick, onDelete, on
   const handleCancelEditClick = () => {
     setIsEdit(false)
   }
+
+  useEffect(() => {
+    console.log("DidMount TodoItem");
+
+    return () => {
+      console.log("Unmount TodoItem");
+    }
+  }, []);
 
   if (isEdit) {
     return (

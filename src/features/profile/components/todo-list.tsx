@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { TodoItem } from './todo-item'
 // import { TodoForm } from './todo-form';
 import { TodoFormUncontrolled } from './todo-form-uncontrolled';
+import { useEffectSkipFirstMount } from '@/hooks/useEffectSkipFirstMount';
 
 type ITodoItem = {
   id: number;
@@ -16,27 +17,29 @@ type ITodoItem = {
 // [x] useRef
 // [x] useCallback
 // useEffect
+// [ ] localStorage
 
-const DEFAULT_TODO_LIST: ITodoItem[] = [
-  {
-    id: 1,
-    title: "Learning Next.js",
-    isDone: true,
-  },
-  {
-    id: 2,
-    title: "Build Portfolio Website (HTML)",
-    isDone: true,
-  },
-  {
-    id: 3,
-    title: "Convert Portfolio Website to Next.js",
-    isDone: false
-  },
-]
+// const DEFAULT_TODO_LIST: ITodoItem[] = [
+//   {
+//     id: 1,
+//     title: "Learning Next.js",
+//     isDone: true,
+//   },
+//   {
+//     id: 2,
+//     title: "Build Portfolio Website (HTML)",
+//     isDone: true,
+//   },
+//   {
+//     id: 3,
+//     title: "Convert Portfolio Website to Next.js",
+//     isDone: false
+//   },
+// ]
 
 export const TodoList = () => {
-  const [todoList, setTodoList] = useState<ITodoItem[]>(DEFAULT_TODO_LIST);
+  const [todoList, setTodoList] = useState<ITodoItem[]>([]);
+  const [, setCount] = useState(0);
 
   const handleTick = useCallback((id: number, isDone: boolean) => {
     setTodoList((prevTodoList) => {
@@ -83,12 +86,33 @@ export const TodoList = () => {
     });
   }, [])
 
+  useEffect(() => {
+    console.log("Component did mount -> loadFromLocalStorage");
+    const todoListFromLocalStorage = localStorage.getItem("todoList");
+
+    if (todoListFromLocalStorage !== null) {
+      const todoList = JSON.parse(todoListFromLocalStorage);
+      setTodoList(todoList);
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   console.log("Component re-render");
+  // });
+
+  useEffectSkipFirstMount(() => {
+    console.log("TodoList -> saveToLocalStorage", todoList);
+    localStorage.setItem("todoList", JSON.stringify(todoList));
+  }, [todoList]);
+
   const countDone = todoList.reduce((prevValue, currentValue) => prevValue + (currentValue.isDone ? 1 : 0), 0)
   const countNot = todoList.length - countDone;
 
   return (
     <div>
       <h1>Todo List</h1>
+
+      <button onClick={() => setCount((prevCount) => prevCount + 1)}>Inc count</button>
 
       <div>
         <p>Done: {countDone} todo(s)</p>
