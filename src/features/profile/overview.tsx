@@ -57,7 +57,7 @@ export const Overview = () => {
         />
       </div>
 
-      <div className="mb-6 flex transform cursor-pointer items-center space-x-2 px-8 text-3xl font-bold sm:text-4xl">
+      <div className="mb-6 flex transform cursor-pointer items-center space-x-2 px-8 text-3xl font-bold sm:text-4xl md:text-3xl lg:text-4xl">
         <span>Nguyễn Chánh Đang</span>
         <svg
           className="text-blue-600"
