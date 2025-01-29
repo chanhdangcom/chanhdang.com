@@ -35,7 +35,7 @@ const EXPERIENCE_EDUCATION: IExperienceItem[] = [
       "In high school, where I not only built a solid foundation of knowledge but also trained my thinking skills and proactive learning. During my studies, I actively participated in extracurricular activities and competitions, which helped develop my communication and teamwork skills and better prepared me for my future studies.",
   },
   {
-    time: "2015 - 2029",
+    time: "2015 - 2019",
     company: "Thuan Hung Secondary School",
     jobTitle: "Graduated",
     content:

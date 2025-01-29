@@ -10,7 +10,7 @@ export const Profile = () => {
       <Header />
 
       <div className="relative">
-        <div className="absolute left-0 top-8 -z-[1] h-[calc(100vh-120px)] rounded-3xl md:w-2/6 xl:bg-slate-200 dark:bg-zinc-900/30"></div>
+        <div className="absolute left-0 top-8 -z-[1] h-[calc(100vh-120px)] rounded-3xl dark:bg-zinc-900/30 md:w-2/6 xl:bg-slate-200/60"></div>
 
         <div className="container mb-8 space-y-8">
           <div className="min-h-[calc(100vh-56px)] items-center space-y-8 md:flex md:space-y-0">
