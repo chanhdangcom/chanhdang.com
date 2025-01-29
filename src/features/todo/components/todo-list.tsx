@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useCallback, useState } from 'react'
-import { TodoItem } from './todo-item'
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { TodoItem } from "./todo-item";
 // import { TodoForm } from './todo-form';
-import { TodoFormUncontrolled } from './todo-form-uncontrolled';
+import { TodoFormUncontrolled } from "./todo-form-uncontrolled";
 
 type ITodoItem = {
   id: number;
   title: string;
   isDone: boolean;
   dueDate?: string;
-}
+};
 
 // [x] useState
 // [x] useRef
@@ -31,12 +31,15 @@ const DEFAULT_TODO_LIST: ITodoItem[] = [
   {
     id: 3,
     title: "Convert Portfolio Website to Next.js",
-    isDone: false
+    isDone: false,
   },
-]
+];
 
 export const TodoList = () => {
   const [todoList, setTodoList] = useState<ITodoItem[]>(DEFAULT_TODO_LIST);
+  // const [refreshFlag, setRefreshFlag] = useState("")
+
+  const refreshFlag2 = useRef("");
 
   const handleTick = useCallback((id: number, isDone: boolean) => {
     setTodoList((prevTodoList) => {
@@ -54,41 +57,73 @@ export const TodoList = () => {
 
   const handleAdd = useCallback((title: string) => {
     setTodoList((prevTodoList) => {
-      return [...prevTodoList, {
-        id: prevTodoList.length + 1,
-        title: title,
-        isDone: false
-      }]
-    })
+      return [
+        ...prevTodoList,
+        {
+          id: prevTodoList.length + 1,
+          title: title,
+          isDone: false,
+        },
+      ];
+    });
   }, []);
 
   const handleDelete = useCallback((id: number) => {
     setTodoList((prevTodoList) => {
       return prevTodoList.filter((todoItem) => todoItem.id !== id);
     });
-  }, [])
+  }, []);
 
-  const handleUpdate = useCallback((id: number, title: string, dueDate: string) => {
-    setTodoList((prevTodoList) => {
-      const todo = prevTodoList.find((todoItem) => todoItem.id === id);
+  const handleUpdate = useCallback(
+    (id: number, title: string, dueDate: string) => {
+      setTodoList((prevTodoList) => {
+        const todo = prevTodoList.find((todoItem) => todoItem.id === id);
 
-      if (!todo) {
-        return prevTodoList;
-      }
+        if (!todo) {
+          return prevTodoList;
+        }
 
-      todo.title = title;
-      todo.dueDate = dueDate;
+        todo.title = title;
+        todo.dueDate = dueDate;
 
-      return [...prevTodoList];
-    });
-  }, [])
+        return [...prevTodoList];
+      });
+    },
+    []
+  );
 
-  const countDone = todoList.reduce((prevValue, currentValue) => prevValue + (currentValue.isDone ? 1 : 0), 0)
+  useEffect(() => {
+    console.log("Refresh Todos ...");
+  }, [refreshFlag2.current]);
+
+  const countDone = todoList.reduce(
+    (prevValue, currentValue) => prevValue + (currentValue.isDone ? 1 : 0),
+    0
+  );
   const countNot = todoList.length - countDone;
 
   return (
     <div>
       <h1>Todo List</h1>
+
+      <button
+        className="rounded-md bg-black px-4 py-2 text-white"
+        onClick={() => {
+          console.log("Prev:refreshFlag2.current", refreshFlag2.current);
+          // setRefreshFlag(new Date().toISOString());
+          refreshFlag2.current = new Date().toISOString();
+          console.log("After:refreshFlag2.current", refreshFlag2.current);
+
+          setTimeout(() => {
+            console.log("Force re-render");
+            handleDelete(1);
+          }, 5000);
+          // handleDelete(1);
+          // console.log(refreshFlag2);
+        }}
+      >
+        Refresh Todos
+      </button>
 
       <div>
         <p>Done: {countDone} todo(s)</p>
@@ -100,21 +135,19 @@ export const TodoList = () => {
           return (
             <TodoItem
               key={item.id}
-
               id={item.id}
               title={item.title}
               isDone={item.isDone}
               dueDate={item.dueDate}
-
               onTick={handleTick}
               onDelete={handleDelete}
               onUpdate={handleUpdate}
             />
-          )
+          );
         })}
       </div>
 
       <TodoFormUncontrolled onAdd={handleAdd} />
     </div>
-  )
-}
+  );
+};

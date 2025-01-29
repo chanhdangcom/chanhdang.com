@@ -1,0 +1,83 @@
+"use client";
+
+import React, { memo, useEffect, useState } from "react";
+import { TodoItemForm } from "./todo-item-form";
+
+type IProps = {
+  id: number;
+  title: string;
+  isDone: boolean;
+  dueDate?: string;
+
+  onTick: (id: number, isDone: boolean) => void;
+  onDelete: (id: number) => void;
+  onUpdate: (id: number, title: string, dueDate: string) => void;
+};
+
+export const TodoItem = memo(
+  ({ id, title, isDone, dueDate, onTick, onDelete, onUpdate }: IProps) => {
+    const [isEdit, setIsEdit] = useState(false);
+
+    console.log("Render TodoItem", title);
+    console.log("Render dueDate", dueDate);
+
+    const handleTickChange: React.ChangeEventHandler<HTMLInputElement> = (
+      event
+    ) => {
+      const newIsDone = event.target.checked;
+      onTick(id, newIsDone);
+    };
+
+    const handleDeleteClick = () => {
+      onDelete(id);
+    };
+
+    const handleEditClick = () => {
+      setIsEdit(true);
+    };
+
+    const handleCancelEditClick = () => {
+      setIsEdit(false);
+    };
+
+    useEffect(() => {
+      console.log("useEffect title", title);
+    }, [title]);
+
+    if (isEdit) {
+      return (
+        <TodoItemForm
+          id={id}
+          title={title}
+          dueDate={dueDate}
+          onCancelEditClick={handleCancelEditClick}
+          onUpdate={onUpdate}
+        />
+      );
+    }
+
+    return (
+      <div className="flex items-center gap-4">
+        <input
+          type="checkbox"
+          defaultChecked={isDone}
+          onChange={handleTickChange}
+        />
+
+        <div className={isDone ? "text-gray-500 line-through" : ""}>
+          {title}
+        </div>
+        <div className="underline">{dueDate}</div>
+
+        <button className="text-blue-500" onClick={handleEditClick}>
+          Edit
+        </button>
+        <button className="text-red-500" onClick={handleDeleteClick}>
+          Delete
+        </button>
+      </div>
+    );
+  }
+);
+
+TodoItem.displayName = "TodoItem";

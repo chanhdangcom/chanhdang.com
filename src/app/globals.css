@@ -19,3 +19,9 @@
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 } */
+
+@layer base {
+  body {
+    @apply font-body bg-zinc-50 text-zinc-950 antialiased dark:bg-zinc-950 dark:text-zinc-50;
+  }
+}

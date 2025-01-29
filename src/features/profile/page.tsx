@@ -1,12 +1,5 @@
-import React from 'react'
-import { TodoList } from './components/todo-list';
-// import { Reaction } from './components/reaction';
+import { Profile } from "./profile";
 
 export const ProfilePage = () => {
-  return (
-    <div>
-      <TodoList />
-      {/* <Reaction fullName='Dang2' defaultIsLike={true} /> */}
-    </div>
-  );
-}
+  return <Profile />;
+};
