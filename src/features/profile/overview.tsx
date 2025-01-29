@@ -16,7 +16,7 @@ const INTRO: IIntroItem[] = [
     icon: <Building variant="Bulk" size={28} color="currentColor" />,
     content: (
       <>
-        Developer at{" "}
+        <span>Developer at</span>
         <a href="https://quaric.com/" className="border-b border-zinc-500">
           Quaric
         </a>
