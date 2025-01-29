@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { TodoItem } from "./todo-item";
 // import { TodoForm } from './todo-form';
 import { TodoFormUncontrolled } from "./todo-form-uncontrolled";
@@ -91,10 +91,6 @@ export const TodoList = () => {
     },
     []
   );
-
-  useEffect(() => {
-    console.log("Refresh Todos ...");
-  }, [refreshFlag2.current]);
 
   const countDone = todoList.reduce(
     (prevValue, currentValue) => prevValue + (currentValue.isDone ? 1 : 0),
