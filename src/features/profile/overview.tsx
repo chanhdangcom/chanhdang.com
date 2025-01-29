@@ -3,10 +3,12 @@ import { IntroItem } from "./components/intro-item";
 import Image from "next/image";
 import { Building, Call, Location, Sms } from "iconsax-react";
 import { LikeButton } from "@/components/like-button";
+import { Ping } from "@/components/ping";
 
 type IIntroItem = {
   icon: JSX.Element;
   content: React.ReactNode;
+  extra?: React.ReactNode;
 };
 
 const INTRO: IIntroItem[] = [
@@ -14,12 +16,13 @@ const INTRO: IIntroItem[] = [
     icon: <Building variant="Bulk" size={28} color="currentColor" />,
     content: (
       <>
-        Developer at{" "}
+        Developer at {}
         <a href="https://quaric.com/" className="border-b border-zinc-500">
           Quaric
         </a>
       </>
     ),
+    extra: <Ping />,
   },
   {
     icon: <Sms variant="Bulk" size={28} color="currentColor" />,
@@ -85,7 +88,12 @@ export const Overview = () => {
       <div className="mb-8 space-y-2 px-8">
         {INTRO.map((item, index) => {
           return (
-            <IntroItem key={index} icon={item.icon} content={item.content} />
+            <IntroItem
+              key={index}
+              icon={item.icon}
+              content={item.content}
+              extra={item.extra}
+            />
           );
         })}
       </div>
