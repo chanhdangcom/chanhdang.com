@@ -57,7 +57,7 @@ const INTRO: IIntroItem[] = [
 
 export const Overview = () => {
   return (
-    <div className="overflow-hidden rounded-3xl border bg-slate-100 font-medium shadow-lg dark:border-neutral-800 dark:bg-zinc-900 dark:text-slate-100">
+    <div className="overflow-hidden rounded-3xl border bg-zinc-100 font-medium shadow-sm dark:border-neutral-800 dark:bg-zinc-900 dark:text-zinc-50">
       <div className="relative aspect-3/1 overflow-hidden before:absolute before:inset-0 before:bg-[image:url(/img/cover.jpg)] before:bg-cover before:bg-center before:duration-300 after:absolute after:bottom-0 after:left-0 after:z-[1] after:h-px after:w-full after:bg-white/20 hover:before:scale-105 hover:before:transform hover:before:transition-transform">
         <div className="relative m-2 flex justify-end">
           <LikeButton />

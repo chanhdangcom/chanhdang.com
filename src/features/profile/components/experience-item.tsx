@@ -26,7 +26,7 @@ export const ExperienceItem = ({
   content,
 }: IProps) => {
   return (
-    <div className="transform rounded-2xl border border-slate-100 bg-slate-100 p-4 shadow-xl transition-transform duration-300 hover:scale-105 dark:border-neutral-800 dark:bg-zinc-900 dark:text-slate-50">
+    <div className="transform rounded-2xl border border-zinc-200 bg-zinc-50 p-4 shadow-sm transition-transform duration-300 hover:scale-105 dark:border-neutral-800 dark:bg-zinc-900 dark:text-slate-50">
       <div className="text-xl font-bold text-blue-600">{time}</div>
 
       <ExperienceInfoItem

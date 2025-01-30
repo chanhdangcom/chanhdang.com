@@ -23,7 +23,7 @@ const fontMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nguyễn Chánh Đang",
+  title: "Chánh Đang",
   description: "I am a developer.",
 };
 
