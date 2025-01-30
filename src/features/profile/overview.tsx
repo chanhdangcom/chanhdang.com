@@ -1,9 +1,18 @@
+"use client";
+
 import React, { JSX } from "react";
 import { IntroItem } from "./components/intro-item";
 import Image from "next/image";
 import { Building, Call, Location, Sms } from "iconsax-react";
-import { LikeButton } from "@/components/like-button";
 import { Ping } from "@/components/ping";
+import dynamic from "next/dynamic";
+
+const LikeButton = dynamic(
+  () => import("@/components/like-button").then((res) => res.LikeButton),
+  {
+    ssr: false, // Server-side Render (SSR), Client-side Render (CSR)
+  }
+);
 
 type IIntroItem = {
   icon: JSX.Element;
