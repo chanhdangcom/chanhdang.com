@@ -1,12 +1,19 @@
 "use client";
 
 import { ThumbsUpIcon } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export const LikeButton = () => {
   const [isLike, setIsLike] = useState(
-    localStorage.getItem("isLike") === "true"
+    typeof localStorage !== "undefined" &&
+      localStorage.getItem("isLike") === "true"
   );
+
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleClick = () => {
     setIsLike((prevIsLike) => {
@@ -15,6 +22,8 @@ export const LikeButton = () => {
       return nextIsLike;
     });
   };
+
+  if (!isClient) return null;
 
   return (
     <div>
@@ -28,7 +37,7 @@ export const LikeButton = () => {
             Like
           </p>
         ) : (
-          <p className="flex justify-center gap-1 text-blue-700 dark:text-blue-600">
+          <p className="flex justify-center gap-1 text-blue-600">
             <ThumbsUpIcon />
             Liked
           </p>

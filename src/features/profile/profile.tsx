@@ -3,6 +3,7 @@ import { AboutMe } from "./about-me";
 import { Header } from "./header";
 import { Overview } from "./overview";
 import { ExperienceList } from "./experience-list";
+import { Confetti } from "./components/confetti";
 
 export const Profile = () => {
   return (
@@ -25,6 +26,8 @@ export const Profile = () => {
           <ExperienceList />
         </div>
       </div>
+
+      <Confetti />
     </>
   );
 };
