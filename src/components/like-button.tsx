@@ -1,10 +1,12 @@
 "use client";
 
 import { ThumbsUpIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 export const LikeButton = () => {
-  const [isLike, setIsLike] = useState(false);
+  const [isLike, setIsLike] = useState(
+    localStorage.getItem("isLike") === "true"
+  );
 
   const handleClick = () => {
     setIsLike((prevIsLike) => {
@@ -13,11 +15,6 @@ export const LikeButton = () => {
       return nextIsLike;
     });
   };
-
-  useEffect(() => {
-    const isLikeFromLS = localStorage.getItem("isLike") === "true";
-    setIsLike(isLikeFromLS);
-  }, []);
 
   return (
     <div>
