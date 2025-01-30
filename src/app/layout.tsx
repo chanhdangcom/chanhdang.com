@@ -19,7 +19,7 @@ const fontHandWritten = Pacifico({
 const fontMono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["vietnamese"],
-  weight: ["400", "600"],
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {

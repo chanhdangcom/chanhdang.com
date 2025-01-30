@@ -20,11 +20,13 @@ export const AboutMe = () => {
         <Button type="secondary">Project</Button>
       </div>
 
-      <div className="text-balance text-center text-lg">
-        I am passionate about creating and developing web applications and
-        software, always looking for the most optimal and efficient solutions.
-        With experience in using modern technologies such as JavaScript, React
-        and Tailwind CSS. I love learning and applying new technologies.
+      <div className="text-balance text-center font-mono text-sm">
+        <span className="font-bold text-sky-400">{"<About>"}</span>I am
+        passionate about creating and developing web applications and software,
+        always looking for the most optimal and efficient solutions. With
+        experience in using modern technologies such as JavaScript, React and
+        Tailwind CSS. I love learning and applying new technologies.
+        <span className="font-bold text-sky-400">{"<About/>"}</span>
       </div>
 
       <TechStack />

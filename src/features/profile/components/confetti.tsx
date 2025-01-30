@@ -23,13 +23,10 @@ export const Confetti = () => {
     const today = dayjs().startOf("date");
     const confettiDate = localStorage.getItem("confettiDate"); // ISOString | null
 
-    if (!confettiDate) {
-      saveDate(today);
-      setShouldShow(true);
-      return;
-    }
-
-    if (dayjs(confettiDate).isBefore(today)) {
+    if (
+      !confettiDate ||
+      (confettiDate && dayjs(confettiDate).isBefore(today))
+    ) {
       saveDate(today);
       setShouldShow(true);
     }
