@@ -64,13 +64,13 @@ export const Overview = () => {
         </div>
       </div>
 
-      <div className="relative z-[1] -mt-20 mb-2 flex h-48 px-8 lg:-mt-24 lg:mb-6">
+      <div className="relative z-[1] -mt-12 mb-2 flex h-48 px-8 lg:-mt-24 lg:mb-6">
         <Image
           src="/img/avatar.jpeg"
           alt="Avatar"
           width={192}
           height={192}
-          className="size-44 transform rounded-full ring-1 ring-zinc-700 ring-offset-4 ring-offset-zinc-950 transition-transform duration-300 hover:scale-105 lg:size-48"
+          className="size-44 transform rounded-full ring-1 ring-zinc-700 ring-offset-4 ring-offset-zinc-950 transition-transform duration-300 hover:scale-105 md:size-40 lg:size-48"
         />
       </div>
 
