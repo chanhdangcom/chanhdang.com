@@ -26,7 +26,7 @@ const INTRO: IIntroItem[] = [
     content: (
       <>
         <span>Developer at</span>
-        <a href="https://quaric.com/" className="border-b border-zinc-500">
+        <a href="https://quaric.com/" className="text-blue-600">
           Quaric
         </a>
       </>
