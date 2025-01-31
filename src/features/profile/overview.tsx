@@ -4,7 +4,6 @@ import React, { JSX } from "react";
 import { IntroItem } from "./components/intro-item";
 import Image from "next/image";
 import { Building, Call, Location, Sms } from "iconsax-react";
-import { Ping } from "@/components/ping";
 import { LikeButton } from "@/components/like-button";
 
 // const LikeButton = dynamic(
@@ -22,7 +21,7 @@ type IIntroItem = {
 
 const INTRO: IIntroItem[] = [
   {
-    icon: <Building variant="Bulk" size={28} color="currentColor" />,
+    icon: <Building variant="Bulk" size={24} color="currentColor" />,
     content: (
       <>
         <span>Developer at</span>
@@ -31,10 +30,9 @@ const INTRO: IIntroItem[] = [
         </a>
       </>
     ),
-    extra: <Ping />,
   },
   {
-    icon: <Sms variant="Bulk" size={28} color="currentColor" />,
+    icon: <Sms variant="Bulk" size={24} color="currentColor" />,
     content: (
       <a href="mailto:ncdang@quaric.com" className="hover:underline">
         ncdang@quaric.com
@@ -42,11 +40,11 @@ const INTRO: IIntroItem[] = [
     ),
   },
   {
-    icon: <Location variant="Bulk" size={28} color="currentColor" />,
+    icon: <Location variant="Bulk" size={24} color="currentColor" />,
     content: "Can Tho, Viet Nam",
   },
   {
-    icon: <Call variant="Bulk" size={28} color="currentColor" />,
+    icon: <Call variant="Bulk" size={24} color="currentColor" />,
     content: (
       <a href="tel:0799979382" className="hover:underline">
         079 997 9382
@@ -57,7 +55,7 @@ const INTRO: IIntroItem[] = [
 
 export const Overview = () => {
   return (
-    <div className="overflow-hidden rounded-3xl border bg-zinc-100 font-medium shadow-sm dark:border-neutral-800 dark:bg-zinc-900 dark:text-zinc-50">
+    <div className="overflow-hidden rounded-3xl border bg-zinc-100 font-medium shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50">
       <div className="relative aspect-3/1 overflow-hidden before:absolute before:inset-0 before:bg-[image:url(/img/cover.jpg)] before:bg-cover before:bg-center before:duration-300 after:absolute after:bottom-0 after:left-0 after:z-[1] after:h-px after:w-full after:bg-white/20 hover:before:scale-105 hover:before:transform hover:before:transition-transform">
         <div className="relative m-2 flex justify-end">
           <LikeButton />

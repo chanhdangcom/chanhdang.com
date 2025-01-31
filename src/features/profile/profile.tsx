@@ -15,7 +15,7 @@ export const Profile = () => {
 
         <div className="container mb-8 space-y-8">
           <div className="min-h-[calc(100vh-56px)] items-center space-y-8 md:flex md:space-y-0">
-            <Hello className="md:hidden" />
+            <Hello className="mt-8 md:hidden" />
 
             <div className="grid items-center gap-x-16 md:grid-cols-2">
               <Overview />
