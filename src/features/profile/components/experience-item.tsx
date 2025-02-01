@@ -12,7 +12,7 @@ type IProps = {
   jobTitle?: string;
   jobIcon?: JSX.Element;
 
-  content: string;
+  content?: string;
 
   isWorking?: boolean;
 };
@@ -45,7 +45,7 @@ export const ExperienceItem = ({
       <div className="ml-8 space-y-2 font-mono text-sm">
         <div className="text-zinc-400">{time}</div>
         <div>{jobTitle}</div>
-        <div>{content}</div>
+        <div className="">{content}</div>
       </div>
     </div>
   );

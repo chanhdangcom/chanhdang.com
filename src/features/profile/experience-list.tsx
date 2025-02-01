@@ -7,7 +7,7 @@ type IExperienceItem = {
   time: string;
   company: string;
   jobTitle?: string;
-  content: string;
+  content?: string;
   isWorking?: boolean;
 };
 
