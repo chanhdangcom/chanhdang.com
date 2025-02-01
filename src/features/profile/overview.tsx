@@ -56,7 +56,10 @@ const INTRO: IIntroItem[] = [
 export const Overview = () => {
   return (
     <div className="">
-      <div className="relative overflow-hidden rounded-3xl border border-zinc-400 bg-zinc-100 font-medium shadow-sm dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50">
+      <div className="mx-8 text-balance font-mono text-sm text-zinc-400 dark:text-zinc-800">
+        flex text-3xl font-mono
+      </div>
+      <div className="relative overflow-hidden rounded-3xl border border-zinc-200 bg-zinc-100 font-medium shadow-sm dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50">
         <div className="absolute left-8 h-full w-px bg-gray-200 dark:bg-zinc-800"></div>
 
         <div className="relative aspect-3/1 overflow-hidden before:absolute before:inset-0 before:bg-[image:url(/img/cover.jpg)] before:bg-cover before:bg-center before:duration-300 after:absolute after:bottom-0 after:left-0 after:z-[1] after:h-px after:w-full after:bg-white/20 hover:before:scale-105 hover:before:transform hover:before:transition-transform">
@@ -74,9 +77,9 @@ export const Overview = () => {
             className="size-44 rounded-full ring-1 ring-zinc-700 ring-offset-4 ring-offset-zinc-950 md:size-40 lg:size-48"
           />
 
-          <div className="mx-2 mb-14 flex select-none items-center text-balance font-mono text-sm text-zinc-400 dark:text-zinc-800 sm:mb-[72px] md:mb-[56px] lg:mt-[72px]">
+          {/* <div className="mx-2 mb-[117px] flex w-full select-none items-center text-balance py-4 font-mono text-sm text-zinc-400 dark:text-zinc-800 sm:mb-[122px] md:mb-[96px] lg:mt-[72px]">
             text-3xl font-mono
-          </div>
+          </div> */}
         </div>
 
         <div className="flex items-center space-x-2 border-y border-gray-200 px-8 text-3xl font-bold dark:border-zinc-900 sm:text-4xl md:text-3xl lg:text-4xl">
