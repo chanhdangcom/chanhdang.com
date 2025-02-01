@@ -55,25 +55,30 @@ const INTRO: IIntroItem[] = [
 
 export const Overview = () => {
   return (
-    <div className="overflow-hidden rounded-3xl border bg-zinc-100 font-medium shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50">
+    <div className="relative overflow-hidden rounded-3xl border bg-zinc-100 font-medium shadow-sm dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50">
+      <div className="absolute left-8 h-full w-px bg-zinc-800"></div>
+
       <div className="relative aspect-3/1 overflow-hidden before:absolute before:inset-0 before:bg-[image:url(/img/cover.jpg)] before:bg-cover before:bg-center before:duration-300 after:absolute after:bottom-0 after:left-0 after:z-[1] after:h-px after:w-full after:bg-white/20 hover:before:scale-105 hover:before:transform hover:before:transition-transform">
         <div className="relative m-2 flex justify-end">
           <LikeButton />
         </div>
       </div>
 
-      <div className="relative z-[1] -mt-12 mb-2 flex h-48 px-8 lg:-mt-24 lg:mb-6">
+      <div className="relative left-[5px] z-[1] -mt-12 mb-2 flex h-48 px-8 lg:-mt-24 lg:mb-6">
         <Image
           src="/img/avatar.jpeg"
           alt="Avatar"
           width={192}
           height={192}
-          className="size-44 transform rounded-full ring-1 ring-zinc-700 ring-offset-4 ring-offset-zinc-950 transition-transform duration-300 hover:scale-105 md:size-40 lg:size-48"
+          className="size-44 rounded-full ring-1 ring-zinc-700 ring-offset-4 ring-offset-zinc-950 md:size-40 lg:size-48"
         />
+        <div className="mx-2 mb-[72px] flex select-none items-center text-balance font-mono text-sm text-zinc-800 sm:mb-[72px] md:mb-[56px] lg:mt-[72px]">
+          text-3xl font-mono
+        </div>
       </div>
 
-      <div className="mb-6 flex transform cursor-pointer items-center space-x-2 px-8 text-3xl font-bold sm:text-4xl md:text-3xl lg:text-4xl">
-        <span>Nguyễn Chánh Đang</span>
+      <div className="flex items-center space-x-2 border-y border-zinc-900 px-8 text-3xl font-bold sm:text-4xl md:text-3xl lg:text-4xl">
+        <span className="">Nguyễn Chánh Đang</span>
         <svg
           className="text-blue-600"
           width="0.6em"
@@ -92,7 +97,9 @@ export const Overview = () => {
         </svg>
       </div>
 
-      <div className="mb-8 space-y-2 px-8">
+      <div className="flex h-4 w-full bg-[image:repeating-linear-gradient(315deg,_var(--pattern-foreground)_0,_var(--pattern-foreground)_1px,_transparent_0,_transparent_50%)] bg-[size:10px_10px] [--pattern-foreground:#e4e4e7] dark:[--pattern-foreground:#27272a]" />
+
+      <div className="space-y-2 border-y border-zinc-900 px-8">
         {INTRO.map((item, index) => {
           return (
             <IntroItem
@@ -104,6 +111,7 @@ export const Overview = () => {
           );
         })}
       </div>
+      <div className="flex h-4 w-full bg-[image:repeating-linear-gradient(315deg,_var(--pattern-foreground)_0,_var(--pattern-foreground)_1px,_transparent_0,_transparent_50%)] bg-[size:10px_10px] [--pattern-foreground:#e4e4e7] dark:[--pattern-foreground:#27272a]" />
     </div>
   );
 };
