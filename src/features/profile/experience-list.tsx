@@ -49,7 +49,7 @@ export const ExperienceList = () => {
       <div className="space-y-0">
         <CodeTag
           tagName="Work"
-          className="ml-2 text-sky-600 dark:text-sky-400"
+          className="ml-2 text-cyan-500 dark:text-cyan-400"
         />
 
         <div className="ml-2 border-l border-zinc-200 text-sm dark:border-zinc-800">
@@ -70,14 +70,14 @@ export const ExperienceList = () => {
         <CodeTag
           tagName="Work"
           isCloseTag
-          className="ml-2 text-sky-600 dark:text-sky-400"
+          className="ml-2 text-cyan-500 dark:text-cyan-400"
         />
       </div>
 
       <div className="space-y-0">
         <CodeTag
           tagName="Education"
-          className="ml-2 text-sky-600 dark:text-sky-400"
+          className="ml-2 text-cyan-500 dark:text-cyan-400"
         />
 
         <div className="ml-2 border-l border-zinc-200 text-sm dark:border-zinc-800">
@@ -100,7 +100,7 @@ export const ExperienceList = () => {
         <CodeTag
           tagName="Education"
           isCloseTag
-          className="ml-2 text-sky-600 dark:text-sky-400"
+          className="ml-2 text-cyan-500 dark:text-cyan-400"
         />
       </div>
     </div>

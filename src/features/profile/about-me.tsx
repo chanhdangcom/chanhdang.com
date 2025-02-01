@@ -20,14 +20,14 @@ export const AboutMe = () => {
         <Button type="secondary">Project</Button>
       </div> */}
       <div className="text-balance text-center font-mono text-sm">
-        <CodeTag tagName="About" className="text-sky-600 dark:text-sky-400" />
+        <CodeTag tagName="About" className="text-cyan-500 dark:text-cyan-400" />
         I am passionate about creating and developing web applications and
         software, always looking for the most optimal and efficient solutions.
         With experience in using modern technologies such as JavaScript, React
         and Tailwind CSS. I love learning and applying new technologies.
         <CodeTag
           tagName="About"
-          className="text-sky-600 dark:text-sky-400"
+          className="text-cyan-500 dark:text-cyan-400"
           isCloseTag
         />
       </div>
