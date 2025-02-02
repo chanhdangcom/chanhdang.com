@@ -1,48 +1,99 @@
 import React from "react";
-import { TechStackItem } from "./components/tech-stack-item";
+import { FloatingDock } from "@/components/floating-dock";
+import { FloatingDockItem } from "@/components/floating-dock-item";
 
-type ITechStackItem = {
-  iconUrl: string;
-};
+// type ITechStackItem = {
+//   iconUrl: string;
+// };
 
-const TECHSTACK: ITechStackItem[] = [
+// const TECHSTACK: ITechStackItem[] = [
+//   {
+//     iconUrl: "/img/tech-stack/typescript.svg",
+//   },
+//   {
+//     iconUrl: "/img/tech-stack/js.svg",
+//   },
+//   {
+//     iconUrl: "/img/tech-stack/php.svg",
+//   },
+//   {
+//     iconUrl: "/img/tech-stack/mysql.svg",
+//   },
+//   {
+//     iconUrl: "/img/tech-stack/nextjs2-dark.svg",
+//   },
+//   {
+//     iconUrl: "/img/tech-stack/react.svg",
+//   },
+//   {
+//     iconUrl: "/img/tech-stack/tailwindcss.svg",
+//   },
+//   {
+//     iconUrl: "/img/tech-stack/git.svg",
+//   },
+//   {
+//     iconUrl: "/img/tech-stack/docker.svg",
+//   },
+// ];
+
+const ITechStackItem = [
   {
-    iconUrl: "/img/tech-stack/typescript.svg",
+    title: "Type Script",
+    icon: <FloatingDockItem iconUrl={"/img/tech-stack/typescript.svg"} />,
+    href: "",
   },
   {
-    iconUrl: "/img/tech-stack/js.svg",
+    title: "Java Script",
+    icon: <FloatingDockItem iconUrl={"/img/tech-stack/js.svg"} />,
+    href: "",
   },
   {
-    iconUrl: "/img/tech-stack/php.svg",
+    title: "PHP",
+    icon: <FloatingDockItem iconUrl={"/img/tech-stack/php.svg"} />,
+    href: "",
   },
   {
-    iconUrl: "/img/tech-stack/mysql.svg",
+    title: "My Sql",
+    icon: <FloatingDockItem iconUrl={"/img/tech-stack/mysql.svg"} />,
+    href: "",
   },
   {
-    iconUrl: "/img/tech-stack/nextjs2-dark.svg",
+    title: "Next Js",
+    icon: <FloatingDockItem iconUrl={"/img/tech-stack/nextjs2-dark.svg"} />,
+    href: "",
   },
   {
-    iconUrl: "/img/tech-stack/react.svg",
+    title: "React",
+    icon: <FloatingDockItem iconUrl={"/img/tech-stack/react.svg"} />,
+    href: "",
   },
   {
-    iconUrl: "/img/tech-stack/tailwindcss.svg",
+    title: "Tailwind css",
+    icon: <FloatingDockItem iconUrl={"/img/tech-stack/tailwindcss.svg"} />,
+    href: "",
   },
   {
-    iconUrl: "/img/tech-stack/git.svg",
+    title: "Git",
+    icon: <FloatingDockItem iconUrl={"/img/tech-stack/git.svg"} />,
+    href: "",
   },
   {
-    iconUrl: "/img/tech-stack/docker.svg",
+    title: "Docker",
+    icon: <FloatingDockItem iconUrl={"/img/tech-stack/docker.svg"} />,
+    href: "",
   },
 ];
 
 export const TechStack = () => {
   return (
     <div className="flex justify-center">
-      <div className="flex flex-wrap justify-center gap-4 rounded-2xl border border-zinc-200 bg-zinc-50 p-4 shadow-sm dark:border-zinc-900 dark:bg-zinc-900/50">
+      {/* <div className="flex flex-wrap justify-center gap-4 rounded-2xl border border-zinc-200 bg-zinc-50 p-4 shadow-sm dark:border-zinc-900 dark:bg-zinc-900/50">
         {TECHSTACK.map((item, index) => {
           return <TechStackItem key={index} iconUrl={item.iconUrl} />;
         })}
-      </div>
+      </div> */}
+
+      <FloatingDock items={ITechStackItem} />
     </div>
   );
 };
