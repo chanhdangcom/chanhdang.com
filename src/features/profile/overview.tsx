@@ -64,7 +64,7 @@ export const Overview = () => {
         </div>
       </div>
 
-      <div className="-mt-12flex relative left-[5px] z-[1] h-48 px-8 lg:-mt-24 lg:mb-6">
+      <div className="relative left-[5px] z-[1] -mt-12 flex h-48 px-8 lg:-mt-24 lg:mb-6">
         <Image
           src="/img/avatar.jpeg"
           alt="Avatar"
