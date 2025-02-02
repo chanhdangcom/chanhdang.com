@@ -1,10 +1,13 @@
 import { CodeTag } from "@/components/code-tag";
+import { FlipWords } from "@/components/flip-words";
 import { cn } from "@/utils/cn";
 import React from "react";
 
 type IProps = {
   className?: string;
 };
+
+const words = ["Developer", "Coder", "Dang"];
 
 export const Hello = ({ className }: IProps) => {
   return (
@@ -14,8 +17,9 @@ export const Hello = ({ className }: IProps) => {
       </div>
 
       <div className="font-mono text-xl dark:text-white lg:text-2xl">
-        <CodeTag tagName="p" className="text-pink-500 dark:text-pink-400" />
-        I am a Developer.
+        <CodeTag tagName="p" className="text-pink-500 dark:text-pink-400" /> I
+        am a
+        <FlipWords words={words} />
         <CodeTag
           tagName="p"
           isCloseTag

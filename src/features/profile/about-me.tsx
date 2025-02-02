@@ -32,6 +32,10 @@ export const AboutMe = () => {
         />
       </div>
       <TechStack />
+
+      {/* <div className="mb-10 flex w-full flex-row items-center justify-center">
+        <AnimatedTooltip items={TECHSTACK} />
+      </div> */}
     </div>
   );
 };
