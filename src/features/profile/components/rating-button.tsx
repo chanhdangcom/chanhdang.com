@@ -11,6 +11,7 @@ export const RatingButton = () => {
     <div>
       <Rating
         value={value}
+        precision={0.5}
         emptyIcon={<StarIcon fontSize="inherit" style={{ color: "#27272a" }} />}
         onChange={(event, newValue) => {
           localStorage.setItem("RatingValue", String(newValue));
