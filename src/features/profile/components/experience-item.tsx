@@ -12,7 +12,7 @@ type IProps = {
   jobTitle?: string;
   jobIcon?: JSX.Element;
 
-  content?: string;
+  content?: React.ReactNode;
 
   isWorking?: boolean;
 };
