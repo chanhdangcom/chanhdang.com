@@ -1,4 +1,5 @@
 import { Rating } from "@mui/material";
+import { StarIcon } from "lucide-react";
 import { useState } from "react";
 
 export const RatingButton = () => {
@@ -10,6 +11,7 @@ export const RatingButton = () => {
     <div>
       <Rating
         value={value}
+        emptyIcon={<StarIcon fontSize="inherit" style={{ color: "#27272a" }} />}
         onChange={(event, newValue) => {
           localStorage.setItem("RatingValue", String(newValue));
           setValue(newValue);
