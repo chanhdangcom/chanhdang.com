@@ -8,7 +8,7 @@ import { Building, Call, Location, Sms } from "iconsax-react";
 import { TypewriterEffect } from "./components/typewriter-effect";
 
 import Stack from "@mui/material/Stack";
-import { RatingButton } from "./components/rating-button";
+import dynamic from "next/dynamic";
 
 // const LikeButton = dynamic(
 //   () => import("@/components/like-button").then((res) => res.LikeButton),
@@ -16,6 +16,16 @@ import { RatingButton } from "./components/rating-button";
 //     ssr: false, // Server-side Render (SSR), Client-side Render (CSR)
 //   }
 // );
+
+const RatingButton = dynamic(
+  () =>
+    import("@/features/profile/components/rating-button").then(
+      (res) => res.RatingButton
+    ),
+  {
+    ssr: false, // Server-side Render (SSR), Client-side Render (CSR)
+  }
+);
 
 type IIntroItem = {
   icon: JSX.Element;
