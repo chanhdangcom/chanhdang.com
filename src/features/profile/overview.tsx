@@ -4,8 +4,11 @@ import React, { JSX } from "react";
 import { IntroItem } from "./components/intro-item";
 import Image from "next/image";
 import { Building, Call, Location, Sms } from "iconsax-react";
-import { LikeButton } from "@/components/like-button";
+// import { LikeButton } from "@/components/like-button";
 import { TypewriterEffect } from "./components/typewriter-effect";
+
+import Stack from "@mui/material/Stack";
+import { RatingButton } from "./components/rating-button";
 
 // const LikeButton = dynamic(
 //   () => import("@/components/like-button").then((res) => res.LikeButton),
@@ -67,7 +70,14 @@ export const Overview = () => {
 
       <div className="relative aspect-3/1 overflow-hidden before:absolute before:inset-0 before:bg-[image:url(/img/cover.jpg)] before:bg-cover before:bg-center after:absolute after:bottom-0 after:left-0 after:z-[1] after:h-px after:w-full after:bg-white/20">
         <div className="relative m-2 flex justify-end">
-          <LikeButton />
+          {/* <LikeButton /> */}
+
+          <div className="p-2">
+            <Stack spacing={1}>
+              {/* <Rating name="half-rating" defaultValue={2.5} precision={0.5} /> */}
+              <RatingButton />
+            </Stack>
+          </div>
         </div>
       </div>
 
