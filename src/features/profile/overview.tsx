@@ -5,6 +5,7 @@ import { IntroItem } from "./components/intro-item";
 import Image from "next/image";
 import { Building, Call, Location, Sms } from "iconsax-react";
 import { LikeButton } from "@/components/like-button";
+import { TypewriterEffect } from "./components/typewriter-effect";
 
 // const LikeButton = dynamic(
 //   () => import("@/components/like-button").then((res) => res.LikeButton),
@@ -18,6 +19,12 @@ type IIntroItem = {
   content: React.ReactNode;
   extra?: React.ReactNode;
 };
+
+const NAME = [
+  { text: "Nguyễn", className: "text-mono md:text-2xl lg:text-3xl" },
+  { text: "Chánh", className: "text-mono md:text-2xl lg:text-3xl" },
+  { text: "Đang", className: "text-mono md:text-2xl lg:text-3xl" },
+];
 
 const INTRO: IIntroItem[] = [
   {
@@ -58,7 +65,7 @@ export const Overview = () => {
     <div className="relative overflow-hidden rounded-3xl border border-zinc-200 bg-zinc-100 font-medium shadow-sm dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50">
       <div className="absolute left-8 h-full w-px bg-gray-200 dark:bg-zinc-900"></div>
 
-      <div className="relative aspect-3/1 overflow-hidden before:absolute before:inset-0 before:bg-[image:url(/img/cover.jpg)] before:bg-cover before:bg-center before:duration-300 after:absolute after:bottom-0 after:left-0 after:z-[1] after:h-px after:w-full after:bg-white/20 hover:before:scale-105 hover:before:transform hover:before:transition-transform">
+      <div className="relative aspect-3/1 overflow-hidden before:absolute before:inset-0 before:bg-[image:url(/img/cover.jpg)] before:bg-cover before:bg-center after:absolute after:bottom-0 after:left-0 after:z-[1] after:h-px after:w-full after:bg-white/20">
         <div className="relative m-2 flex justify-end">
           <LikeButton />
         </div>
@@ -79,10 +86,12 @@ export const Overview = () => {
       </div>
 
       <div className="mb-6 flex items-center space-x-2 border-y border-gray-200 px-8 text-3xl font-bold dark:border-zinc-900 sm:text-4xl md:text-3xl lg:text-4xl">
-        <span className="">Nguyễn Chánh Đang</span>
+        <span className="">
+          <TypewriterEffect words={NAME} />
+        </span>
 
         <svg
-          className="text-blue-600"
+          className="text-left text-blue-600"
           width="0.6em"
           height="0.6em"
           viewBox="0 0 24 24"

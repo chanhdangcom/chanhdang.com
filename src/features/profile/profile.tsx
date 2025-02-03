@@ -17,7 +17,7 @@ export const Profile = () => {
           <div className="min-h-[calc(100vh-56px)] items-center space-y-8 md:flex md:space-y-0">
             <Hello className="mt-8 md:hidden" />
 
-            <div className="grid items-center gap-x-16 md:grid-cols-2">
+            <div className="grid items-center gap-x-16 md:grid-cols-2 xl:gap-x-56">
               <Overview />
               <AboutMe />
             </div>
