@@ -7,7 +7,7 @@ type IProps = {
   className?: string;
 };
 
-const words = ["Developer", "Dang"];
+const words = [" Developer", "Coder"];
 
 export const Hello = ({ className }: IProps) => {
   return (
