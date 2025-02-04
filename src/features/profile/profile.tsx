@@ -22,7 +22,8 @@ export const Profile = () => {
               <AboutMe />
             </div>
           </div>
-
+        </div>
+        <div className="container">
           <ExperienceList />
         </div>
       </div>
