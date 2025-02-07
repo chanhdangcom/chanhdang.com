@@ -9,13 +9,14 @@ type IWeather = {
   description: string;
   icon: string;
 };
+
 type ITemp = {
   temp: number;
 };
 
 export const WeatherList = () => {
   const [weathers, setWeathers] = useState<IWeather[]>([]);
-  const [temps, setTemps] = useState<ITemp>();
+  const [temp, setTemp] = useState<ITemp>();
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = async () => {
@@ -25,10 +26,10 @@ export const WeatherList = () => {
     );
     const jasonData = await data.json();
     const weathers = jasonData.weather as IWeather[];
-    const temps = jasonData.main as ITemp;
+    const temp = jasonData.main as ITemp;
 
     setWeathers(weathers);
-    setTemps(temps);
+    setTemp(temp);
     setIsLoading(false);
   };
 
@@ -50,7 +51,7 @@ export const WeatherList = () => {
               >
                 <div className="p-4">
                   <div className="flex items-center gap-3">
-                    <div> {temps?.temp}&deg;C </div>
+                    <div> {temp?.temp}&deg;C </div>
                     <div>
                       <WeatherIcon icon={item.icon} />
                     </div>
@@ -65,6 +66,7 @@ export const WeatherList = () => {
           })}
         </div>
       )}
+
       {!isLoading && weathers.length == 0 && (
         <div className="p-2">No data weather</div>
       )}

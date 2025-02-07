@@ -1,14 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-
-type IPost = {
-  documentId: string;
-  title: string;
-  description: string;
-  content_blocks: unknown[];
-  slug: string;
-};
+import { IPost } from "./types";
 
 // 1. Hoc sau them: Async/Await in JS/TS
 
