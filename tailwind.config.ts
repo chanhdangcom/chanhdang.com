@@ -69,7 +69,10 @@ const config: Config = {
       },
     },
   },
-  plugins: [addVariablesForColors, backgroundUtilities],
+  plugins: [addVariablesForColors, backgroundUtilities], addVariablesForColors,
 };
+
+
+
 
 export default config;

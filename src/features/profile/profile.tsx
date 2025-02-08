@@ -4,6 +4,7 @@ import { Header } from "./header";
 import { Overview } from "./overview";
 import { ExperienceList } from "./experience-list";
 import { Confetti } from "./components/confetti";
+import { Footer } from "./footer";
 
 export const Profile = () => {
   return (
@@ -23,8 +24,13 @@ export const Profile = () => {
             </div>
           </div>
         </div>
+
         <div className="container">
           <ExperienceList />
+        </div>
+
+        <div className="container my-8">
+          <Footer />
         </div>
       </div>
 

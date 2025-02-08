@@ -25,7 +25,7 @@ export const WeatherList = () => {
     );
     const jasonData = await data.json();
     const weathers = jasonData.weather as IWeather[];
-    const temps = jasonData.main as ITemp;
+    const temps = jasonData.main;
 
     setWeathers(weathers);
     setTemps(temps);
