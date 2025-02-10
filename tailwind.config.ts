@@ -6,7 +6,10 @@ import plugin from "tailwindcss/plugin";
 type PluginAPI = Parameters<Parameters<typeof plugin>[0]>[0];
 
 function addVariablesForColors({ addBase, theme }: PluginAPI): void {
-  const allColors = flattenColorPalette(theme("colors")) as Record<string, string>;
+  const allColors = flattenColorPalette(theme("colors")) as Record<
+    string,
+    string
+  >;
   const newVars: Record<string, string> = Object.fromEntries(
     Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
   );
@@ -16,7 +19,10 @@ function addVariablesForColors({ addBase, theme }: PluginAPI): void {
   });
 }
 
-const backgroundUtilities = plugin(function ({ matchUtilities, theme }: PluginAPI) {
+const backgroundUtilities = plugin(function ({
+  matchUtilities,
+  theme,
+}: PluginAPI) {
   matchUtilities(
     {
       "bg-grid": (value: string) => ({
@@ -35,7 +41,13 @@ const backgroundUtilities = plugin(function ({ matchUtilities, theme }: PluginAP
         )}")`,
       }),
     },
-    { values: flattenColorPalette(theme("backgroundColor")) as Record<string, string>, type: "color" }
+    {
+      values: flattenColorPalette(theme("backgroundColor")) as Record<
+        string,
+        string
+      >,
+      type: "color",
+    }
   );
 });
 
@@ -69,6 +81,7 @@ const config: Config = {
       },
     },
   },
+<<<<<<< HEAD
   plugins: [addVariablesForColors, backgroundUtilities], addVariablesForColors,
 };
 
@@ -76,3 +89,14 @@ const config: Config = {
 
 
 export default config;
+=======
+  plugins: [
+    addVariablesForColors,
+    backgroundUtilities,
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require("@tailwindcss/typography"),
+  ],
+};
+
+export default config;
+>>>>>>> 31b2108c2695cf2b1f13ad66c84d718d84caf4e0
