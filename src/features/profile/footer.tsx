@@ -18,7 +18,10 @@ export const Footer = () => {
           <a className="hover:underline" href="https://github.com/chanhdangcom">
             <ExperienceInfoItem icon={<GithubIcon />} content="Github" />
           </a>
-          <a className="hover:underline" href="https://github.com/chanhdangcom">
+          <a
+            className="hover:underline"
+            href="https://www.facebook.com/NguyenChanhDang.Best"
+          >
             <ExperienceInfoItem icon={<FacebookIcon />} content="Facebook" />
           </a>
         </div>
