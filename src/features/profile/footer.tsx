@@ -6,7 +6,7 @@ import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 export const Footer = () => {
   return (
     <div className="container space-y-4 border-t border-gray-200 dark:border-zinc-800 dark:text-zinc-400">
-      <div className="my-2 flex flex-wrap justify-center gap-4 font-mono text-sm md:gap-8">
+      <div className="my-2 flex flex-wrap justify-center gap-4 font-mono text-sm md:gap-6">
         <a className="hover:underline" href="http://chanhdang.com">
           chanhdang.com
         </a>
