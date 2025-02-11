@@ -1,18 +1,17 @@
+/* eslint-disable @next/next/no-img-element */
 import { FacebookIcon, GithubIcon } from "lucide-react";
 import { ExperienceInfoItem } from "./components/experience-info-item";
+import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 
 export const Footer = () => {
   return (
-    <div className="container space-y-4 border-t border-gray-200 dark:border-zinc-800">
+    <div className="container space-y-4 border-t border-gray-200 dark:border-zinc-800 dark:text-zinc-400">
       <div className="my-2 flex flex-wrap justify-center gap-4 font-mono text-sm md:gap-8">
         <a className="hover:underline" href="http://chanhdang.com">
           chanhdang.com
         </a>
         <a className="hover:underline" href="https://dang.is-a.dev">
           dang.is-a.dev
-        </a>
-        <a className="hover:underline" href="http://chanhdang.vercel.app">
-          chanhdang.vercel.app
         </a>
         <div className="flex gap-8 md:gap-4">
           <a className="hover:underline" href="https://github.com/chanhdangcom">
@@ -31,7 +30,20 @@ export const Footer = () => {
         © 2025 Chánh Đang. All rights reserved.
       </div>
 
-      <div className="flex justify-center">
+      <div className="flex items-center justify-center space-x-2">
+        <div className="flex space-x-1">
+          <div>Inspired by</div>
+          <div>
+            <img src="/img/Dracula-Theme.svg" alt="" className="size-6" />
+          </div>
+          <div className="font-medium text-white"> Dracula Theme Offical</div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-center space-x-2">
+        <div>
+          <ChanhdangLogotype className="w-28" />
+        </div>
         <a href="https://www.dmca.com/Protection/Status.aspx?id=b2d35e52-e8ef-4f3b-81e1-5452b2c431c2&refurl=https%3a%2f%2fchanhdang.com%2f&rlo=true">
           <svg
             height="20"
