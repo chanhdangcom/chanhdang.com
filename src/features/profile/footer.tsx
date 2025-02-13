@@ -36,7 +36,9 @@ export const Footer = () => {
           <div>
             <img src="/img/Dracula-Theme.svg" alt="" className="size-6" />
           </div>
-          <div className="font-medium text-white"> Dracula Theme Offical</div>
+          <div className="text-zinc-950 dark:font-medium dark:text-white">
+            Dracula Theme Offical
+          </div>
         </div>
       </div>
 
