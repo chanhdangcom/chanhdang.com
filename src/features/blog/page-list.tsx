@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { IPost } from "./types";
+import Link from "next/link";
 
 // 1. Hoc sau them: Async/Await in JS/TS
 
@@ -48,11 +49,13 @@ export const PageBlogList = () => {
       {isLoading && <div>Loading...</div>}
 
       {!isLoading && posts.length > 0 && (
-        <div className="border border-red-500">
+        <div className="space-y-4 border border-red-500">
           {posts.map((post) => {
             return (
               <div key={post.documentId}>
-                <div>{post.title}</div>
+                <Link href={`/blogtraining/${post.slug}`}>
+                  <h2 className="cursor-pointer">{post.title}</h2>
+                </Link>
               </div>
             );
           })}
