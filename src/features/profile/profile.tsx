@@ -5,6 +5,7 @@ import { Overview } from "./overview";
 import { ExperienceList } from "./experience-list";
 import { Confetti } from "./components/confetti";
 import { Footer } from "./footer";
+import { PhotoList } from "./photo-list";
 
 export const Profile = () => {
   return (
@@ -24,6 +25,11 @@ export const Profile = () => {
             </div>
           </div>
         </div>
+
+        <div className="flex justify-center">
+          <PhotoList />
+        </div>
+
         <div className="container">
           <ExperienceList />
         </div>

@@ -46,30 +46,35 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/features/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: "class",
+  darkMode: ["class"],
   theme: {
-    extend: {
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-      },
-      fontFamily: {
-        body: "var(--font-body)",
-        handwritten: "var(--font-handwritten)",
-        mono: "var(--font-mono)",
-      },
-      aspectRatio: {
-        "3/1": "3 / 1",
-      },
-    },
-    container: {
-      center: true,
-      padding: {
-        DEFAULT: "1rem",
-      },
-    },
+  	extend: {
+  		colors: {
+  			background: 'var(--background)',
+  			foreground: 'var(--foreground)'
+  		},
+  		fontFamily: {
+  			body: 'var(--font-body)',
+  			handwritten: 'var(--font-handwritten)',
+  			mono: 'var(--font-mono)'
+  		},
+  		aspectRatio: {
+  			'3/1': '3 / 1'
+  		},
+  		borderRadius: {
+  			lg: 'var(--radius)',
+  			md: 'calc(var(--radius) - 2px)',
+  			sm: 'calc(var(--radius) - 4px)'
+  		}
+  	},
+  	container: {
+  		center: true,
+  		padding: {
+  			DEFAULT: '1rem'
+  		}
+  	}
   },
-  plugins: [addVariablesForColors, backgroundUtilities],
+  plugins: [addVariablesForColors, backgroundUtilities, require("tailwindcss-animate")],
 };
 
 export default config;
