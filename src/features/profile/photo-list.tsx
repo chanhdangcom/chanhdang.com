@@ -42,11 +42,11 @@ const IPhotoItem: IPhoto[] = [
     time: "3/11/2023",
     title: "Chủ nhật xanh",
   },
-  {
-    photoUrl: "/img/photo-me/10.JPG",
-    time: "26/12/2024",
-    title: "Địa chỉ đỏ",
-  },
+  // {
+  //   photoUrl: "/img/photo-me/10.JPG",
+  //   time: "26/12/2024",
+  //   title: "Địa chỉ đỏ",
+  // },
 ];
 
 export const PhotoList = () => {
