@@ -15,7 +15,7 @@ export const Profile = () => {
       <div className="relative">
         <div className="absolute left-0 top-8 -z-[1] h-[calc(100vh-120px)] rounded-3xl dark:bg-zinc-900/30 md:w-2/6 xl:bg-zinc-100"></div>
 
-        <div className="container mb-8 space-y-8 xl:px-16">
+        <div className="container space-y-8 xl:px-16">
           <div className="min-h-[calc(100vh-56px)] items-center space-y-8 md:flex md:space-y-0">
             <Hello className="mt-8 md:hidden" />
 
@@ -26,7 +26,7 @@ export const Profile = () => {
           </div>
         </div>
 
-        <div className="flex justify-center">
+        <div className="container my-8 md:flex md:items-center md:justify-center">
           <PhotoList />
         </div>
 
