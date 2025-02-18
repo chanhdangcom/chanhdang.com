@@ -25,7 +25,7 @@ const IPhotoItem: IPhoto[] = [
   {
     photoUrl: "/img/photo-me/1.JPG",
     time: "2024",
-    title: "Hoi xuan AGU",
+    title: "Hội xuân AGU",
   },
   {
     photoUrl: "/img/photo-me/4.JPG",
@@ -35,22 +35,22 @@ const IPhotoItem: IPhoto[] = [
   {
     photoUrl: "/img/photo-me/5.JPG",
     time: "2022",
-    title: "Chu nhat xanh",
+    title: "Chủ nhật xanh",
   },
   {
     photoUrl: "/img/photo-me/7.JPG",
     time: "2017",
-    title: "???",
+    title: "no-titile",
   },
   {
     photoUrl: "/img/photo-me/8.jpeg",
     time: "2013",
-    title: "???",
+    title: "no-titile",
   },
   {
     photoUrl: "/img/photo-me/9.jpeg",
     time: "2013",
-    title: "???",
+    title: "no-titile",
   },
 ];
 
@@ -66,7 +66,7 @@ export const PhotoList = () => {
 
       <div className="mt-4">
         <Carousel className="w-full max-w-4xl">
-          <CarouselContent>
+          <CarouselContent className="">
             {IPhotoItem.map((item, key) => (
               <CarouselItem className="md:basis-1/3" key={key}>
                 <div className="grid items-center justify-center">
