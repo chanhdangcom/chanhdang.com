@@ -26,7 +26,7 @@ const ITechList: IProp[] = [
     techName: "UX/UI",
   },
   {
-    techName: "Component libray",
+    techName: "Libray",
   },
 ];
 export const TechStudiesListQuaric = ({}) => {
