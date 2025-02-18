@@ -28,7 +28,7 @@ const IPhotoItem: IPhoto[] = [
     title: "Hội xuân AGU",
   },
   {
-    photoUrl: "/img/photo-me/11.jpg",
+    photoUrl: "/img/photo-me/IMG_9097.JPG",
     time: "11/11/2023",
     title: "Văn nghệ AGU",
   },
