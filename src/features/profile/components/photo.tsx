@@ -20,7 +20,7 @@ export const Photos = ({ photoUrl, time, title }: IPhoto) => {
           <small className="text-default-500 font-mono text-gray-400">
             {time}
           </small>
-          <h1 className="text-xl font-bold">{title}</h1>
+          <h1 className="text-xl font-semibold">{title}</h1>
         </CardHeader>
         <CardBody className="overflow-visible pt-2">
           <img
