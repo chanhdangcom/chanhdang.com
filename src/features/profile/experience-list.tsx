@@ -4,6 +4,10 @@ import { GraduationCapIcon, SchoolIcon } from "lucide-react";
 import { CodeTag } from "@/components/code-tag";
 import { ExperienceIinfoItemContents } from "./components/experience-info-item-contents";
 
+import { TechStudiesListAGU } from "./components/tech-studies-list-AGU";
+import { TechStudiesListQuaric } from "./components/tech-studies-list-quaric";
+import { TechStudiesItem } from "@/components/tech-studies-item";
+
 type IExperienceItem = {
   time: string;
   company: string;
@@ -20,6 +24,7 @@ const EXPERIENCE_WORK: IExperienceItem[] = [
       <ExperienceIinfoItemContents
         content1="I had the opportunity to intern at a technology company where I got to work on real-world software development projects. During my internship, I learned how to work in a team, manage my time, and apply my knowledge to solving real-world problems."
         content2="This was an important stepping stone to help me better understand the professional working environment and strengthen my skills."
+        addOn=<TechStudiesListQuaric />
       />
     ),
     isWorking: true,
@@ -34,6 +39,7 @@ const EXPERIENCE_EDUCATION: IExperienceItem[] = [
       <ExperienceIinfoItemContents
         content1="I had the opportunity to intern at a technology company where I got to work on real-world software development projects. During my internship, I learned how to work in a team, manage my time, and apply my knowledge to solving real-world problems."
         content2="These experiences nurtured a passion for technology and a willingness to adapt to change."
+        addOn=<TechStudiesListAGU />
       />
     ),
     isWorking: true,
@@ -45,6 +51,7 @@ const EXPERIENCE_EDUCATION: IExperienceItem[] = [
       <ExperienceIinfoItemContents
         content1="In high school, where I not only built a solid foundation of knowledge but also trained my thinking skills and proactive learning."
         content2="During my studies, I actively participated in extracurricular activities and competitions, which helped develop my communication and teamwork skills and better prepared me for my future studies."
+        addOn=<TechStudiesItem techName="Pascal" />
       />
     ),
   },
