@@ -3,6 +3,7 @@
 import React from "react";
 import { Card, CardHeader, CardBody } from "@heroui/react";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
+
 type IPhoto = {
   photoUrl: string;
   time?: string;
@@ -11,20 +12,20 @@ type IPhoto = {
 
 export const Photos = ({ photoUrl, time, title }: IPhoto) => {
   return (
-    <div className="rounded-xl border shadow-md dark:border-zinc-800">
+    <div className="rounded-xl border shadow-md dark:border-zinc-950 dark:bg-zinc-900/50">
       <Card className="p-2">
         <CardHeader className="flex-col items-start">
-          <div>
-            <ChanhdangLogotype className="w-24" />
+          <div className="">
+            <ChanhdangLogotype className="w-20" />
           </div>
+          <h1 className="text-xl font-semibold">{title}</h1>
           <small className="text-default-500 font-mono text-gray-400">
             {time}
           </small>
-          <h1 className="text-xl font-semibold">{title}</h1>
         </CardHeader>
         <CardBody className="overflow-visible pt-2">
           <img
-            className="h-80 w-80 transform rounded-xl border border-zinc-300 object-cover shadow-md transition-transform duration-300 hover:scale-105 dark:border-zinc-800 md:h-80 md:w-80"
+            className="h-96 w-80 rounded-xl border border-zinc-300 object-cover shadow-md dark:border-zinc-800"
             src={photoUrl}
             alt="Photo"
           />

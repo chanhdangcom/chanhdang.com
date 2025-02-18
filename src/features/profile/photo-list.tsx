@@ -24,33 +24,28 @@ const IPhotoItem: IPhoto[] = [
   // },
   {
     photoUrl: "/img/photo-me/1.JPG",
-    time: "2024",
+    time: "19/2/2024",
     title: "Hội xuân AGU",
   },
   {
+    photoUrl: "/img/photo-me/11.jpg",
+    time: "11/11/2023",
+    title: "Văn nghệ AGU",
+  },
+  {
     photoUrl: "/img/photo-me/4.JPG",
-    time: "2022",
+    time: "24/12/2023",
     title: "Trung thu cho em",
   },
   {
     photoUrl: "/img/photo-me/5.JPG",
-    time: "2022",
+    time: "3/11/2023",
     title: "Chủ nhật xanh",
   },
   {
-    photoUrl: "/img/photo-me/7.JPG",
-    time: "2017",
-    title: "no-titile",
-  },
-  {
-    photoUrl: "/img/photo-me/8.jpeg",
-    time: "2013",
-    title: "no-titile",
-  },
-  {
-    photoUrl: "/img/photo-me/9.jpeg",
-    time: "2013",
-    title: "no-titile",
+    photoUrl: "/img/photo-me/10.JPG",
+    time: "26/12/2024",
+    title: "Địa chỉ đỏ",
   },
 ];
 
