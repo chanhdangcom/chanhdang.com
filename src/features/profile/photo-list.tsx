@@ -56,7 +56,7 @@ export const PhotoList = () => {
         <div className="">
           <ExperienceInfoItem icon={<ImageIcon />} content="Gallery" />
         </div>
-        <div className="text-gray-400">| 2013 - Present</div>
+        <div className="text-gray-400">| 2023 - Present</div>
       </div>
 
       <div className="mt-4">

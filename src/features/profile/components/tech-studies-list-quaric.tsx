@@ -11,7 +11,7 @@ const ITechList: IProp[] = [
     techName: "NextJs",
   },
   {
-    techName: "Tailwind css",
+    techName: "Tailwind CSS",
   },
   {
     techName: "Docker",

@@ -51,7 +51,7 @@ const EXPERIENCE_EDUCATION: IExperienceItem[] = [
       <ExperienceIinfoItemContents
         content1="In high school, where I not only built a solid foundation of knowledge but also trained my thinking skills and proactive learning."
         content2="During my studies, I actively participated in extracurricular activities and competitions, which helped develop my communication and teamwork skills and better prepared me for my future studies."
-        addOn=<TechStudiesItem techName="Pascal" />
+        addOn=<TechStudiesItem techName="Turbo Pascal" />
       />
     ),
   },
@@ -62,6 +62,7 @@ const EXPERIENCE_EDUCATION: IExperienceItem[] = [
       <ExperienceIinfoItemContents
         content1="In high school, I began expand my knowledge and sharpen my critical thinking skills. I challenged myself with advanced subjects and explored different fields of study, which helped me gain a deeper understanding of various concepts."
         content2="Beyond academics, I actively participated in group projects and extracurricular activities, taking on leadership roles whenever possible. These experiences improved my problem-solving abilities, teamwork, and communication skills, all of which prepared me for future academic and personal growth."
+        addOn=<TechStudiesItem techName="Pascal" />
       />
     ),
   },
