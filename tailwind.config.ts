@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import typography from "@tailwindcss/typography"; 
 import { default as flattenColorPalette } from "tailwindcss/lib/util/flattenColorPalette";
 import svgToDataUri from "mini-svg-data-uri";
 import plugin from "tailwindcss/plugin";
@@ -74,7 +75,12 @@ const config: Config = {
   		}
   	}
   },
-  plugins: [addVariablesForColors, backgroundUtilities, require("tailwindcss-animate")],
+  plugins: [
+    addVariablesForColors,
+    backgroundUtilities,
+    require("tailwindcss-animate"),
+    typography, // ✅ Thêm vào đây
+  ],
 };
 
 export default config;

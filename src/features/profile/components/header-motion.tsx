@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
 import Image from "next/image";
+import Link from "next/link";
 
 export const HeaderMotion = () => {
   const { scrollY } = useScroll();
@@ -15,16 +16,18 @@ export const HeaderMotion = () => {
       className="fixed left-0 right-0 top-0 z-50 flex justify-center bg-background pt-2"
       style={{ top }}
     >
-      <div className="">
+      <div className="transform transition-transform hover:scale-105">
         <div className="flex w-fit items-center justify-center space-x-2 rounded-full border bg-zinc-100 p-2 text-2xl font-bold shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-          <Image
-            src="/img/avatar.jpeg"
-            alt="Avatar"
-            width={192}
-            height={192}
-            className="size-10 rounded-full border border-zinc-800"
-          />
-          <div className="">Nguyễn Chánh Đang</div>
+          <Link href={"/"} className="flex items-center gap-2">
+            <Image
+              src="/img/avatar.jpeg"
+              alt="Avatar"
+              width={192}
+              height={192}
+              className="size-10 rounded-full border border-zinc-800"
+            />
+            <div className="">Nguyễn Chánh Đang</div>
+          </Link>
 
           <svg
             className="text-left text-3xl text-blue-600"

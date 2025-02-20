@@ -6,7 +6,7 @@ import { ExperienceList } from "./experience-list";
 import { Confetti } from "./components/confetti";
 import { Footer } from "./footer";
 import { PhotoList } from "./photo-list";
-import { HeaderMotion } from "./components";
+import { HeaderMotion } from "./components/header-motion";
 
 export const Profile = () => {
   return (
