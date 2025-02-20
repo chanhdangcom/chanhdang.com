@@ -23,22 +23,22 @@ const IPhotoItem: IPhoto[] = [
   //     "/img/ImgBlog/Blog3/large_siri_open_brain_new_york_times_1_dd4ec78bfc.webp",
   // },
   {
-    photoUrl: "/img/photo-me/1.JPG",
+    photoUrl: "/img/photo-me/1.webp",
     time: "19/2/2024",
     title: "Hội xuân AGU",
   },
   {
-    photoUrl: "/img/photo-me/IMG_9097.JPG",
+    photoUrl: "/img/photo-me/11.webp",
     time: "11/11/2023",
     title: "Văn nghệ AGU",
   },
   {
-    photoUrl: "/img/photo-me/4.JPG",
+    photoUrl: "/img/photo-me/4.webp",
     time: "24/12/2023",
     title: "Trung thu cho em",
   },
   {
-    photoUrl: "/img/photo-me/5.JPG",
+    photoUrl: "/img/photo-me/5.webp",
     time: "3/11/2023",
     title: "Chủ nhật xanh",
   },

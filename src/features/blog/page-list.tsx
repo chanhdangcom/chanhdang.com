@@ -3,16 +3,34 @@ import { useEffect, useState } from "react";
 import { IPost } from "./types";
 import Link from "next/link";
 
+import qs from "qs";
+import Image from "next/image";
+
 export const PageList = () => {
   const [posts, setPosts] = useState<IPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const featchData = async () => {
-    const data = await fetch("https://api.quaric.com/api/articles/custom", {
-      method: "GET",
-    });
+    const queryParams = qs.stringify(
+      {
+        populate: {
+          cover: true,
+        },
+        sort: ["updatedAt:desc"],
+      },
+      {
+        encodeValuesOnly: true,
+      }
+    );
+    const data = await fetch(
+      `https://api.quaric.com/api/articles/custom?${queryParams}`,
+      {
+        method: "GET",
+      }
+    );
     const jsonData = await data.json();
     const posts = (await jsonData.data) as IPost[];
+    console.log("🚀 ~ featchData ~ posts:", posts);
     setIsLoading(false);
     setPosts(posts);
   };
@@ -26,11 +44,18 @@ export const PageList = () => {
         {isLoading && <div className="p-2">Loading...</div>}
         {!isLoading && (
           <div>
-            {posts.map((posts) => (
-              <div key={posts.documentId} className="">
-                <Link key={posts.documentId} href={`/blog/${posts.slug}`}>
+            {posts.map((post) => (
+              <div key={post.documentId} className="">
+                <Link key={post.documentId} href={`/blog/${post.slug}`}>
+                  <div className="relative aspect-video">
+                    <Image
+                      src={post.cover.formats.medium.url}
+                      alt={post.title}
+                      fill
+                    />
+                  </div>
                   <div className="transform rounded-xl border p-1 text-xl text-zinc-500 shadow-sm transition-transform hover:scale-105 dark:border-zinc-800 dark:bg-zinc-900">
-                    {posts.title}
+                    {post.title}
                   </div>
                 </Link>
               </div>

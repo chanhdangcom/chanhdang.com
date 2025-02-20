@@ -7,4 +7,13 @@ export type IPost = {
   content_blocks: BlocksContent;
   createdAt: string;
   slug: string;
+  cover: {
+    formats: {
+      medium: {
+        url: string;
+        width: number;
+        height: number;
+      };
+    };
+  };
 };

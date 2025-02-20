@@ -2,6 +2,9 @@ import React, { JSX } from "react";
 import { ExperienceInfoItem } from "./experience-info-item";
 import { BriefcaseBusinessIcon } from "lucide-react";
 import { Ping } from "@/components/ping";
+import { TechStudiesItem } from "@/components/tech-studies-item";
+
+import ReactMarkdown from "react-markdown";
 
 type IProps = {
   time: string;
@@ -12,7 +15,9 @@ type IProps = {
   jobTitle?: string;
   jobIcon?: JSX.Element;
 
+  contentMarkdown?: string;
   content?: React.ReactNode;
+  skills?: string[];
 
   isWorking?: boolean;
 };
@@ -26,7 +31,9 @@ export const ExperienceItem = ({
   jobTitle,
   jobIcon,
 
-  content,
+  contentMarkdown,
+  // content,
+  skills = [],
 
   isWorking = false,
 }: IProps) => {
@@ -45,7 +52,16 @@ export const ExperienceItem = ({
       <div className="ml-8 space-y-2 font-mono text-sm">
         <div className="text-zinc-400">{time}</div>
         <div>{jobTitle}</div>
-        <div className="">{content}</div>
+
+        <div className="prose prose-sm prose-zinc max-w-none dark:prose-invert">
+          <ReactMarkdown>{contentMarkdown}</ReactMarkdown>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          {skills.map((skill) => (
+            <TechStudiesItem key={skill} techName={skill} />
+          ))}
+        </div>
       </div>
     </div>
   );
