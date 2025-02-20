@@ -11,13 +11,13 @@ const ITechList: IProp[] = [
     techName: "Java",
   },
   {
-    techName: ".net",
+    techName: ".NET",
   },
   {
     techName: "PHP",
   },
   {
-    techName: "JavaScrip",
+    techName: "JavaScript",
   },
   {
     techName: "Team work",

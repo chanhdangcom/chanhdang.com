@@ -32,7 +32,7 @@ export const Profile = () => {
           <PhotoList />
         </div>
 
-        <div className="container">
+        <div className="container max-w-4xl">
           <ExperienceList />
         </div>
         <div className="container my-8">

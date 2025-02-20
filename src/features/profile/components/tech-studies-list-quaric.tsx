@@ -8,7 +8,7 @@ const ITechList: IProp[] = [
     techName: "React",
   },
   {
-    techName: "NextJs",
+    techName: "Next.js",
   },
   {
     techName: "Tailwind CSS",
@@ -17,7 +17,7 @@ const ITechList: IProp[] = [
     techName: "Docker",
   },
   {
-    techName: "TypeScrip",
+    techName: "TypeScript",
   },
   {
     techName: "Github",

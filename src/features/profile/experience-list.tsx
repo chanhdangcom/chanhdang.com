@@ -51,7 +51,7 @@ const EXPERIENCE_EDUCATION: IExperienceItem[] = [
       <ExperienceIinfoItemContents
         content1="In high school, where I not only built a solid foundation of knowledge but also trained my thinking skills and proactive learning."
         content2="During my studies, I actively participated in extracurricular activities and competitions, which helped develop my communication and teamwork skills and better prepared me for my future studies."
-        addOn=<TechStudiesItem techName="Turbo Pascal" />
+        addOn=<TechStudiesItem techName="Pascal" />
       />
     ),
   },
@@ -70,7 +70,7 @@ const EXPERIENCE_EDUCATION: IExperienceItem[] = [
 
 export const ExperienceList = () => {
   return (
-    <div className="scroll-mt-8 space-y-8" id="work">
+    <div className="scroll-mt-8 space-y-8">
       <div className="space-y-0">
         <CodeTag
           tagName="Work"
