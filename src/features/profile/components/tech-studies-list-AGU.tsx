@@ -20,7 +20,7 @@ const ITechList: IProp[] = [
     techName: "JavaScript",
   },
   {
-    techName: "Team work",
+    techName: "Teamwork",
   },
 ];
 export const TechStudiesListAGU = ({}) => {
