@@ -2,7 +2,6 @@ import React from "react";
 import { ExperienceItem } from "./components/experience-item";
 import { GraduationCapIcon, SchoolIcon } from "lucide-react";
 import { CodeTag } from "@/components/code-tag";
-import { ExperienceIinfoItemContents } from "./components/experience-info-item-contents";
 
 type IExperienceItem = {
   time: string;
@@ -18,13 +17,19 @@ const EXPERIENCE_WORK: IExperienceItem[] = [
   {
     time: "2023 - Present",
     company: "Quaric Co., Ltd.",
-    content: (
-      <ExperienceIinfoItemContents
-        content1="I had the opportunity to intern at a technology company where I got to work on real-world software development projects. During my internship, I learned how to work in a team, manage my time, and apply my knowledge to solving real-world problems."
-        content2="This was an important stepping stone to help me better understand the professional working environment and strengthen my skills."
-      />
-    ),
-    skills: ["React", "Next.js"],
+    contentMarkdown:
+      "- I had the opportunity to intern at a technology company where I got to work on real-world software development projects. During my internship, I learned how to work in a team, manage my time, and apply my knowledge to solving real-world problems.\n\n - This was an important stepping stone to help me better understand the professional working environment and strengthen my skills.",
+
+    skills: [
+      "React",
+      "Next.js",
+      "Tailwind CSS",
+      "Docker",
+      "TypeScript",
+      "Github",
+      "UX/UI",
+      "Library",
+    ],
     isWorking: true,
   },
 ];
@@ -34,35 +39,24 @@ const EXPERIENCE_EDUCATION: IExperienceItem[] = [
     time: "Full-time | 2022 - Present",
     company: "An Giang University",
     contentMarkdown:
-      "I had the opportunity to intern at a technology [company](https://quaric.com) where I got to work on **real-world** software development projects. During my internship, I learned how to work in a team, manage my time, and apply my knowledge to solving real-world problems.\n\nThese experiences nurtured a passion for technology and a willingness to adapt to change.\n\n- Task 1\n- Task 2",
-    content: (
-      <ExperienceIinfoItemContents
-        content1="I had the opportunity to intern at a technology company where I got to work on real-world software development projects. During my internship, I learned how to work in a team, manage my time, and apply my knowledge to solving real-world problems."
-        content2="These experiences nurtured a passion for technology and a willingness to adapt to change."
-      />
-    ),
-    skills: ["OOP", "Python"],
+      "- I had the opportunity to intern at a technology company where I got to work on real-world software development projects. During my internship, I learned how to work in a team, manage my time, and apply my knowledge to solving real-world problems.\n\n- These experiences nurtured a passion for technology and a willingness to adapt to change.\n\n",
+
+    skills: ["C/C++", "Python", ".NET", "PHP", "JavaScript", "Teamwork"],
     isWorking: true,
   },
   {
     time: "Full-time | 2019 - 2022",
     company: "Thuan Hung High School",
-    content: (
-      <ExperienceIinfoItemContents
-        content1="In high school, where I not only built a solid foundation of knowledge but also trained my thinking skills and proactive learning."
-        content2="During my studies, I actively participated in extracurricular activities and competitions, which helped develop my communication and teamwork skills and better prepared me for my future studies."
-      />
-    ),
+    contentMarkdown:
+      "- In high school, where I not only built a solid foundation of knowledge but also trained my thinking skills and proactive learning.\n\n- During my studies, I actively participated in extracurricular activities and competitions, which helped develop my communication and teamwork skills and better prepared me for my future studies.",
+    skills: ["Pascal"],
   },
   {
     time: "Full-time | 2015 - 2019",
     company: "Thuan Hung Secondary School",
-    content: (
-      <ExperienceIinfoItemContents
-        content1="In high school, I began expand my knowledge and sharpen my critical thinking skills. I challenged myself with advanced subjects and explored different fields of study, which helped me gain a deeper understanding of various concepts."
-        content2="Beyond academics, I actively participated in group projects and extracurricular activities, taking on leadership roles whenever possible. These experiences improved my problem-solving abilities, teamwork, and communication skills, all of which prepared me for future academic and personal growth."
-      />
-    ),
+    contentMarkdown:
+      "- In high school, I began expand my knowledge and sharpen my critical thinking skills. I challenged myself with advanced subjects and explored different fields of study, which helped me gain a deeper understanding of various concepts.\n\n- Beyond academics, I actively participated in group projects and extracurricular activities, taking on leadership roles whenever possible. These experiences improved my problem-solving abilities, teamwork, and communication skills, all of which prepared me for future academic and personal growth.",
+    skills: ["Pascal"],
   },
 ];
 

@@ -8,6 +8,8 @@ import { Footer } from "./footer";
 import { PhotoList } from "./photo-list";
 import { HeaderMotion } from "./components/header-motion";
 
+import { PageList } from "../blog/page-list";
+
 export const Profile = () => {
   return (
     <>
@@ -35,6 +37,11 @@ export const Profile = () => {
         <div className="container max-w-4xl">
           <ExperienceList />
         </div>
+
+        <div className="container my-8 max-w-4xl">
+          <PageList />
+        </div>
+
         <div className="container my-8">
           <Footer />
         </div>

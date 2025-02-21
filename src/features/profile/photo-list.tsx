@@ -51,17 +51,15 @@ const IPhotoItem: IPhoto[] = [
 
 export const PhotoList = () => {
   return (
-    <div className="">
+    <div>
       <div className="my-2 flex items-center space-x-2 font-mono text-sm">
-        <div className="">
-          <ExperienceInfoItem icon={<ImageIcon />} content="Gallery" />
-        </div>
+        <ExperienceInfoItem icon={<ImageIcon />} content="Gallery" />
         <div className="text-gray-400">| 2023 - Present</div>
       </div>
 
       <div className="mt-4">
         <Carousel className="w-full max-w-4xl">
-          <CarouselContent className="">
+          <CarouselContent>
             {IPhotoItem.map((item, key) => (
               <CarouselItem className="md:basis-1/3" key={key}>
                 <div className="grid items-center justify-center">

@@ -12,7 +12,7 @@ type IPhoto = {
 
 export const Photos = ({ photoUrl, time, title }: IPhoto) => {
   return (
-    <div className="rounded-xl border shadow-md dark:border-zinc-950 dark:bg-zinc-900/50">
+    <div className="rounded-xl border bg-zinc-100/50 shadow-sm dark:border-zinc-950 dark:bg-zinc-900/50">
       <Card className="p-2">
         <CardHeader className="flex-col items-start">
           <div className="">
@@ -25,7 +25,7 @@ export const Photos = ({ photoUrl, time, title }: IPhoto) => {
         </CardHeader>
         <CardBody className="overflow-visible pt-2">
           <img
-            className="h-96 w-80 rounded-xl border border-zinc-300 object-cover shadow-md dark:border-zinc-800"
+            className="h-96 w-80 rounded-xl border border-zinc-300 object-cover dark:border-zinc-800"
             src={photoUrl}
             alt="Photo"
           />
