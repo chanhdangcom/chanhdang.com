@@ -64,16 +64,16 @@ export const PageList = ({ isList }: viewOrList) => {
                 className="max-w-xs transform rounded-xl transition-transform duration-300 hover:scale-105"
               >
                 <Link key={post.documentId} href={`/blog/${post.slug}`}>
-                  <div className="space-y-4 rounded-xl border p-1 dark:border-zinc-800 dark:bg-zinc-950/30">
+                  <div className="space-y-4 rounded-xl border bg-zinc-100/50 p-2 dark:border-zinc-800 dark:bg-zinc-950/30">
                     <div className="relative mx-auto aspect-video">
                       <Image
-                        className="rounded-xl border dark:border-zinc-900"
+                        className="rounded-md border dark:border-zinc-900"
                         src={post.cover.formats.medium.url}
                         alt={post.title}
                         fill
                       />
                     </div>
-                    <div className="line-clamp-2 h-20 rounded-xl p-1 text-zinc-500">
+                    <div className="line-clamp-2 h-20 text-balance rounded-xl p-1 dark:text-white">
                       {post.title}
                     </div>
                   </div>
@@ -96,16 +96,16 @@ export const PageList = ({ isList }: viewOrList) => {
           {posts.map((post) => (
             <CarouselItem className="md:basis-1/3" key={post.documentId}>
               <Link key={post.documentId} href={`/blog/${post.slug}`}>
-                <div className="space-y-4 rounded-xl border bg-zinc-100/50 p-1 dark:border-zinc-800 dark:bg-zinc-950/30">
+                <div className="space-y-4 rounded-xl border bg-zinc-100/50 p-2 dark:border-zinc-800 dark:bg-zinc-950/30">
                   <div className="relative mx-auto aspect-video">
                     <Image
-                      className="rounded-xl border dark:border-zinc-900"
+                      className="rounded-md border dark:border-zinc-900"
                       src={post.cover.formats.medium.url}
                       alt={post.title}
                       fill
                     />
                   </div>
-                  <div className="line-clamp-2 h-20 rounded-xl p-1 text-zinc-500">
+                  <div className="line-clamp-2 h-20 text-balance rounded-xl p-1 dark:text-white">
                     {post.title}
                   </div>
                 </div>
