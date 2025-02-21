@@ -73,7 +73,7 @@ export const PageList = ({ isList }: viewOrList) => {
                         fill
                       />
                     </div>
-                    <div className="line-clamp-2 h-20 text-balance rounded-xl p-1 font-medium dark:text-white">
+                    <div className="line-clamp-2 h-20 rounded-xl p-1 font-medium dark:text-white">
                       {post.title}
                     </div>
                   </div>
@@ -105,7 +105,7 @@ export const PageList = ({ isList }: viewOrList) => {
                       fill
                     />
                   </div>
-                  <div className="line-clamp-2 h-20 text-balance rounded-xl p-1 font-medium dark:text-white">
+                  <div className="line-clamp-2 h-20 rounded-xl p-1 font-medium dark:text-white">
                     {post.title}
                   </div>
                 </div>
