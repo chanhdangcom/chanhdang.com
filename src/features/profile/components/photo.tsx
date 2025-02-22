@@ -13,7 +13,7 @@ type IPhoto = {
 export const Photos = ({ photoUrl, time, title }: IPhoto) => {
   return (
     <div className="rounded-xl border bg-zinc-100/50 dark:border-zinc-950 dark:bg-zinc-900/50">
-      <Card className="p-2">
+      <Card className="">
         <CardHeader className="flex-col items-start">
           <div className="">
             <ChanhdangLogotype className="w-20" />

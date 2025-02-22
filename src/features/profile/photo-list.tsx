@@ -59,9 +59,12 @@ export const PhotoList = () => {
 
       <div className="mt-4">
         <Carousel className="w-full max-w-4xl">
-          <CarouselContent>
+          <CarouselContent className="p-3.5">
             {IPhotoItem.map((item, key) => (
-              <CarouselItem className="md:basis-1/3" key={key}>
+              <CarouselItem
+                className="transform transition-transform duration-300 md:basis-1/3 md:hover:scale-105"
+                key={key}
+              >
                 <div className="grid items-center justify-center">
                   <Photos
                     photoUrl={item.photoUrl}

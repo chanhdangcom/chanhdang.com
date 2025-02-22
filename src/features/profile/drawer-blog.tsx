@@ -21,7 +21,7 @@ export const DrawerBlog = () => {
       <DrawerContent className="border bg-zinc-50 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
         <div className="mx-auto">
           <DrawerHeader>
-            <div className="absolute inset-0 top-4 mx-auto h-2 w-32 rounded-full bg-zinc-200 dark:bg-zinc-800"></div>
+            <div className="absolute inset-0 top-4 mx-auto h-1.5 w-36 rounded-full bg-zinc-200 dark:bg-zinc-800"></div>
             <DrawerTitle className="mx-auto font-mono text-xl">
               Blog List
             </DrawerTitle>
