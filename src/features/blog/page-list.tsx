@@ -61,7 +61,7 @@ export const PageList = ({ isList }: viewOrList) => {
             {posts.map((post) => (
               <div
                 key={post.documentId}
-                className="max-w-xs transform rounded-xl transition-transform duration-300 hover:scale-105"
+                className="max-w-xs transform rounded-xl transition-transform duration-300 md:hover:scale-105"
               >
                 <Link key={post.documentId} href={`/blog/${post.slug}`}>
                   <div className="space-y-4 rounded-xl border bg-zinc-100/50 p-1 dark:border-zinc-800 dark:bg-zinc-950/30">
@@ -73,7 +73,7 @@ export const PageList = ({ isList }: viewOrList) => {
                         fill
                       />
                     </div>
-                    <div className="line-clamp-2 h-20 text-balance rounded-xl p-1 font-medium dark:text-white">
+                    <div className="line-clamp-2 h-20 rounded-xl p-1 font-medium dark:text-white">
                       {post.title}
                     </div>
                   </div>
@@ -92,11 +92,11 @@ export const PageList = ({ isList }: viewOrList) => {
         <DrawerBlog />
       </div>
       <Carousel className="w-full max-w-4xl">
-        <CarouselContent>
+        <CarouselContent className="p-2">
           {posts.map((post) => (
             <CarouselItem className="md:basis-1/3" key={post.documentId}>
               <Link key={post.documentId} href={`/blog/${post.slug}`}>
-                <div className="space-y-4 rounded-xl border bg-zinc-100/50 p-1 dark:border-zinc-800 dark:bg-zinc-950/30">
+                <div className="transform space-y-4 rounded-xl border bg-zinc-100/50 p-1 transition-transform duration-300 dark:border-zinc-800 dark:bg-zinc-950/30 md:hover:scale-105">
                   <div className="relative mx-auto aspect-video">
                     <Image
                       className="rounded-lg border dark:border-zinc-900"
@@ -105,7 +105,7 @@ export const PageList = ({ isList }: viewOrList) => {
                       fill
                     />
                   </div>
-                  <div className="line-clamp-2 h-20 text-balance rounded-xl p-1 font-medium dark:text-white">
+                  <div className="line-clamp-2 h-20 rounded-xl p-1 font-medium dark:text-white">
                     {post.title}
                   </div>
                 </div>
