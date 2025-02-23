@@ -1,3 +1,5 @@
+"use client";
+
 import { Hello } from "./components/hello";
 import { AboutMe } from "./about-me";
 import { Header } from "./header";
@@ -9,6 +11,8 @@ import { PhotoList } from "./photo-list";
 import { HeaderMotion } from "./components/header-motion";
 
 import { PageList } from "../blog/page-list";
+import { Button } from "@/components/button-new";
+import Link from "next/link";
 // import { LoadingBar } from "@/components/loading-bar";
 
 export const Profile = () => {
@@ -29,6 +33,12 @@ export const Profile = () => {
               <AboutMe />
             </div>
           </div>
+        </div>
+
+        <div className="flex justify-center p-4">
+          <Button variant="success" asChild>
+            <Link href="/blog">View All Posts</Link>
+          </Button>
         </div>
 
         <div className="container my-8 md:flex md:items-center md:justify-center">
