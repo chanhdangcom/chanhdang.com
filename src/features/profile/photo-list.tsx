@@ -1,3 +1,9 @@
+"use client";
+
+import { Photos } from "./components/photo";
+import { ExperienceInfoItem } from "./components/experience-info-item";
+import { ImageIcon } from "lucide-react";
+import { motion, useInView } from "motion/react";
 import {
   Carousel,
   CarouselContent,
@@ -5,9 +11,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carouse";
-import { Photos } from "./components/photo";
-import { ExperienceInfoItem } from "./components/experience-info-item";
-import { ImageIcon } from "lucide-react";
+import { useRef } from "react";
 
 type IPhoto = {
   photoUrl: string;
@@ -50,35 +54,51 @@ const IPhotoItem: IPhoto[] = [
 ];
 
 export const PhotoList = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
   return (
     <div>
-      <div className="my-2 flex items-center space-x-2 font-mono text-sm">
-        <ExperienceInfoItem icon={<ImageIcon />} content="Gallery" />
-        <div className="text-gray-400">| 2023 - Present</div>
-      </div>
+      <motion.header
+        ref={ref}
+        initial={{ opacity: 0, y: 50 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
+        <div className="my-2 flex items-center space-x-2 font-mono text-sm">
+          <ExperienceInfoItem icon={<ImageIcon />} content="Gallery" />
+          <div className="text-gray-400">| 2023 - Present</div>
+        </div>
+      </motion.header>
 
-      <div className="mt-4">
-        <Carousel className="w-full max-w-4xl">
-          <CarouselContent className="p-3.5">
-            {IPhotoItem.map((item, key) => (
-              <CarouselItem
-                className="transform transition-transform duration-300 md:basis-1/3 md:hover:scale-105"
-                key={key}
-              >
-                <div className="grid items-center justify-center">
-                  <Photos
-                    photoUrl={item.photoUrl}
-                    time={item.time}
-                    title={item.title}
-                  />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
-      </div>
+      <motion.header
+        ref={ref}
+        initial={{ opacity: 0, y: 50 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 1, ease: "easeOut" }}
+      >
+        <div className="mt-4">
+          <Carousel className="w-full max-w-4xl">
+            <CarouselContent className="p-3.5">
+              {IPhotoItem.map((item, key) => (
+                <CarouselItem
+                  className="transform transition-transform duration-300 md:basis-1/3 md:hover:scale-105"
+                  key={key}
+                >
+                  <div className="grid items-center justify-center">
+                    <Photos
+                      photoUrl={item.photoUrl}
+                      time={item.time}
+                      title={item.title}
+                    />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
+        </div>
+      </motion.header>
     </div>
   );
 };

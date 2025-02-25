@@ -4,6 +4,9 @@ import { IPost } from "./types";
 import Link from "next/link";
 import qs from "qs";
 import Image from "next/image";
+import { ExperienceInfoItem } from "../profile/components/experience-info-item";
+import { DrawerBlog } from "../profile/drawer-blog";
+import { BookIcon } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -11,9 +14,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carouse";
-import { ExperienceInfoItem } from "../profile/components/experience-info-item";
-import { DrawerBlog } from "../profile/drawer-blog";
-import { BookIcon } from "lucide-react";
 
 type viewOrList = {
   isList?: true;

@@ -5,7 +5,6 @@ import { IntroItem } from "./components/intro-item";
 import Image from "next/image";
 import { Building, Call, Location, Sms } from "iconsax-react";
 import { TypewriterEffect } from "./components/typewriter-effect";
-
 import dynamic from "next/dynamic";
 
 const RatingButton = dynamic(
@@ -77,7 +76,7 @@ export const Overview = () => {
         </div>
       </div>
 
-      <div className="relative left-[5px] z-[1] -mt-12 flex h-48 px-8 lg:-mt-24 lg:mb-6">
+      <div className="relative left-[5px] z-[1] -mt-12 h-48 px-8 lg:-mt-24 lg:mb-6">
         <Image
           src="/img/avatar.jpeg"
           alt="Avatar"
@@ -85,10 +84,6 @@ export const Overview = () => {
           height={192}
           className="size-44 rounded-full ring-1 ring-zinc-700 ring-offset-4 ring-offset-zinc-950 md:size-40 lg:size-48"
         />
-
-        {/* <div className="mx-2 mb-[117px] flex w-full select-none items-center text-balance py-4 font-mono text-sm text-zinc-400 dark:text-zinc-800 sm:mb-[122px] md:mb-[96px] lg:mt-[72px]">
-            text-3xl font-mono
-          </div> */}
       </div>
 
       <div className="mb-6 flex items-center space-x-2 border-y border-gray-200 px-8 text-3xl font-bold dark:border-zinc-900 sm:text-4xl md:text-3xl lg:text-4xl">

@@ -1,7 +1,10 @@
-import React from "react";
+"use client";
+import React, { useRef } from "react";
 import { ExperienceItem } from "./components/experience-item";
 import { GraduationCapIcon, SchoolIcon } from "lucide-react";
 import { CodeTag } from "@/components/code-tag";
+
+import { motion, useInView } from "motion/react";
 
 type IExperienceItem = {
   time: string;
@@ -61,69 +64,81 @@ const EXPERIENCE_EDUCATION: IExperienceItem[] = [
 ];
 
 export const ExperienceList = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+
   return (
-    <div className="scroll-mt-8 space-y-8">
-      <div className="space-y-0">
-        <CodeTag
-          tagName="Work"
-          className="ml-2 text-cyan-500 dark:text-cyan-400"
-        />
+    <>
+      <motion.header
+        ref={ref}
+        initial={{ opacity: 0, y: 50 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 1, ease: "easeOut" }}
+      >
+        <div className="scroll-mt-8 space-y-8">
+          <div className="space-y-0">
+            <CodeTag
+              tagName="Work"
+              className="ml-2 text-cyan-500 dark:text-cyan-400"
+            />
 
-        <div className="ml-2 text-balance border-l border-zinc-200 text-sm dark:border-zinc-800">
-          {EXPERIENCE_WORK.map((item, index) => {
-            return (
-              <ExperienceItem
-                key={index}
-                time={item.time}
-                jobTitle={item.jobTitle}
-                company={item.company}
-                contentMarkdown={item.contentMarkdown}
-                content={item.content}
-                skills={item.skills}
-                isWorking={item.isWorking}
-              />
-            );
-          })}
+            <div className="ml-2 text-balance border-l border-zinc-200 text-sm dark:border-zinc-800">
+              {EXPERIENCE_WORK.map((item, index) => {
+                return (
+                  <ExperienceItem
+                    key={index}
+                    time={item.time}
+                    jobTitle={item.jobTitle}
+                    company={item.company}
+                    contentMarkdown={item.contentMarkdown}
+                    content={item.content}
+                    skills={item.skills}
+                    isWorking={item.isWorking}
+                  />
+                );
+              })}
+            </div>
+
+            <CodeTag
+              tagName="Work"
+              isCloseTag
+              className="ml-2 text-cyan-500 dark:text-cyan-400"
+            />
+          </div>
+
+          <div className="space-y-0">
+            <CodeTag
+              tagName="Education"
+              className="ml-2 text-cyan-500 dark:text-cyan-400"
+            />
+
+            <div className="text-balanc ml-2 border-l border-zinc-200 text-sm dark:border-zinc-800">
+              {EXPERIENCE_EDUCATION.map((item, index) => {
+                return (
+                  <ExperienceItem
+                    key={index}
+                    time={item.time}
+                    company={item.company}
+                    companyIcon={<SchoolIcon size="1em" />}
+                    jobTitle={item.jobTitle}
+                    jobIcon={<GraduationCapIcon size="1em" />}
+                    contentMarkdown={item.contentMarkdown}
+                    content={item.content}
+                    skills={item.skills}
+                    isWorking={item.isWorking}
+                  />
+                );
+              })}
+            </div>
+
+            <CodeTag
+              tagName="Education"
+              isCloseTag
+              className="ml-2 text-cyan-500 dark:text-cyan-400"
+            />
+          </div>
         </div>
-
-        <CodeTag
-          tagName="Work"
-          isCloseTag
-          className="ml-2 text-cyan-500 dark:text-cyan-400"
-        />
-      </div>
-
-      <div className="space-y-0">
-        <CodeTag
-          tagName="Education"
-          className="ml-2 text-cyan-500 dark:text-cyan-400"
-        />
-
-        <div className="text-balanc ml-2 border-l border-zinc-200 text-sm dark:border-zinc-800">
-          {EXPERIENCE_EDUCATION.map((item, index) => {
-            return (
-              <ExperienceItem
-                key={index}
-                time={item.time}
-                company={item.company}
-                companyIcon={<SchoolIcon size="1em" />}
-                jobTitle={item.jobTitle}
-                jobIcon={<GraduationCapIcon size="1em" />}
-                contentMarkdown={item.contentMarkdown}
-                content={item.content}
-                skills={item.skills}
-                isWorking={item.isWorking}
-              />
-            );
-          })}
-        </div>
-
-        <CodeTag
-          tagName="Education"
-          isCloseTag
-          className="ml-2 text-cyan-500 dark:text-cyan-400"
-        />
-      </div>
-    </div>
+      </motion.header>
+    </>
   );
 };
