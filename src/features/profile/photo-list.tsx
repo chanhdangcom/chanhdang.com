@@ -58,7 +58,7 @@ export const PhotoList = () => {
   const isInView = useInView(ref, { once: true });
   return (
     <div>
-      <motion.header
+      <motion.div
         ref={ref}
         initial={{ opacity: 0, y: 50 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -68,9 +68,9 @@ export const PhotoList = () => {
           <ExperienceInfoItem icon={<ImageIcon />} content="Gallery" />
           <div className="text-gray-400">| 2023 - Present</div>
         </div>
-      </motion.header>
+      </motion.div>
 
-      <motion.header
+      <motion.div
         ref={ref}
         initial={{ opacity: 0, y: 50 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -84,13 +84,22 @@ export const PhotoList = () => {
                   className="transform transition-transform duration-300 md:basis-1/3 md:hover:scale-105"
                   key={key}
                 >
-                  <div className="grid items-center justify-center">
-                    <Photos
-                      photoUrl={item.photoUrl}
-                      time={item.time}
-                      title={item.title}
-                    />
-                  </div>
+                  <motion.div
+                    animate={{ x: [-7, 7, -7] }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <div className="grid items-center justify-center">
+                      <Photos
+                        photoUrl={item.photoUrl}
+                        time={item.time}
+                        title={item.title}
+                      />
+                    </div>
+                  </motion.div>
                 </CarouselItem>
               ))}
             </CarouselContent>
@@ -98,7 +107,7 @@ export const PhotoList = () => {
             <CarouselNext />
           </Carousel>
         </div>
-      </motion.header>
+      </motion.div>
     </div>
   );
 };

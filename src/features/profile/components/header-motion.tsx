@@ -1,12 +1,11 @@
 "use client";
 
-import { motion, useScroll, useSpring, useTransform } from "motion/react";
+import { motion, useScroll, useTransform, useSpring } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 
 export const HeaderMotion = () => {
   const { scrollY } = useScroll();
-
   const _top = useTransform(scrollY, [100, 400], [-80, 0]);
   const top = useSpring(_top);
   // const opacity = useTransform(scrollY, [200, 400], [0, 1]);
@@ -21,6 +20,7 @@ export const HeaderMotion = () => {
           <Link
             onClick={() => window.location.reload()}
             href={"/"}
+            scroll={false}
             className="flex items-center gap-4"
           >
             <Image

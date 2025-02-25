@@ -6,6 +6,7 @@ import qs from "qs";
 import Image from "next/image";
 import { ExperienceInfoItem } from "../profile/components/experience-info-item";
 import { DrawerBlog } from "../profile/drawer-blog";
+import { motion } from "motion/react";
 import { BookIcon } from "lucide-react";
 import {
   Carousel,
@@ -96,19 +97,28 @@ export const PageList = ({ isList }: viewOrList) => {
           {posts.map((post) => (
             <CarouselItem className="md:basis-1/3" key={post.documentId}>
               <Link key={post.documentId} href={`/blog/${post.slug}`}>
-                <div className="transform space-y-4 rounded-xl border bg-zinc-100/50 p-1 transition-transform duration-300 dark:border-zinc-800 dark:bg-zinc-950/30 md:hover:scale-105">
-                  <div className="relative mx-auto aspect-video">
-                    <Image
-                      className="rounded-lg border dark:border-zinc-900"
-                      src={post.cover.formats.medium.url}
-                      alt={post.title}
-                      fill
-                    />
+                <motion.div
+                  animate={{ x: [-7, 7, -7] }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <div className="transform space-y-4 rounded-xl border bg-zinc-100/50 p-1 transition-transform duration-300 dark:border-zinc-800 dark:bg-zinc-950/30 md:hover:scale-105">
+                    <div className="relative mx-auto aspect-video">
+                      <Image
+                        className="rounded-lg border dark:border-zinc-900"
+                        src={post.cover.formats.medium.url}
+                        alt={post.title}
+                        fill
+                      />
+                    </div>
+                    <div className="line-clamp-2 h-20 rounded-xl p-1 font-medium dark:text-white">
+                      {post.title}
+                    </div>
                   </div>
-                  <div className="line-clamp-2 h-20 rounded-xl p-1 font-medium dark:text-white">
-                    {post.title}
-                  </div>
-                </div>
+                </motion.div>
               </Link>
             </CarouselItem>
           ))}

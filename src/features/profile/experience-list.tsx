@@ -69,7 +69,7 @@ export const ExperienceList = () => {
 
   return (
     <>
-      <motion.header
+      <motion.div
         ref={ref}
         initial={{ opacity: 0, y: 50 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -138,7 +138,7 @@ export const ExperienceList = () => {
             />
           </div>
         </div>
-      </motion.header>
+      </motion.div>
     </>
   );
 };
