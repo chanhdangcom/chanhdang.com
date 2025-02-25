@@ -11,12 +11,14 @@ import { PhotoList } from "./photo-list";
 import { HeaderMotion } from "./components/header-motion";
 
 import { PageList } from "../blog/page-list";
+import { LoadingBar } from "@/components/loading-bar";
 
 // import { LoadingBar } from "@/components/loading-bar";
 
 export const Profile = () => {
   return (
     <>
+      <LoadingBar />
       <Header />
       <HeaderMotion />
 

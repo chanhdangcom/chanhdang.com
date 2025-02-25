@@ -18,7 +18,11 @@ export const HeaderMotion = () => {
     >
       <div className="transform transition-transform duration-300 hover:scale-105">
         <div className="flex w-fit items-center justify-center space-x-2 rounded-full border bg-zinc-100 py-2 pl-2 pr-4 text-2xl font-bold shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-          <Link href={"/"} className="flex items-center gap-4">
+          <Link
+            onClick={() => window.location.reload()}
+            href={"/"}
+            className="flex items-center gap-4"
+          >
             <Image
               src="/img/avatar.jpeg"
               alt="Avatar"
