@@ -1,4 +1,5 @@
-import { PageDetails } from "@/features/blog/page-details";
+// import { BlogDetailsPageClient } from "@/features/blog/page-details-client";
+import { DetailsPageServer } from "@/features/blog/page-details-server";
 
 type IPageProps = {
   params: Promise<{
@@ -9,5 +10,7 @@ type IPageProps = {
 export default async function Page({ params }: IPageProps) {
   const paramsData = await params;
   const slug = paramsData.slug;
-  return <PageDetails slug={slug} />;
+
+  // return <BlogDetailsPageClient slug={slug} />;
+  return <DetailsPageServer slug={slug} />;
 }
