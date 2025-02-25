@@ -10,11 +10,8 @@ type IProps = {
   slug: string;
 };
 
-export const DetailsPageServer = async ({ slug }: IProps) => {
-  const res = await fetch(
-    `https://api.quaric.com/api/articles/custom/${slug}`,
-    { cache: "no-store" }
-  );
+export const BlogDetailsPageServer = async ({ slug }: IProps) => {
+  const res = await fetch(`https://api.quaric.com/api/articles/custom/${slug}`);
 
   const jsonData = (await res.json()) as IResponse;
 

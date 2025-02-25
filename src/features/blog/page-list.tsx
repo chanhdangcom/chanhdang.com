@@ -23,6 +23,7 @@ type viewOrList = {
 export const PageList = ({ isList }: viewOrList) => {
   const [posts, setPosts] = useState<IPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  console.log("✅ Running on the client!");
 
   const featchData = async () => {
     const queryParams = qs.stringify(

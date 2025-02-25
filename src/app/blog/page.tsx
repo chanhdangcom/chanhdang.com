@@ -1,5 +1,5 @@
-import { PageList } from "@/features/blog/page-list";
+import { PageListServer } from "@/features/blog/page-list-server";
 
 export default function Page() {
-  return <PageList />;
+  return <PageListServer />;
 }
