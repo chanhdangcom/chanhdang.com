@@ -85,7 +85,7 @@ export const PhotoList = () => {
                   key={key}
                 >
                   <motion.div
-                    animate={{ x: [-7, 7, -7] }}
+                    animate={{ x: [-5, 5, -5] }}
                     transition={{
                       duration: 2,
                       repeat: Infinity,

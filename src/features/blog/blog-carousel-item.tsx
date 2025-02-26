@@ -12,7 +12,7 @@ export function BlogCarouselItem({ post }: { post: IPost }) {
     <CarouselItem className="md:basis-1/3" key={post.documentId}>
       <Link key={post.documentId} href={`/blog/${post.slug}`}>
         <motion.div
-          animate={{ x: [-7, 7, -7] }}
+          animate={{ x: [-5, 5, -5] }}
           transition={{
             duration: 2,
             repeat: Infinity,
