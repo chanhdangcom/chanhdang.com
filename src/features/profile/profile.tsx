@@ -1,5 +1,3 @@
-"use client";
-
 import { Hello } from "./components/hello";
 import { AboutMe } from "./about-me";
 import { Header } from "./header";
@@ -10,15 +8,11 @@ import { Footer } from "./footer";
 import { PhotoList } from "./photo-list";
 import { HeaderMotion } from "./components/header-motion";
 
-import { PageList } from "../blog/page-list";
-import { LoadingBar } from "@/components/loading-bar";
-
-// import { LoadingBar } from "@/components/loading-bar";
+import { SectionBlog } from "./section-blog";
 
 export const Profile = () => {
   return (
     <>
-      <LoadingBar />
       <Header />
       <HeaderMotion />
 
@@ -36,12 +30,6 @@ export const Profile = () => {
           </div>
         </div>
 
-        {/* <div className="flex justify-center p-4">
-          <Button variant="success" asChild>
-            <Link href="/blog">View All Posts</Link>
-          </Button>
-        </div> */}
-
         <div className="container my-8 md:flex md:items-center md:justify-center">
           <PhotoList />
         </div>
@@ -51,7 +39,7 @@ export const Profile = () => {
         </div>
 
         <div className="container my-8 max-w-4xl">
-          <PageList />
+          <SectionBlog />
         </div>
 
         <div className="container my-8">

@@ -96,6 +96,26 @@
     "@babel/helper-string-parser" "^7.25.9"
     "@babel/helper-validator-identifier" "^7.25.9"
 
+"@bprogress/core@^1.1.18":
+  version "1.1.18"
+  resolved "https://registry.yarnpkg.com/@bprogress/core/-/core-1.1.18.tgz#fcdc0367374fc8a1dd03761f70ced256eb47f4b9"
+  integrity sha512-+khsDSJ7jv1L9LU34jnEsNqY6tXViSZDOeoxd09Ws8zVXzFjatRzWwBpiDQqTqyVZc0nlOxkkumFDtAgDJwY2A==
+
+"@bprogress/next@^3.0.10":
+  version "3.0.10"
+  resolved "https://registry.yarnpkg.com/@bprogress/next/-/next-3.0.10.tgz#0b611a0fc7a6d83ce1dfbcef5704a9d6d2b32898"
+  integrity sha512-ED+5QafyG/g1QYCA00gsCYGQmSqVCTS1+83dfV3Fc9+eUiBXDg2Qg///dS7VHPS9kuWE9Y7kjcLSD5dpsX8EHQ==
+  dependencies:
+    "@bprogress/core" "^1.1.18"
+    "@bprogress/react" "^1.1.4"
+
+"@bprogress/react@^1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@bprogress/react/-/react-1.1.4.tgz#78978e2e6f7b9b7555b61312e61875304269e067"
+  integrity sha512-faAGNitciEk5vQfu5eoojFZqHLAe/oB4OeEj5zO15kTBZyLy1v9vs1BOX2u/YYnNx6/IeZQlBvENF4nZwjbZSw==
+  dependencies:
+    "@bprogress/core" "^1.1.18"
+
 "@emnapi/runtime@^1.2.0":
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@emnapi/runtime/-/runtime-1.3.1.tgz#0fcaa575afc31f455fd33534c19381cfce6c6f60"
