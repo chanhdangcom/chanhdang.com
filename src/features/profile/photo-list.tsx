@@ -4,6 +4,7 @@ import { Photos } from "./components/photo";
 import { ExperienceInfoItem } from "./components/experience-info-item";
 import { ImageIcon } from "lucide-react";
 import { motion, useInView } from "motion/react";
+import { useRef } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -11,7 +12,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carouse";
-import { useRef } from "react";
 
 type IPhoto = {
   photoUrl: string;
@@ -85,9 +85,9 @@ export const PhotoList = () => {
                   key={key}
                 >
                   <motion.div
-                    animate={{ x: [-5, 5, -5] }}
+                    animate={{ x: [-3, 3, -3] }}
                     transition={{
-                      duration: 2,
+                      duration: 2.5,
                       repeat: Infinity,
                       ease: "easeInOut",
                     }}

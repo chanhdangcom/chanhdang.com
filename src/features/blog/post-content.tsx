@@ -13,16 +13,17 @@ type IProps = {
 };
 
 export const PostContent = ({ post }: IProps) => {
-  const formattedDate = new Date(post.createdAt).toLocaleDateString("vi-VN");
-
   return (
     <div className="mt-4">
       <HeaderMotion />
+
       <Header />
 
       <div className="container mt-8">
-        <div className="prose prose-lg prose-zinc mx-auto mb-8 max-w-3xl dark:prose-invert prose-headings:text-balance prose-img:rounded-lg">
-          <div className="text-sm">{formattedDate}</div>
+        <div className="prose prose-lg prose-zinc mx-auto mb-8 max-w-3xl space-y-4 dark:prose-invert prose-headings:text-balance prose-img:rounded-lg">
+          <div className="text-sm">
+            {new Date(post.createdAt).toLocaleDateString("vi-VN")}
+          </div>
           <h1>{post.title}</h1>
           <StrapiBlocksRenderer contentBlocks={post.content_blocks} />
         </div>

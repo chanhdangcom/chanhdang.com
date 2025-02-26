@@ -12,9 +12,9 @@ export function BlogCarouselItem({ post }: { post: IPost }) {
     <CarouselItem className="md:basis-1/3" key={post.documentId}>
       <Link key={post.documentId} href={`/blog/${post.slug}`}>
         <motion.div
-          animate={{ x: [-5, 5, -5] }}
+          animate={{ x: [-3, 3, -3] }}
           transition={{
-            duration: 2,
+            duration: 2.5,
             repeat: Infinity,
             ease: "easeInOut",
           }}

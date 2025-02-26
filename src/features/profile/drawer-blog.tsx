@@ -8,15 +8,27 @@ import {
 } from "@/components/ui/drawer";
 import { BlogList } from "../blog/blog-list";
 import { getPosts } from "@/api/blog/get-posts";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 export async function DrawerBlog() {
   const posts = await getPosts();
 
   return (
     <Drawer>
-      <DrawerTrigger className="rounded-xl border px-4 py-2 shadow-sm hover:underline dark:border-zinc-800">
-        List
-      </DrawerTrigger>
+      <HoverCard>
+        <HoverCardTrigger>
+          <DrawerTrigger className="rounded-xl border px-4 py-2 shadow-sm hover:underline dark:border-zinc-800">
+            List
+          </DrawerTrigger>
+        </HoverCardTrigger>
+        <HoverCardContent className="w-fit border bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+          Displayed as a list
+        </HoverCardContent>
+      </HoverCard>
 
       <DrawerContent className="border bg-zinc-50 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
         <DrawerHeader className="border-b shadow-sm dark:border-zinc-900">

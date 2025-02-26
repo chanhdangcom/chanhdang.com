@@ -83,6 +83,7 @@ export const TypewriterEffect = ({
   return (
     <div className={cn("", className)}>
       {renderWords()}
+
       {showCursor && (
         <motion.span
           initial={{ opacity: 0 }}
@@ -93,7 +94,7 @@ export const TypewriterEffect = ({
             repeatType: "reverse",
           }}
           className={cn(
-            "inline-block h-6 w-[4px] items-center rounded-sm bg-blue-500 md:h-8 lg:h-8",
+            "inline-flex h-7 w-0.5 items-center rounded-sm bg-blue-500 md:h-8 lg:h-8",
             cursorClassName
           )}
         ></motion.span>
