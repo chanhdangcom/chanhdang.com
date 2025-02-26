@@ -16,7 +16,7 @@ type IExperienceItem = {
 
 const EXPERIENCE_WORK: IExperienceItem[] = [
   {
-    time: "2023 - Present",
+    time: "Intern | 2023 - Present",
     company: "Quaric Co., Ltd.",
     contentMarkdown:
       "- I had the opportunity to intern at a technology company where I got to work on real-world software development projects. During my internship, I learned how to work in a team, manage my time, and apply my knowledge to solving real-world problems.\n\n - This was an important stepping stone to help me better understand the professional working environment and strengthen my skills.",

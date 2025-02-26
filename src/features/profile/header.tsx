@@ -7,14 +7,14 @@ import React from "react";
 export const Header = () => {
   return (
     <div className="container">
-      <Link href="/">
-        <Progress className="w-[60%]" value={33} />
-        <div className="flex h-14 items-center justify-between">
+      <Progress className="w-[60%]" value={33} />
+      <div className="flex h-14 items-center justify-between">
+        <Link href="/">
           <ChanhdangLogotype />
+        </Link>
 
-          <SwitchTheme />
-        </div>
-      </Link>
+        <SwitchTheme />
+      </div>
     </div>
   );
 };
