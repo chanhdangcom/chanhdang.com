@@ -1,14 +1,9 @@
-import {
-  Carousel,
-  CarouselContent,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carouse";
 import { BookIcon } from "lucide-react";
 import { ExperienceInfoItem } from "../profile/components/experience-info-item";
 import { DrawerBlog } from "../profile/drawer-blog";
 import { getPosts } from "@/api/blog/get-posts";
-import { BlogCarouselItem } from "../blog/blog-carousel-item";
+
+import { BlogCarousel } from "./blog-carousel";
 
 export async function SectionBlog() {
   const posts = await getPosts();
@@ -20,7 +15,7 @@ export async function SectionBlog() {
         <DrawerBlog />
       </div>
 
-      <Carousel className="w-full max-w-4xl">
+      {/* <Carousel className="w-full max-w-4xl">
         <CarouselContent className="p-2">
           {posts.map((post) => (
             <BlogCarouselItem key={post.documentId} post={post} />
@@ -28,7 +23,9 @@ export async function SectionBlog() {
         </CarouselContent>
         <CarouselPrevious />
         <CarouselNext />
-      </Carousel>
+      </Carousel> */}
+
+      <BlogCarousel posts={posts} />
     </div>
   );
 }

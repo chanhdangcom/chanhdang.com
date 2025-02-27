@@ -1,3 +1,10 @@
+import { BlogList } from "../blog/blog-list";
+import { getPosts } from "@/api/blog/get-posts";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import {
   Drawer,
   DrawerContent,
@@ -6,13 +13,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { BlogList } from "../blog/blog-list";
-import { getPosts } from "@/api/blog/get-posts";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
 
 export async function DrawerBlog() {
   const posts = await getPosts();

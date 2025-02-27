@@ -4,13 +4,15 @@ import { Photos } from "./components/photo";
 import { ExperienceInfoItem } from "./components/experience-info-item";
 import { ImageIcon } from "lucide-react";
 import { motion, useInView } from "motion/react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi,
 } from "@/components/ui/carouse";
 
 type IPhoto = {
@@ -56,6 +58,23 @@ const IPhotoItem: IPhoto[] = [
 export const PhotoList = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap() + 1);
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap() + 1);
+    });
+  }, [api]);
+
   return (
     <div>
       <motion.div
@@ -77,7 +96,7 @@ export const PhotoList = () => {
         transition={{ duration: 1, ease: "easeOut" }}
       >
         <div className="mt-4">
-          <Carousel className="w-full max-w-4xl">
+          <Carousel setApi={setApi} className="w-full max-w-4xl">
             <CarouselContent className="p-3.5">
               {IPhotoItem.map((item, key) => (
                 <CarouselItem
@@ -106,6 +125,10 @@ export const PhotoList = () => {
             <CarouselPrevious />
             <CarouselNext />
           </Carousel>
+          <div className="mx-auto flex w-fit justify-center gap-1 rounded-xl border px-2 py-0.5 font-mono shadow-sm dark:border-zinc-800">
+            <div className="font-semibold">{current}</div> of{" "}
+            <div className="font-semibold">{count}</div>
+          </div>
         </div>
       </motion.div>
     </div>
