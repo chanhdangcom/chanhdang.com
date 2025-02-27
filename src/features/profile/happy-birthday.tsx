@@ -38,7 +38,7 @@ export function HappyBrithday() {
     <div>
       <div className="my-2 flex items-center space-x-2 font-mono text-sm">
         <ExperienceInfoItem icon={<CakeIcon />} content="Happy Brithday" />
-        <div className="text-gray-400">| 27/2/2004</div> <Ping />
+        <div className="text-gray-400">| 27/2/2025</div> <Ping />
       </div>
       <AnimatedTestimonials testimonials={testimonials} />
     </div>
