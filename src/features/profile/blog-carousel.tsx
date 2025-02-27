@@ -40,10 +40,8 @@ export function BlogCarousel({ posts }: { posts: IPost[] }) {
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
-      <div className="mx-auto flex w-20 justify-center gap-1 rounded-xl border px-2 py-0.5 font-mono shadow-sm dark:border-zinc-800">
-        <div className="font-semibold">{current}</div>
-        <div className="font-thin">of</div>
-        <div className="font-semibold">{count}</div>
+      <div className="mx-auto mt-2 flex w-16 justify-center gap-1 rounded-xl border px-2 py-0.5 font-mono text-sm shadow-sm dark:border-zinc-800">
+        {current}/{count}
       </div>
     </div>
   );
