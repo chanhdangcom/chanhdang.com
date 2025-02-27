@@ -36,10 +36,8 @@ export function HappyBrithday() {
   return (
     <div>
       <div className="my-2 flex items-center space-x-2 font-mono text-sm">
-        <ExperienceInfoItem icon={<CakeIcon />} content="Gallery" />
-        <div className="text-gray-400">
-          | Happy Birthday Đắc Vinh - 27/2/2004
-        </div>
+        <ExperienceInfoItem icon={<CakeIcon />} content="Happy Brithday" />
+        <div className="text-gray-400">| Đắc Vinh - 27/2/2004</div>
       </div>
       <AnimatedTestimonials testimonials={testimonials} />
     </div>
