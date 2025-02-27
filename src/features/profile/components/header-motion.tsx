@@ -12,7 +12,7 @@ export const HeaderMotion = () => {
 
   return (
     <motion.header
-      className="fixed left-0 right-0 top-0 z-50 flex justify-center bg-background pt-2"
+      className="fixed left-0 right-0 top-0 z-[9999] flex justify-center bg-background pt-2"
       style={{ top }}
     >
       <div className="transform transition-transform duration-300 hover:scale-105">
