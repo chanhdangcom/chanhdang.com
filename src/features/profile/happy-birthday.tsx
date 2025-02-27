@@ -13,7 +13,7 @@ export function HappyBrithday() {
     },
     {
       quote:
-        "Hôm nay là một ngày đặc biệt, vì có một “huyền thoại” ra đời! Chúc bạn sinh nhật vui vẻ, ăn nhiều mà không mập, tiền tiêu hoài không hết!",
+        "Hôm nay là một ngày đặc biệt, vì có một “huyền thoại” ra đời! Sinh nhật vui vẻ, ăn nhiều mà không mập, tiền tiêu hoài không hết!",
       name: "Huỳnh Đắc Vinh",
       designation: "27/2/2004",
       src: "/img/DV/DV2.JPG",
