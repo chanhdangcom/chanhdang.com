@@ -9,6 +9,7 @@ import { PhotoList } from "./photo-list";
 import { HeaderMotion } from "./components/header-motion";
 
 import { SectionBlog } from "./section-blog";
+import { HappyBrithday } from "./happy-birthday";
 
 export const Profile = () => {
   return (
@@ -28,6 +29,10 @@ export const Profile = () => {
               <AboutMe />
             </div>
           </div>
+        </div>
+
+        <div className="container my-8 md:flex md:items-center md:justify-center">
+          <HappyBrithday />
         </div>
 
         <div className="container my-8 md:flex md:items-center md:justify-center">

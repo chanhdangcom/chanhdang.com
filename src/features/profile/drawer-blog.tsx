@@ -25,7 +25,7 @@ export async function DrawerBlog() {
             List
           </DrawerTrigger>
         </HoverCardTrigger>
-        <HoverCardContent className="w-fit border bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+        <HoverCardContent className="hidden w-fit border bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 md:flex">
           Displayed as a list
         </HoverCardContent>
       </HoverCard>

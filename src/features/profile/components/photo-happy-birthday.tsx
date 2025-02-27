@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import React from "react";
-import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 
 type IPhoto = {
   photoUrl: string;
@@ -9,7 +8,7 @@ type IPhoto = {
   title?: string;
 };
 
-export const Photos = ({ photoUrl, time, title }: IPhoto) => {
+export const PhotoHappyBirthday = ({ photoUrl, time, title }: IPhoto) => {
   return (
     <div className="rounded-xl border bg-zinc-100/50 p-1 dark:border-zinc-800 dark:bg-zinc-900/50">
       <div className="flex items-center justify-between">
@@ -19,8 +18,6 @@ export const Photos = ({ photoUrl, time, title }: IPhoto) => {
             {time}
           </div>
         </div>
-
-        <ChanhdangLogotype className="w-28" />
       </div>
 
       <div className="overflow-visible pt-2">

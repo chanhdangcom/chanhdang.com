@@ -15,16 +15,6 @@ export async function SectionBlog() {
         <DrawerBlog />
       </div>
 
-      {/* <Carousel className="w-full max-w-4xl">
-        <CarouselContent className="p-2">
-          {posts.map((post) => (
-            <BlogCarouselItem key={post.documentId} post={post} />
-          ))}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel> */}
-
       <BlogCarousel posts={posts} />
     </div>
   );
