@@ -1,6 +1,7 @@
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 import { ExperienceInfoItem } from "./components/experience-info-item";
 import { CakeIcon } from "lucide-react";
+import { Ping } from "@/components/ping";
 
 export function HappyBrithday() {
   const testimonials = [
@@ -37,7 +38,7 @@ export function HappyBrithday() {
     <div>
       <div className="my-2 flex items-center space-x-2 font-mono text-sm">
         <ExperienceInfoItem icon={<CakeIcon />} content="Happy Brithday" />
-        <div className="text-gray-400">| Đắc Vinh - 27/2/2004</div>
+        <div className="text-gray-400">| Đắc Vinh - 27/2/2004</div> <Ping />
       </div>
       <AnimatedTestimonials testimonials={testimonials} />
     </div>
