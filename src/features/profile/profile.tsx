@@ -5,11 +5,11 @@ import { Overview } from "./overview";
 import { ExperienceList } from "./experience-list";
 import { Confetti } from "./components/confetti";
 import { Footer } from "./footer";
-import { PhotoList } from "./photo-list";
+
 import { HeaderMotion } from "./components/header-motion";
 
 import { SectionBlog } from "./section-blog";
-import { HappyBrithday } from "./happy-birthday";
+import { PhotoListAnimate } from "./photo-list-animate";
 
 export const Profile = () => {
   return (
@@ -31,13 +31,13 @@ export const Profile = () => {
           </div>
         </div>
 
-        <div className="container my-8 md:flex md:items-center md:justify-center">
-          <HappyBrithday />
+        <div className="container my-8 justify-center md:flex md:items-center">
+          <PhotoListAnimate />
         </div>
 
-        <div className="container my-8 md:flex md:items-center md:justify-center">
+        {/* <div className="container my-8 md:flex md:items-center md:justify-center">
           <PhotoList />
-        </div>
+        </div> */}
 
         <div className="container max-w-4xl">
           <ExperienceList />
