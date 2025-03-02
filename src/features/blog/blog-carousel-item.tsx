@@ -28,7 +28,7 @@ export function BlogCarouselItem({ post }: { post: IPost }) {
                 fill
               />
             </div>
-            <div className="line-clamp-2 h-24 rounded-xl p-1 font-semibold dark:text-white">
+            <div className="line-clamp-2 h-24 rounded-xl p-1 font-medium dark:text-white">
               <div className="text-sm font-light text-zinc-400">
                 {new Date(post.createdAt).toLocaleDateString("vi-VN")}
               </div>

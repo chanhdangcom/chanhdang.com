@@ -7,8 +7,8 @@ import { useEffect, useState } from "react";
 
 type Testimonial = {
   quote: string;
-  name: string;
-  designation: string;
+  title: string;
+  time: string;
   src: string;
 };
 export const AnimatedTestimonials = ({
@@ -82,7 +82,7 @@ export const AnimatedTestimonials = ({
                 >
                   <Image
                     src={testimonial.src}
-                    alt={testimonial.name}
+                    alt={testimonial.title}
                     width={500}
                     height={500}
                     draggable={false}
@@ -113,9 +113,9 @@ export const AnimatedTestimonials = ({
               ease: "easeInOut",
             }}
           >
-            <h3 className="text-2xl font-bold">{testimonials[active].name}</h3>
+            <h3 className="text-2xl font-bold">{testimonials[active].title}</h3>
             <p className="font-mono text-sm text-zinc-400">
-              {testimonials[active].designation}
+              {testimonials[active].time}
             </p>
             <motion.p className="mt-8 font-mono text-sm">
               {testimonials[active].quote.split(" ").map((word, index) => (
