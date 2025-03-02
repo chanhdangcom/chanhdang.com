@@ -45,7 +45,7 @@ export const AnimatedTestimonials = ({
   };
   return (
     <div className="mx-auto max-w-xs px-4 py-4 font-sans antialiased md:max-w-4xl md:px-8 lg:px-12">
-      <div className="relative grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-20">
+      <div className="relative grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-20">
         <div>
           <div className="relative h-80 w-full">
             <AnimatePresence>
@@ -93,7 +93,7 @@ export const AnimatedTestimonials = ({
             </AnimatePresence>
           </div>
         </div>
-        <div className="flex flex-col justify-between py-4">
+        <div className="flex flex-col justify-between py-2">
           <motion.div
             key={active}
             initial={{
@@ -119,7 +119,7 @@ export const AnimatedTestimonials = ({
             <p className="font-mono text-sm text-gray-500 dark:text-neutral-500">
               {testimonials[active].designation}
             </p>
-            <motion.p className="mt-8 font-mono text-sm text-gray-500 dark:text-neutral-300 md:text-base">
+            <motion.p className="mt-8 font-mono text-sm text-gray-500 dark:text-neutral-300">
               {testimonials[active].quote.split(" ").map((word, index) => (
                 <motion.span
                   key={index}
@@ -145,7 +145,7 @@ export const AnimatedTestimonials = ({
               ))}
             </motion.p>
           </motion.div>
-          <div className="flex gap-4 pt-12 md:pt-0">
+          <div className="flex gap-4 pt-8 md:pt-0">
             <button
               onClick={handlePrev}
               className="group/button flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800"

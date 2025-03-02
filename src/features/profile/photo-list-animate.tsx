@@ -31,7 +31,7 @@ export function PhotoListAnimate() {
       quote:
         "Bringing joy to children during the Mid-Autumn Festival, we organized fun activities, gifted lanterns, and shared warm smiles. It was a night filled with laughter, love, and meaningful connections.",
       name: "Trung Thu Cho Em",
-      designation: "24/12/202",
+      designation: "24/12/2023",
       src: "/img/photo-me/4.webp",
     },
     {
