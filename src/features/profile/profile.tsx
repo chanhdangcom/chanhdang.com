@@ -10,6 +10,7 @@ import { HeaderMotion } from "./components/header-motion";
 
 import { SectionBlog } from "./section-blog";
 import { PhotoListAnimate } from "./photo-list-animate";
+import { Music } from "./music";
 
 export const Profile = () => {
   return (
@@ -45,6 +46,10 @@ export const Profile = () => {
 
         <div className="container my-8 max-w-4xl">
           <SectionBlog />
+        </div>
+
+        <div className="container my-8 max-w-4xl">
+          <Music />
         </div>
 
         <div className="container my-8">
