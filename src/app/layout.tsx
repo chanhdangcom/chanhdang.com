@@ -32,6 +32,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log("Render RootLayout");
+
   return (
     <html lang="en" className="light scroll-smooth" suppressHydrationWarning>
       <body
