@@ -240,7 +240,7 @@ const cards = [
   },
   {
     description: "Sơn Tùng M-TP",
-    title: "Có chắc yêu là đầy",
+    title: "Có chắc yêu là đây",
     src: "/img/music-cover/CoChacYeuLaDay.jpg",
     ctaText: "Play",
     ctaLink: "/audio/CoChacYeuLaDay.mp3",
