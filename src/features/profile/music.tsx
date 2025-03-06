@@ -214,7 +214,7 @@ export const CloseIcon = () => {
 
 const cards = [
   {
-    description: "Quốc Thiên",
+    description: "Sơn tèo",
     title: "Ngày mai người ta lấy chồng",
     src: "/img/music-cover/music-1.jpg",
     ctaText: "Play",
