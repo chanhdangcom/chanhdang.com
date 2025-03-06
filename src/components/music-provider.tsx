@@ -3,7 +3,7 @@ import React, { useContext, useRef, useState } from "react";
 
 type IMusicContext = {
   handlePlayAudio: (audioUrl: string) => void;
-  handlePauseAudio: () => void;
+  handlePauseAudio?: () => void;
 };
 
 const MusicContext = React.createContext<IMusicContext | null>(null);

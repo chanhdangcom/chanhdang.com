@@ -1,7 +1,13 @@
 "use client";
 
 import DynamicIslandWave from "@/components/ui/dynamic-island";
-import { motion, useScroll, useTransform, useSpring } from "motion/react";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+  useSpring,
+} from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -29,8 +35,9 @@ export const HeaderMotion = ({ isPlaying }: IProp) => {
               height={192}
               className="size-10 rounded-full border border-zinc-800"
             />
-            <div className="">Nguyễn Chánh Đang</div>
+            <div className="text-xl md:text-2xl">Nguyễn Chánh Đang</div>
           </Link>
+
           <svg
             className="text-left text-3xl text-blue-600"
             width="0.6em"
@@ -48,19 +55,22 @@ export const HeaderMotion = ({ isPlaying }: IProp) => {
             ></path>
           </svg>
 
-          <div>
+          <AnimatePresence>
             {isPlaying && (
               <motion.div
                 initial={{ width: 0, opacity: 0 }}
                 animate={{ width: "auto", opacity: 1 }}
-                exit={{ width: 0, opacity: 0 }}
-                transition={{ duration: 0.4, ease: "easeInOut" }}
-                className="overflow-hidden" // Đảm bảo không bị lỗi khi thu nhỏ
+                exit={{ width: 0, opacity: 1 }}
+                transition={{
+                  width: { duration: 0.4, ease: "easeInOut" },
+                  opacity: { duration: 0.2, ease: "easeInOut" },
+                }}
+                className="overflow-hidden"
               >
                 <DynamicIslandWave />
               </motion.div>
             )}
-          </div>
+          </AnimatePresence>
         </div>
       </div>
     </motion.header>
