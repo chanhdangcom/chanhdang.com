@@ -4,7 +4,6 @@ import { IPost } from "./types";
 
 import { Footer } from "../profile/footer";
 
-import { HeaderMotion } from "../profile/components/header-motion";
 import { StrapiBlocksRenderer } from "@/components/strapi-blocks-renderer";
 import { Header } from "../profile/header";
 
@@ -15,8 +14,6 @@ type IProps = {
 export const PostContent = ({ post }: IProps) => {
   return (
     <div className="mt-4">
-      <HeaderMotion />
-
       <Header />
 
       <div className="container mt-8">

@@ -1,4 +1,5 @@
-import React, { useContext, useRef } from "react";
+import { HeaderMotion } from "@/features/profile/components/header-motion";
+import React, { useContext, useRef, useState } from "react";
 
 type IMusicContext = {
   handlePlayAudio: (audioUrl: string) => void;
@@ -18,6 +19,7 @@ export function useAudio() {
 }
 
 export function MusicProvider({ children }: { children: React.ReactNode }) {
+  const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const handlePlayAudio = (audioUrl: string) => {
@@ -30,10 +32,12 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       audioRef.current.load();
     }
     audioRef.current.play();
+    setIsPlaying(true);
   };
 
   const handlePauseAudio = () => {
     audioRef.current?.pause();
+    setIsPlaying(false);
   };
 
   return (
@@ -43,6 +47,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         handlePauseAudio,
       }}
     >
+      <HeaderMotion isPlaying={isPlaying} />
       {children}
 
       <audio ref={audioRef} preload="auto" />
