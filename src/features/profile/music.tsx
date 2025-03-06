@@ -4,9 +4,12 @@ import React, { useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "./hook/use-outside-click";
 import { ExperienceInfoItem } from "./components/experience-info-item";
-import { MusicIcon } from "lucide-react";
+import { MusicIcon, PauseIcon } from "lucide-react";
+import { Button } from "@/components/button-new";
+import { useAudio } from "@/components/music-provider";
 
 export function Music() {
+  const { handlePlayAudio, handlePauseAudio } = useAudio();
   const [active, setActive] = useState<(typeof cards)[number] | boolean | null>(
     null
   );
@@ -107,14 +110,18 @@ export function Music() {
                   </div>
 
                   <motion.a
+                    onClick={() => handlePlayAudio(active.ctaLink)}
                     layoutId={`button-${active.title}-${id}`}
-                    href={active.ctaLink}
                     target="_blank"
-                    className="rounded-full bg-green-500 px-4 py-3 text-sm font-bold text-white"
+                    className="cursor-pointer rounded-full bg-green-500 px-4 py-3 text-sm font-bold text-zinc-50 hover:bg-green-700"
                   >
                     {active.ctaText}
                   </motion.a>
                 </div>
+                <Button onClick={handlePauseAudio}>
+                  <PauseIcon />
+                  Pause
+                </Button>
                 <div className="relative px-4 pt-4">
                   <motion.div
                     layout
@@ -218,7 +225,7 @@ const cards = [
     title: "Ngày mai người ta lấy chồng",
     src: "/img/music-cover/music-1.jpg",
     ctaText: "Play",
-    ctaLink: "https://www.youtube.com/watch?v=nsm32kHAaEA",
+    ctaLink: "/audio/NgayMaiNguoiTaLayChong.mp3",
     content: () => {
       return (
         <p className="container flex-wrap text-lg">
@@ -241,8 +248,7 @@ const cards = [
     title: "Chia cách bình yên",
     src: "/img/music-cover/music-2.jpg",
     ctaText: "Play",
-    ctaLink:
-      "https://www.youtube.com/watch?v=YCJqVCMuVVs&pp=ygUVY2hpYSBjw6FjaCBiw6xuaCB5w6pu",
+    ctaLink: "/audio/ChiaCachBinhYen.mp3",
     content: () => {
       return (
         <p className="container flex-wrap text-lg">
