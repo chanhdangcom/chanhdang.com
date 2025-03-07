@@ -6,6 +6,7 @@ import { Footer } from "../profile/footer";
 
 import { StrapiBlocksRenderer } from "@/components/strapi-blocks-renderer";
 import { Header } from "../profile/header";
+import { ScrollHeaderPage } from "@/components/scroll-header-page";
 
 type IProps = {
   post: IPost;
@@ -26,6 +27,7 @@ export const PostContent = ({ post }: IProps) => {
         </div>
       </div>
 
+      <ScrollHeaderPage />
       <Footer />
     </div>
   );
