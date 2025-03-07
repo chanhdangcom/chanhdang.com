@@ -87,7 +87,7 @@ export function MusicList() {
                   height={200}
                   src={active.src}
                   alt={active.title}
-                  className="h-96 w-full rounded-xl object-cover object-top p-1 md:rounded-3xl lg:h-80"
+                  className="h-64 w-full rounded-xl object-cover object-top p-1 md:rounded-3xl lg:h-80"
                 />
               </motion.div>
 
