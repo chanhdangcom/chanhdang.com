@@ -18,9 +18,11 @@ export const ScrollHeaderPage = () => {
     <motion.header
       className="fixed bottom-0 left-0 right-0 z-[1000] m-8 flex justify-end"
       style={{ bottom, opacity }}
-      onClick={scrollToTop}
     >
-      <ChevronsUpIcon className="size-10 cursor-pointer rounded-full border bg-zinc-100 p-2 shadow-sm hover:bg-zinc-200 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:bg-zinc-800" />
+      <ChevronsUpIcon
+        onClick={scrollToTop}
+        className="size-10 cursor-pointer rounded-full border bg-zinc-100 p-2 shadow-sm hover:bg-zinc-200 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:bg-zinc-800"
+      />
     </motion.header>
   );
 };
