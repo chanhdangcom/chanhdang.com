@@ -1,6 +1,7 @@
 "use client";
 
 import DynamicIslandWave from "@/components/ui/dynamic-island";
+import Image from "next/image";
 import {
   motion,
   AnimatePresence,
@@ -8,8 +9,8 @@ import {
   useTransform,
   useSpring,
 } from "motion/react";
-import Image from "next/image";
-import Link from "next/link";
+import { PauseIcon } from "lucide-react";
+import { useAudio } from "@/components/music-provider";
 
 type IProp = {
   isPlaying: boolean;
@@ -18,6 +19,7 @@ export const HeaderMotion = ({ isPlaying }: IProp) => {
   const { scrollY } = useScroll();
   const _top = useTransform(scrollY, [100, 400], [-80, 0]);
   const top = useSpring(_top);
+  const { handlePauseAudio } = useAudio();
   // const opacity = useTransform(scrollY, [200, 400], [0, 1]);
 
   return (
@@ -27,16 +29,54 @@ export const HeaderMotion = ({ isPlaying }: IProp) => {
     >
       <div className="transform transition-transform duration-300 hover:scale-105">
         <div className="flex w-fit items-center justify-center space-x-2 rounded-full border bg-zinc-100 py-2 pl-2 pr-4 text-2xl font-bold shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-          <Link href="/" className="flex items-center gap-4">
-            <Image
-              src="/img/avatar.jpeg"
-              alt="Avatar"
-              width={192}
-              height={192}
-              className="size-10 rounded-full border border-zinc-800"
-            />
-            <div className="text-xl md:text-2xl">Nguyễn Chánh Đang</div>
-          </Link>
+          <AnimatePresence mode="wait">
+            {isPlaying ? (
+              <motion.div
+                key="playing"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="flex items-center gap-4"
+              >
+                <motion.div
+                  animate={{
+                    y: [0, -1, 0, 1, 0], // Lắc lên xuống
+                  }}
+                  transition={{
+                    duration: 1.5, // Thời gian mỗi vòng lắc
+                    repeat: Infinity, // Lặp vô hạn
+                    ease: "easeInOut", // Hiệu ứng mượt mà
+                  }}
+                >
+                  <PauseIcon
+                    className="size-10 cursor-pointer rounded-full border p-2 text-green-400 shadow-sm dark:border-zinc-800"
+                    onClick={handlePauseAudio}
+                  />
+                </motion.div>
+
+                <div className="text-xl md:text-2xl">Nguyễn Chánh Đang</div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="not-playing"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="flex items-center gap-4"
+              >
+                <Image
+                  src="/img/avatar.jpeg"
+                  alt="Avatar"
+                  width={192}
+                  height={192}
+                  className="size-10 rounded-full border shadow-sm dark:border-zinc-800"
+                />
+                <div className="text-xl md:text-2xl">Nguyễn Chánh Đang</div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <svg
             className="text-left text-3xl text-blue-600"

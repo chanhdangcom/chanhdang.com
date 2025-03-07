@@ -4,9 +4,8 @@ import React, { useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "./hook/use-outside-click";
 import { ExperienceInfoItem } from "./components/experience-info-item";
-import { MusicIcon } from "lucide-react";
-
 import { useAudio } from "@/components/music-provider";
+import { MusicIcon } from "lucide-react";
 
 export function MusicList() {
   const { handlePlayAudio } = useAudio();
@@ -79,7 +78,7 @@ export function MusicList() {
             <motion.div
               layoutId={`card-${active.title}-${id}`}
               ref={ref}
-              className="flex h-full w-full max-w-[500px] flex-col overflow-hidden rounded-xl border bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 sm:rounded-3xl md:h-fit md:max-h-[90%]"
+              className="flex h-full w-full max-w-md flex-col overflow-hidden rounded-xl border bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 sm:rounded-3xl md:max-h-[85%]"
             >
               <motion.div layoutId={`image-${active.title}-${id}`}>
                 <Image
@@ -220,7 +219,7 @@ const cards = [
   {
     description: "Robber",
     title: "Huslang all day",
-    src: "/img/music-cover/HUSTLANG ALL DAY.jpg",
+    src: "/img/music-cover/HustlangAllDay.jpg",
     ctaText: "Play",
     ctaLink: "/audio/HUSTLANG ALL DAY.mp3",
     content: () => {
@@ -263,6 +262,28 @@ const cards = [
     src: "/img/music-cover/ChiaCachBinhYen.jpg",
     ctaText: "Play",
     ctaLink: "/audio/ChiaCachBinhYen.mp3",
+    content: () => {
+      return (
+        <p className="container flex-wrap text-lg">
+          “Chia Cách Bình Yên” là một ca khúc giàu cảm xúc, mang giai điệu nhẹ
+          nhàng nhưng đầy day dứt về một cuộc chia ly. Bài hát kể về hai người
+          yêu nhau nhưng buộc phải rời xa nhau, không phải vì hết yêu, mà vì
+          những lý do ngoài tầm kiểm soát. Lời bài hát mang đến cảm giác tiếc
+          nuối nhưng không quá bi lụy. Thay vì đau khổ dằn vặt, nó gợi lên sự
+          chấp nhận trong lặng lẽ, một sự “chia cách bình yên” đúng như tên gọi.
+          Với giai điệu nhẹ nhàng, sâu lắng cùng ca từ ý nghĩa, bài hát đã chạm
+          đến trái tim của nhiều người từng trải qua một cuộc chia ly không mong
+          muốn.
+        </p>
+      );
+    },
+  },
+  {
+    description: "Soobin Hoàng Sơn & Tùng Dương",
+    title: "Giá như",
+    src: "/img/music-cover/GiaNhu.jpg",
+    ctaText: "Play",
+    ctaLink: "/audio/GiaNhu.mp3",
     content: () => {
       return (
         <p className="container flex-wrap text-lg">
