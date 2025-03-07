@@ -9,6 +9,7 @@ import { Footer } from "./footer";
 import { SectionBlog } from "./section-blog";
 import { PhotoListAnimate } from "./photo-list-animate";
 import { MusicList } from "./music-list";
+import { ScrollHeaderPage } from "@/components/scroll-header-page";
 
 export const Profile = () => {
   return (
@@ -47,6 +48,10 @@ export const Profile = () => {
 
         <div className="container my-8">
           <Footer />
+        </div>
+
+        <div className="container my-8">
+          <ScrollHeaderPage />
         </div>
       </div>
 
