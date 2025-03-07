@@ -217,8 +217,8 @@ export const CloseIcon = () => {
 
 const cards = [
   {
-    description: "Robber",
-    title: "Huslang all day",
+    description: "Hustlang Robber",
+    title: "Hustlang all day",
     src: "/img/music-cover/HustlangAllDay.jpg",
     ctaText: "Play",
     ctaLink: "/audio/HUSTLANG ALL DAY.mp3",
@@ -287,15 +287,14 @@ const cards = [
     content: () => {
       return (
         <p className="container flex-wrap text-lg">
-          “Chia Cách Bình Yên” là một ca khúc giàu cảm xúc, mang giai điệu nhẹ
-          nhàng nhưng đầy day dứt về một cuộc chia ly. Bài hát kể về hai người
-          yêu nhau nhưng buộc phải rời xa nhau, không phải vì hết yêu, mà vì
-          những lý do ngoài tầm kiểm soát. Lời bài hát mang đến cảm giác tiếc
-          nuối nhưng không quá bi lụy. Thay vì đau khổ dằn vặt, nó gợi lên sự
-          chấp nhận trong lặng lẽ, một sự “chia cách bình yên” đúng như tên gọi.
-          Với giai điệu nhẹ nhàng, sâu lắng cùng ca từ ý nghĩa, bài hát đã chạm
-          đến trái tim của nhiều người từng trải qua một cuộc chia ly không mong
-          muốn.
+          “Giá Như” là một ca khúc đầy cảm xúc, nói về những tiếc nuối trong
+          tình yêu khi mọi thứ không còn như xưa. Bài hát kể về một mối quan hệ
+          đã tan vỡ, nhưng trong lòng vẫn chất chứa bao điều muốn nói. Dẫu biết
+          rằng mọi chuyện đã qua, nhưng trái tim vẫn không thể buông bỏ, chỉ
+          biết thầm nhủ “giá như” có thể thay đổi một điều gì đó, có lẽ mọi thứ
+          đã khác. Giai điệu bài hát nhẹ nhàng nhưng sâu lắng, kết hợp với ca từ
+          đầy cảm xúc khiến người nghe dễ dàng đồng cảm, đặc biệt là những ai đã
+          từng trải qua một cuộc tình dang dở.
         </p>
       );
     },
