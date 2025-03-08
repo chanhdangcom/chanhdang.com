@@ -115,7 +115,7 @@ export function MusicList() {
                   <motion.a
                     layoutId={`button-${active.title}-${id}`}
                     target="_blank"
-                    className=""
+                    className="mt-4 cursor-pointer rounded-full bg-green-500 px-4 py-2 text-sm font-bold text-white hover:bg-green-700 md:mt-0"
                     onClick={() => handlePlayAudio(active.ctaLink)}
                   >
                     {active.ctaText}
