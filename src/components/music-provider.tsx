@@ -2,7 +2,12 @@ import { HeaderMotion } from "@/features/profile/components/header-motion";
 import React, { useContext, useRef, useState } from "react";
 
 type IMusicContext = {
-  handlePlayAudio: (audioUrl: string) => void;
+  handlePlayAudio: (
+    audioUrl: string,
+    title: string,
+    cover: string,
+    singer: string
+  ) => void;
   handlePauseAudio: () => void;
   handleResumeAudio: () => void;
   isPlaying: boolean;
@@ -10,6 +15,9 @@ type IMusicContext = {
   lastPlayedUrl: string | null;
   currentTime: number;
   duration: number;
+  songTitle: string;
+  coverImage: string;
+  singerTitle: string;
 };
 
 const MusicContext = React.createContext<IMusicContext | null>(null);
@@ -28,9 +36,17 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   const [lastPlayedUrl, setLastPlayedUrl] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [songTitle, setSongTitle] = useState("");
+  const [coverImage, setCoverImage] = useState("");
+  const [singerTitle, setSingerTitle] = useState("");
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const handlePlayAudio = (audioUrl: string) => {
+  const handlePlayAudio = (
+    audioUrl: string,
+    title: string,
+    cover: string,
+    singer: string
+  ) => {
     if (!audioRef.current) {
       audioRef.current = new Audio(audioUrl);
       audioRef.current.preload = "auto";
@@ -46,6 +62,9 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     setIsPlaying(true);
     setIsPaused(false);
     setLastPlayedUrl(audioUrl);
+    setSongTitle(title);
+    setCoverImage(cover);
+    setSingerTitle(singer);
   };
 
   const handlePauseAudio = () => {
@@ -62,7 +81,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       setIsPlaying(true);
       setIsPaused(false);
     } else if (!audioRef.current && lastPlayedUrl) {
-      handlePlayAudio(lastPlayedUrl);
+      handlePlayAudio(lastPlayedUrl, songTitle, coverImage, singerTitle);
     }
   };
 
@@ -84,12 +103,18 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         lastPlayedUrl,
         currentTime,
         duration,
+        songTitle,
+        coverImage,
+        singerTitle,
       }}
     >
       <HeaderMotion
         isPlaying={isPlaying}
         currentTime={currentTime}
         duration={duration}
+        songTitle={songTitle}
+        coverImage={coverImage}
+        singer={singerTitle}
       />
       {children}
     </MusicContext.Provider>

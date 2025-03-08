@@ -1,4 +1,5 @@
 "use client";
+
 import Image from "next/image";
 import React, { useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -116,7 +117,14 @@ export function MusicList() {
                     layoutId={`button-${active.title}-${id}`}
                     target="_blank"
                     className="mt-4 cursor-pointer rounded-full bg-green-500 px-4 py-2 text-sm font-bold text-white hover:bg-green-700 md:mt-0"
-                    onClick={() => handlePlayAudio(active.ctaLink)}
+                    onClick={() =>
+                      handlePlayAudio(
+                        active.ctaLink,
+                        active.title,
+                        active.src,
+                        active.description
+                      )
+                    }
                   >
                     {active.ctaText}
                   </motion.a>

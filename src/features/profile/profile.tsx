@@ -9,6 +9,7 @@ import { Footer } from "./footer";
 import { SectionBlog } from "./section-blog";
 import { PhotoListAnimate } from "./photo-list-animate";
 import { MusicList } from "./music-list";
+
 import { ScrollHeaderPage } from "@/components/scroll-header-page";
 
 export const Profile = () => {
