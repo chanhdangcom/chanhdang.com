@@ -49,12 +49,11 @@ export const Profile = () => {
         <div className="container my-8">
           <Footer />
         </div>
-
-        <div className="container my-8">
-          <ScrollHeaderPage />
-        </div>
       </div>
 
+      <div className="m-8">
+        <ScrollHeaderPage />
+      </div>
       <Confetti />
     </>
   );

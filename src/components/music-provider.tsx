@@ -3,41 +3,74 @@ import React, { useContext, useRef, useState } from "react";
 
 type IMusicContext = {
   handlePlayAudio: (audioUrl: string) => void;
-  handlePauseAudio?: () => void;
+  handlePauseAudio: () => void;
+  handleResumeAudio: () => void;
+  isPlaying: boolean;
+  isPaused: boolean;
+  lastPlayedUrl: string | null;
+  currentTime: number;
+  duration: number;
 };
 
 const MusicContext = React.createContext<IMusicContext | null>(null);
 
 export function useAudio() {
   const context = useContext(MusicContext);
-
   if (!context) {
     throw new Error("useAudio must be used within a MusicProvider");
   }
-
   return context;
 }
 
 export function MusicProvider({ children }: { children: React.ReactNode }) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const [lastPlayedUrl, setLastPlayedUrl] = useState<string | null>(null);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const handlePlayAudio = (audioUrl: string) => {
     if (!audioRef.current) {
-      return;
+      audioRef.current = new Audio(audioUrl);
+      audioRef.current.preload = "auto";
+      audioRef.current.addEventListener("timeupdate", handleTimeUpdate);
     }
 
     if (audioRef.current.src !== audioUrl) {
       audioRef.current.src = audioUrl;
       audioRef.current.load();
     }
+
     audioRef.current.play();
     setIsPlaying(true);
+    setIsPaused(false);
+    setLastPlayedUrl(audioUrl);
   };
 
   const handlePauseAudio = () => {
-    audioRef.current?.pause();
-    setIsPlaying(false);
+    if (audioRef.current && !audioRef.current.paused) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+      setIsPaused(true);
+    }
+  };
+
+  const handleResumeAudio = () => {
+    if (audioRef.current && isPaused) {
+      audioRef.current.play();
+      setIsPlaying(true);
+      setIsPaused(false);
+    } else if (!audioRef.current && lastPlayedUrl) {
+      handlePlayAudio(lastPlayedUrl);
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+      setDuration(audioRef.current.duration);
+    }
   };
 
   return (
@@ -45,12 +78,20 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       value={{
         handlePlayAudio,
         handlePauseAudio,
+        handleResumeAudio,
+        isPlaying,
+        isPaused,
+        lastPlayedUrl,
+        currentTime,
+        duration,
       }}
     >
-      <HeaderMotion isPlaying={isPlaying} />
+      <HeaderMotion
+        isPlaying={isPlaying}
+        currentTime={currentTime}
+        duration={duration}
+      />
       {children}
-
-      <audio ref={audioRef} preload="auto" />
     </MusicContext.Provider>
   );
 }

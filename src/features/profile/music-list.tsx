@@ -4,16 +4,17 @@ import React, { useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "./hook/use-outside-click";
 import { ExperienceInfoItem } from "./components/experience-info-item";
+
+import { ListMusicIcon } from "lucide-react";
 import { useAudio } from "@/components/music-provider";
-import { MusicIcon } from "lucide-react";
 
 export function MusicList() {
-  const { handlePlayAudio } = useAudio();
   const [active, setActive] = useState<(typeof cards)[number] | boolean | null>(
     null
   );
   const ref = useRef<HTMLDivElement>(null);
   const id = useId();
+  const { handlePlayAudio } = useAudio();
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -38,7 +39,10 @@ export function MusicList() {
     <>
       <div className="space-y-8">
         <div className="my-2 flex items-center space-x-2 font-mono text-sm">
-          <ExperienceInfoItem icon={<MusicIcon />} content="Music Gallery" />
+          <ExperienceInfoItem
+            icon={<ListMusicIcon />}
+            content="Music Gallery"
+          />
         </div>
       </div>
 
@@ -109,10 +113,10 @@ export function MusicList() {
                   </div>
 
                   <motion.a
-                    onClick={() => handlePlayAudio(active.ctaLink)}
                     layoutId={`button-${active.title}-${id}`}
                     target="_blank"
-                    className="cursor-pointer rounded-full bg-green-500 px-4 py-3 text-sm font-bold text-zinc-50 hover:bg-green-700"
+                    className=""
+                    onClick={() => handlePlayAudio(active.ctaLink)}
                   >
                     {active.ctaText}
                   </motion.a>
