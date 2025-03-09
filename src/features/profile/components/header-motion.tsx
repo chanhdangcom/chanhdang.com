@@ -34,24 +34,59 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
 
   return (
     <motion.header
-      className="fixed left-0 right-0 top-0 z-[1000] mx-auto flex h-16 w-fit justify-center bg-background pt-2 transition-[height] duration-300 ease-in-out"
+      className="fixed inset-x-0 top-0 z-[1000] flex justify-center bg-background"
       style={{ top }}
       onClick={() => setIsClick(!isClick)}
     >
-      <div className="">
-        <div className="flex w-fit items-center justify-center space-x-2 rounded-full py-2 pl-2 pr-4 text-2xl font-bold">
-          <>
+      <div className="flex w-fit cursor-pointer items-center justify-center space-x-2 rounded-full py-2 text-2xl font-bold duration-300 md:hover:scale-105">
+        <>
+          {!isPlaying ? (
             <>
-              {!isPlaying ? (
-                <div className="flex items-center justify-center rounded-full border border-zinc-800 bg-zinc-950 p-2">
+              <motion.div
+                style={{ position: "relative" }}
+                key={`PauseAudio-${isClick ? "expanded" : "compact"}`}
+                layoutId="dynamic-island"
+                initial={{
+                  opacity: 0,
+                  scale: 0.9,
+                  clipPath: "inset(40% 50% 40% 50%)",
+                  borderRadius: "50px",
+                }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                  clipPath: "inset(0% 0% 0% 0%)",
+                  borderRadius: isClick ? "32px" : "50px",
+                }}
+                exit={{
+                  opacity: 0,
+                  scale: 0.9,
+                  clipPath: "inset(40% 50% 40% 50%)",
+                  borderRadius: "50px",
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 150,
+                  damping: 20,
+                  duration: 0.5,
+                }}
+                className="flex items-center justify-center rounded-full border bg-zinc-100 p-1 pr-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+              >
+                {!isClick ? (
                   <AnimatePresence mode="wait">
                     <motion.div
-                      key="not-playing"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ duration: 0.4, ease: "easeOut" }}
-                      className="flex items-center gap-4"
+                      key="compact"
+                      layoutId="compact"
+                      initial={{ scale: 0.9, borderRadius: "50px" }}
+                      animate={{ scale: 1, borderRadius: "24px" }}
+                      exit={{ scale: 0.9, borderRadius: "50px" }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 180,
+                        damping: 20,
+                        duration: 0.5,
+                      }}
+                      className="flex w-[30vh] items-center gap-4"
                     >
                       <motion.div
                         animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
@@ -92,177 +127,294 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                       ></path>
                     </svg>
                   </AnimatePresence>
-                </div>
-              ) : (
-                <AnimatePresence mode="popLayout">
+                ) : (
                   <motion.div
-                    key={isClick ? "expanded" : "compact"}
-                    layoutId="dynamic-island"
-                    initial={{
-                      opacity: 0,
-                      scale: 0.92,
-                      clipPath: "inset(40% 50% 40% 50%)",
-                      borderRadius: "50px",
-                    }}
-                    animate={{
-                      opacity: 1,
-                      scale: 1,
-                      clipPath: "inset(0% 0% 0% 0%)",
-                      borderRadius: isClick ? "32px" : "50px",
-                    }}
-                    exit={{
-                      opacity: 0,
-                      scale: 0.92,
-                      clipPath: "inset(40% 50% 40% 50%)",
-                      borderRadius: "50px",
-                    }}
+                    key="compact"
+                    layoutId="expanded"
+                    initial={{ scale: 0.9, borderRadius: "50px" }}
+                    animate={{ scale: 1, borderRadius: "24px" }}
+                    exit={{ scale: 0.9, borderRadius: "50px" }}
                     transition={{
                       type: "spring",
-                      stiffness: 150,
+                      stiffness: 180,
                       damping: 20,
                       duration: 0.5,
                     }}
-                    className="flex items-center justify-center rounded-full border border-zinc-700 bg-zinc-950"
+                    className="w-[45vh] space-y-4 p-3"
                   >
-                    {!isClick ? (
-                      <motion.div
-                        layoutId="compact"
-                        initial={{ scale: 0.92, borderRadius: "50px" }}
-                        animate={{ scale: 1, borderRadius: "24px" }}
-                        exit={{ scale: 0.92, borderRadius: "50px" }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 180,
-                          damping: 20,
-                          duration: 0.5,
-                        }}
-                        className="flex w-fit items-center gap-4 p-2"
-                      >
-                        <motion.div layoutId="image-small" className="size-10">
-                          <Image
-                            src={coverImage}
-                            alt="Cover"
-                            width={192}
-                            height={192}
-                            className="size-10 rounded-full border shadow-sm hover:size-16 dark:border-zinc-800"
-                          />
-                        </motion.div>
-
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
                         <motion.div
-                          layoutId="text-small"
-                          className="md:text-md text-xl"
+                          layoutId="image-large"
+                          className="flex size-16 items-center justify-center"
                         >
-                          {songTitle}
-                        </motion.div>
-
-                        <AnimatePresence>
-                          {isPlaying && (
-                            <motion.div
-                              initial={{ width: 0, opacity: 0 }}
-                              animate={{ width: "auto", opacity: 1 }}
-                              exit={{ width: 0, opacity: 0 }}
-                              transition={{ duration: 0.3, ease: "easeInOut" }}
-                              className="overflow-hidden"
-                            >
-                              <DynamicIslandWave />
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        layoutId="expanded"
-                        initial={{ scale: 0.9, borderRadius: "50px" }}
-                        animate={{ scale: 1, borderRadius: "24px" }}
-                        exit={{ scale: 0.9, borderRadius: "50px" }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 180,
-                          damping: 20,
-                          duration: 0.5,
-                        }}
-                        className="space-y-4 p-3"
-                      >
-                        <div className="flex items-center justify-center gap-4">
-                          <motion.div
-                            layoutId="image-large"
-                            className="size-16"
-                          >
+                          {!coverImage ? (
+                            <div className="flex size-16 items-center rounded-2xl border shadow-sm dark:border-zinc-950 dark:bg-zinc-800"></div>
+                          ) : (
                             <Image
                               src={coverImage}
                               alt="Cover"
                               width={192}
                               height={192}
-                              className="size-16 rounded-2xl border shadow-sm dark:border-zinc-800"
+                              className="flex size-16 items-center rounded-2xl border shadow-sm dark:border-zinc-950"
                             />
+                          )}
+                        </motion.div>
+
+                        <div>
+                          <motion.div
+                            layoutId="text-large"
+                            className="md:text-md flex items-center justify-between text-base"
+                          >
+                            {!songTitle ? (
+                              <div>TITLE SONG</div>
+                            ) : (
+                              <div>{songTitle}</div>
+                            )}
                           </motion.div>
 
-                          <div>
-                            <motion.div
-                              layoutId="text-large"
-                              className="md:text-md flex items-center justify-between text-base"
-                            >
-                              {songTitle}
-
-                              <DynamicIslandWave />
-                            </motion.div>
-
-                            <div className="text-sm font-thin text-zinc-400">
-                              {singerTitle}
-                            </div>
+                          <div className="text-sm font-thin text-zinc-400">
+                            {!singerTitle ? (
+                              <div>Singer</div>
+                            ) : (
+                              <div>{singerTitle}</div>
+                            )}
                           </div>
                         </div>
+                      </div>
 
+                      <div className="">
+                        <DynamicIslandWave isPlay={false} />
+                      </div>
+                    </div>
+
+                    <motion.div
+                      layoutId="progress-bar"
+                      className="mx-auto h-1 w-72 overflow-hidden rounded-full bg-zinc-400"
+                    >
+                      <motion.div
+                        className="h-full bg-zinc-50 transition-all duration-300"
+                        style={{ width: `${progress}%` }}
+                      />
+                    </motion.div>
+
+                    <motion.div
+                      layout
+                      className="mt-3 flex items-center justify-center space-x-4"
+                    >
+                      <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                      >
+                        <Rewind size={32} weight="fill" />
+                      </motion.button>
+
+                      <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        onClick={
+                          isPlaying ? handlePauseAudio : handleResumeAudio
+                        }
+                        className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                      >
+                        {isPlaying ? (
+                          <Pause size={32} weight="fill" />
+                        ) : (
+                          <Play size={32} weight="fill" />
+                        )}
+                      </motion.button>
+
+                      <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                      >
+                        <FastForward size={32} weight="fill" />
+                      </motion.button>
+                    </motion.div>
+                  </motion.div>
+                )}
+              </motion.div>
+            </>
+          ) : (
+            <div>
+              <motion.div
+                style={{ position: "relative" }}
+                key={`PlayAudio-${isClick ? "expanded" : "compact"}`}
+                layoutId="dynamic-island"
+                initial={{
+                  opacity: 0,
+                  scale: 0.9,
+                  clipPath: "inset(40% 50% 40% 50%)",
+                  borderRadius: "50px",
+                }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                  clipPath: "inset(0% 0% 0% 0%)",
+                  borderRadius: isClick ? "32px" : "50px",
+                }}
+                exit={{
+                  opacity: 0,
+                  scale: 0.9,
+                  clipPath: "inset(40% 50% 40% 50%)",
+                  borderRadius: "50px",
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 150,
+                  damping: 20,
+                  duration: 0.5,
+                }}
+                className="flex rounded-full border bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+              >
+                {!isClick ? (
+                  <motion.div
+                    layoutId="compact"
+                    initial={{ scale: 0.9, borderRadius: "50px" }}
+                    animate={{ scale: 1, borderRadius: "24px" }}
+                    exit={{ scale: 0.9, borderRadius: "50px" }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 180,
+                      damping: 20,
+                      duration: 0.5,
+                    }}
+                    className="flex w-[40vh] min-w-[40vh] items-center justify-between p-1"
+                  >
+                    <div className="flex items-center gap-2">
+                      <motion.div
+                        layoutId="image-small"
+                        className="size-10"
+                        animate={{ rotate: 360 }}
+                        transition={{
+                          repeat: Infinity,
+                          duration: 5,
+                          ease: "linear",
+                        }}
+                      >
+                        <Image
+                          src={coverImage}
+                          alt="Cover"
+                          width={192}
+                          height={192}
+                          className="size-10 rounded-full border shadow-sm dark:border-zinc-800"
+                        />
+                      </motion.div>
+
+                      <motion.div layoutId="text-small" className="text-base">
+                        {songTitle}
+                      </motion.div>
+                    </div>
+
+                    <AnimatePresence>
+                      {isPlaying && (
                         <motion.div
-                          layoutId="progress-bar"
-                          className="mx-auto h-1 w-64 overflow-hidden rounded-full bg-zinc-400"
+                          initial={{ width: 0, opacity: 0 }}
+                          animate={{ width: "auto", opacity: 1 }}
+                          exit={{ width: 0, opacity: 0 }}
+                          transition={{ duration: 0.3, ease: "easeInOut" }}
+                          className="overflow-hidden"
                         >
-                          <motion.div
-                            className="h-full bg-zinc-50 transition-all duration-300"
-                            style={{ width: `${progress}%` }}
+                          <DynamicIslandWave isPlay={true} />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    layoutId="expanded"
+                    initial={{ scale: 0.9, borderRadius: "50px" }}
+                    animate={{ scale: 1, borderRadius: "24px" }}
+                    exit={{ scale: 0.9, borderRadius: "50px" }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 180,
+                      damping: 20,
+                      duration: 0.5,
+                    }}
+                    className="w-[50vh] min-w-[50vh] space-y-4 p-3"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <motion.div
+                          layoutId="image-large"
+                          className="flex size-16 items-center justify-center"
+                        >
+                          <Image
+                            src={coverImage}
+                            alt="Cover"
+                            width={192}
+                            height={192}
+                            className="flex size-16 items-center rounded-2xl border shadow-sm dark:border-zinc-950"
                           />
                         </motion.div>
 
-                        <motion.div
-                          layout
-                          className="mt-3 flex items-center justify-center space-x-4"
-                        >
-                          <motion.button
-                            whileTap={{ scale: 0.95 }}
-                            className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                        <div>
+                          <motion.div
+                            layoutId="text-large"
+                            className="md:text-md flex items-center justify-between text-base"
                           >
-                            <Rewind size={32} weight="fill" />
-                          </motion.button>
+                            {songTitle}
+                          </motion.div>
 
-                          <motion.button
-                            whileTap={{ scale: 0.95 }}
-                            onClick={
-                              isPlaying ? handlePauseAudio : handleResumeAudio
-                            }
-                            className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
-                          >
-                            {isPlaying ? (
-                              <Pause size={32} weight="fill" />
-                            ) : (
-                              <Play size={32} weight="fill" />
-                            )}
-                          </motion.button>
+                          <div className="text-sm font-thin text-zinc-400">
+                            {singerTitle}
+                          </div>
+                        </div>
+                      </div>
 
-                          <motion.button
-                            whileTap={{ scale: 0.95 }}
-                            className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
-                          >
-                            <FastForward size={32} weight="fill" />
-                          </motion.button>
-                        </motion.div>
-                      </motion.div>
-                    )}
+                      <div className="">
+                        <DynamicIslandWave isPlay={true} />
+                      </div>
+                    </div>
+
+                    <motion.div
+                      layoutId="progress-bar"
+                      className="mx-auto h-1 w-72 overflow-hidden rounded-full bg-zinc-400"
+                    >
+                      <motion.div
+                        className="h-full bg-zinc-50 transition-all duration-300"
+                        style={{ width: `${progress}%` }}
+                      />
+                    </motion.div>
+
+                    <motion.div
+                      layout
+                      className="mt-3 flex items-center justify-center space-x-4"
+                    >
+                      <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                      >
+                        <Rewind size={32} weight="fill" />
+                      </motion.button>
+
+                      <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        onClick={
+                          isPlaying ? handlePauseAudio : handleResumeAudio
+                        }
+                        className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                      >
+                        {isPlaying ? (
+                          <Pause size={32} weight="fill" />
+                        ) : (
+                          <Play size={32} weight="fill" />
+                        )}
+                      </motion.button>
+
+                      <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                      >
+                        <FastForward size={32} weight="fill" />
+                      </motion.button>
+                    </motion.div>
                   </motion.div>
-                </AnimatePresence>
-              )}
-            </>
-          </>
-        </div>
+                )}
+              </motion.div>
+            </div>
+          )}
+        </>
       </div>
     </motion.header>
   );

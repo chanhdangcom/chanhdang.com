@@ -230,7 +230,7 @@ export const CloseIcon = () => {
 const cards = [
   {
     description: "Hustlang Robber",
-    title: "Hustlang all day",
+    title: "HUSTLANG ALL DAY",
     src: "/img/music-cover/HustlangAllDay.jpg",
     ctaText: "Play",
     ctaLink: "/audio/HUSTLANG ALL DAY.mp3",
@@ -251,7 +251,7 @@ const cards = [
   },
   {
     description: "Sơn Tùng M-TP",
-    title: "Có chắc yêu là đây",
+    title: "CÓ CHẮC YÊU LÀ ĐÂY",
     src: "/img/music-cover/CoChacYeuLaDay.jpg",
     ctaText: "Play",
     ctaLink: "/audio/CoChacYeuLaDay.mp3",
@@ -270,7 +270,7 @@ const cards = [
   },
   {
     description: "Quốc Thiên",
-    title: "Chia cách bình yên",
+    title: "CHIA CÁNH BÌNH YÊN",
     src: "/img/music-cover/ChiaCachBinhYen.jpg",
     ctaText: "Play",
     ctaLink: "/audio/ChiaCachBinhYen.mp3",
@@ -292,7 +292,7 @@ const cards = [
   },
   {
     description: "Soobin Hoàng Sơn & Tùng Dương",
-    title: "Giá như",
+    title: "GIÁ NHƯ",
     src: "/img/music-cover/GiaNhu.jpg",
     ctaText: "Play",
     ctaLink: "/audio/GiaNhu.mp3",
