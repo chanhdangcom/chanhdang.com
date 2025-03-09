@@ -23,18 +23,14 @@ export function DynamicIslandWave({ isPlay }: IPlay) {
           }}
           animate={{
             height: isPlay
-              ? ["30%", "90%", "40%", "70%", "50%", "85%", "30%"] // Sóng động
-              : "40%", // Sóng tĩnh giữ nguyên chiều cao
+              ? ["30%", "90%", "40%", "70%", "50%", "85%", "30%"] // Sóng động mạnh
+              : ["40%", "50%", "45%", "42%", "48%", "44%", "40%"], // Sóng nhấp nhô nhẹ
           }}
-          transition={
-            isPlay
-              ? {
-                  repeat: Infinity,
-                  duration: 0.8 + i * 0.1,
-                  ease: "easeInOut",
-                }
-              : { duration: 0.3 } // Animation dừng lại khi không phát
-          }
+          transition={{
+            repeat: Infinity,
+            duration: isPlay ? 0.8 + i * 0.1 : 1.2 + i * 0.2, // Khi tĩnh thì chậm hơn một chút
+            ease: "easeInOut",
+          }}
         />
       ))}
     </div>

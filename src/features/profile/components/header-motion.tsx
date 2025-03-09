@@ -74,7 +74,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                   damping: 20,
                   duration: 0.5,
                 }}
-                className="flex items-center justify-center rounded-full border bg-zinc-100 p-1 pr-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+                className="flex items-center justify-center rounded-full border bg-zinc-100 p-1 pr-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-950"
               >
                 {!isClick ? (
                   <AnimatePresence mode="wait">
@@ -144,10 +144,10 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                       damping: 20,
                       duration: 0.5,
                     }}
-                    className="w-[45vh] space-y-4 p-3"
+                    className="w-[50vh] space-y-4 p-3"
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                         <motion.div
                           layoutId="image-large"
                           className="flex size-16 items-center justify-center"
@@ -168,7 +168,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                         <div>
                           <motion.div
                             layoutId="text-large"
-                            className="md:text-md flex items-center justify-between text-base"
+                            className="flex items-center justify-between text-lg"
                           >
                             {!songTitle ? (
                               <div>TITLE SONG</div>
@@ -187,9 +187,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                         </div>
                       </div>
 
-                      <div className="">
-                        <DynamicIslandWave isPlay={false} />
-                      </div>
+                      <DynamicIslandWave isPlay={false} />
                     </div>
 
                     <motion.div
@@ -268,7 +266,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                   damping: 20,
                   duration: 0.5,
                 }}
-                className="flex rounded-full border bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+                className="flex rounded-full border bg-zinc-100 shadow-sm dark:border-zinc-700 dark:bg-zinc-950"
               >
                 {!isClick ? (
                   <motion.div
@@ -339,7 +337,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                     className="w-[50vh] min-w-[50vh] space-y-4 p-3"
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                         <motion.div
                           layoutId="image-large"
                           className="flex size-16 items-center justify-center"
