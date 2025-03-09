@@ -114,7 +114,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         duration={duration}
         songTitle={songTitle}
         coverImage={coverImage}
-        singer={singerTitle}
+        singerTitle={singerTitle}
       />
       {children}
     </MusicContext.Provider>

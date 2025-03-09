@@ -17,7 +17,11 @@ type IProp = {
   isPlaying: boolean;
   currentTime: number;
   duration: number;
+  songTitle: string;
+  coverImage: string;
+  singerTitle: string;
 };
+
 export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
   const { scrollY } = useScroll();
   const _top = useTransform(scrollY, [100, 400], [-80, 0]);
@@ -70,7 +74,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                   damping: 20,
                   duration: 0.5,
                 }}
-                className="flex items-center justify-center rounded-full border bg-zinc-100 p-1 pr-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+                className="flex items-center justify-center rounded-full border bg-zinc-100 p-1 pr-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-950"
               >
                 {!isClick ? (
                   <AnimatePresence mode="wait">
@@ -264,7 +268,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                   damping: 20,
                   duration: 0.5,
                 }}
-                className="flex rounded-full border bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+                className="flex rounded-full border bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-950"
               >
                 {!isClick ? (
                   <motion.div
@@ -281,6 +285,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                     className="flex w-[40vh] min-w-[40vh] items-center justify-between p-1"
                   >
                     <div className="flex items-center gap-2">
+                      {/* Ảnh xoay tròn */}
                       <motion.div
                         layoutId="image-small"
                         className="size-10"
