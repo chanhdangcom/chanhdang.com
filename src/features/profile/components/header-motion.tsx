@@ -192,10 +192,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                       />
                     </div>
 
-                    <motion.div
-                      layout
-                      className="mt-3 flex items-center justify-center space-x-4"
-                    >
+                    <div className="mt-3 flex items-center justify-center space-x-4">
                       <motion.button
                         whileTap={{ scale: 0.95 }}
                         className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
@@ -223,7 +220,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                       >
                         <FastForward size={32} weight="fill" />
                       </motion.button>
-                    </motion.div>
+                    </div>
                   </motion.div>
                 )}
               </motion.div>
