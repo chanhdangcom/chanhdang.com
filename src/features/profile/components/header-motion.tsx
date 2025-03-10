@@ -11,18 +11,11 @@ import {
   useSpring,
 } from "motion/react";
 
-import {
-  Play,
-  Pause,
-  Rewind,
-  FastForward,
-  HeartStraight,
-  Airplay,
-} from "phosphor-react";
+import { Play, Pause, Rewind, FastForward } from "phosphor-react";
 
 import { useRef, useState } from "react";
 import { useOutsideClick } from "../hook/use-outside-click";
-import Link from "next/link";
+
 import { format } from "date-fns";
 
 type IProp = {
@@ -44,12 +37,11 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
   const {
     handlePauseAudio,
     handleResumeAudio,
-    handleAudioSkip,
-    handAudioForward,
+    // handleAudioSkip,
+    // handAudioForward,
     songTitle,
     coverImage,
     singerTitle,
-    youtubeLink,
   } = useAudio();
 
   const progress = duration ? (currentTime / duration) * 100 : 0;
@@ -65,7 +57,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
       <div
         ref={headerRef}
         onClick={() => setIsClick(!isClick)}
-        className="flex w-fit cursor-pointer items-center justify-center space-x-2 py-2 text-2xl font-bold duration-300 md:hover:scale-105"
+        className="flex w-full cursor-pointer items-center justify-center space-x-2 p-2 text-2xl duration-300 md:hover:scale-105"
       >
         <>
           {!isPlaying ? (
@@ -77,17 +69,14 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                 initial={{
                   opacity: 1,
                   scale: 0.9,
-                  borderRadius: "50px",
                 }}
                 animate={{
                   opacity: 1,
                   scale: 1,
-                  borderRadius: isClick ? "32px" : "50px",
                 }}
                 exit={{
                   opacity: 1,
                   scale: 0.9,
-                  borderRadius: "50px",
                 }}
                 transition={{
                   type: "spring",
@@ -95,7 +84,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                   damping: 20,
                   duration: 1,
                 }}
-                className="flex items-center justify-center rounded-full border bg-zinc-100 shadow-sm dark:border-zinc-700 dark:bg-zinc-950"
+                className="flex w-full items-center justify-center rounded-[40px] bg-zinc-950 dark:border dark:border-zinc-700"
               >
                 {!isClick ? (
                   <AnimatePresence mode="wait">
@@ -103,11 +92,9 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                       key="compact"
                       initial={{
                         scale: 0.9,
-                        borderRadius: "50px",
                       }}
                       animate={{
                         scale: 1,
-                        borderRadius: isClick ? "32px" : "50px",
                       }}
                       transition={{
                         type: "spring",
@@ -165,49 +152,46 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                     key="compact"
                     initial={{
                       scale: 0.9,
-                      borderRadius: "45px",
                     }}
                     animate={{
                       scale: 1,
-                      borderRadius: isClick ? "32px" : "45px",
                     }}
                     transition={{
                       type: "spring",
                       stiffness: 150,
                       damping: 20,
                     }}
-                    className="h-[335px] w-[675px] space-y-4 p-4"
+                    className="w-full p-5"
                   >
-                    <div className="font-sf flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-3">
-                        <div className="flex size-16 items-center justify-center">
+                    <div className="font-sf flex justify-between gap-2">
+                      <div className="flex items-center gap-4">
+                        <>
                           {!coverImage ? (
-                            <div className="flex size-16 items-center rounded-2xl border shadow-sm dark:border-zinc-950 dark:bg-zinc-900"></div>
+                            <div className="flex size-16 items-center rounded-2xl border border-zinc-950 bg-zinc-900 shadow-sm"></div>
                           ) : (
                             <Image
                               src={coverImage}
                               alt="Cover"
                               width={192}
                               height={192}
-                              className="flex size-16 items-center rounded-2xl border shadow-sm dark:border-zinc-950"
+                              className="size-16 rounded-2xl shadow-sm"
                             />
                           )}
-                        </div>
+                        </>
 
                         <motion.div
                           initial={{ opacity: 0.3 }}
                           animate={{ opacity: 1 }}
                           transition={{ duration: 0.5 }}
+                          className="text-sm font-semibold leading-5 text-zinc-50"
                         >
-                          <div className="flex items-center justify-between text-base">
-                            {!songTitle ? (
-                              <div>TITLE SONG</div>
-                            ) : (
-                              <div>{songTitle}</div>
-                            )}
-                          </div>
+                          {!songTitle ? (
+                            <div>TITLE SONG</div>
+                          ) : (
+                            <div>{songTitle}</div>
+                          )}
 
-                          <div className="text-xs text-zinc-400">
+                          <div className="font-normal text-zinc-400">
                             {!singerTitle ? (
                               <div>Singer</div>
                             ) : (
@@ -217,92 +201,86 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                         </motion.div>
                       </div>
 
-                      <DynamicIslandWave isPlay={false} />
+                      <div className="mt-3">
+                        <DynamicIslandWave isPlay={false} />
+                      </div>
                     </div>
 
-                    <div className="font-sf mx-auto flex items-center justify-between gap-x-2">
+                    <div className="font-sf mx-auto mt-4 flex items-center justify-between gap-2">
                       <div className="text-xs text-zinc-400">
-                        {format(new Date(currentTime * 1000), "mm:ss")}
+                        {format(new Date(currentTime * 1000), "m:ss")}
                       </div>
 
-                      <div className="h-1 w-64 overflow-hidden rounded-full bg-zinc-400 md:w-72">
+                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-zinc-700 md:w-72">
                         <motion.div
-                          className="h-full bg-zinc-500 transition-all duration-300 dark:bg-zinc-50"
+                          className="h-full bg-zinc-50 transition-all duration-300"
                           style={{ width: `${progress}%` }}
                         />
                       </div>
 
                       <div className="text-xs text-zinc-400">
-                        {format(new Date(duration * 1000), "mm:ss")}
+                        {format(new Date(duration * 1000), "m:ss")}
                       </div>
                     </div>
 
-                    <div className="mt-3 flex items-center justify-between">
-                      <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-300 hover:bg-zinc-200 dark:text-zinc-600 dark:hover:bg-zinc-800"></motion.button>
-
-                      <div className="flex gap-4">
-                        <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800">
-                          <Rewind size={32} weight="fill" />
+                    <div className="mt-3 flex items-center justify-center">
+                      <div className="flex items-center justify-center gap-10">
+                        <motion.button className="flex cursor-pointer items-center justify-center rounded-full text-zinc-50 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                          <Rewind size={30} weight="fill" />
                         </motion.button>
 
                         <motion.button
                           onClick={
                             isPlaying ? handlePauseAudio : handleResumeAudio
                           }
-                          className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                          className="flex cursor-pointer items-center justify-center rounded-full text-zinc-50 hover:bg-zinc-200 dark:hover:bg-zinc-800"
                         >
                           {isPlaying ? (
-                            <Pause size={32} weight="fill" />
+                            <Pause size={36} weight="fill" />
                           ) : (
-                            <Play size={32} weight="fill" />
+                            <Play size={36} weight="fill" />
                           )}
                         </motion.button>
 
-                        <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800">
-                          <FastForward size={32} weight="fill" />
+                        <motion.button className="flex cursor-pointer items-center justify-center rounded-full text-zinc-50 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                          <FastForward size={30} weight="fill" />
                         </motion.button>
                       </div>
-
-                      <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-300 hover:bg-zinc-200 dark:text-zinc-600 dark:hover:bg-zinc-800">
-                        <Airplay size={32} />
-                      </motion.button>
                     </div>
                   </motion.div>
                 )}
               </motion.div>
             </>
           ) : (
-            <div>
+            <div className="flex w-full items-center justify-center">
               <motion.div
                 layoutId="dynamic-island"
                 initial={{
                   scale: 0.9,
-                  borderRadius: "50px",
                 }}
                 animate={{
                   scale: 1,
-                  borderRadius: isClick ? "32px" : "50px",
                 }}
                 transition={{
                   type: "spring",
                   stiffness: 150,
                   damping: 20,
                 }}
-                className="flex rounded-full border bg-zinc-100 shadow-sm dark:border-zinc-700 dark:bg-zinc-950"
+                className="w-full rounded-[40px] bg-zinc-950 dark:border-zinc-700"
               >
                 {!isClick ? (
                   <motion.div
                     layoutId="compact"
-                    initial={{ scale: 0.9, borderRadius: "50px" }}
-                    animate={{ scale: 1, borderRadius: "24px" }}
-                    exit={{ scale: 0.9, borderRadius: "50px" }}
+                    initial={{ scale: 0.9 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0.9 }}
                     transition={{
                       type: "spring",
                       stiffness: 180,
                       damping: 20,
                       duration: 1,
                     }}
-                    className="flex w-[40vh] min-w-[40vh] items-center justify-between p-1"
+                    className="flex items-center justify-between p-1"
                   >
                     <motion.div
                       initial={{ opacity: 0 }}
@@ -324,18 +302,12 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                           alt="Cover"
                           width={192}
                           height={192}
-                          className="size-10 rounded-full border shadow-sm dark:border-zinc-800"
+                          className="size-10 rounded-full"
                         />
                       </motion.div>
-
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                        className="font-sf text-sm"
-                      >
+                      <div className="font-sf text-sm text-zinc-50">
                         {songTitle}
-                      </motion.div>
+                      </div>
                     </motion.div>
 
                     <AnimatePresence>
@@ -353,123 +325,91 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                   </motion.div>
                 ) : (
                   <motion.div
-                    layoutId="expanded"
-                    initial={{ scale: 0.9 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0.9 }}
+                    key="compact"
+                    initial={{
+                      scale: 0.9,
+                    }}
+                    animate={{
+                      scale: 1,
+                    }}
                     transition={{
                       type: "spring",
-                      stiffness: 180,
+                      stiffness: 150,
                       damping: 20,
-                      duration: 1,
                     }}
-                    className="w-[50vh] space-y-4 p-3"
+                    className="w-full p-5"
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <motion.div
-                          animate={{ opacity: 1 }}
-                          transition={{ duration: 0.5 }}
-                          className="flex size-16 items-center justify-center"
-                        >
-                          <motion.div
-                            animate={{ y: [-1.5, 0, -1.5] }}
-                            transition={{
-                              duration: 1,
-                              ease: "easeInOut",
-                              repeat: Infinity,
-                            }}
-                          >
-                            <Image
-                              src={coverImage}
-                              alt="Cover"
-                              width={192}
-                              height={192}
-                              className="flex size-16 items-center rounded-2xl border shadow-sm dark:border-zinc-950"
-                            />
-                          </motion.div>
-                        </motion.div>
+                    <div className="font-sf flex justify-between gap-2">
+                      <div className="flex items-center gap-4">
+                        <>
+                          <Image
+                            src={coverImage}
+                            alt="Cover"
+                            width={192}
+                            height={192}
+                            className="size-16 rounded-2xl shadow-sm"
+                          />
+                        </>
 
                         <motion.div
-                          initial={{ opacity: 0.5 }}
+                          initial={{ opacity: 0.3 }}
                           animate={{ opacity: 1 }}
                           transition={{ duration: 0.5 }}
+                          className="text-sm font-semibold leading-5 text-zinc-50"
                         >
-                          <div className="flex items-center justify-between text-xl">
-                            {songTitle}
-                          </div>
+                          <div>{songTitle}</div>
 
-                          <div className="text-sm font-thin text-zinc-400">
-                            {singerTitle}
+                          <div className="font-normal text-zinc-400">
+                            <div>{singerTitle}</div>
                           </div>
                         </motion.div>
                       </div>
 
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                      >
+                      <div className="mt-3">
                         <DynamicIslandWave isPlay={true} />
-                      </motion.div>
+                      </div>
                     </div>
 
-                    <div className="mx-auto flex items-center justify-between gap-x-2">
-                      <div className="ml-4 text-xs font-thin text-zinc-400">
-                        {format(new Date(currentTime * 1000), "mm:ss")}
+                    <div className="font-sf mx-auto mt-4 flex items-center justify-between gap-2">
+                      <div className="text-xs text-zinc-400">
+                        {format(new Date(currentTime * 1000), "m:ss")}
                       </div>
 
-                      <div className="h-1 w-64 overflow-hidden rounded-full bg-zinc-400 md:w-72">
+                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-zinc-700 md:w-72">
                         <motion.div
-                          className="dark:zinc-50 h-full bg-zinc-500 transition-all duration-300 dark:bg-zinc-50"
+                          className="h-full bg-zinc-50 transition-all duration-300"
                           style={{ width: `${progress}%` }}
                         />
                       </div>
 
-                      <div className="mr-4 text-xs font-thin text-zinc-400">
-                        {format(new Date(duration * 1000), "mm:ss")}
+                      <div className="text-xs text-zinc-400">
+                        {format(new Date(duration * 1000), "m:ss")}
                       </div>
                     </div>
 
-                    <div className="mt-3 flex items-center justify-between">
-                      <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-300 hover:bg-zinc-200 dark:text-zinc-600 dark:hover:bg-zinc-800">
-                        <HeartStraight size={32} />
-                      </motion.button>
-
-                      <div className="flex items-center justify-center gap-4">
-                        <motion.button
-                          onClick={handAudioForward}
-                          className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
-                        >
-                          <Rewind size={32} weight="fill" />
+                    <div className="mt-3 flex items-center justify-center">
+                      <div className="flex items-center justify-center gap-10">
+                        <motion.button className="flex cursor-pointer items-center justify-center rounded-full text-zinc-50 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                          <Rewind size={30} weight="fill" />
                         </motion.button>
 
                         <motion.button
                           onClick={
                             isPlaying ? handlePauseAudio : handleResumeAudio
                           }
-                          className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                          className="flex cursor-pointer items-center justify-center rounded-full text-zinc-50 hover:bg-zinc-200 dark:hover:bg-zinc-800"
                         >
                           {isPlaying ? (
-                            <Pause size={32} weight="fill" />
+                            <Pause size={36} weight="fill" />
                           ) : (
-                            <Play size={32} weight="fill" />
+                            <Play size={36} weight="fill" />
                           )}
                         </motion.button>
 
-                        <motion.button
-                          onClick={handleAudioSkip}
-                          className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
-                        >
-                          <FastForward size={32} weight="fill" />
+                        <motion.button className="flex cursor-pointer items-center justify-center rounded-full text-zinc-50 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                          <FastForward size={30} weight="fill" />
                         </motion.button>
                       </div>
-
-                      <Link target="_blank" href={youtubeLink}>
-                        <motion.button className="flex size-8 cursor-pointer items-center justify-start rounded-full p-1 text-zinc-300 hover:bg-zinc-200 dark:text-zinc-600 dark:hover:bg-zinc-800">
-                          <Airplay size={32} />
-                        </motion.button>
-                      </Link>
                     </div>
                   </motion.div>
                 )}

@@ -17,13 +17,13 @@ export function DynamicIslandWave({ isPlay }: IPlay) {
           className="mx-0.5 w-[2px] rounded-full bg-gray-400"
           animate={{
             height: isPlay
-              ? ["10%", "100%", "15%", "90%", "20%", "95%", "10%"] // Biên độ cao hơn
-              : ["40%", "50%", "45%", "55%", "42%", "48%", "40%"],
-            opacity: isPlay ? [0.5, 1, 0.7] : [0.5, 0.6, 0.5],
+              ? ["20%", "80%", "30%", "90%", "40%", "85%", "25%"] // Biên độ mượt hơn
+              : ["50%", "55%", "52%", "58%", "50%", "54%", "51%"],
+            opacity: isPlay ? [0.6, 1, 0.8] : [0.5, 0.55, 0.5],
           }}
           transition={{
             repeat: Infinity,
-            duration: isPlay ? 0.4 + i * 0.08 : 1.2 + i * 0.15, // Nhanh hơn một chút
+            duration: isPlay ? 0.7 + i * 0.1 : 1.8 + i * 0.2, // Chậm hơn trước
             ease: "easeInOut",
           }}
         />
