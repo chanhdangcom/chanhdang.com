@@ -5,7 +5,6 @@ import React, { useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "./hook/use-outside-click";
 import { ExperienceInfoItem } from "./components/experience-info-item";
-
 import { ListMusicIcon } from "lucide-react";
 import { useAudio } from "@/components/music-provider";
 
@@ -122,7 +121,8 @@ export function MusicList() {
                         active.ctaLink,
                         active.title,
                         active.src,
-                        active.description
+                        active.description,
+                        active.youtubeLink
                       )
                     }
                   >
@@ -229,11 +229,12 @@ export const CloseIcon = () => {
 
 const cards = [
   {
+    youtubeLink: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
     description: "Hustlang Robber",
     title: "HUSTLANG ALL DAY",
     src: "/img/music-cover/HustlangAllDay.jpg",
     ctaText: "Play",
-    ctaLink: "/audio/HUSTLANG ALL DAY.mp3",
+    ctaLink: "/audio/HUSTLANGALLDAY.mp3",
     content: () => {
       return (
         <p className="container flex-wrap text-lg">
@@ -250,6 +251,7 @@ const cards = [
     },
   },
   {
+    youtubeLink: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
     description: "Sơn Tùng M-TP",
     title: "CÓ CHẮC YÊU LÀ ĐÂY",
     src: "/img/music-cover/CoChacYeuLaDay.jpg",
@@ -269,6 +271,7 @@ const cards = [
     },
   },
   {
+    youtubeLink: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
     description: "Quốc Thiên",
     title: "CHIA CÁNH BÌNH YÊN",
     src: "/img/music-cover/ChiaCachBinhYen.jpg",
@@ -291,6 +294,7 @@ const cards = [
     },
   },
   {
+    youtubeLink: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
     description: "Soobin Hoàng Sơn & Tùng Dương",
     title: "GIÁ NHƯ",
     src: "/img/music-cover/GiaNhu.jpg",

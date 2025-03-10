@@ -6,7 +6,8 @@ type IMusicContext = {
     audioUrl: string,
     title: string,
     cover: string,
-    singer: string
+    singer: string,
+    youtube: string
   ) => void;
   handlePauseAudio: () => void;
   handleResumeAudio: () => void;
@@ -20,6 +21,7 @@ type IMusicContext = {
   songTitle: string;
   coverImage: string;
   singerTitle: string;
+  youtubeLink: string;
 };
 
 const MusicContext = React.createContext<IMusicContext | null>(null);
@@ -41,13 +43,15 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   const [songTitle, setSongTitle] = useState("");
   const [coverImage, setCoverImage] = useState("");
   const [singerTitle, setSingerTitle] = useState("");
+  const [youtubeLink, setYoutubeLink] = useState("");
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const handlePlayAudio = (
     audioUrl: string,
     title: string,
     cover: string,
-    singer: string
+    singer: string,
+    youtube: string
   ) => {
     if (!audioRef.current) {
       audioRef.current = new Audio(audioUrl);
@@ -67,6 +71,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     setSongTitle(title);
     setCoverImage(cover);
     setSingerTitle(singer);
+    setYoutubeLink(youtube);
   };
 
   const handlePauseAudio = () => {
@@ -83,7 +88,13 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       setIsPlaying(true);
       setIsPaused(false);
     } else if (!audioRef.current && lastPlayedUrl) {
-      handlePlayAudio(lastPlayedUrl, songTitle, coverImage, singerTitle);
+      handlePlayAudio(
+        lastPlayedUrl,
+        songTitle,
+        coverImage,
+        singerTitle,
+        youtubeLink
+      );
     }
   };
 
@@ -127,6 +138,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         songTitle,
         coverImage,
         singerTitle,
+        youtubeLink,
       }}
     >
       <HeaderMotion
@@ -136,6 +148,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         songTitle={songTitle}
         coverImage={coverImage}
         singerTitle={singerTitle}
+        youtubeLink={youtubeLink}
       />
       {children}
     </MusicContext.Provider>

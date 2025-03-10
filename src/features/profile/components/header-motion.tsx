@@ -10,6 +10,7 @@ import {
   useTransform,
   useSpring,
 } from "motion/react";
+
 import {
   Play,
   Pause,
@@ -18,8 +19,11 @@ import {
   HeartStraight,
   Airplay,
 } from "phosphor-react";
+
 import { useRef, useState } from "react";
 import { useOutsideClick } from "../hook/use-outside-click";
+import Link from "next/link";
+import { format } from "date-fns";
 
 type IProp = {
   isPlaying: boolean;
@@ -28,12 +32,14 @@ type IProp = {
   songTitle: string;
   coverImage: string;
   singerTitle: string;
+  youtubeLink: string;
 };
 
 export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
   const { scrollY } = useScroll();
   const _top = useTransform(scrollY, [100, 400], [-80, 0]);
   const top = useSpring(_top);
+
   const {
     handlePauseAudio,
     handleResumeAudio,
@@ -42,10 +48,11 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
     songTitle,
     coverImage,
     singerTitle,
+    youtubeLink,
   } = useAudio();
+
   const progress = duration ? (currentTime / duration) * 100 : 0;
   const [isClick, setIsClick] = useState(false);
-
   const headerRef = useRef<HTMLDivElement>(null);
   useOutsideClick(headerRef, () => setIsClick(false));
 
@@ -191,7 +198,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                           animate={{ opacity: 1 }}
                           transition={{ duration: 0.5 }}
                         >
-                          <div className="flex items-center justify-between text-lg">
+                          <div className="flex items-center justify-between text-xl">
                             {!songTitle ? (
                               <div>TITLE SONG</div>
                             ) : (
@@ -212,11 +219,21 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                       <DynamicIslandWave isPlay={false} />
                     </div>
 
-                    <div className="mx-auto h-1 w-72 overflow-hidden rounded-full bg-zinc-400">
-                      <motion.div
-                        className="h-full bg-zinc-50 transition-all duration-300"
-                        style={{ width: `${progress}%` }}
-                      />
+                    <div className="mx-auto flex items-center justify-between gap-x-2">
+                      <div className="ml-4 text-xs font-thin text-zinc-400">
+                        {format(new Date(currentTime * 1000), "mm:ss")}
+                      </div>
+
+                      <div className="h-1 w-64 overflow-hidden rounded-full bg-zinc-400 md:w-72">
+                        <motion.div
+                          className="h-full bg-zinc-50 transition-all duration-300"
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+
+                      <div className="mr-4 text-xs font-thin text-zinc-400">
+                        {format(new Date(duration * 1000), "mm:ss")}
+                      </div>
                     </div>
 
                     <div className="mt-3 flex items-center justify-between">
@@ -371,7 +388,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                           animate={{ opacity: 1 }}
                           transition={{ duration: 0.5 }}
                         >
-                          <div className="md:text-md flex items-center justify-between text-base">
+                          <div className="flex items-center justify-between text-xl">
                             {songTitle}
                           </div>
 
@@ -390,11 +407,21 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                       </motion.div>
                     </div>
 
-                    <div className="mx-auto h-1 w-72 overflow-hidden rounded-full bg-zinc-400">
-                      <motion.div
-                        className="h-full bg-zinc-50 transition-all duration-300"
-                        style={{ width: `${progress}%` }}
-                      />
+                    <div className="mx-auto flex items-center justify-between gap-x-2">
+                      <div className="ml-4 text-xs font-thin text-zinc-400">
+                        {format(new Date(currentTime * 1000), "mm:ss")}
+                      </div>
+
+                      <div className="h-1 w-64 overflow-hidden rounded-full bg-zinc-400 md:w-72">
+                        <motion.div
+                          className="h-full bg-zinc-50 transition-all duration-300"
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+
+                      <div className="mr-4 text-xs font-thin text-zinc-400">
+                        {format(new Date(duration * 1000), "mm:ss")}
+                      </div>
                     </div>
 
                     <div className="mt-3 flex items-center justify-between">
@@ -431,9 +458,11 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                         </motion.button>
                       </div>
 
-                      <motion.button className="flex size-8 cursor-pointer items-center justify-start rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800">
-                        <Airplay size={32} />
-                      </motion.button>
+                      <Link target="_blank" href={youtubeLink}>
+                        <motion.button className="flex size-8 cursor-pointer items-center justify-start rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                          <Airplay size={32} />
+                        </motion.button>
+                      </Link>
                     </div>
                   </motion.div>
                 )}
