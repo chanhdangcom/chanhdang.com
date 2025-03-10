@@ -11,7 +11,8 @@ import {
   useSpring,
 } from "motion/react";
 import { Play, Pause, Rewind, FastForward } from "phosphor-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useOutsideClick } from "../hook/use-outside-click";
 
 type IProp = {
   isPlaying: boolean;
@@ -36,13 +37,19 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
   const progress = duration ? (currentTime / duration) * 100 : 0;
   const [isClick, setIsClick] = useState(false);
 
+  const headerRef = useRef<HTMLDivElement>(null);
+  useOutsideClick(headerRef, () => setIsClick(false));
+
   return (
     <motion.header
       className="fixed inset-x-0 top-0 z-[1000] flex justify-center bg-background"
       style={{ top }}
-      onClick={() => setIsClick(!isClick)}
     >
-      <div className="flex w-fit cursor-pointer items-center justify-center space-x-2 rounded-full py-2 text-2xl font-bold duration-300 md:hover:scale-105">
+      <div
+        ref={headerRef}
+        onClick={() => setIsClick(!isClick)}
+        className="flex w-fit cursor-pointer items-center justify-center space-x-2 rounded-full py-2 text-2xl font-bold duration-300 md:hover:scale-105"
+      >
         <>
           {!isPlaying ? (
             <>
@@ -51,28 +58,25 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                 key={`PauseAudio-${isClick ? "expanded" : "compact"}`}
                 layoutId="dynamic-island"
                 initial={{
-                  opacity: 0,
+                  opacity: 1,
                   scale: 0.9,
-                  clipPath: "inset(40% 50% 40% 50%)",
                   borderRadius: "50px",
                 }}
                 animate={{
                   opacity: 1,
                   scale: 1,
-                  clipPath: "inset(0% 0% 0% 0%)",
                   borderRadius: isClick ? "32px" : "50px",
                 }}
                 exit={{
-                  opacity: 0,
+                  opacity: 1,
                   scale: 0.9,
-                  clipPath: "inset(40% 50% 40% 50%)",
                   borderRadius: "50px",
                 }}
                 transition={{
                   type: "spring",
                   stiffness: 150,
                   damping: 20,
-                  duration: 0.5,
+                  duration: 1,
                 }}
                 className="flex items-center justify-center rounded-full border bg-zinc-100 shadow-sm dark:border-zinc-700 dark:bg-zinc-950"
               >
@@ -80,37 +84,32 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                   <AnimatePresence mode="wait">
                     <motion.div
                       key="compact"
-                      layoutId="compact"
-                      initial={{ scale: 0.9 }}
-                      animate={{ scale: 1 }}
-                      exit={{ scale: 0.9 }}
+                      initial={{
+                        scale: 0.9,
+                        borderRadius: "50px",
+                      }}
+                      animate={{
+                        scale: 1,
+                        borderRadius: isClick ? "32px" : "50px",
+                      }}
                       transition={{
                         type: "spring",
-                        stiffness: 180,
+                        stiffness: 150,
                         damping: 20,
-                        duration: 0.5,
                       }}
                       className="flex w-fit items-center gap-2 p-1"
                     >
-                      <motion.div
-                        animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
-                        transition={{
-                          duration: isPlaying ? 5 : 0.5,
-                          repeat: isPlaying ? Infinity : 0,
-                          ease: "linear",
-                        }}
-                        className="size-10"
-                      >
-                        <Image
-                          src="/img/avatar.jpeg"
-                          alt="Avatar"
-                          width={192}
-                          height={192}
-                          className="size-10 rounded-full border shadow-sm dark:border-zinc-800"
-                        />
-                      </motion.div>
+                      <Image
+                        src="/img/avatar.jpeg"
+                        alt="Avatar"
+                        width={192}
+                        height={192}
+                        className="size-10 rounded-full border shadow-sm dark:border-zinc-800"
+                      />
 
-                      <div className="text-xl">Nguyễn Chánh Đang</div>
+                      <motion.div layout className="text-xl">
+                        Nguyễn Chánh Đang
+                      </motion.div>
 
                       <svg
                         className="mr-2 text-left text-3xl text-blue-600"
@@ -133,24 +132,24 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                 ) : (
                   <motion.div
                     key="compact"
-                    layoutId="expanded"
-                    initial={{ scale: 0.9 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0.9 }}
+                    initial={{
+                      scale: 0.9,
+                      borderRadius: "50px",
+                    }}
+                    animate={{
+                      scale: 1,
+                      borderRadius: isClick ? "32px" : "50px",
+                    }}
                     transition={{
                       type: "spring",
-                      stiffness: 180,
+                      stiffness: 150,
                       damping: 20,
-                      duration: 0.5,
                     }}
                     className="w-[50vh] space-y-4 p-3"
                   >
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-3">
-                        <motion.div
-                          layoutId="image-large"
-                          className="flex size-16 items-center justify-center"
-                        >
+                        <div className="flex size-16 items-center justify-center">
                           {!coverImage ? (
                             <div className="flex size-16 items-center rounded-2xl border shadow-sm dark:border-zinc-950 dark:bg-zinc-800"></div>
                           ) : (
@@ -162,19 +161,16 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                               className="flex size-16 items-center rounded-2xl border shadow-sm dark:border-zinc-950"
                             />
                           )}
-                        </motion.div>
+                        </div>
 
                         <div>
-                          <motion.div
-                            layoutId="text-large"
-                            className="flex items-center justify-between text-lg"
-                          >
+                          <div className="flex items-center justify-between text-lg">
                             {!songTitle ? (
                               <div>TITLE SONG</div>
                             ) : (
                               <div>{songTitle}</div>
                             )}
-                          </motion.div>
+                          </div>
 
                           <div className="text-sm font-thin text-zinc-400">
                             {!singerTitle ? (
@@ -189,15 +185,12 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                       <DynamicIslandWave isPlay={false} />
                     </div>
 
-                    <motion.div
-                      layoutId="progress-bar"
-                      className="mx-auto h-1 w-72 overflow-hidden rounded-full bg-zinc-400"
-                    >
+                    <div className="mx-auto h-1 w-72 overflow-hidden rounded-full bg-zinc-400">
                       <motion.div
                         className="h-full bg-zinc-50 transition-all duration-300"
                         style={{ width: `${progress}%` }}
                       />
-                    </motion.div>
+                    </div>
 
                     <motion.div
                       layout
@@ -241,12 +234,10 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                 layoutId="dynamic-island"
                 initial={{
                   scale: 0.9,
-                  clipPath: "inset(40% 50% 40% 50%)",
                   borderRadius: "50px",
                 }}
                 animate={{
                   scale: 1,
-                  clipPath: "inset(0% 0% 0% 0%)",
                   borderRadius: isClick ? "32px" : "50px",
                 }}
                 transition={{
@@ -266,12 +257,11 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                       type: "spring",
                       stiffness: 180,
                       damping: 20,
-                      duration: 0.5,
+                      duration: 1,
                     }}
                     className="flex w-[40vh] min-w-[40vh] items-center justify-between p-1"
                   >
                     <div className="flex items-center gap-2">
-                      {/* Ảnh xoay tròn */}
                       <motion.div
                         className="size-10"
                         animate={{ rotate: 360 }}
@@ -319,16 +309,13 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                       type: "spring",
                       stiffness: 180,
                       damping: 20,
-                      duration: 0.5,
+                      duration: 1,
                     }}
                     className="w-[50vh] space-y-4 p-3"
                   >
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-3">
-                        <motion.div
-                          layoutId="image-large"
-                          className="flex size-16 items-center justify-center"
-                        >
+                        <div className="flex size-16 items-center justify-center">
                           <Image
                             src={coverImage}
                             alt="Cover"
@@ -336,15 +323,12 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                             height={192}
                             className="flex size-16 items-center rounded-2xl border shadow-sm dark:border-zinc-950"
                           />
-                        </motion.div>
+                        </div>
 
                         <div>
-                          <motion.div
-                            layoutId="text-large"
-                            className="md:text-md flex items-center justify-between text-base"
-                          >
+                          <div className="md:text-md flex items-center justify-between text-base">
                             {songTitle}
-                          </motion.div>
+                          </div>
 
                           <div className="text-sm font-thin text-zinc-400">
                             {singerTitle}
@@ -357,20 +341,14 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                       </div>
                     </div>
 
-                    <motion.div
-                      layoutId="progress-bar"
-                      className="mx-auto h-1 w-72 overflow-hidden rounded-full bg-zinc-400"
-                    >
+                    <div className="mx-auto h-1 w-72 overflow-hidden rounded-full bg-zinc-400">
                       <motion.div
                         className="h-full bg-zinc-50 transition-all duration-300"
                         style={{ width: `${progress}%` }}
                       />
-                    </motion.div>
+                    </div>
 
-                    <motion.div
-                      layout
-                      className="mt-3 flex items-center justify-center space-x-4"
-                    >
+                    <div className="mt-3 flex items-center justify-center space-x-4">
                       <motion.button
                         whileTap={{ scale: 0.95 }}
                         className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
@@ -398,7 +376,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                       >
                         <FastForward size={32} weight="fill" />
                       </motion.button>
-                    </motion.div>
+                    </div>
                   </motion.div>
                 )}
               </motion.div>
