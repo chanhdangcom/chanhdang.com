@@ -181,7 +181,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                       <div className="flex items-center gap-3">
                         <div className="flex size-16 items-center justify-center">
                           {!coverImage ? (
-                            <div className="flex size-16 items-center rounded-2xl border shadow-sm dark:border-zinc-950 dark:bg-zinc-800"></div>
+                            <div className="flex size-16 items-center rounded-2xl border shadow-sm dark:border-zinc-950 dark:bg-zinc-900"></div>
                           ) : (
                             <Image
                               src={coverImage}
@@ -226,7 +226,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
 
                       <div className="h-1 w-64 overflow-hidden rounded-full bg-zinc-400 md:w-72">
                         <motion.div
-                          className="h-full bg-zinc-50 transition-all duration-300"
+                          className="h-full bg-zinc-500 transition-all duration-300 dark:bg-zinc-50"
                           style={{ width: `${progress}%` }}
                         />
                       </div>
@@ -237,7 +237,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                     </div>
 
                     <div className="mt-3 flex items-center justify-between">
-                      <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                      <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-300 hover:bg-zinc-200 dark:text-zinc-600 dark:hover:bg-zinc-800">
                         <HeartStraight size={32} />
                       </motion.button>
 
@@ -264,7 +264,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                         </motion.button>
                       </div>
 
-                      <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                      <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-300 hover:bg-zinc-200 dark:text-zinc-600 dark:hover:bg-zinc-800">
                         <Airplay size={32} />
                       </motion.button>
                     </div>
@@ -369,18 +369,26 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <motion.div
-                          initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ duration: 0.5 }}
                           className="flex size-16 items-center justify-center"
                         >
-                          <Image
-                            src={coverImage}
-                            alt="Cover"
-                            width={192}
-                            height={192}
-                            className="flex size-16 items-center rounded-2xl border shadow-sm dark:border-zinc-950"
-                          />
+                          <motion.div
+                            animate={{ y: [-1.5, 0, -1.5] }}
+                            transition={{
+                              duration: 1,
+                              ease: "easeInOut",
+                              repeat: Infinity,
+                            }}
+                          >
+                            <Image
+                              src={coverImage}
+                              alt="Cover"
+                              width={192}
+                              height={192}
+                              className="flex size-16 items-center rounded-2xl border shadow-sm dark:border-zinc-950"
+                            />
+                          </motion.div>
                         </motion.div>
 
                         <motion.div
@@ -414,7 +422,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
 
                       <div className="h-1 w-64 overflow-hidden rounded-full bg-zinc-400 md:w-72">
                         <motion.div
-                          className="h-full bg-zinc-50 transition-all duration-300"
+                          className="dark:zinc-50 h-full bg-zinc-500 transition-all duration-300 dark:bg-zinc-50"
                           style={{ width: `${progress}%` }}
                         />
                       </div>
@@ -425,7 +433,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                     </div>
 
                     <div className="mt-3 flex items-center justify-between">
-                      <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                      <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-300 hover:bg-zinc-200 dark:text-zinc-600 dark:hover:bg-zinc-800">
                         <HeartStraight size={32} />
                       </motion.button>
 
@@ -459,7 +467,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                       </div>
 
                       <Link target="_blank" href={youtubeLink}>
-                        <motion.button className="flex size-8 cursor-pointer items-center justify-start rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                        <motion.button className="flex size-8 cursor-pointer items-center justify-start rounded-full p-1 text-zinc-300 hover:bg-zinc-200 dark:text-zinc-600 dark:hover:bg-zinc-800">
                           <Airplay size={32} />
                         </motion.button>
                       </Link>
