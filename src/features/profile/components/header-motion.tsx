@@ -40,9 +40,11 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
     <motion.header
       className="fixed inset-x-0 top-0 z-[1000] flex justify-center bg-background"
       style={{ top }}
-      onClick={() => setIsClick(!isClick)}
     >
-      <div className="flex w-fit cursor-pointer items-center justify-center space-x-2 rounded-full py-2 text-2xl font-bold duration-300 md:hover:scale-105">
+      <div
+        onClick={() => setIsClick(!isClick)}
+        className="flex w-fit cursor-pointer items-center justify-center space-x-2 rounded-full py-2 text-2xl font-bold duration-300 md:hover:scale-105"
+      >
         <>
           {!isPlaying ? (
             <>
