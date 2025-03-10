@@ -30,6 +30,8 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
   const {
     handlePauseAudio,
     handleResumeAudio,
+    handleAudioSkip,
+    handAudioForward,
     songTitle,
     coverImage,
     singerTitle,
@@ -387,6 +389,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
 
                     <div className="mt-3 flex items-center justify-center space-x-4">
                       <motion.button
+                        onClick={handAudioForward}
                         whileTap={{ scale: 0.95 }}
                         className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
                       >
@@ -409,6 +412,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
 
                       <motion.button
                         whileTap={{ scale: 0.95 }}
+                        onClick={handleAudioSkip}
                         className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
                       >
                         <FastForward size={32} weight="fill" />

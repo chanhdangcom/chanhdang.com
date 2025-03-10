@@ -10,6 +10,8 @@ type IMusicContext = {
   ) => void;
   handlePauseAudio: () => void;
   handleResumeAudio: () => void;
+  handleAudioSkip: () => void;
+  handAudioForward: () => void;
   isPlaying: boolean;
   isPaused: boolean;
   lastPlayedUrl: string | null;
@@ -92,12 +94,31 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const handleAudioSkip = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Math.min(
+        audioRef.current.currentTime + 10,
+        audioRef.current.duration
+      );
+    }
+  };
+
+  const handAudioForward = () => {
+    if (audioRef.current) {
+      if (audioRef.current.currentTime > 10) {
+        audioRef.current.currentTime = audioRef.current.currentTime - 10;
+      }
+    }
+  };
+
   return (
     <MusicContext.Provider
       value={{
         handlePlayAudio,
         handlePauseAudio,
         handleResumeAudio,
+        handleAudioSkip,
+        handAudioForward,
         isPlaying,
         isPaused,
         lastPlayedUrl,
