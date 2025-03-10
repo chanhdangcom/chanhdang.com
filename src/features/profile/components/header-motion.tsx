@@ -33,6 +33,7 @@ type IProp = {
   coverImage: string;
   singerTitle: string;
   youtubeLink: string;
+  audioHref: string;
 };
 
 export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
@@ -64,7 +65,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
       <div
         ref={headerRef}
         onClick={() => setIsClick(!isClick)}
-        className="flex w-fit cursor-pointer items-center justify-center space-x-2 rounded-full py-2 text-2xl font-bold duration-300 md:hover:scale-105"
+        className="flex w-fit cursor-pointer items-center justify-center space-x-2 py-2 text-2xl font-bold duration-300 md:hover:scale-105"
       >
         <>
           {!isPlaying ? (
@@ -164,20 +165,20 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                     key="compact"
                     initial={{
                       scale: 0.9,
-                      borderRadius: "50px",
+                      borderRadius: "45px",
                     }}
                     animate={{
                       scale: 1,
-                      borderRadius: isClick ? "32px" : "50px",
+                      borderRadius: isClick ? "32px" : "45px",
                     }}
                     transition={{
                       type: "spring",
                       stiffness: 150,
                       damping: 20,
                     }}
-                    className="w-[50vh] space-y-4 p-3"
+                    className="h-[335px] w-[675px] space-y-4 p-4"
                   >
-                    <div className="flex items-center justify-between gap-2">
+                    <div className="font-sf flex items-center justify-between gap-2">
                       <div className="flex items-center gap-3">
                         <div className="flex size-16 items-center justify-center">
                           {!coverImage ? (
@@ -198,7 +199,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                           animate={{ opacity: 1 }}
                           transition={{ duration: 0.5 }}
                         >
-                          <div className="flex items-center justify-between text-xl">
+                          <div className="flex items-center justify-between text-base">
                             {!songTitle ? (
                               <div>TITLE SONG</div>
                             ) : (
@@ -206,7 +207,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                             )}
                           </div>
 
-                          <div className="text-sm font-thin text-zinc-400">
+                          <div className="text-xs text-zinc-400">
                             {!singerTitle ? (
                               <div>Singer</div>
                             ) : (
@@ -219,8 +220,8 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                       <DynamicIslandWave isPlay={false} />
                     </div>
 
-                    <div className="mx-auto flex items-center justify-between gap-x-2">
-                      <div className="ml-4 text-xs font-thin text-zinc-400">
+                    <div className="font-sf mx-auto flex items-center justify-between gap-x-2">
+                      <div className="text-xs text-zinc-400">
                         {format(new Date(currentTime * 1000), "mm:ss")}
                       </div>
 
@@ -231,15 +232,13 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                         />
                       </div>
 
-                      <div className="mr-4 text-xs font-thin text-zinc-400">
+                      <div className="text-xs text-zinc-400">
                         {format(new Date(duration * 1000), "mm:ss")}
                       </div>
                     </div>
 
                     <div className="mt-3 flex items-center justify-between">
-                      <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-300 hover:bg-zinc-200 dark:text-zinc-600 dark:hover:bg-zinc-800">
-                        <HeartStraight size={32} />
-                      </motion.button>
+                      <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-300 hover:bg-zinc-200 dark:text-zinc-600 dark:hover:bg-zinc-800"></motion.button>
 
                       <div className="flex gap-4">
                         <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800">
@@ -316,7 +315,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                         animate={{ rotate: 360 }}
                         transition={{
                           repeat: Infinity,
-                          duration: 5,
+                          duration: 7,
                           ease: "linear",
                         }}
                       >
@@ -333,7 +332,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
-                        className="text-base"
+                        className="font-sf text-sm"
                       >
                         {songTitle}
                       </motion.div>

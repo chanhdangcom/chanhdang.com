@@ -122,7 +122,8 @@ export function MusicList() {
                         active.title,
                         active.src,
                         active.description,
-                        active.youtubeLink
+                        active.youtubeLink,
+                        active.ctaLink
                       )
                     }
                   >
@@ -252,7 +253,7 @@ const cards = [
   },
   {
     youtubeLink: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
-    description: "Sơn Tùng M-TP",
+    description: "Quốc Thiên",
     title: "CÓ CHẮC YÊU LÀ ĐÂY",
     src: "/img/music-cover/CoChacYeuLaDay.jpg",
     ctaText: "Play",

@@ -7,7 +7,8 @@ type IMusicContext = {
     title: string,
     cover: string,
     singer: string,
-    youtube: string
+    youtube: string,
+    audio: string
   ) => void;
   handlePauseAudio: () => void;
   handleResumeAudio: () => void;
@@ -22,6 +23,7 @@ type IMusicContext = {
   coverImage: string;
   singerTitle: string;
   youtubeLink: string;
+  audioHref: string;
 };
 
 const MusicContext = React.createContext<IMusicContext | null>(null);
@@ -44,6 +46,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   const [coverImage, setCoverImage] = useState("");
   const [singerTitle, setSingerTitle] = useState("");
   const [youtubeLink, setYoutubeLink] = useState("");
+  const [audioHref, setAudioHref] = useState("");
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const handlePlayAudio = (
@@ -51,7 +54,8 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     title: string,
     cover: string,
     singer: string,
-    youtube: string
+    youtube: string,
+    audio: string
   ) => {
     if (!audioRef.current) {
       audioRef.current = new Audio(audioUrl);
@@ -72,6 +76,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     setCoverImage(cover);
     setSingerTitle(singer);
     setYoutubeLink(youtube);
+    setAudioHref(audio);
   };
 
   const handlePauseAudio = () => {
@@ -93,7 +98,8 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         songTitle,
         coverImage,
         singerTitle,
-        youtubeLink
+        youtubeLink,
+        audioHref
       );
     }
   };
@@ -139,6 +145,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         coverImage,
         singerTitle,
         youtubeLink,
+        audioHref,
       }}
     >
       <HeaderMotion
@@ -149,6 +156,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         coverImage={coverImage}
         singerTitle={singerTitle}
         youtubeLink={youtubeLink}
+        audioHref={audioHref}
       />
       {children}
     </MusicContext.Provider>

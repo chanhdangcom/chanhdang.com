@@ -57,7 +57,17 @@ const config: Config = {
   		fontFamily: {
   			body: 'var(--font-body)',
   			handwritten: 'var(--font-handwritten)',
-  			mono: 'var(--font-mono)'
+  			mono: 'var(--font-mono)',
+        sf: [
+          "-apple-system",
+          "BlinkMacSystemFont",
+          '"SF Pro"',
+          '"Segoe UI"',
+          "Roboto",
+          "Helvetica",
+          "Arial",
+          "sans-serif",
+        ],
   		},
   		aspectRatio: {
   			'3/1': '3 / 1'
