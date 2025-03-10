@@ -10,7 +10,14 @@ import {
   useTransform,
   useSpring,
 } from "motion/react";
-import { Play, Pause, Rewind, FastForward } from "phosphor-react";
+import {
+  Play,
+  Pause,
+  Rewind,
+  FastForward,
+  HeartStraight,
+  Airplay,
+} from "phosphor-react";
 import { useRef, useState } from "react";
 import { useOutsideClick } from "../hook/use-outside-click";
 
@@ -212,33 +219,36 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                       />
                     </div>
 
-                    <div className="mt-3 flex items-center justify-center space-x-4">
-                      <motion.button
-                        whileTap={{ scale: 0.95 }}
-                        className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
-                      >
-                        <Rewind size={32} weight="fill" />
+                    <div className="mt-3 flex items-center justify-between">
+                      <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                        <HeartStraight size={32} />
                       </motion.button>
 
-                      <motion.button
-                        whileTap={{ scale: 0.95 }}
-                        onClick={
-                          isPlaying ? handlePauseAudio : handleResumeAudio
-                        }
-                        className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
-                      >
-                        {isPlaying ? (
-                          <Pause size={32} weight="fill" />
-                        ) : (
-                          <Play size={32} weight="fill" />
-                        )}
-                      </motion.button>
+                      <div className="flex gap-4">
+                        <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                          <Rewind size={32} weight="fill" />
+                        </motion.button>
 
-                      <motion.button
-                        whileTap={{ scale: 0.95 }}
-                        className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
-                      >
-                        <FastForward size={32} weight="fill" />
+                        <motion.button
+                          onClick={
+                            isPlaying ? handlePauseAudio : handleResumeAudio
+                          }
+                          className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                        >
+                          {isPlaying ? (
+                            <Pause size={32} weight="fill" />
+                          ) : (
+                            <Play size={32} weight="fill" />
+                          )}
+                        </motion.button>
+
+                        <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                          <FastForward size={32} weight="fill" />
+                        </motion.button>
+                      </div>
+
+                      <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                        <Airplay size={32} />
                       </motion.button>
                     </div>
                   </motion.div>
@@ -339,7 +349,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                     }}
                     className="w-[50vh] space-y-4 p-3"
                   >
-                    <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <motion.div
                           initial={{ opacity: 0 }}
@@ -387,35 +397,42 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                       />
                     </div>
 
-                    <div className="mt-3 flex items-center justify-center space-x-4">
-                      <motion.button
-                        onClick={handAudioForward}
-                        whileTap={{ scale: 0.95 }}
-                        className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
-                      >
-                        <Rewind size={32} weight="fill" />
+                    <div className="mt-3 flex items-center justify-between">
+                      <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                        <HeartStraight size={32} />
                       </motion.button>
 
-                      <motion.button
-                        whileTap={{ scale: 0.95 }}
-                        onClick={
-                          isPlaying ? handlePauseAudio : handleResumeAudio
-                        }
-                        className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
-                      >
-                        {isPlaying ? (
-                          <Pause size={32} weight="fill" />
-                        ) : (
-                          <Play size={32} weight="fill" />
-                        )}
-                      </motion.button>
+                      <div className="flex items-center justify-center gap-4">
+                        <motion.button
+                          onClick={handAudioForward}
+                          className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                        >
+                          <Rewind size={32} weight="fill" />
+                        </motion.button>
 
-                      <motion.button
-                        whileTap={{ scale: 0.95 }}
-                        onClick={handleAudioSkip}
-                        className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
-                      >
-                        <FastForward size={32} weight="fill" />
+                        <motion.button
+                          onClick={
+                            isPlaying ? handlePauseAudio : handleResumeAudio
+                          }
+                          className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                        >
+                          {isPlaying ? (
+                            <Pause size={32} weight="fill" />
+                          ) : (
+                            <Play size={32} weight="fill" />
+                          )}
+                        </motion.button>
+
+                        <motion.button
+                          onClick={handleAudioSkip}
+                          className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                        >
+                          <FastForward size={32} weight="fill" />
+                        </motion.button>
+                      </div>
+
+                      <motion.button className="flex size-8 cursor-pointer items-center justify-start rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                        <Airplay size={32} />
                       </motion.button>
                     </div>
                   </motion.div>
