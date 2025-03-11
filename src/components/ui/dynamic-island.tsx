@@ -14,7 +14,7 @@ export function DynamicIslandWave({ isPlay }: IPlay) {
       {bars.map((_, i) => (
         <motion.div
           key={`bar-${i}`}
-          className="mx-0.5 w-[2px] rounded-full bg-gray-400"
+          className="mx-0.5 w-[2px] rounded-full bg-green-400"
           animate={{
             height: isPlay
               ? ["20%", "80%", "30%", "90%", "40%", "85%", "25%"] // Biên độ mượt hơn
