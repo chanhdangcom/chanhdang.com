@@ -91,7 +91,7 @@ export const HeaderMotion = () => {
             stiffness: 150,
             damping: 20,
           }}
-          className="w-96 space-y-4 p-3"
+          className="w-[calc(100vw-1rem)] space-y-4 p-3 sm:w-96"
         >
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-3">
@@ -326,7 +326,7 @@ export const HeaderMotion = () => {
     >
       <div
         ref={headerRef}
-        className="flex w-fit cursor-pointer items-center justify-center space-x-2 rounded-full py-2 text-2xl font-bold duration-300 md:hover:scale-105"
+        className="flex w-fit cursor-pointer items-center justify-center space-x-2 rounded-full pt-2 text-2xl font-bold duration-300 md:hover:scale-105"
       >
         {isExpanded ? renderExpaned() : renderCollapsed()}
       </div>
