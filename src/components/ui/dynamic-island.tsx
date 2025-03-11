@@ -2,10 +2,7 @@
 
 import { motion } from "framer-motion";
 
-const bars = [1, 2, 3, 4, 5];
-
-const activeColors = ["#86efac", "#4ade80", "#22c55e", "#16a34a", "#15803d"]; // Xanh nhạt đến đậm
-const inactiveColors = ["#d4d4d8", "#a1a1aa", "#71717a", "#52525b", "#3f3f46"]; // Xám nhạt đến đậm
+const bars = new Array(8).fill(0); // 8 cột sóng nhỏ
 
 type IPlay = {
   isPlay: boolean;
@@ -13,22 +10,20 @@ type IPlay = {
 
 export function DynamicIslandWave({ isPlay }: IPlay) {
   return (
-    <div className="relative flex h-5 items-center justify-center rounded-full px-3">
+    <div className="relative flex h-5 items-center justify-center rounded-full">
       {bars.map((_, i) => (
         <motion.div
-          key={`bar-${i}`} // Đảm bảo key duy nhất
-          className="mx-0.5 w-0.5 rounded-full"
-          style={{
-            backgroundColor: isPlay ? activeColors[i] : inactiveColors[i],
-          }}
+          key={`bar-${i}`}
+          className="mx-0.5 w-[2px] rounded-full bg-green-400"
           animate={{
             height: isPlay
-              ? ["30%", "90%", "40%", "70%", "50%", "85%", "30%"] // Sóng động mạnh
-              : ["40%", "50%", "45%", "42%", "48%", "44%", "40%"], // Sóng nhấp nhô nhẹ
+              ? ["20%", "80%", "30%", "90%", "40%", "85%", "25%"] // Biên độ mượt hơn
+              : ["50%", "55%", "52%", "58%", "50%", "54%", "51%"],
+            opacity: isPlay ? [0.6, 1, 0.8] : [0.5, 0.55, 0.5],
           }}
           transition={{
             repeat: Infinity,
-            duration: isPlay ? 0.8 + i * 0.1 : 1.2 + i * 0.2, // Khi tĩnh thì chậm hơn một chút
+            duration: isPlay ? 0.7 + i * 0.1 : 1.8 + i * 0.2, // Chậm hơn trước
             ease: "easeInOut",
           }}
         />

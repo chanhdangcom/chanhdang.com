@@ -11,14 +11,7 @@ import {
   useSpring,
 } from "motion/react";
 
-import {
-  Play,
-  Pause,
-  Rewind,
-  FastForward,
-  HeartStraight,
-  Airplay,
-} from "phosphor-react";
+import { Play, Pause, Rewind, FastForward } from "phosphor-react";
 
 import { useRef, useState } from "react";
 import { useScroll as useScrollCustom } from "../hook/use-scroll";
@@ -50,61 +43,60 @@ export const HeaderMotion = () => {
   const renderExpaned = () => {
     return (
       <motion.div
-        style={{ position: "relative" }}
         key={`PauseAudio-${isExpanded ? "expanded" : "compact"}`}
         layoutId="dynamic-island"
         initial={{
           opacity: 1,
           scale: 0.9,
-          borderRadius: "50px",
+          borderRadius: "40px", // Trạng thái ban đầu là hình tròn
         }}
         animate={{
           opacity: 1,
           scale: 1,
-          borderRadius: isExpanded ? "32px" : "50px",
+          borderRadius: isExpanded ? "40px" : "55px", // Chuyển đổi giữa bo tròn và bo góc
         }}
         exit={{
           opacity: 1,
           scale: 0.9,
-          borderRadius: "50px",
+          borderRadius: "40px",
         }}
         transition={{
           type: "spring",
-          stiffness: 150,
-          damping: 20,
-          duration: 1,
+          stiffness: 150, // Giảm độ đàn hồi để chuyển động chậm hơn
+          damping: 20, // Tăng damping để giảm độ nảy
+          mass: 0.6,
+          duration: 4, // Giảm thời gian để nhanh hơn
         }}
-        className="flex items-center justify-center rounded-full border bg-zinc-100 shadow-sm dark:border-zinc-700 dark:bg-zinc-950"
+        className="flex items-center justify-center rounded-[40px] bg-zinc-950 shadow-2xl dark:border dark:border-zinc-700"
       >
         <motion.div
           key="compact"
           initial={{
             scale: 0.9,
-            borderRadius: "50px",
           }}
           animate={{
             scale: 1,
-            borderRadius: isExpanded ? "32px" : "50px",
           }}
+          exit={{ scale: 0.9 }}
           transition={{
             type: "spring",
             stiffness: 150,
             damping: 20,
           }}
-          className="w-[calc(100vw-1rem)] space-y-4 p-3 sm:w-96"
+          className="w-[calc(100vw-1rem)] p-4 sm:w-96"
         >
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex justify-between">
             <div className="flex items-center gap-3">
               <div className="flex size-16 shrink-0 items-center justify-center">
                 {!currentMusic?.cover ? (
-                  <div className="flex size-16 items-center rounded-2xl border shadow-sm dark:border-zinc-950 dark:bg-zinc-900"></div>
+                  <div className="flex size-16 items-center rounded-2xl bg-zinc-900"></div>
                 ) : (
                   <Image
                     src={currentMusic?.cover}
                     alt="Cover"
                     width={192}
                     height={192}
-                    className="flex size-16 items-center rounded-2xl border shadow-sm dark:border-zinc-950"
+                    className="flex size-16 items-center rounded-2xl"
                   />
                 )}
               </div>
@@ -113,34 +105,34 @@ export const HeaderMotion = () => {
                 initial={{ opacity: 0.3 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="flex-1"
+                className="text-base font-semibold leading-5 text-zinc-50"
               >
-                <div className="line-clamp-1 text-xl">
+                <div className="line-clamp-1">
                   {currentMusic?.title || "TITLE SONG"}
                 </div>
 
-                <div className="text-sm font-thin text-zinc-400">
+                <div className="font-sf font-normal text-zinc-400">
                   {currentMusic?.singer || "Singer"}
                 </div>
               </motion.div>
             </div>
 
-            <DynamicIslandWave isPlay={isPlaying} />
+            <div className="mt-3">
+              <DynamicIslandWave isPlay={isPlaying} />
+            </div>
           </div>
-
           <MusicTime />
-
-          <div className="mt-3 flex items-center justify-between">
-            <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-300 hover:bg-zinc-200 dark:text-zinc-600 dark:hover:bg-zinc-800">
-              <HeartStraight size={32} />
-            </motion.button>
-
-            <div className="flex gap-4">
-              <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800">
-                <Rewind size={32} weight="fill" />
+          <div className="mt-3 flex items-center justify-center">
+            <div className="flex gap-8">
+              <motion.button
+                whileTap={{ scale: 0.5 }}
+                className="flex cursor-pointer items-center justify-center text-zinc-50"
+              >
+                <Rewind size={30} weight="fill" />
               </motion.button>
 
               <motion.button
+                whileTap={{ scale: 0.5 }}
                 onClick={
                   isPlaying
                     ? handlePauseAudio
@@ -148,23 +140,22 @@ export const HeaderMotion = () => {
                       ? handleResumeAudio
                       : handlePlayRandomAudio
                 }
-                className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                className="flex cursor-pointer items-center justify-center text-zinc-50"
               >
                 {isPlaying ? (
-                  <Pause size={32} weight="fill" />
+                  <Pause size={36} weight="fill" />
                 ) : (
-                  <Play size={32} weight="fill" />
+                  <Play size={36} weight="fill" />
                 )}
               </motion.button>
 
-              <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+              <motion.button
+                whileTap={{ scale: 0.5 }}
+                className="flex cursor-pointer items-center justify-center text-zinc-50"
+              >
                 <FastForward size={32} weight="fill" />
               </motion.button>
             </div>
-
-            <motion.button className="flex size-8 cursor-pointer items-center justify-center rounded-full p-1 text-zinc-300 hover:bg-zinc-200 dark:text-zinc-600 dark:hover:bg-zinc-800">
-              <Airplay size={32} />
-            </motion.button>
           </div>
         </motion.div>
       </motion.div>
@@ -174,29 +165,39 @@ export const HeaderMotion = () => {
   const renderCollapsed = () => {
     return (
       <motion.div
+        key={`PauseAudio-${isExpanded ? "expanded" : "compact"}`}
         layoutId="dynamic-island"
         initial={{
+          opacity: 1,
           scale: 0.9,
-          borderRadius: "50px",
+          borderRadius: "40px", // Trạng thái ban đầu là hình tròn
         }}
         animate={{
+          opacity: 1,
           scale: 1,
-          borderRadius: isExpanded ? "32px" : "50px",
+          borderRadius: isExpanded ? "40px" : "55px", // Chuyển đổi giữa bo tròn và bo góc
+        }}
+        exit={{
+          opacity: 1,
+          scale: 0.9,
+          borderRadius: "40px",
         }}
         transition={{
           type: "spring",
-          stiffness: 150,
-          damping: 20,
+          stiffness: 150, // Giảm độ đàn hồi để chuyển động chậm hơn
+          damping: 20, // Tăng damping để giảm độ nảy
+          mass: 0.6,
+          duration: 4, // Giảm thời gian để nhanh hơn
         }}
-        className="flex rounded-full border bg-zinc-100 shadow-sm dark:border-zinc-700 dark:bg-zinc-950"
+        className="flex rounded-full bg-zinc-950 dark:border dark:border-zinc-700"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         {isPlaying && currentMusic && (
           <motion.div
             layoutId="compact"
-            initial={{ scale: 0.9, borderRadius: "50px" }}
-            animate={{ scale: 1, borderRadius: "24px" }}
-            exit={{ scale: 0.9, borderRadius: "50px" }}
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0.9 }}
             transition={{
               type: "spring",
               stiffness: 180,
@@ -225,7 +226,7 @@ export const HeaderMotion = () => {
                   alt="Cover"
                   width={192}
                   height={192}
-                  className="size-10 rounded-full border shadow-sm dark:border-zinc-800"
+                  className="size-10 rounded-full shadow-sm dark:border-zinc-800"
                 />
               </motion.div>
 
@@ -233,20 +234,13 @@ export const HeaderMotion = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="line-clamp-1 text-base"
+                className="line-clamp-1 text-base font-semibold text-zinc-50"
               >
                 {currentMusic.title}
               </motion.div>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="overflow-hidden"
-            >
-              <DynamicIslandWave isPlay />
-            </motion.div>
+            <DynamicIslandWave isPlay />
           </motion.div>
         )}
 
@@ -256,11 +250,9 @@ export const HeaderMotion = () => {
               key="compact"
               initial={{
                 scale: 0.9,
-                borderRadius: "50px",
               }}
               animate={{
                 scale: 1,
-                borderRadius: isExpanded ? "32px" : "50px",
               }}
               transition={{
                 type: "spring",
@@ -269,18 +261,13 @@ export const HeaderMotion = () => {
               }}
               className="flex w-fit items-center gap-2 p-1"
             >
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1, rotate: 360 }}
-                transition={{ duration: 0.5 }}
-                className="shrink-0"
-              >
+              <motion.div className="shrink-0 rounded-full border-zinc-800">
                 <Image
                   src="/img/avatar.jpeg"
                   alt="Avatar"
                   width={192}
                   height={192}
-                  className="size-10 rounded-full border shadow-sm dark:border-zinc-800"
+                  className="size-10 rounded-full"
                 />
               </motion.div>
 
@@ -288,7 +275,7 @@ export const HeaderMotion = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="text-xl"
+                className="text-xl font-semibold text-zinc-50"
               >
                 Nguyễn Chánh Đang
               </motion.div>
@@ -321,13 +308,10 @@ export const HeaderMotion = () => {
 
   return (
     <motion.header
-      className="fixed inset-x-0 top-0 z-[1000] flex justify-center bg-background"
+      className="fixed inset-x-0 top-0 z-[1000] flex justify-center"
       style={{ top }}
     >
-      <div
-        ref={headerRef}
-        className="flex w-fit cursor-pointer items-center justify-center space-x-2 rounded-full pt-2 text-2xl font-bold duration-300 md:hover:scale-105"
-      >
+      <div ref={headerRef} className="mt-2">
         {isExpanded ? renderExpaned() : renderCollapsed()}
       </div>
     </motion.header>
