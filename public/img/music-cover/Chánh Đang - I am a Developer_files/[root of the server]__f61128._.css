@@ -2198,9 +2198,9 @@ body:is(.dark *) {
   margin: 2rem;
 }
 
-.mx-0\.5 {
-  margin-left: .125rem;
-  margin-right: .125rem;
+.mx-\[1px\] {
+  margin-left: 1px;
+  margin-right: 1px;
 }
 
 .mx-auto {
@@ -2284,14 +2284,6 @@ body:is(.dark *) {
 
 .mt-auto {
   margin-top: auto;
-}
-
-.ml-1 {
-  margin-left: .25rem;
-}
-
-.mr-1 {
-  margin-right: .25rem;
 }
 
 .line-clamp-1 {
@@ -3068,6 +3060,11 @@ body:is(.dark *) {
 
 .p-4 {
   padding: 1rem;
+}
+
+.px-1 {
+  padding-left: .25rem;
+  padding-right: .25rem;
 }
 
 .px-1\.5 {

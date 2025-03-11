@@ -9,7 +9,7 @@
     "static/chunks/node_modules_next_98ae40._.js",
     "static/chunks/node_modules_framer-motion_dist_es_ea6903._.js",
     "static/chunks/node_modules_motion_dist_es_33b63d._.js",
-    "static/chunks/node_modules_5b8b40._.js",
+    "static/chunks/node_modules_b84213._.js",
     "static/chunks/src_0474af._.js"
   ],
   "source": "dynamic"

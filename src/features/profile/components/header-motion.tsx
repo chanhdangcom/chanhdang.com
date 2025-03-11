@@ -225,27 +225,33 @@ export const HeaderMotion = () => {
                 stiffness: 180,
                 damping: 20,
                 duration: 1,
-                ease: "easeInOut",
               }}
               className="flex w-[40vh] min-w-[40vh] items-center justify-between p-1"
             >
-              <motion.div
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="flex items-center gap-2"
-              >
+              <div className="flex items-center gap-2">
                 <motion.div
                   layoutId="cover-audio"
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  transition={{ duration: 0.3 }}
                   className="shrink-0"
                 >
-                  <Image
-                    src={currentMusic.cover}
-                    alt="Cover"
-                    width={192}
-                    height={192}
-                    className="size-10 rounded-full shadow-sm dark:border-zinc-800"
-                  />
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      repeat: Infinity,
+                      ease: "linear",
+                      duration: 3,
+                    }}
+                  >
+                    <Image
+                      src={currentMusic.cover}
+                      alt="Cover"
+                      width={192}
+                      height={192}
+                      className="size-10 rounded-full shadow-sm dark:border-zinc-800"
+                    />
+                  </motion.div>
                 </motion.div>
+
                 <motion.div
                   layoutId="title-audio"
                   initial={{ opacity: 0 }}
@@ -262,7 +268,7 @@ export const HeaderMotion = () => {
                 >
                   {currentMusic.title}
                 </motion.div>
-              </motion.div>
+              </div>
 
               <motion.div layoutId="wave-audio" className="mr-2 shrink-0">
                 <DynamicIslandWave isPlay coverUrl={currentMusic.cover} />

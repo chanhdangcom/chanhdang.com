@@ -10,27 +10,47 @@ __turbopack_esm__({
     "default": (()=>__TURBOPACK__default__export__)
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$fast$2d$average$2d$color$2f$dist$2f$index$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/fast-average-color/dist/index.esm.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/framer-motion/dist/es/render/components/motion/proxy.mjs [app-client] (ecmascript)");
+;
+var _s = __turbopack_refresh__.signature();
 "use client";
 ;
 ;
-const bars = new Array(8).fill(0); // 8 cột sóng nhỏ
-function DynamicIslandWave({ isPlay }) {
+;
+const bars = new Array(13).fill(0);
+function DynamicIslandWave({ isPlay, coverUrl }) {
+    _s();
+    const [waveColor, setWaveColor] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("#ffffff");
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "DynamicIslandWave.useEffect": ()=>{
+            if (!coverUrl) {
+                setWaveColor("#ffffff"); // Màu mặc định nếu không có ảnh
+                return;
+            }
+            const fac = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$fast$2d$average$2d$color$2f$dist$2f$index$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FastAverageColor"]();
+            fac.getColorAsync(coverUrl).then({
+                "DynamicIslandWave.useEffect": (color)=>setWaveColor(color.hex)
+            }["DynamicIslandWave.useEffect"]).catch({
+                "DynamicIslandWave.useEffect": ()=>setWaveColor("#ffffff")
+            }["DynamicIslandWave.useEffect"]); // Nếu lỗi, đặt màu trắng
+        }
+    }["DynamicIslandWave.useEffect"], [
+        coverUrl
+    ]);
+    const getRandomHeight = ()=>Array.from({
+            length: 6
+        }, ()=>`${Math.random() * 60 + 20}%`);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "relative flex h-5 items-center justify-center rounded-full",
+        className: "relative flex h-6 w-fit items-center justify-center rounded-full px-1",
         children: bars.map((_, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
-                className: "mx-0.5 w-[2px] rounded-full bg-green-400",
+                className: "mx-[1px] w-[2px] rounded-full",
+                style: {
+                    backgroundColor: waveColor
+                },
                 animate: {
-                    height: isPlay ? [
-                        "20%",
-                        "80%",
-                        "30%",
-                        "90%",
-                        "40%",
-                        "85%",
-                        "25%"
-                    ] // Biên độ mượt hơn
-                     : [
+                    height: isPlay ? getRandomHeight() : [
                         "50%",
                         "55%",
                         "52%",
@@ -38,33 +58,25 @@ function DynamicIslandWave({ isPlay }) {
                         "50%",
                         "54%",
                         "51%"
-                    ],
-                    opacity: isPlay ? [
-                        0.6,
-                        1,
-                        0.8
-                    ] : [
-                        0.5,
-                        0.55,
-                        0.5
                     ]
                 },
                 transition: {
                     repeat: Infinity,
-                    duration: isPlay ? 0.7 + i * 0.1 : 1.8 + i * 0.2,
+                    duration: isPlay ? Math.random() * 0.5 + 0.4 : 1.2 + i % 5 * 0.1,
                     ease: "easeInOut"
                 }
             }, `bar-${i}`, false, {
                 fileName: "[project]/src/components/ui/dynamic-island.tsx",
-                lineNumber: 15,
+                lineNumber: 36,
                 columnNumber: 9
             }, this))
     }, void 0, false, {
         fileName: "[project]/src/components/ui/dynamic-island.tsx",
-        lineNumber: 13,
+        lineNumber: 34,
         columnNumber: 5
     }, this);
 }
+_s(DynamicIslandWave, "Py0cyVceRzR+Qvms0kVj6HmTm4M=");
 _c = DynamicIslandWave;
 const __TURBOPACK__default__export__ = DynamicIslandWave;
 var _c;
@@ -172,7 +184,7 @@ function MusicTime() {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "text-xs text-zinc-400",
-                children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(new Date(currentTime * 1000), "m:ss")
+                children: duration ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(new Date(currentTime * 1000), "m:ss") : "0:00"
             }, void 0, false, {
                 fileName: "[project]/src/features/profile/components/music-time.tsx",
                 lineNumber: 39,
@@ -197,7 +209,7 @@ function MusicTime() {
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "text-xs text-zinc-400",
-                children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(new Date(duration * 1000), "m:ss")
+                children: duration ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(new Date(duration * 1000), "m:ss") : "0:00"
             }, void 0, false, {
                 fileName: "[project]/src/features/profile/components/music-time.tsx",
                 lineNumber: 50,
@@ -289,6 +301,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$motion$2f$di
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$motion$2f$dist$2f$es$2f$framer$2d$motion$2f$dist$2f$es$2f$value$2f$use$2d$spring$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/motion/dist/es/framer-motion/dist/es/value/use-spring.mjs [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$motion$2f$dist$2f$es$2f$framer$2d$motion$2f$dist$2f$es$2f$components$2f$AnimatePresence$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/motion/dist/es/framer-motion/dist/es/components/AnimatePresence/index.mjs [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$motion$2f$dist$2f$es$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/motion/dist/es/framer-motion/dist/es/render/components/motion/proxy.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$phosphor$2d$react$2f$dist$2f$icons$2f$MusicNotes$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__MusicNotes$3e$__ = __turbopack_import__("[project]/node_modules/phosphor-react/dist/icons/MusicNotes.esm.js [app-client] (ecmascript) <export default as MusicNotes>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$phosphor$2d$react$2f$dist$2f$icons$2f$Rewind$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Rewind$3e$__ = __turbopack_import__("[project]/node_modules/phosphor-react/dist/icons/Rewind.esm.js [app-client] (ecmascript) <export default as Rewind>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$phosphor$2d$react$2f$dist$2f$icons$2f$Play$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Play$3e$__ = __turbopack_import__("[project]/node_modules/phosphor-react/dist/icons/Play.esm.js [app-client] (ecmascript) <export default as Play>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$phosphor$2d$react$2f$dist$2f$icons$2f$Pause$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Pause$3e$__ = __turbopack_import__("[project]/node_modules/phosphor-react/dist/icons/Pause.esm.js [app-client] (ecmascript) <export default as Pause>");
@@ -345,7 +358,8 @@ const HeaderMotion = ()=>{
                     type: "spring",
                     stiffness: 150,
                     damping: 20,
-                    mass: 0.6
+                    mass: 0.6,
+                    ease: "easeInOut"
                 },
                 className: "flex items-center justify-center rounded-[40px] bg-zinc-950 shadow-2xl dark:border dark:border-zinc-700",
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -361,10 +375,19 @@ const HeaderMotion = ()=>{
                                             layoutId: "cover-audio",
                                             className: "flex size-16 shrink-0 items-center justify-center",
                                             children: !currentMusic?.cover ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "flex size-16 items-center rounded-2xl bg-zinc-900"
+                                                className: "flex size-16 items-center justify-center rounded-3xl bg-zinc-900",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$phosphor$2d$react$2f$dist$2f$icons$2f$MusicNotes$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__MusicNotes$3e$__["MusicNotes"], {
+                                                    size: 32,
+                                                    weight: "fill",
+                                                    className: "text-zinc-700"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/features/profile/components/header-motion.tsx",
+                                                    lineNumber: 81,
+                                                    columnNumber: 23
+                                                }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                                lineNumber: 79,
+                                                lineNumber: 80,
                                                 columnNumber: 21
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                                 src: currentMusic?.cover,
@@ -374,15 +397,32 @@ const HeaderMotion = ()=>{
                                                 className: "flex size-16 items-center rounded-2xl"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                                lineNumber: 81,
+                                                lineNumber: 88,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                            lineNumber: 74,
+                                            lineNumber: 75,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$motion$2f$dist$2f$es$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
+                                            layoutId: "title-audio",
+                                            initial: {
+                                                opacity: 0
+                                            },
+                                            animate: {
+                                                opacity: 1
+                                            },
+                                            exit: {
+                                                opacity: 0
+                                            },
+                                            transition: {
+                                                type: "spring",
+                                                stiffness: 180,
+                                                damping: 20,
+                                                duration: 1,
+                                                ease: "easeInOut"
+                                            },
                                             className: "text-base font-semibold leading-5 text-zinc-50",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -390,7 +430,7 @@ const HeaderMotion = ()=>{
                                                     children: currentMusic?.title || "TITLE SONG"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                                    lineNumber: 92,
+                                                    lineNumber: 112,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -398,45 +438,62 @@ const HeaderMotion = ()=>{
                                                     children: currentMusic?.singer || "Singer"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                                    lineNumber: 96,
+                                                    lineNumber: 116,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                            lineNumber: 91,
+                                            lineNumber: 98,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                    lineNumber: 73,
+                                    lineNumber: 74,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$motion$2f$dist$2f$es$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
+                                    initial: {
+                                        opacity: 0
+                                    },
+                                    animate: {
+                                        opacity: 1
+                                    },
+                                    exit: {
+                                        opacity: 0
+                                    },
+                                    transition: {
+                                        type: "spring",
+                                        stiffness: 180,
+                                        damping: 20,
+                                        duration: 1,
+                                        ease: "easeInOut"
+                                    },
                                     layoutId: "wave-audio",
-                                    className: "mt-3",
+                                    className: "mt-3 shrink-0",
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dynamic$2d$island$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                        isPlay: isPlaying
+                                        isPlay: isPlaying,
+                                        coverUrl: currentMusic?.cover
                                     }, void 0, false, {
                                         fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                        lineNumber: 103,
+                                        lineNumber: 136,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                    lineNumber: 102,
+                                    lineNumber: 122,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                            lineNumber: 72,
+                            lineNumber: 73,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$features$2f$profile$2f$components$2f$music$2d$time$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["MusicTime"], {}, void 0, false, {
                             fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                            lineNumber: 106,
+                            lineNumber: 143,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -455,12 +512,12 @@ const HeaderMotion = ()=>{
                                             weight: "fill"
                                         }, void 0, false, {
                                             fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                            lineNumber: 114,
+                                            lineNumber: 152,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                        lineNumber: 109,
+                                        lineNumber: 147,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$motion$2f$dist$2f$es$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].button, {
@@ -474,19 +531,19 @@ const HeaderMotion = ()=>{
                                             weight: "fill"
                                         }, void 0, false, {
                                             fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                            lineNumber: 129,
+                                            lineNumber: 167,
                                             columnNumber: 21
                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$phosphor$2d$react$2f$dist$2f$icons$2f$Play$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Play$3e$__["Play"], {
                                             size: 36,
                                             weight: "fill"
                                         }, void 0, false, {
                                             fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                            lineNumber: 131,
+                                            lineNumber: 169,
                                             columnNumber: 21
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                        lineNumber: 117,
+                                        lineNumber: 155,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$motion$2f$dist$2f$es$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].button, {
@@ -500,29 +557,29 @@ const HeaderMotion = ()=>{
                                             weight: "fill"
                                         }, void 0, false, {
                                             fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                            lineNumber: 140,
+                                            lineNumber: 178,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                        lineNumber: 135,
+                                        lineNumber: 173,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                lineNumber: 108,
+                                lineNumber: 146,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                            lineNumber: 107,
+                            lineNumber: 145,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                    lineNumber: 71,
+                    lineNumber: 72,
                     columnNumber: 11
                 }, this)
             }, `PauseAudio-${isExpanded ? "expanded" : "compact"}`, false, {
@@ -556,7 +613,8 @@ const HeaderMotion = ()=>{
                 stiffness: 150,
                 damping: 20,
                 mass: 0.6,
-                duration: 4
+                duration: 4,
+                ease: "easeInOut"
             },
             className: "flex rounded-full bg-zinc-950 dark:border dark:border-zinc-700",
             onClick: ()=>setIsExpanded(!isExpanded),
@@ -581,10 +639,7 @@ const HeaderMotion = ()=>{
                         },
                         className: "flex w-[40vh] min-w-[40vh] items-center justify-between p-1",
                         children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$motion$2f$dist$2f$es$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
-                                transition: {
-                                    duration: 0.5
-                                },
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex items-center gap-2",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$motion$2f$dist$2f$es$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
@@ -592,60 +647,92 @@ const HeaderMotion = ()=>{
                                         transition: {
                                             duration: 0.3
                                         },
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                            src: currentMusic.cover,
-                                            alt: "Cover",
-                                            width: 192,
-                                            height: 192,
-                                            className: "size-10 rounded-2xl shadow-sm dark:border-zinc-800"
+                                        className: "shrink-0",
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$motion$2f$dist$2f$es$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
+                                            animate: {
+                                                rotate: 360
+                                            },
+                                            transition: {
+                                                repeat: Infinity,
+                                                ease: "linear"
+                                            },
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                                src: currentMusic.cover,
+                                                alt: "Cover",
+                                                width: 192,
+                                                height: 192,
+                                                className: "size-10 rounded-full shadow-sm dark:border-zinc-800"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/features/profile/components/header-motion.tsx",
+                                                lineNumber: 244,
+                                                columnNumber: 21
+                                            }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                            lineNumber: 200,
+                                            lineNumber: 237,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                        lineNumber: 196,
+                                        lineNumber: 232,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$motion$2f$dist$2f$es$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
+                                        layoutId: "title-audio",
+                                        initial: {
+                                            opacity: 0
+                                        },
+                                        animate: {
+                                            opacity: 1
+                                        },
+                                        exit: {
+                                            opacity: 0
+                                        },
+                                        transition: {
+                                            type: "spring",
+                                            stiffness: 180,
+                                            damping: 20,
+                                            duration: 1,
+                                            ease: "easeInOut"
+                                        },
                                         className: "line-clamp-1 text-base font-semibold text-zinc-50",
                                         children: currentMusic.title
                                     }, void 0, false, {
                                         fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                        lineNumber: 208,
+                                        lineNumber: 254,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                lineNumber: 192,
+                                lineNumber: 231,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$motion$2f$dist$2f$es$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
                                 layoutId: "wave-audio",
-                                className: "mr-2",
+                                className: "mr-2 shrink-0",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dynamic$2d$island$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                    isPlay: true
+                                    isPlay: true,
+                                    coverUrl: currentMusic.cover
                                 }, void 0, false, {
                                     fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                    lineNumber: 214,
+                                    lineNumber: 273,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                lineNumber: 213,
+                                lineNumber: 272,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                        lineNumber: 179,
+                        lineNumber: 218,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                    lineNumber: 178,
+                    lineNumber: 217,
                     columnNumber: 11
                 }, this),
                 !isPlaying && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$motion$2f$dist$2f$es$2f$framer$2d$motion$2f$dist$2f$es$2f$components$2f$AnimatePresence$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AnimatePresence"], {
@@ -659,13 +746,14 @@ const HeaderMotion = ()=>{
                         transition: {
                             type: "spring",
                             stiffness: 150,
-                            damping: 20
+                            damping: 20,
+                            ease: "easeInOut"
                         },
                         className: "flex w-fit items-center gap-2 p-1",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$motion$2f$dist$2f$es$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
                                 layoutId: "cover-audio",
-                                className: "shrink-0 rounded-full border-zinc-800",
+                                className: "shrink-0 rounded-full border border-zinc-800",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                     src: "/img/avatar.jpeg",
                                     alt: "Avatar",
@@ -674,20 +762,37 @@ const HeaderMotion = ()=>{
                                     className: "size-10 rounded-full"
                                 }, void 0, false, {
                                     fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                    lineNumber: 241,
+                                    lineNumber: 301,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                lineNumber: 237,
+                                lineNumber: 297,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$motion$2f$dist$2f$es$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
+                                initial: {
+                                    opacity: 0
+                                },
+                                animate: {
+                                    opacity: 1
+                                },
+                                exit: {
+                                    opacity: 1
+                                },
+                                transition: {
+                                    type: "spring",
+                                    stiffness: 180,
+                                    damping: 20,
+                                    duration: 1,
+                                    ease: "easeInOut"
+                                },
+                                layoutId: "title-audio",
                                 className: "text-xl font-semibold text-zinc-50",
                                 children: "Nguyễn Chánh Đang"
                             }, void 0, false, {
                                 fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                lineNumber: 250,
+                                lineNumber: 310,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$motion$2f$dist$2f$es$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].svg, {
@@ -697,8 +802,15 @@ const HeaderMotion = ()=>{
                                 animate: {
                                     opacity: 1
                                 },
+                                exit: {
+                                    opacity: 0
+                                },
                                 transition: {
-                                    duration: 0.5
+                                    type: "spring",
+                                    stiffness: 180,
+                                    damping: 20,
+                                    duration: 1,
+                                    ease: "easeInOut"
                                 },
                                 className: "mr-2 text-left text-3xl text-blue-600",
                                 width: "0.6em",
@@ -714,29 +826,29 @@ const HeaderMotion = ()=>{
                                     fill: "currentColor"
                                 }, void 0, false, {
                                     fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                    lineNumber: 266,
+                                    lineNumber: 346,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                                lineNumber: 254,
+                                lineNumber: 327,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, "compact", true, {
                         fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                        lineNumber: 222,
+                        lineNumber: 281,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/features/profile/components/header-motion.tsx",
-                    lineNumber: 221,
+                    lineNumber: 280,
                     columnNumber: 11
                 }, this)
             ]
         }, `PauseAudio-${isExpanded ? "expanded" : "compact"}`, true, {
             fileName: "[project]/src/features/profile/components/header-motion.tsx",
-            lineNumber: 152,
+            lineNumber: 190,
             columnNumber: 7
         }, this);
     };
@@ -751,12 +863,12 @@ const HeaderMotion = ()=>{
             children: isExpanded ? renderExpaned() : renderCollapsed()
         }, void 0, false, {
             fileName: "[project]/src/features/profile/components/header-motion.tsx",
-            lineNumber: 285,
+            lineNumber: 365,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/features/profile/components/header-motion.tsx",
-        lineNumber: 281,
+        lineNumber: 361,
         columnNumber: 5
     }, this);
 };
@@ -820,6 +932,25 @@ khởi ngay từ những giây đầu tiên. Giai điệu của “All Day” ph
 giữa chất Trap và một chút Melodic Rap, mang đến sự cân bằng giữa sự
 mạnh mẽ và cảm xúc. Đây là ca khúc thích hợp để nghe khi cần thêm động
 lực, muốn “chill” hoặc khuấy động bầu không khí.
+    `
+    },
+    {
+        id: "e4a0b19c-4e31-41ff-b846-1d39aa2e3cef",
+        title: "QUA TỪNG KHUNG HÌNH",
+        singer: "Hustlang Robber & Ngắn",
+        cover: "/img/music-cover/QUATUNGKHUNGHINH.jpg",
+        audio: "/audio/QUATUNGKHUNGHINH.mp3",
+        youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+        content: `
+“Chia Cách Bình Yên” là một ca khúc giàu cảm xúc, mang giai điệu nhẹ
+nhàng nhưng đầy day dứt về một cuộc chia ly. Bài hát kể về hai người
+yêu nhau nhưng buộc phải rời xa nhau, không phải vì hết yêu, mà vì
+những lý do ngoài tầm kiểm soát. Lời bài hát mang đến cảm giác tiếc
+nuối nhưng không quá bi lụy. Thay vì đau khổ dằn vặt, nó gợi lên sự
+chấp nhận trong lặng lẽ, một sự “chia cách bình yên” đúng như tên gọi.
+Với giai điệu nhẹ nhàng, sâu lắng cùng ca từ ý nghĩa, bài hát đã chạm
+đến trái tim của nhiều người từng trải qua một cuộc chia ly không mong
+muốn.
     `
     },
     {
