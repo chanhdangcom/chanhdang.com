@@ -1,27 +1,20 @@
 import { HeaderMotion } from "@/features/profile/components/header-motion";
-import React, { useContext, useRef, useState } from "react";
+import { MUSICS } from "@/features/profile/data/music";
+import { IMusic } from "@/features/profile/types/music";
+import React, { useCallback, useContext, useRef, useState } from "react";
 
 type IMusicContext = {
-  handlePlayAudio: (
-    audioUrl: string,
-    title: string,
-    cover: string,
-    singer: string,
-    youtube: string
-  ) => void;
+  audioRef: React.RefObject<HTMLAudioElement | null>;
+  currentMusic: IMusic | null;
+  isPlaying: boolean;
+  isPaused: boolean;
+
+  handlePlayAudio: (music: IMusic) => void;
+  handlePlayRandomAudio: () => void;
   handlePauseAudio: () => void;
   handleResumeAudio: () => void;
   handleAudioSkip: () => void;
   handAudioForward: () => void;
-  isPlaying: boolean;
-  isPaused: boolean;
-  lastPlayedUrl: string | null;
-  currentTime: number;
-  duration: number;
-  songTitle: string;
-  coverImage: string;
-  singerTitle: string;
-  youtubeLink: string;
 };
 
 const MusicContext = React.createContext<IMusicContext | null>(null);
@@ -34,123 +27,105 @@ export function useAudio() {
   return context;
 }
 
+function Provider({
+  children,
+  ...props
+}: {
+  children: React.ReactNode;
+} & IMusicContext) {
+  return (
+    <MusicContext.Provider value={props}>{children}</MusicContext.Provider>
+  );
+}
+
 export function MusicProvider({ children }: { children: React.ReactNode }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [lastPlayedUrl, setLastPlayedUrl] = useState<string | null>(null);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [songTitle, setSongTitle] = useState("");
-  const [coverImage, setCoverImage] = useState("");
-  const [singerTitle, setSingerTitle] = useState("");
-  const [youtubeLink, setYoutubeLink] = useState("");
+  const [currentMusic, setCurrentMusic] = useState<IMusic | null>(null);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const handlePlayAudio = (
-    audioUrl: string,
-    title: string,
-    cover: string,
-    singer: string,
-    youtube: string
-  ) => {
+  const handlePlayAudio = useCallback((music: IMusic) => {
     if (!audioRef.current) {
-      audioRef.current = new Audio(audioUrl);
+      audioRef.current = new Audio(music.audio);
       audioRef.current.preload = "auto";
-      audioRef.current.addEventListener("timeupdate", handleTimeUpdate);
+      // audioRef.current.addEventListener("timeupdate", handleTimeUpdate);
     }
 
-    if (audioRef.current.src !== audioUrl) {
-      audioRef.current.src = audioUrl;
+    if (audioRef.current.src !== music.audio) {
+      audioRef.current.src = music.audio;
       audioRef.current.load();
     }
 
     audioRef.current.play();
     setIsPlaying(true);
     setIsPaused(false);
-    setLastPlayedUrl(audioUrl);
-    setSongTitle(title);
-    setCoverImage(cover);
-    setSingerTitle(singer);
-    setYoutubeLink(youtube);
-  };
+    setCurrentMusic(music);
+  }, []);
 
-  const handlePauseAudio = () => {
-    if (audioRef.current && !audioRef.current.paused) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-      setIsPaused(true);
+  const handlePlayRandomAudio = useCallback(() => {
+    const randomIndex = Math.floor(Math.random() * MUSICS.length);
+    const music = MUSICS[randomIndex];
+
+    handlePlayAudio(music);
+  }, [handlePlayAudio]);
+
+  const handlePauseAudio = useCallback(() => {
+    if (!audioRef.current) {
+      return;
     }
-  };
 
-  const handleResumeAudio = () => {
+    if (audioRef.current.paused) {
+      return;
+    }
+
+    audioRef.current.pause();
+    setIsPlaying(false);
+    setIsPaused(true);
+  }, []);
+
+  const handleResumeAudio = useCallback(() => {
     if (audioRef.current && isPaused) {
       audioRef.current.play();
       setIsPlaying(true);
       setIsPaused(false);
-    } else if (!audioRef.current && lastPlayedUrl) {
-      handlePlayAudio(
-        lastPlayedUrl,
-        songTitle,
-        coverImage,
-        singerTitle,
-        youtubeLink
-      );
     }
-  };
+  }, [isPaused]);
 
-  const handleTimeUpdate = () => {
-    if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime);
-      setDuration(audioRef.current.duration);
-    }
-  };
-
-  const handleAudioSkip = () => {
+  const handleAudioSkip = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.currentTime = Math.min(
         audioRef.current.currentTime + 10,
         audioRef.current.duration
       );
     }
-  };
+  }, []);
 
-  const handAudioForward = () => {
+  const handAudioForward = useCallback(() => {
     if (audioRef.current) {
       if (audioRef.current.currentTime > 10) {
         audioRef.current.currentTime = audioRef.current.currentTime - 10;
       }
     }
-  };
+  }, []);
 
   return (
-    <MusicContext.Provider
-      value={{
-        handlePlayAudio,
-        handlePauseAudio,
-        handleResumeAudio,
-        handleAudioSkip,
-        handAudioForward,
-        isPlaying,
-        isPaused,
-        lastPlayedUrl,
-        currentTime,
-        duration,
-        songTitle,
-        coverImage,
-        singerTitle,
-        youtubeLink,
-      }}
+    <Provider
+      audioRef={audioRef}
+      currentMusic={currentMusic}
+      isPlaying={isPlaying}
+      isPaused={isPaused}
+      //
+      handlePlayAudio={handlePlayAudio}
+      handlePlayRandomAudio={handlePlayRandomAudio}
+      handlePauseAudio={handlePauseAudio}
+      handleResumeAudio={handleResumeAudio}
+      handleAudioSkip={handleAudioSkip}
+      handAudioForward={handAudioForward}
     >
-      <HeaderMotion
-        isPlaying={isPlaying}
-        currentTime={currentTime}
-        duration={duration}
-        songTitle={songTitle}
-        coverImage={coverImage}
-        singerTitle={singerTitle}
-        youtubeLink={youtubeLink}
-      />
+      <HeaderMotion />
+
       {children}
-    </MusicContext.Provider>
+    </Provider>
   );
 }
