@@ -1,39 +1,36 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useId, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "./hook/use-outside-click";
 import { ExperienceInfoItem } from "./components/experience-info-item";
 import { ListMusicIcon } from "lucide-react";
 import { useAudio } from "@/components/music-provider";
+import { MUSICS } from "./data/music";
+import { IMusic } from "./types/music";
+
+import { Play as PlayIcon, Pause as PauseIcon } from "phosphor-react";
+import { cn } from "@/lib/utils";
+import { useEscapePress } from "./hook/use-escape-press";
 
 export function MusicList() {
-  const [active, setActive] = useState<(typeof cards)[number] | boolean | null>(
-    null
-  );
+  const [musicView, setMusicView] = useState<IMusic | null>(null);
   const ref = useRef<HTMLDivElement>(null);
-  const id = useId();
-  const { handlePlayAudio } = useAudio();
 
-  useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setActive(false);
-      }
-    }
+  const {
+    currentMusic,
+    isPaused,
+    handlePlayAudio,
+    handlePauseAudio,
+    handleResumeAudio,
+  } = useAudio();
 
-    if (active && typeof active === "object") {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
+  useEscapePress(() => setMusicView(null), !!musicView);
 
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [active]);
+  useOutsideClick(ref, () => setMusicView(null), !!musicView);
 
-  useOutsideClick(ref, () => setActive(null));
+  console.log("Render Music List");
 
   return (
     <>
@@ -47,7 +44,7 @@ export function MusicList() {
       </div>
 
       <AnimatePresence>
-        {active && typeof active === "object" && (
+        {musicView && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -56,11 +53,12 @@ export function MusicList() {
           />
         )}
       </AnimatePresence>
+
       <AnimatePresence>
-        {active && typeof active === "object" ? (
+        {musicView ? (
           <div className="fixed inset-0 z-[1001] m-4 grid place-items-center rounded-xl">
             <motion.button
-              key={`button-${active.title}-${id}`}
+              key={`button-close-${musicView.id}`}
               layout
               initial={{
                 opacity: 0,
@@ -75,22 +73,23 @@ export function MusicList() {
                 },
               }}
               className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-zinc-100 lg:hidden"
-              onClick={() => setActive(null)}
+              onClick={() => setMusicView(null)}
             >
               <CloseIcon />
             </motion.button>
+
             <motion.div
-              layoutId={`card-${active.title}-${id}`}
+              layoutId={`card-${musicView.id}`}
               ref={ref}
               className="flex h-full w-full max-w-md flex-col overflow-hidden rounded-xl border bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 sm:rounded-3xl md:max-h-[85%]"
             >
-              <motion.div layoutId={`image-${active.title}-${id}`}>
+              <motion.div layoutId={`cover-${musicView.id}`}>
                 <Image
                   priority
                   width={200}
                   height={200}
-                  src={active.src}
-                  alt={active.title}
+                  src={musicView.cover}
+                  alt={musicView.title}
                   className="h-72 w-full rounded-xl object-cover object-top p-1 md:rounded-3xl lg:h-80"
                 />
               </motion.div>
@@ -99,34 +98,27 @@ export function MusicList() {
                 <div className="flex items-start justify-between p-4">
                   <div className="">
                     <motion.h3
-                      layoutId={`title-${active.title}-${id}`}
+                      layoutId={`title-${musicView.id}`}
                       className="text-2xl font-bold text-zinc-700 dark:text-zinc-200"
                     >
-                      {active.title}
+                      {musicView.title}
                     </motion.h3>
+
                     <motion.p
-                      layoutId={`description-${active.description}-${id}`}
+                      layoutId={`singer-${musicView.id}`}
                       className="text-zinc-600 dark:text-zinc-400"
                     >
-                      {active.description}
+                      {musicView.singer}
                     </motion.p>
                   </div>
 
                   <motion.a
-                    layoutId={`button-${active.title}-${id}`}
+                    layoutId={`button-play-${musicView.id}`}
                     target="_blank"
                     className="mt-4 cursor-pointer rounded-full bg-green-500 px-4 py-2 text-sm font-bold text-white hover:bg-green-700 md:mt-0"
-                    onClick={() =>
-                      handlePlayAudio(
-                        active.ctaLink,
-                        active.title,
-                        active.src,
-                        active.description,
-                        active.youtubeLink
-                      )
-                    }
+                    onClick={() => handlePlayAudio(musicView)}
                   >
-                    {active.ctaText}
+                    {musicView.id === currentMusic?.id ? "Current" : "Play"}
                   </motion.a>
                 </div>
 
@@ -136,11 +128,9 @@ export function MusicList() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="flex h-72 flex-col items-start gap-4 overflow-auto pb-10 text-xs text-zinc-600 [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch] [mask:linear-gradient(to_bottom,white,white,transparent)] [scrollbar-width:none] dark:text-zinc-400 md:h-fit md:text-sm lg:text-base"
+                    className="flex h-72 flex-col items-start gap-4 overflow-auto pb-10 text-xs text-zinc-600 [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch] [mask:linear-gradient(to_bottom,white,white,transparent)] [scrollbar-width:none] dark:text-zinc-400 md:text-sm lg:text-base"
                   >
-                    {typeof active.content === "function"
-                      ? active.content()
-                      : active.content}
+                    <p className="flex-wrap text-lg">{musicView.content}</p>
                   </motion.div>
                 </div>
               </div>
@@ -148,47 +138,81 @@ export function MusicList() {
           </div>
         ) : null}
       </AnimatePresence>
+
       <ul className="mx-auto w-full max-w-2xl gap-4">
-        {cards.map((card) => (
-          <motion.div
-            layoutId={`card-${card.title}-${id}`}
-            key={`card-${card.title}-${id}`}
-            onClick={() => setActive(card)}
-            className="flex cursor-pointer flex-row items-center justify-between rounded-xl p-4 hover:bg-zinc-200 dark:hover:bg-zinc-800"
-          >
-            <div className="flex flex-row gap-4">
-              <motion.div layoutId={`image-${card.title}-${id}`}>
-                <Image
-                  width={100}
-                  height={100}
-                  src={card.src}
-                  alt={card.title}
-                  className="size-14 rounded-xl border object-cover object-top shadow-sm dark:border-zinc-800"
-                />
-              </motion.div>
-              <div className="">
-                <motion.h3
-                  layoutId={`title-${card.title}-${id}`}
-                  className="text-left font-medium text-zinc-800 dark:text-zinc-200"
-                >
-                  {card.title}
-                </motion.h3>
-                <motion.p
-                  layoutId={`description-${card.description}-${id}`}
-                  className="text-left text-zinc-600 dark:text-zinc-400"
-                >
-                  {card.description}
-                </motion.p>
-              </div>
-            </div>
-            <motion.button
-              layoutId={`button-${card.title}-${id}`}
-              className="mt-4 rounded-full bg-gray-100 px-4 py-2 text-sm font-bold text-black hover:bg-green-500 hover:text-white md:mt-0"
+        {MUSICS.map((music) => {
+          const isPlayThisMusic = music.id === currentMusic?.id;
+
+          return (
+            <motion.div
+              key={`card-${music.id}`}
+              layoutId={`card-${music.id}`}
+              onClick={() => setMusicView(music)}
+              className="flex cursor-pointer flex-row items-center justify-between rounded-xl p-4 hover:bg-zinc-200 dark:hover:bg-zinc-800"
             >
-              {card.ctaText}
-            </motion.button>
-          </motion.div>
-        ))}
+              <div className="flex flex-row gap-4">
+                <motion.div layoutId={`cover-${music.id}`}>
+                  <Image
+                    width={100}
+                    height={100}
+                    src={music.cover}
+                    alt={music.title}
+                    className="size-14 rounded-xl border object-cover object-top shadow-sm dark:border-zinc-800"
+                  />
+                </motion.div>
+
+                <div>
+                  <motion.h3
+                    layoutId={`title-${music.id}`}
+                    className="text-left font-medium text-zinc-800 dark:text-zinc-200"
+                  >
+                    {music.title}
+                  </motion.h3>
+
+                  <motion.p
+                    layoutId={`singer-${music.id}`}
+                    className="text-left text-zinc-600 dark:text-zinc-400"
+                  >
+                    {music.singer}
+                  </motion.p>
+                </div>
+              </div>
+
+              <motion.button
+                layoutId={`button-play-${music.id}`}
+                className={cn(
+                  "mt-4 rounded-full bg-gray-100 px-4 py-2 text-sm font-bold text-black hover:bg-green-500 hover:text-white md:mt-0",
+                  isPlayThisMusic && "bg-green-500 text-white"
+                )}
+                onClick={(event) => {
+                  event.stopPropagation();
+
+                  if (isPlayThisMusic) {
+                    if (isPaused) {
+                      handleResumeAudio();
+                    } else {
+                      handlePauseAudio();
+                    }
+                  } else {
+                    handlePlayAudio(music);
+                  }
+                }}
+              >
+                {isPlayThisMusic ? (
+                  <>
+                    {isPaused ? (
+                      <PlayIcon weight="fill" />
+                    ) : (
+                      <PauseIcon weight="fill" />
+                    )}
+                  </>
+                ) : (
+                  <PlayIcon weight="fill" />
+                )}
+              </motion.button>
+            </motion.div>
+          );
+        })}
       </ul>
     </>
   );
@@ -226,93 +250,3 @@ export const CloseIcon = () => {
     </motion.svg>
   );
 };
-
-const cards = [
-  {
-    youtubeLink: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
-    description: "Hustlang Robber",
-    title: "HUSTLANG ALL DAY",
-    src: "/img/music-cover/HustlangAllDay.jpg",
-    ctaText: "Play",
-    ctaLink: "/audio/HUSTLANGALLDAY.mp3",
-    content: () => {
-      return (
-        <p className="container flex-wrap text-lg">
-          Hustlang All Day” bài hát xoay quanh sự tận hưởng cuộc sống, những
-          khoảnh khắc vui vẻ và thái độ “chơi tới bến” của tuổi trẻ. Với phần
-          rap cuốn hút, flow mượt mà cùng cách gieo vần đầy sáng tạo, Huslang đã
-          tạo nên một bản nhạc dễ gây nghiện, khiến người nghe cảm thấy hứng
-          khởi ngay từ những giây đầu tiên. Giai điệu của “All Day” pha trộn
-          giữa chất Trap và một chút Melodic Rap, mang đến sự cân bằng giữa sự
-          mạnh mẽ và cảm xúc. Đây là ca khúc thích hợp để nghe khi cần thêm động
-          lực, muốn “chill” hoặc khuấy động bầu không khí.
-        </p>
-      );
-    },
-  },
-  {
-    youtubeLink: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
-    description: "Sơn Tùng M-TP",
-    title: "CÓ CHẮC YÊU LÀ ĐÂY",
-    src: "/img/music-cover/CoChacYeuLaDay.jpg",
-    ctaText: "Play",
-    ctaLink: "/audio/CoChacYeuLaDay.mp3",
-    content: () => {
-      return (
-        <p className="container flex-wrap text-lg">
-          “Có Chắc Yêu Là Đây” mang đến cảm giác vui tươi, lãng mạn và tràn đầy
-          năng lượng tích cực về tình yêu. Lời bài hát thể hiện những cảm xúc
-          bồi hồi, rung động của chàng trai khi đang đắm chìm trong tình yêu.
-          Giai điệu của bài hát có phần nhẹ nhàng, bay bổng hơn so với những ca
-          khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
-          mang phong cách đáng yêu, trẻ trung.
-        </p>
-      );
-    },
-  },
-  {
-    youtubeLink: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
-    description: "Quốc Thiên",
-    title: "CHIA CÁNH BÌNH YÊN",
-    src: "/img/music-cover/ChiaCachBinhYen.jpg",
-    ctaText: "Play",
-    ctaLink: "/audio/ChiaCachBinhYen.mp3",
-    content: () => {
-      return (
-        <p className="container flex-wrap text-lg">
-          “Chia Cách Bình Yên” là một ca khúc giàu cảm xúc, mang giai điệu nhẹ
-          nhàng nhưng đầy day dứt về một cuộc chia ly. Bài hát kể về hai người
-          yêu nhau nhưng buộc phải rời xa nhau, không phải vì hết yêu, mà vì
-          những lý do ngoài tầm kiểm soát. Lời bài hát mang đến cảm giác tiếc
-          nuối nhưng không quá bi lụy. Thay vì đau khổ dằn vặt, nó gợi lên sự
-          chấp nhận trong lặng lẽ, một sự “chia cách bình yên” đúng như tên gọi.
-          Với giai điệu nhẹ nhàng, sâu lắng cùng ca từ ý nghĩa, bài hát đã chạm
-          đến trái tim của nhiều người từng trải qua một cuộc chia ly không mong
-          muốn.
-        </p>
-      );
-    },
-  },
-  {
-    youtubeLink: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
-    description: "Soobin Hoàng Sơn & Tùng Dương",
-    title: "GIÁ NHƯ",
-    src: "/img/music-cover/GiaNhu.jpg",
-    ctaText: "Play",
-    ctaLink: "/audio/GiaNhu.mp3",
-    content: () => {
-      return (
-        <p className="container flex-wrap text-lg">
-          “Giá Như” là một ca khúc đầy cảm xúc, nói về những tiếc nuối trong
-          tình yêu khi mọi thứ không còn như xưa. Bài hát kể về một mối quan hệ
-          đã tan vỡ, nhưng trong lòng vẫn chất chứa bao điều muốn nói. Dẫu biết
-          rằng mọi chuyện đã qua, nhưng trái tim vẫn không thể buông bỏ, chỉ
-          biết thầm nhủ “giá như” có thể thay đổi một điều gì đó, có lẽ mọi thứ
-          đã khác. Giai điệu bài hát nhẹ nhàng nhưng sâu lắng, kết hợp với ca từ
-          đầy cảm xúc khiến người nghe dễ dàng đồng cảm, đặc biệt là những ai đã
-          từng trải qua một cuộc tình dang dở.
-        </p>
-      );
-    },
-  },
-];

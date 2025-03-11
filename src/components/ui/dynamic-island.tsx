@@ -13,11 +13,11 @@ type IPlay = {
 
 export function DynamicIslandWave({ isPlay }: IPlay) {
   return (
-    <div className="relative flex h-6 w-20 items-center justify-center rounded-full px-3">
+    <div className="relative flex h-5 items-center justify-center rounded-full px-3">
       {bars.map((_, i) => (
         <motion.div
           key={`bar-${i}`} // Đảm bảo key duy nhất
-          className="mx-1 w-2 rounded-full"
+          className="mx-0.5 w-0.5 rounded-full"
           style={{
             backgroundColor: isPlay ? activeColors[i] : inactiveColors[i],
           }}
