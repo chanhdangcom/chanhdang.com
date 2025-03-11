@@ -30,6 +30,7 @@
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
     "embla-carousel-react": "^8.5.2",
+    "fast-average-color": "^9.4.0",
     "framer-motion": "^12.4.10",
     "i": "^0.3.7",
     "iconsax-react": "^0.0.8",

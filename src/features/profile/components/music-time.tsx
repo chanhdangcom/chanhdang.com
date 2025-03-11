@@ -37,7 +37,7 @@ export function MusicTime() {
   return (
     <div className="font-sf mx-auto mt-4 flex items-center justify-between gap-2">
       <div className="text-xs text-zinc-400">
-        {format(new Date(currentTime * 1000), "m:ss")}
+        {duration ? format(new Date(currentTime * 1000), "m:ss") : "0:00"}
       </div>
 
       <div className="h-1.5 w-full overflow-hidden rounded-full bg-zinc-700 md:w-72">
@@ -48,7 +48,7 @@ export function MusicTime() {
       </div>
 
       <div className="text-xs text-zinc-400">
-        {format(new Date(duration * 1000), "m:ss")}
+        {duration ? format(new Date(duration * 1000), "m:ss") : "0:00"}
       </div>
     </div>
   );

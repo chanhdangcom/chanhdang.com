@@ -1,29 +1,52 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { FastAverageColor } from "fast-average-color";
 
-const bars = new Array(8).fill(0); // 8 cột sóng nhỏ
+const bars = new Array(13).fill(0);
 
 type IPlay = {
   isPlay: boolean;
+  coverUrl?: string; // Ảnh cover (có thể không có)
 };
 
-export function DynamicIslandWave({ isPlay }: IPlay) {
+export function DynamicIslandWave({ isPlay, coverUrl }: IPlay) {
+  const [waveColor, setWaveColor] = useState("#ffffff");
+
+  useEffect(() => {
+    if (!coverUrl) {
+      setWaveColor("#ffffff"); // Màu mặc định nếu không có ảnh
+      return;
+    }
+
+    const fac = new FastAverageColor();
+    fac
+      .getColorAsync(coverUrl)
+      .then((color) => setWaveColor(color.hex))
+      .catch(() => setWaveColor("#ffffff")); // Nếu lỗi, đặt màu trắng
+  }, [coverUrl]);
+
+  const getRandomHeight = () =>
+    Array.from({ length: 6 }, () => `${Math.random() * 60 + 20}%`);
+
   return (
-    <div className="relative flex h-5 items-center justify-center rounded-full">
+    <div className="relative flex h-6 w-fit items-center justify-center rounded-full px-1">
       {bars.map((_, i) => (
         <motion.div
           key={`bar-${i}`}
-          className="mx-0.5 w-[2px] rounded-full bg-green-400"
+          className="mx-[1px] w-[2px] rounded-full"
+          style={{
+            backgroundColor: waveColor,
+          }}
           animate={{
             height: isPlay
-              ? ["20%", "80%", "30%", "90%", "40%", "85%", "25%"] // Biên độ mượt hơn
+              ? getRandomHeight()
               : ["50%", "55%", "52%", "58%", "50%", "54%", "51%"],
-            opacity: isPlay ? [0.6, 1, 0.8] : [0.5, 0.55, 0.5],
           }}
           transition={{
             repeat: Infinity,
-            duration: isPlay ? 0.7 + i * 0.1 : 1.8 + i * 0.2, // Chậm hơn trước
+            duration: isPlay ? Math.random() * 0.5 + 0.4 : 1.2 + (i % 5) * 0.1,
             ease: "easeInOut",
           }}
         />

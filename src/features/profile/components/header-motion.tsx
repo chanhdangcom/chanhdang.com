@@ -11,7 +11,7 @@ import {
   useSpring,
 } from "motion/react";
 
-import { Play, Pause, Rewind, FastForward } from "phosphor-react";
+import { Play, Pause, Rewind, FastForward, MusicNotes } from "phosphor-react";
 
 import { useRef, useState } from "react";
 import { useScroll as useScrollCustom } from "../hook/use-scroll";
@@ -31,6 +31,8 @@ export const HeaderMotion = () => {
     handlePlayRandomAudio,
     handlePauseAudio,
     handleResumeAudio,
+    handleAudioSkip,
+    handAudioForward,
   } = useAudio();
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -42,123 +44,144 @@ export const HeaderMotion = () => {
 
   const renderExpaned = () => {
     return (
-      <motion.div
-        key={`PauseAudio-${isExpanded ? "expanded" : "compact"}`}
-        layoutId="dynamic-island"
-        initial={{
-          opacity: 1,
-          scale: 0.9,
-          borderRadius: "40px", // Trạng thái ban đầu là hình tròn
-        }}
-        animate={{
-          opacity: 1,
-          scale: 1,
-          borderRadius: isExpanded ? "40px" : "55px", // Chuyển đổi giữa bo tròn và bo góc
-        }}
-        exit={{
-          opacity: 1,
-          scale: 0.9,
-          borderRadius: "40px",
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 150, // Giảm độ đàn hồi để chuyển động chậm hơn
-          damping: 20, // Tăng damping để giảm độ nảy
-          mass: 0.6,
-          duration: 4, // Giảm thời gian để nhanh hơn
-        }}
-        className="flex items-center justify-center rounded-[40px] bg-zinc-950 shadow-2xl dark:border dark:border-zinc-700"
-      >
+      <AnimatePresence>
         <motion.div
-          key="compact"
+          key={`PauseAudio-${isExpanded ? "expanded" : "compact"}`}
+          layoutId="dynamic-island"
           initial={{
             scale: 0.9,
+            borderRadius: "40px",
           }}
           animate={{
             scale: 1,
+            borderRadius: isExpanded ? "40px" : "55px",
           }}
-          exit={{ scale: 0.9 }}
+          exit={{
+            scale: 0.9,
+            borderRadius: "40px",
+          }}
           transition={{
             type: "spring",
             stiffness: 150,
             damping: 20,
+            mass: 0.6,
+            ease: "easeInOut",
           }}
-          className="w-[calc(100vw-1rem)] p-4 sm:w-96"
+          className="flex items-center justify-center rounded-[40px] bg-zinc-950 shadow-2xl dark:border dark:border-zinc-700"
         >
-          <div className="flex justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex size-16 shrink-0 items-center justify-center">
-                {!currentMusic?.cover ? (
-                  <div className="flex size-16 items-center rounded-2xl bg-zinc-900"></div>
-                ) : (
-                  <Image
-                    src={currentMusic?.cover}
-                    alt="Cover"
-                    width={192}
-                    height={192}
-                    className="flex size-16 items-center rounded-2xl"
-                  />
-                )}
+          <div className="w-[calc(100vw-1rem)] p-4 sm:w-96">
+            <div className="flex justify-between">
+              <div className="flex items-center gap-3">
+                <motion.div
+                  layoutId="cover-audio"
+                  className="flex size-16 shrink-0 items-center justify-center"
+                >
+                  {!currentMusic?.cover ? (
+                    <div className="flex size-16 items-center justify-center rounded-3xl bg-zinc-900">
+                      <MusicNotes
+                        size={32}
+                        weight="fill"
+                        className="text-zinc-700"
+                      />
+                    </div>
+                  ) : (
+                    <Image
+                      src={currentMusic?.cover}
+                      alt="Cover"
+                      width={192}
+                      height={192}
+                      className="flex size-16 items-center rounded-2xl"
+                    />
+                  )}
+                </motion.div>
+
+                <motion.div
+                  layoutId="title-audio"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 180,
+                    damping: 20,
+                    duration: 1,
+                    ease: "easeInOut",
+                  }}
+                  className="text-base font-semibold leading-5 text-zinc-50"
+                >
+                  <div className="line-clamp-1">
+                    {currentMusic?.title || "TITLE SONG"}
+                  </div>
+
+                  <div className="font-sf font-normal text-zinc-400">
+                    {currentMusic?.singer || "Singer"}
+                  </div>
+                </motion.div>
               </div>
 
               <motion.div
-                initial={{ opacity: 0.3 }}
+                initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="text-base font-semibold leading-5 text-zinc-50"
+                exit={{ opacity: 0 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 180,
+                  damping: 20,
+                  duration: 1,
+                  ease: "easeInOut",
+                }}
+                layoutId="wave-audio"
+                className="mt-3 shrink-0"
               >
-                <div className="line-clamp-1">
-                  {currentMusic?.title || "TITLE SONG"}
-                </div>
-
-                <div className="font-sf font-normal text-zinc-400">
-                  {currentMusic?.singer || "Singer"}
-                </div>
+                <DynamicIslandWave
+                  isPlay={isPlaying}
+                  coverUrl={currentMusic?.cover}
+                />
               </motion.div>
             </div>
 
-            <div className="mt-3">
-              <DynamicIslandWave isPlay={isPlaying} />
-            </div>
-          </div>
-          <MusicTime />
-          <div className="mt-3 flex items-center justify-center">
-            <div className="flex gap-8">
-              <motion.button
-                whileTap={{ scale: 0.5 }}
-                className="flex cursor-pointer items-center justify-center text-zinc-50"
-              >
-                <Rewind size={30} weight="fill" />
-              </motion.button>
+            <MusicTime />
 
-              <motion.button
-                whileTap={{ scale: 0.5 }}
-                onClick={
-                  isPlaying
-                    ? handlePauseAudio
-                    : isPaused
-                      ? handleResumeAudio
-                      : handlePlayRandomAudio
-                }
-                className="flex cursor-pointer items-center justify-center text-zinc-50"
-              >
-                {isPlaying ? (
-                  <Pause size={36} weight="fill" />
-                ) : (
-                  <Play size={36} weight="fill" />
-                )}
-              </motion.button>
+            <div className="mt-3 flex items-center justify-center">
+              <div className="flex gap-8">
+                <motion.button
+                  onClick={handAudioForward}
+                  whileTap={{ scale: 0.5 }}
+                  className="flex cursor-pointer items-center justify-center text-zinc-50"
+                >
+                  <Rewind size={30} weight="fill" />
+                </motion.button>
 
-              <motion.button
-                whileTap={{ scale: 0.5 }}
-                className="flex cursor-pointer items-center justify-center text-zinc-50"
-              >
-                <FastForward size={32} weight="fill" />
-              </motion.button>
+                <motion.button
+                  whileTap={{ scale: 0.5 }}
+                  onClick={
+                    isPlaying
+                      ? handlePauseAudio
+                      : isPaused
+                        ? handleResumeAudio
+                        : handlePlayRandomAudio
+                  }
+                  className="flex cursor-pointer items-center justify-center text-zinc-50"
+                >
+                  {isPlaying ? (
+                    <Pause size={36} weight="fill" />
+                  ) : (
+                    <Play size={36} weight="fill" />
+                  )}
+                </motion.button>
+
+                <motion.button
+                  onClick={handleAudioSkip}
+                  whileTap={{ scale: 0.5 }}
+                  className="flex cursor-pointer items-center justify-center text-zinc-50"
+                >
+                  <FastForward size={32} weight="fill" />
+                </motion.button>
+              </div>
             </div>
           </div>
         </motion.div>
-      </motion.div>
+      </AnimatePresence>
     );
   };
 
@@ -168,84 +191,88 @@ export const HeaderMotion = () => {
         key={`PauseAudio-${isExpanded ? "expanded" : "compact"}`}
         layoutId="dynamic-island"
         initial={{
-          opacity: 1,
           scale: 0.9,
-          borderRadius: "40px", // Trạng thái ban đầu là hình tròn
+          borderRadius: "40px",
         }}
         animate={{
-          opacity: 1,
           scale: 1,
-          borderRadius: isExpanded ? "40px" : "55px", // Chuyển đổi giữa bo tròn và bo góc
+          borderRadius: isExpanded ? "40px" : "55px",
         }}
         exit={{
-          opacity: 1,
           scale: 0.9,
           borderRadius: "40px",
         }}
         transition={{
           type: "spring",
-          stiffness: 150, // Giảm độ đàn hồi để chuyển động chậm hơn
-          damping: 20, // Tăng damping để giảm độ nảy
+          stiffness: 150,
+          damping: 20,
           mass: 0.6,
-          duration: 4, // Giảm thời gian để nhanh hơn
+          duration: 4,
+          ease: "easeInOut",
         }}
         className="flex rounded-full bg-zinc-950 dark:border dark:border-zinc-700"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         {isPlaying && currentMusic && (
-          <motion.div
-            layoutId="compact"
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-            exit={{ scale: 0.9 }}
-            transition={{
-              type: "spring",
-              stiffness: 180,
-              damping: 20,
-              duration: 1,
-            }}
-            className="flex w-[40vh] min-w-[40vh] items-center justify-between p-1"
-          >
+          <AnimatePresence>
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="flex items-center gap-2"
+              layoutId="compact"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              transition={{
+                type: "spring",
+                stiffness: 180,
+                damping: 20,
+                duration: 1,
+                ease: "easeInOut",
+              }}
+              className="flex w-[40vh] min-w-[40vh] items-center justify-between p-1"
             >
               <motion.div
-                className="size-10 shrink-0"
-                animate={{ rotate: 360 }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 5,
-                  ease: "linear",
-                }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                className="flex items-center gap-2"
               >
-                <Image
-                  src={currentMusic.cover}
-                  alt="Cover"
-                  width={192}
-                  height={192}
-                  className="size-10 rounded-full shadow-sm dark:border-zinc-800"
-                />
+                <motion.div
+                  layoutId="cover-audio"
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="shrink-0"
+                >
+                  <Image
+                    src={currentMusic.cover}
+                    alt="Cover"
+                    width={192}
+                    height={192}
+                    className="size-10 rounded-full shadow-sm dark:border-zinc-800"
+                  />
+                </motion.div>
+                <motion.div
+                  layoutId="title-audio"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 180,
+                    damping: 20,
+                    duration: 1,
+                    ease: "easeInOut",
+                  }}
+                  className="line-clamp-1 text-base font-semibold text-zinc-50"
+                >
+                  {currentMusic.title}
+                </motion.div>
               </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="line-clamp-1 text-base font-semibold text-zinc-50"
-              >
-                {currentMusic.title}
+              <motion.div layoutId="wave-audio" className="mr-2 shrink-0">
+                <DynamicIslandWave isPlay coverUrl={currentMusic.cover} />
               </motion.div>
             </motion.div>
-
-            <DynamicIslandWave isPlay />
-          </motion.div>
+          </AnimatePresence>
         )}
 
         {!isPlaying && (
-          <AnimatePresence mode="wait">
+          <AnimatePresence>
             <motion.div
               key="compact"
               initial={{
@@ -258,10 +285,14 @@ export const HeaderMotion = () => {
                 type: "spring",
                 stiffness: 150,
                 damping: 20,
+                ease: "easeInOut",
               }}
               className="flex w-fit items-center gap-2 p-1"
             >
-              <motion.div className="shrink-0 rounded-full border-zinc-800">
+              <motion.div
+                layoutId="cover-audio"
+                className="shrink-0 rounded-full border border-zinc-800"
+              >
                 <Image
                   src="/img/avatar.jpeg"
                   alt="Avatar"
@@ -274,7 +305,15 @@ export const HeaderMotion = () => {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
+                exit={{ opacity: 1 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 180,
+                  damping: 20,
+                  duration: 1,
+                  ease: "easeInOut",
+                }}
+                layoutId="title-audio"
                 className="text-xl font-semibold text-zinc-50"
               >
                 Nguyễn Chánh Đang
@@ -283,7 +322,14 @@ export const HeaderMotion = () => {
               <motion.svg
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
+                exit={{ opacity: 0 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 180,
+                  damping: 20,
+                  duration: 1,
+                  ease: "easeInOut",
+                }}
                 className="mr-2 text-left text-3xl text-blue-600"
                 width="0.6em"
                 height="0.6em"
