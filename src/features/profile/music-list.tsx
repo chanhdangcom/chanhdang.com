@@ -128,11 +128,9 @@ export function MusicList() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="flex h-72 flex-col items-start gap-4 overflow-auto pb-10 text-xs text-zinc-600 [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch] [mask:linear-gradient(to_bottom,white,white,transparent)] [scrollbar-width:none] dark:text-zinc-400 md:h-fit md:text-sm lg:text-base"
+                    className="flex h-72 flex-col items-start gap-4 overflow-auto pb-10 text-xs text-zinc-600 [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch] [mask:linear-gradient(to_bottom,white,white,transparent)] [scrollbar-width:none] dark:text-zinc-400 md:text-sm lg:text-base"
                   >
-                    <p className="container flex-wrap text-lg">
-                      {musicView.content}
-                    </p>
+                    <p className="flex-wrap text-lg">{musicView.content}</p>
                   </motion.div>
                 </div>
               </div>
