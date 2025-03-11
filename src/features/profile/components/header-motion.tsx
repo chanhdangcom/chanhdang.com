@@ -188,7 +188,7 @@ export const HeaderMotion = ({ isPlaying, currentTime, duration }: IProp) => {
                               alt="Cover"
                               width={192}
                               height={192}
-                              className="flex size-16 items-center rounded-2xl border shadow-sm dark:border-zinc-950"
+                              className="flex size-14 items-center rounded-2xl border shadow-sm dark:border-zinc-950"
                             />
                           )}
                         </div>
