@@ -17,6 +17,40 @@ type IMusicContext = {
   handAudioForward: () => void;
 };
 
+// !BAD
+function calc(
+  title: string,
+  singer: string,
+  audio: string,
+  cover: string,
+  youTube: string
+) {
+  console.log(title, singer, cover, youTube);
+}
+
+calc("Co chac yeu la day", "audio.mp3", "Son Tung", "abc.jpg", "youtube");
+
+// ?GOOD
+function calc2(params: {
+  id: string;
+  title: string;
+  singer: string;
+  audio: string;
+  cover: string;
+  youTube?: string;
+}) {
+  const { title, singer, audio, cover, youTube } = params;
+  console.log(title, singer, audio, cover, youTube);
+}
+
+calc2({
+  id: "id",
+  title: "Co chac yeu la day",
+  audio: "audio.mp3",
+  cover: "cover.jpg",
+  singer: "Son Tung",
+});
+
 const MusicContext = React.createContext<IMusicContext | null>(null);
 
 export function useAudio() {
