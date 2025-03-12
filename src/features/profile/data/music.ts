@@ -55,37 +55,38 @@ muốn.
     `,
   },
   {
-    id: "1f027516-868d-4749-a7a0-8e55f8b5faf0",
-    title: "CÓ CHẮC YÊU LÀ ĐÂY",
-    singer: "Sơn Tùng M-TP",
-    cover: "/img/music-cover/CoChacYeuLaDay.jpg",
-    audio: "/audio/CoChacYeuLaDay.mp3",
+    id: "36b896d2-d27b-4fc6-b71b-7babaa44c9c2",
+    title: "SLATT ON",
+    singer: "Hustlang Robber",
+    cover: "/img/music-cover/SlattOn.jpg",
+    audio: "/audio/SLATTON.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
     content: `
-“Có Chắc Yêu Là Đây” mang đến cảm giác vui tươi, lãng mạn và tràn đầy
-năng lượng tích cực về tình yêu. Lời bài hát thể hiện những cảm xúc
-bồi hồi, rung động của chàng trai khi đang đắm chìm trong tình yêu.
-Giai điệu của bài hát có phần nhẹ nhàng, bay bổng hơn so với những ca
-khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
-mang phong cách đáng yêu, trẻ trung.
+“Giá Như” là một ca khúc đầy cảm xúc, nói về những tiếc nuối trong
+tình yêu khi mọi thứ không còn như xưa. Bài hát kể về một mối quan hệ
+đã tan vỡ, nhưng trong lòng vẫn chất chứa bao điều muốn nói. Dẫu biết
+rằng mọi chuyện đã qua, nhưng trái tim vẫn không thể buông bỏ, chỉ
+biết thầm nhủ “giá như” có thể thay đổi một điều gì đó, có lẽ mọi thứ
+đã khác. Giai điệu bài hát nhẹ nhàng nhưng sâu lắng, kết hợp với ca từ
+đầy cảm xúc khiến người nghe dễ dàng đồng cảm, đặc biệt là những ai đã
+từng trải qua một cuộc tình dang dở.
 `,
   },
 //   {
-//     id: "36b896d2-d27b-4fc6-b71b-7babaa44c9c2",
-//     title: "GIÁ NHƯ",
-//     singer: "Soobin Hoàng Sơn & Tùng Dương",
-//     cover: "/img/music-cover/GiaNhu.jpg",
-//     audio: "/audio/GiaNhu.mp3",
+//     id: "1f027516-868d-4749-a7a0-8e55f8b5faf0",
+//     title: "CÓ CHẮC YÊU LÀ ĐÂY",
+//     singer: "Sơn Tùng M-TP",
+//     cover: "/img/music-cover/CoChacYeuLaDay.jpg",
+//     audio: "/audio/CoChacYeuLaDay.mp3",
 //     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
 //     content: `
-// “Giá Như” là một ca khúc đầy cảm xúc, nói về những tiếc nuối trong
-// tình yêu khi mọi thứ không còn như xưa. Bài hát kể về một mối quan hệ
-// đã tan vỡ, nhưng trong lòng vẫn chất chứa bao điều muốn nói. Dẫu biết
-// rằng mọi chuyện đã qua, nhưng trái tim vẫn không thể buông bỏ, chỉ
-// biết thầm nhủ “giá như” có thể thay đổi một điều gì đó, có lẽ mọi thứ
-// đã khác. Giai điệu bài hát nhẹ nhàng nhưng sâu lắng, kết hợp với ca từ
-// đầy cảm xúc khiến người nghe dễ dàng đồng cảm, đặc biệt là những ai đã
-// từng trải qua một cuộc tình dang dở.
+// “Có Chắc Yêu Là Đây” mang đến cảm giác vui tươi, lãng mạn và tràn đầy
+// năng lượng tích cực về tình yêu. Lời bài hát thể hiện những cảm xúc
+// bồi hồi, rung động của chàng trai khi đang đắm chìm trong tình yêu.
+// Giai điệu của bài hát có phần nhẹ nhàng, bay bổng hơn so với những ca
+// khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
+// mang phong cách đáng yêu, trẻ trung.
 // `,
 //   },
+
 ];

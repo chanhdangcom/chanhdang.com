@@ -12,7 +12,7 @@ type IPlay = {
 };
 
 export function DynamicIslandWave({ isPlay, coverUrl }: IPlay) {
-  const [waveColor, setWaveColor] = useState("#ffffff");
+  const [waveColor, setWaveColor] = useState("");
 
   useEffect(() => {
     if (!coverUrl) {

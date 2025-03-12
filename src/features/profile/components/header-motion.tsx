@@ -77,11 +77,11 @@ export const HeaderMotion = () => {
                   className="flex size-16 shrink-0 items-center justify-center"
                 >
                   {!currentMusic?.cover ? (
-                    <div className="flex size-16 items-center justify-center rounded-3xl bg-zinc-900">
+                    <div className="flex size-16 items-center justify-center rounded-2xl bg-zinc-900">
                       <MusicNotes
                         size={32}
                         weight="fill"
-                        className="text-zinc-700"
+                        className="text-zinc-50"
                       />
                     </div>
                   ) : (
@@ -247,7 +247,7 @@ export const HeaderMotion = () => {
                       alt="Cover"
                       width={192}
                       height={192}
-                      className="size-10 rounded-full shadow-sm dark:border-zinc-800"
+                      className="size-10 rounded-full border border-zinc-800 shadow-sm"
                     />
                   </motion.div>
                 </motion.div>
