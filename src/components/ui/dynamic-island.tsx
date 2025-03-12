@@ -8,7 +8,7 @@ const bars = new Array(13).fill(0);
 
 type IPlay = {
   isPlay: boolean;
-  coverUrl?: string; // Ảnh cover (có thể không có)
+  coverUrl?: string;
 };
 
 export function DynamicIslandWave({ isPlay, coverUrl }: IPlay) {
@@ -16,7 +16,7 @@ export function DynamicIslandWave({ isPlay, coverUrl }: IPlay) {
 
   useEffect(() => {
     if (!coverUrl) {
-      setWaveColor("#ffffff"); // Màu mặc định nếu không có ảnh
+      setWaveColor("#fafafa");
       return;
     }
 
@@ -24,7 +24,7 @@ export function DynamicIslandWave({ isPlay, coverUrl }: IPlay) {
     fac
       .getColorAsync(coverUrl)
       .then((color) => setWaveColor(color.hex))
-      .catch(() => setWaveColor("#ffffff")); // Nếu lỗi, đặt màu trắng
+      .catch(() => setWaveColor("#fafafa"));
   }, [coverUrl]);
 
   const getRandomHeight = () =>

@@ -86,11 +86,11 @@ export function MusicList() {
               <motion.div layoutId={`cover-${musicView.id}`}>
                 <Image
                   priority
-                  width={200}
-                  height={200}
+                  width={300}
+                  height={300}
                   src={musicView.cover}
                   alt={musicView.title}
-                  className="h-72 w-full rounded-xl object-cover object-top p-1 md:rounded-3xl lg:h-80"
+                  className="h-[50vh] w-full rounded-xl object-cover object-top p-1 md:rounded-3xl lg:h-[50vh]"
                 />
               </motion.div>
 
