@@ -9,14 +9,12 @@ export const HeaderMusicPage = () => {
     <div className="container">
       <Progress className="w-[60%]" value={33} />
       <div className="flex h-14 items-center justify-between">
-        <div className="flex items-center gap-8">
-          <Link href="/">
-            <ChanhdangLogotype />
-          </Link>
-          <div className="font-handwritten text-xl">
-            “Feel the Rhythm, Live the Music!”
+        <Link href="/">
+          <ChanhdangLogotype />
+          <div className="font-handwritten text-sm">
+            &quot;Feel the Rhythm, Live the Music!s&quot;
           </div>
-        </div>
+        </Link>
 
         <SwitchTheme />
       </div>

@@ -8,7 +8,7 @@ export function TableRanking() {
   const { handlePlayAudio } = useAudio();
   return (
     <div className="rounded-3xl border-b p-2 shadow-sm dark:border-zinc-800">
-      <div className="mb-8 flex gap-2">
+      <div className="mb-4 flex gap-2">
         <Ranking size={32} weight="fill" className="text-pink-500" />
         <div className="text-2xl">Ranking</div>
       </div>
