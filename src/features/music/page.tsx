@@ -7,8 +7,6 @@ import { TableRanking } from "./table-ranking";
 export function MusicPage() {
   return (
     <div className="">
-      {/* <HeaderMotion /> */}
-
       <HeaderMusicPage />
 
       <div className="container mt-8 flex justify-center">

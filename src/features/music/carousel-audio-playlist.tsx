@@ -29,9 +29,11 @@ export function CarouselAudioPlaylist() {
             className="flex items-center justify-center py-2 md:basis-1/2 lg:basis-1/4"
           >
             <PlaylistItem
+              id={music.id}
               title={music.title}
               singer={music.singer}
               cover={music.cover}
+              musics={music.musics}
             />
           </CarouselItem>
         ))}

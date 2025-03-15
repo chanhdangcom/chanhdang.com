@@ -27,7 +27,7 @@ export function AudioBar() {
     handAudioForward,
   } = useAudio();
   return (
-    <div className="fixed inset-x-16 bottom-4 flex justify-center rounded-[40px] border bg-zinc-100 px-8 py-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+    <div className="fixed inset-x-4 bottom-4 flex justify-center rounded-[40px] border bg-zinc-100/80 px-8 py-4 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80">
       <div className="flex w-full items-center justify-between">
         <div className="im flex items-center gap-8">
           <motion.div whileTap={{ scale: 0.5 }}>
@@ -38,7 +38,6 @@ export function AudioBar() {
               className="cursor-pointer"
             />
           </motion.div>
-
           {isPlaying ? (
             <motion.div whileTap={{ scale: 0.5 }}>
               <Pause onClick={handlePauseAudio} weight="fill" size={30.5} />
@@ -48,7 +47,6 @@ export function AudioBar() {
               <Play onClick={handleResumeAudio} weight="fill" size={32} />
             </motion.div>
           )}
-
           <motion.div whileTap={{ scale: 0.5 }}>
             <FastForward
               onClick={handleAudioSkip}
@@ -57,7 +55,6 @@ export function AudioBar() {
               className="cursor-pointer"
             />
           </motion.div>
-
           <DurationAudio />
         </div>
 

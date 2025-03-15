@@ -10,6 +10,7 @@ type IMusicContext = {
   isPaused: boolean;
 
   handlePlayAudio: (music: IMusic) => void;
+
   handlePlayRandomAudio: () => void;
   handlePauseAudio: () => void;
   handleResumeAudio: () => void;

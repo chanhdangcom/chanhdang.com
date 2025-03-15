@@ -4,6 +4,7 @@ import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
 
 import React from "react";
+import { Search } from "./component/search";
 export const HeaderMusicPage = () => {
   return (
     <div className="container">
@@ -12,9 +13,11 @@ export const HeaderMusicPage = () => {
         <Link href="/">
           <ChanhdangLogotype />
           <div className="font-handwritten text-sm">
-            &quot;Feel the Rhythm, Live the Music!s&quot;
+            &quot;Feel the Rhythm, Live the Music!&quot;
           </div>
         </Link>
+
+        <Search />
 
         <SwitchTheme />
       </div>

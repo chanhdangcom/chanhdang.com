@@ -1,6 +1,6 @@
 export const MUSICS = [
   {
-    id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7",
+    id: "1",
     title: "HUSTLANG ALL DAY",
     singer: "Hustlang Robber",
     cover: "/img/music-cover/HustlangAllDay.jpg",
@@ -11,7 +11,7 @@ RAP VIỆT PLAYPLIST
     `,
   },
   {
-    id: "9aa4e51d-a7fc-44a0-88ba-b6981eca64b7",
+    id: "2",
     title: "1TINHYEU",
     singer: "Hustlang Robber",
     cover: "/img/music-cover/1LOVE.jpg",
@@ -22,7 +22,7 @@ RAP VIỆT PLAYPLIST
     `,
   },
   {
-    id: "e4a0b19c-4e31-41ff-b846-1d39aa2e3cef",
+    id: "3",
     title: "QUA TỪNG KHUNG HÌNH",
     singer: "Hustlang Robber & Ngắn",
     cover: "/img/music-cover/QUATUNGKHUNGHINH.jpg",

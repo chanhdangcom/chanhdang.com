@@ -33,7 +33,7 @@ export function MusicList() {
   console.log("Render Music List");
 
   return (
-    <>
+    <div className="rounded-3xl border-b shadow-sm dark:border-zinc-800">
       <div className="space-y-8">
         <div className="my-2 flex items-center space-x-2 font-mono text-sm">
           <ExperienceInfoItem
@@ -214,7 +214,7 @@ export function MusicList() {
           );
         })}
       </ul>
-    </>
+    </div>
   );
 }
 
