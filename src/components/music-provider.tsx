@@ -8,6 +8,7 @@ type IMusicContext = {
   currentMusic: IMusic | null;
   isPlaying: boolean;
   isPaused: boolean;
+  isMuted: boolean;
 
   handlePlayAudio: (music: IMusic) => void;
 
@@ -16,6 +17,7 @@ type IMusicContext = {
   handleResumeAudio: () => void;
   handleAudioSkip: () => void;
   handAudioForward: () => void;
+  handleMute: () => void;
 };
 
 // !BAD
@@ -77,6 +79,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [currentMusic, setCurrentMusic] = useState<IMusic | null>(null);
+  const [isMuted, setIsMuted] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -144,12 +147,20 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const handleMute = () => {
+    if (audioRef.current) {
+      audioRef.current.muted = !audioRef.current.muted;
+      setIsMuted(audioRef.current.muted);
+    }
+  };
+
   return (
     <Provider
       audioRef={audioRef}
       currentMusic={currentMusic}
       isPlaying={isPlaying}
       isPaused={isPaused}
+      isMuted={isMuted}
       //
       handlePlayAudio={handlePlayAudio}
       handlePlayRandomAudio={handlePlayRandomAudio}
@@ -157,6 +168,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       handleResumeAudio={handleResumeAudio}
       handleAudioSkip={handleAudioSkip}
       handAudioForward={handAudioForward}
+      handleMute={handleMute}
     >
       <HeaderMotion />
 

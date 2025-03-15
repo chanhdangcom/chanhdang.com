@@ -19,7 +19,7 @@ export function CarouselAudio() {
   const { handlePlayAudio } = useAudio();
 
   return (
-    <Carousel className="w-full max-w-4xl rounded-3xl border-b p-2 shadow-sm dark:border-zinc-800">
+    <Carousel className="w-full max-w-4xl rounded-3xl border-b p-2 shadow-sm backdrop-blur-md dark:border-zinc-800">
       <div className="font-bol mb-2 flex gap-1 text-2xl">
         <MusicNotesSimple size={32} weight="fill" className="text-pink-500" />
 

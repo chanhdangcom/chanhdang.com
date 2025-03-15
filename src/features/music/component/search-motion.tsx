@@ -4,14 +4,23 @@ import { MUSICS } from "../data/music-page";
 import { AuidoItem } from "./audio-item";
 import { useAudio } from "@/components/music-provider";
 import { useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { useOutsideClick } from "@/features/profile/hook/use-outside-click";
 
-export function Search() {
+export function SearchMotion() {
   const { handlePlayAudio } = useAudio();
   const [value, setValue] = useState("");
   const ref = useRef<HTMLDivElement>(null);
   const [isSearch, setIsSearch] = useState(false);
+  const { scrollY } = useScroll();
+  const _top = useTransform(scrollY, [100, 400], [-80, 0]);
+  const top = useSpring(_top);
 
   useOutsideClick(ref, () => setIsSearch(false), isSearch);
 
@@ -42,7 +51,7 @@ export function Search() {
               value={value}
               onChange={(e) => setValue(e.target.value)}
               placeholder="Music, Playlist ..."
-              className="w-96 rounded-2xl bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+              className="h-12 w-96 rounded-2xl bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
               onClick={() => setIsSearch(true)}
             ></Input>
           </motion.div>
@@ -73,7 +82,7 @@ export function Search() {
                 <Input
                   type="text"
                   placeholder="Music, Playlist ..."
-                  className="z-10 h-14 rounded-2xl bg-zinc-100/80 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80"
+                  className="z-10 rounded-2xl bg-zinc-100/80 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80"
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
                   autoFocus
@@ -123,8 +132,13 @@ export function Search() {
   };
 
   return (
-    <div className="flex items-center justify-center">
-      {isSearch ? <LargerSearch /> : <MiniSearch />}
-    </div>
+    <motion.div
+      style={{ top }}
+      className="fixed inset-x-0 top-4 z-[1000] flex justify-center"
+    >
+      <div className="mt-4 flex items-center justify-center">
+        {isSearch ? <LargerSearch /> : <MiniSearch />}
+      </div>
+    </motion.div>
   );
 }

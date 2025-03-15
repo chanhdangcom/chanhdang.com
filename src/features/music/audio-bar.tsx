@@ -9,22 +9,24 @@ import {
   Repeat,
   Rewind,
   Shuffle,
-  SpeakerSimpleHigh,
 } from "phosphor-react";
 
 import { AnimatePresence, motion } from "motion/react";
 import DynamicIslandWave from "@/components/ui/dynamic-island";
 import { DurationAudio } from "./component/duration-audio";
+import { SpeakerHigh, SpeakerSlash } from "@phosphor-icons/react/dist/ssr";
 
 export function AudioBar() {
   const {
     currentMusic,
     isPlaying,
+    isMuted,
     handlePlayRandomAudio,
     handleResumeAudio,
     handlePauseAudio,
     handleAudioSkip,
     handAudioForward,
+    handleMute,
   } = useAudio();
   return (
     <div className="fixed inset-x-4 bottom-4 flex justify-center rounded-[40px] border bg-zinc-100/80 px-8 py-4 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80">
@@ -154,9 +156,34 @@ export function AudioBar() {
         </div>
 
         <div className="flex items-center gap-8">
-          <SpeakerSimpleHigh size={20} weight="fill" />
+          {isMuted ? (
+            <motion.div whileTap={{ scale: 0.5 }}>
+              <SpeakerSlash
+                size={20}
+                weight="fill"
+                onClick={() => handleMute()}
+              />
+            </motion.div>
+          ) : (
+            <motion.div whileTap={{ scale: 0.5 }}>
+              <SpeakerHigh
+                size={20}
+                weight="fill"
+                onClick={() => handleMute()}
+                className="cursor-pointer"
+              />
+            </motion.div>
+          )}
+
           <Repeat size={20} weight="fill" />
-          <Shuffle onClick={handlePlayRandomAudio} size={20} weight="fill" />
+          <motion.div whileTap={{ scale: 0.5 }}>
+            <Shuffle
+              onClick={() => handlePlayRandomAudio()}
+              size={20}
+              weight="fill"
+              className="cursor-pointer"
+            />
+          </motion.div>
         </div>
       </div>
     </div>
