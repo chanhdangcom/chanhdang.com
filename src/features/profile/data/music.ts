@@ -48,5 +48,22 @@ Giai điệu của bài hát có phần nhẹ nhàng, bay bổng hơn so với n
 khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
 mang phong cách đáng yêu, trẻ trung.
 `,
+  },
+
+  {
+    id: "1f027516-868d-4749-a7a0-8e55f8b5faf00032",
+    title: "MUỘN RỒI MÀ SAO CÒN",
+    singer: "Sơn Tùng MT-P",
+    cover: "/img/music-cover/MuonRoiMaSaoCon.jpg",
+    audio: "/audio/MuonRoiMaSaoCon.mp3",
+    youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+    content: `
+“Có Chắc Yêu Là Đây” mang đến cảm giác vui tươi, lãng mạn và tràn đầy
+năng lượng tích cực về tình yêu. Lời bài hát thể hiện những cảm xúc
+bồi hồi, rung động của chàng trai khi đang đắm chìm trong tình yêu.
+Giai điệu của bài hát có phần nhẹ nhàng, bay bổng hơn so với những ca
+khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
+mang phong cách đáng yêu, trẻ trung.
+`,
   }
 ];

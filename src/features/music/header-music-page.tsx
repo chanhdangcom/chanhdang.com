@@ -7,7 +7,7 @@ import { CaretLeft, CaretRight } from "@phosphor-icons/react/dist/ssr";
 
 export const HeaderMusicPage = () => {
   return (
-    <div className="container sticky inset-0 top-0 z-10 bg-zinc-100 pb-2 dark:border-b dark:border-zinc-800 dark:bg-zinc-950">
+    <div className="container sticky inset-0 top-0 z-10 bg-zinc-100 pb-2 dark:border-b dark:border-zinc-900 dark:bg-zinc-950">
       <Progress className="w-[60%]" value={33} />
       <div className="flex h-14 items-center justify-between">
         <div className="flex gap-16">

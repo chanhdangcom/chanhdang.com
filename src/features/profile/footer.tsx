@@ -43,9 +43,15 @@ export const Footer = () => {
         <a className="hover:underline" href="http://chanhdang.com">
           chanhdang.com
         </a>
+
+        <a className="hover:underline" href="https://ncdang.com">
+          ncdang.com
+        </a>
+
         <a className="hover:underline" href="https://dang.is-a.dev">
           dang.is-a.dev
         </a>
+
         <div className="flex gap-8 md:gap-4">
           <a
             className="flex items-center gap-2 hover:underline"
