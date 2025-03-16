@@ -29,7 +29,7 @@ export function AudioBar() {
     handleMute,
   } = useAudio();
   return (
-    <div className="fixed inset-x-4 bottom-4 flex justify-center rounded-[40px] border bg-zinc-100/80 px-8 py-4 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80">
+    <div className="fixed inset-x-4 bottom-4 flex justify-center rounded-[40px] border bg-zinc-100/80 px-8 py-4 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80">
       <div className="flex w-full items-center justify-between">
         <div className="im flex items-center gap-8">
           <motion.div whileTap={{ scale: 0.5 }}>
@@ -42,11 +42,21 @@ export function AudioBar() {
           </motion.div>
           {isPlaying ? (
             <motion.div whileTap={{ scale: 0.5 }}>
-              <Pause onClick={handlePauseAudio} weight="fill" size={30.5} />
+              <Pause
+                onClick={handlePauseAudio}
+                weight="fill"
+                size={30.5}
+                className="cursor-pointer"
+              />
             </motion.div>
           ) : (
             <motion.div whileTap={{ scale: 0.5 }}>
-              <Play onClick={handleResumeAudio} weight="fill" size={32} />
+              <Play
+                onClick={handleResumeAudio}
+                weight="fill"
+                size={32}
+                className="cursor-pointer"
+              />
             </motion.div>
           )}
           <motion.div whileTap={{ scale: 0.5 }}>
@@ -61,7 +71,6 @@ export function AudioBar() {
         </div>
 
         <div className="flex items-center gap-3">
-          {/* <HeartStraight size={20} className="text-red-500" weight="fill" /> */}
           {!currentMusic?.cover ? (
             <motion.div
               layoutId="Cover"

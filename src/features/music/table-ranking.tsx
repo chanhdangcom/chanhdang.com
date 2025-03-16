@@ -148,6 +148,7 @@ const SVGRANK: ISVGRANK[] = [
 
 export function TableRanking() {
   const { handlePlayAudio } = useAudio();
+
   return (
     <div className="rounded-3xl border-b p-2 shadow-sm dark:border-zinc-800">
       <div className="mb-4 flex gap-2">

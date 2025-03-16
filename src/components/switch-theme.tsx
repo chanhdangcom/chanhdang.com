@@ -19,7 +19,7 @@ export const SwitchTheme = () => {
   }
 
   return (
-    <div className="flex items-center rounded-full border border-zinc-300 dark:border-zinc-700">
+    <div className="flex items-center rounded-full border bg-zinc-100/100 shadow-sm backdrop-blur-md dark:border-zinc-700 dark:bg-zinc-950/80">
       <ThemeItem
         themeKey="light"
         themeIcon={<SunIcon size={20} />}

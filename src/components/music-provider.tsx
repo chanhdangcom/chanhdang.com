@@ -1,4 +1,3 @@
-import { HeaderMotion } from "@/features/profile/components/header-motion";
 import { MUSICS } from "@/features/profile/data/music";
 import { IMusic } from "@/features/profile/types/music";
 import React, { useCallback, useContext, useRef, useState } from "react";
@@ -170,7 +169,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       handAudioForward={handAudioForward}
       handleMute={handleMute}
     >
-      <HeaderMotion />
+      {/* <HeaderMotion /> */}
 
       {children}
     </Provider>

@@ -16,7 +16,7 @@ export function TableRankingItem({
   handlePlay,
 }: Iprop) {
   return (
-    <div className="w-[100vh] cursor-pointer" onClick={handlePlay}>
+    <div className="w-[110vh] cursor-pointer" onClick={handlePlay}>
       <div className="flex items-center justify-between">
         <div className="flex w-64 items-center justify-start gap-3">
           {cover ? (
