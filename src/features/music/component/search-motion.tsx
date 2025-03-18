@@ -42,8 +42,8 @@ export function SearchMotion() {
           <div className="w-full">
             <motion.div className="container bg-zinc-100 p-2 dark:border-zinc-800 dark:bg-zinc-950">
               <motion.div
-                layout
                 layoutId="Search"
+                layout
                 className="flex items-center gap-4"
               >
                 <Link href="/music">

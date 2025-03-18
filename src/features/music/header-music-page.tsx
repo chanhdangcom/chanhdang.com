@@ -1,3 +1,4 @@
+"use client";
 import { Progress } from "@/components/ui/progress";
 
 import React from "react";
@@ -6,10 +7,11 @@ import {
   CaretLeft,
   CaretRight,
   MagnifyingGlass,
-  Screencast,
 } from "@phosphor-icons/react/dist/ssr";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { MusicType } from "./music-type";
+
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
 export const HeaderMusicPage = () => {
@@ -21,14 +23,24 @@ export const HeaderMusicPage = () => {
         <div className="flex items-center justify-between">
           <ChanhdangLogotype />
 
-          <div className="flex gap-4 text-zinc-500">
-            <Screencast size={25} />
+          <AnimatePresence>
+            <motion.div
+              transition={{
+                type: "spring",
+                stiffness: 250,
+                damping: 20,
+                duration: 0.1,
+              }}
+              layoutId="Search"
+              className="flex gap-4 text-zinc-500"
+            >
+              {/* <Screencast size={25} /> */}
 
-            {/* <SearchMotion /> */}
-            <Link href="/search">
-              <MagnifyingGlass size={25} />
-            </Link>
-          </div>
+              <Link href="/music/search">
+                <MagnifyingGlass size={25} />
+              </Link>
+            </motion.div>
+          </AnimatePresence>
         </div>
 
         <MusicType />

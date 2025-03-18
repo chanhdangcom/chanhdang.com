@@ -247,7 +247,16 @@ export function AudioBar() {
               </motion.div>
             </div>
 
-            <div className="md:hidden">
+            <div className="ml-4 flex items-center gap-4 md:hidden">
+              <motion.div layout>
+                {currentMusic?.cover && (
+                  <DynamicIslandWave
+                    isPlay={isPlaying}
+                    coverUrl={currentMusic?.cover}
+                  />
+                )}
+              </motion.div>
+
               {isPlaying ? (
                 <motion.div whileTap={{ scale: 0.5 }}>
                   <Pause

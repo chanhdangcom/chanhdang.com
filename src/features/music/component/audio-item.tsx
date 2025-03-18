@@ -10,7 +10,7 @@ export function AuidoItem({ music, handlePlay }: IProp) {
   return (
     <>
       <div
-        className="w-fit shrink-0 transform cursor-pointer space-y-2 rounded-3xl p-3 transition-transform duration-300 hover:scale-105 hover:bg-zinc-100 hover:dark:bg-zinc-900"
+        className="w-fit shrink-0 cursor-pointer space-y-2 rounded-3xl p-3 hover:bg-zinc-100 hover:dark:bg-zinc-900"
         onClick={handlePlay}
       >
         {music.cover ? (
