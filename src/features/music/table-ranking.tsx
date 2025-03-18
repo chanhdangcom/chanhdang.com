@@ -150,10 +150,10 @@ export function TableRanking() {
   const { handlePlayAudio } = useAudio();
 
   return (
-    <div className="mx-auto rounded-3xl border-b shadow-sm dark:border-zinc-800 md:p-2">
-      <div className="container mb-4 flex gap-2">
+    <div className="z-10 mx-auto rounded-3xl md:p-2">
+      <div className="container flex gap-2">
         <Ranking size={32} weight="fill" className="text-zinc-500" />
-        <div className="text-2xl">Ranking</div>
+        <div className="text-2xl text-zinc-50">Ranking</div>
       </div>
 
       {MUSICS.map((music) => (

@@ -8,28 +8,27 @@ import { TableRanking } from "./table-ranking";
 
 export function MusicPage() {
   return (
-    <div className="flex bg-zinc-500/10 dark:bg-zinc-800/10">
+    <div className="flex bg-zinc-500/10 dark:bg-zinc-950">
       <MenuBar />
 
       <div className="mx-auto w-full">
-        <div className="bg-opacity-70 bg-gradient-to-b from-[#112233] to-black backdrop-blur-md">
+        <div className="relative z-10 bg-opacity-50 bg-gradient-to-b from-[#112233] to-zinc-950 backdrop-blur-sm before:absolute before:inset-0 before:w-2/3 before:bg-gradient-to-r before:from-zinc-950 before:via-zinc-950/50 before:to-transparent">
           <HeaderMusicPage />
 
-          <div className="mt-8 flex justify-center"></div>
           <div className="mt-8 flex justify-center">
             <CarouselAudio />
           </div>
+
           <div className="mt-8 flex justify-center">
             <TableRanking />
           </div>
+
+          <div className="mb-40 mt-8 flex justify-center">
+            <CarouselAudioPlaylist />
+          </div>
         </div>
 
-        <div className="mb-40 mt-8 flex justify-center">
-          <CarouselAudioPlaylist />
-        </div>
-        <div className="">
-          <AudioBar />
-        </div>
+        <AudioBar />
       </div>
     </div>
   );

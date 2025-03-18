@@ -1,14 +1,5 @@
 "use client";
-
 import * as React from "react";
-
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carouse";
 
 import { Playlist } from "@phosphor-icons/react/dist/ssr";
 import { MUSICS } from "./data/music-page-playlist";
@@ -16,24 +7,20 @@ import { PlaylistItem } from "./component/playlist-item";
 
 export function CarouselAudioPlaylist() {
   return (
-    <Carousel className="mt-4 w-full max-w-sm rounded-3xl border-b p-2 shadow-sm dark:border-zinc-800 md:max-w-3xl">
+    <div className="mx-auto w-full rounded-lg border-b p-2 shadow-sm backdrop-blur-md dark:border-zinc-800 md:max-w-3xl">
       <div className="font-bol mb-2 flex gap-1 text-2xl">
         <Playlist size={32} weight="fill" className="text-zinc-500" />
 
         <div>Playlist</div>
       </div>
-      <CarouselContent>
+
+      <div className="flex justify-center overflow-x-auto">
         {MUSICS.map((music) => (
-          <CarouselItem
-            key={music.id}
-            className="flex basis-1/2 items-center justify-center py-2 md:basis-1/4"
-          >
+          <div key={music.id} className="shrink-0">
             <PlaylistItem music={music} />
-          </CarouselItem>
+          </div>
         ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+      </div>
+    </div>
   );
 }

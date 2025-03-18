@@ -25,8 +25,8 @@ export function PlaylistItem({ music }: IProp) {
 
   return (
     <Drawer>
-      <DrawerTrigger>
-        <div className="w-fit transform cursor-pointer space-y-2 rounded-3xl p-4 transition-transform duration-300 hover:scale-105 hover:bg-zinc-100 hover:dark:bg-zinc-900">
+      <DrawerTrigger className="">
+        <div className="w-fit shrink-0 transform cursor-pointer space-y-2 rounded-3xl p-3 transition-transform duration-300 hover:scale-105 hover:bg-zinc-100 hover:dark:bg-zinc-900">
           {music.cover ? (
             <Image
               height={300}
@@ -41,11 +41,11 @@ export function PlaylistItem({ music }: IProp) {
           )}
 
           <div className="text-center">
-            <div className="line-clamp-1 font-semibold">
+            <div className="line-clamp-1 w-32 font-semibold">
               {music.title || "TITLE"}
             </div>
 
-            <div className="line-clamp-1 text-zinc-500">
+            <div className="line-clamp-1 w-32 text-zinc-500">
               {music.singer || "SINGER"}
             </div>
           </div>

@@ -2,13 +2,6 @@
 
 import * as React from "react";
 
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carouse";
 import { AuidoItem } from "./component/audio-item";
 
 import { useAudio } from "@/components/music-provider";
@@ -19,27 +12,23 @@ export function CarouselAudio() {
   const { handlePlayAudio } = useAudio();
 
   return (
-    <Carousel className="mx-auto w-full max-w-sm rounded-3xl border-b p-2 shadow-sm backdrop-blur-md dark:border-zinc-800 md:max-w-5xl">
+    <div className="mx-auto w-full rounded-lg border-b shadow-sm backdrop-blur-md dark:border-zinc-800 md:max-w-5xl">
       <div className="font-bol container mb-2 flex gap-1 text-2xl">
         <MusicNotesSimple size={32} weight="fill" className="text-zinc-500" />
 
         <div>Single song</div>
       </div>
-      <CarouselContent>
+
+      <div className="flex overflow-x-auto">
         {MUSICS.map((music) => (
-          <CarouselItem
-            key={music.id}
-            className="flex basis-1/2 items-center justify-center py-2 lg:basis-1/6"
-          >
+          <div key={music.id} className="shrink-0">
             <AuidoItem
               music={music}
               handlePlay={() => handlePlayAudio(music)}
             />
-          </CarouselItem>
+          </div>
         ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+      </div>
+    </div>
   );
 }

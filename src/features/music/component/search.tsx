@@ -38,7 +38,7 @@ export function Search() {
         <div className="">
           <div
             ref={ref}
-            className="fixed top-20 rounded-3xl border bg-zinc-100/80 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80"
+            className="fixed top-20 rounded-3xl border bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
           >
             <div className="grid w-full grid-cols-4">
               {MUSICS.filter((music) => {

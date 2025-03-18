@@ -5,8 +5,10 @@ import { BookBookmark, Browsers, House } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import { AudioItemOrder } from "./component/audio-item-order";
 import { MUSICS } from "./data/music-page-playlist";
+import { useAudio } from "@/components/music-provider";
 
 export function MenuBar() {
+  const { handlePlayAudio } = useAudio();
   return (
     <div className="relative hidden md:flex">
       <div className="h-96 w-64"></div>
@@ -41,6 +43,7 @@ export function MenuBar() {
                 music={music}
                 key={music.id}
                 className="size-16"
+                handlePlay={() => handlePlayAudio}
               />
             ))}
           </div>

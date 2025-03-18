@@ -3,16 +3,19 @@ import Image from "next/image";
 import { IPlaylistItem } from "../type/playlist";
 import { cn } from "@/lib/utils";
 
-import { useState } from "react";
-
 type IProp = {
   music: IMusic | IPlaylistItem;
+  handlePlay: () => void;
   className?: string;
+  classNameOrder?: string;
 };
 
-export function AudioItemOrder({ music, className }: IProp) {
-  const [isClick, setIsClick] = useState(false);
-
+export function AudioItemOrder({
+  music,
+  handlePlay,
+  className,
+  classNameOrder,
+}: IProp) {
   if (!music) {
     return <div className="text-red-500">Dữ liệu nhạc chưa sẵn sàng</div>;
   }
@@ -21,7 +24,7 @@ export function AudioItemOrder({ music, className }: IProp) {
     return (
       <div
         className="flex w-64 items-center justify-start gap-3"
-        onClick={() => setIsClick(!isClick)}
+        onClick={handlePlay}
       >
         {music.cover ? (
           <Image
@@ -39,7 +42,12 @@ export function AudioItemOrder({ music, className }: IProp) {
         )}
 
         <div>
-          <div className="line-clamp-1 w-36 text-base font-semibold">
+          <div
+            className={cn(
+              "line-clamp-1 w-36 text-base font-semibold",
+              classNameOrder
+            )}
+          >
             {music.title || "TITLE SONG"}
           </div>
           <div className="line-clamp-1 text-sm text-zinc-500">

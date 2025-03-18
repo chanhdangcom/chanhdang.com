@@ -27,10 +27,10 @@ export function AuidoItem({ music, handlePlay }: IProp) {
         )}
 
         <div className="text-center">
-          <div className="line-clamp-1 font-semibold">
+          <div className="line-clamp-1 w-32 font-semibold">
             {music.title || "TITLE"}
           </div>
-          <div className="line-clamp-1 text-zinc-500">
+          <div className="line-clamp-1 w-32 text-zinc-500">
             {music.singer || "SINGER"}
           </div>
         </div>

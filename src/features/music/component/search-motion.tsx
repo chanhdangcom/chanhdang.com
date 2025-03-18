@@ -1,19 +1,19 @@
 "use client";
 import { Input } from "@/components/ui/input";
 import { MUSICS } from "../data/music-page";
-import { AuidoItem } from "./audio-item";
 import { useAudio } from "@/components/music-provider";
 import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useOutsideClick } from "@/features/profile/hook/use-outside-click";
+
+import { AudioItemOrder } from "./audio-item-order";
+import { MusicType } from "../music-type";
+import { CaretLeft } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
 
 export function SearchMotion() {
   const { handlePlayAudio } = useAudio();
   const [value, setValue] = useState("");
   const ref = useRef<HTMLDivElement>(null);
-  const [isSearch, setIsSearch] = useState(false);
-
-  useOutsideClick(ref, () => setIsSearch(false), isSearch);
 
   const removeVietnameseTones = (str: string) => {
     return str
@@ -23,79 +23,69 @@ export function SearchMotion() {
       .replace(/Đ/g, "D");
   };
 
-  const MiniSearch = () => {
-    return (
-      <AnimatePresence>
-        {!isSearch && (
-          <motion.div
-            layoutId="Search"
-            transition={{
-              type: "spring",
-              stiffness: 150,
-              damping: 20,
-              duration: 0.1,
-            }}
-            className="z-10"
-          >
-            <Input
-              type="text"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              placeholder="Music, Playlist ..."
-              className="w-[80vh] rounded-2xl bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
-              onClick={() => setIsSearch(true)}
-            ></Input>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    );
-  };
-
   const LargerSearch = () => {
     return (
       <AnimatePresence>
-        {isSearch && (
-          <motion.div
-            layout
-            ref={ref}
-            initial={{ borderRadius: 20 }}
-            exit={{ borderRadius: 20 }}
-            transition={{
-              type: "spring",
-              stiffness: 120,
-              damping: 20,
-              duration: 0.1,
-            }}
-            className="fixed inset-x-80 top-16 z-10 flex rounded-3xl"
-          >
-            <div className="w-full">
-              <motion.div layout layoutId="Search">
+        <motion.div
+          layout
+          ref={ref}
+          initial={{ borderRadius: 20 }}
+          exit={{ borderRadius: 20 }}
+          transition={{
+            type: "spring",
+            stiffness: 120,
+            damping: 20,
+            duration: 0.1,
+          }}
+          className="fixed inset-0 z-50 flex"
+        >
+          <div className="w-full">
+            <motion.div className="container bg-zinc-100 p-2 dark:border-zinc-800 dark:bg-zinc-950">
+              <motion.div
+                layout
+                layoutId="Search"
+                className="flex items-center gap-4"
+              >
+                <Link href="/music">
+                  <CaretLeft
+                    size={30}
+                    weight="bold"
+                    className="rounded-full bg-zinc-200 p-1 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-500"
+                  />
+                </Link>
+
                 <Input
                   type="text"
                   placeholder="Music, Playlist ..."
-                  className="z-10 h-14 rounded-2xl bg-zinc-100/80 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80"
+                  className="z-10 rounded-2xl border-none dark:bg-zinc-800"
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
                   autoFocus
                 />
               </motion.div>
 
-              <motion.div className="mt-2 rounded-3xl bg-zinc-100/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80">
-                <div className="grid w-full grid-cols-5 gap-3">
-                  {MUSICS.filter((music) => {
-                    if (value == "") return null;
+              <div className="">
+                <MusicType />
+              </div>
 
-                    const searchWords = value.toLowerCase().trim().split(" ");
-                    const titleWordsRemoveVietnameseTones =
-                      removeVietnameseTones(music.title).toLowerCase();
-                    const titleWords = music.title.toLowerCase();
+              <div className="container mt-4 h-screen space-y-4 overflow-y-auto">
+                {MUSICS.filter((music) => {
+                  if (value == "") return null;
 
-                    return searchWords.every(
-                      (word) =>
-                        titleWordsRemoveVietnameseTones.includes(word) ||
-                        titleWords.includes(word)
-                    );
-                  }).map((item) => (
+                  const searchWords = value.toLowerCase().trim().split(" ");
+                  const titleWordsRemoveVietnameseTones = removeVietnameseTones(
+                    music.title
+                  ).toLowerCase();
+                  const titleWords = music.title.toLowerCase();
+
+                  return searchWords.every(
+                    (word) =>
+                      titleWordsRemoveVietnameseTones.includes(word) ||
+                      titleWords.includes(word)
+                  );
+                })
+                  .slice(0, 5)
+                  .map((item) => (
                     <motion.div
                       key={item.id}
                       initial={{ scale: 0.9 }}
@@ -105,26 +95,25 @@ export function SearchMotion() {
                         duration: 0.5,
                       }}
                     >
-                      <AuidoItem
-                        title={item.title}
-                        singer={item.singer}
-                        cover={item.cover}
+                      <AudioItemOrder
+                        music={item}
                         handlePlay={() => handlePlayAudio(item)}
+                        className="size-20"
+                        classNameOrder="w-96"
                       />
                     </motion.div>
                   ))}
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
       </AnimatePresence>
     );
   };
 
   return (
     <div className="flex items-center justify-center">
-      {isSearch ? <LargerSearch /> : <MiniSearch />}
+      <LargerSearch />
     </div>
   );
 }

@@ -9,24 +9,29 @@ import {
   MagnifyingGlass,
   Screencast,
 } from "@phosphor-icons/react/dist/ssr";
-import Link from "next/link";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { MusicType } from "./music-type";
+import Link from "next/link";
 
 export const HeaderMusicPage = () => {
   return (
-    <div className="container sticky inset-0 top-0 z-10 border-b border-zinc-800 pb-2 backdrop-blur-md">
+    <div className="container sticky inset-0 top-0 z-40 pb-2 backdrop-blur-md">
       <Progress className="w-[60%]" value={33} />
 
       <div className="space-y-4 md:hidden">
-        <Link href="/" className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
           <ChanhdangLogotype />
 
           <div className="flex gap-4 text-zinc-500">
             <Screencast size={25} />
-            <MagnifyingGlass size={25} />
+
+            {/* <SearchMotion /> */}
+            <Link href="/search">
+              <MagnifyingGlass size={25} />
+            </Link>
           </div>
-        </Link>
+        </div>
+
         <MusicType />
       </div>
 
