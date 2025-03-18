@@ -1,45 +1,22 @@
-import Image from "next/image";
+import { AudioItemOrder } from "./audio-item-order";
+import { IMusic } from "@/features/profile/types/music";
 
 type Iprop = {
-  title: string;
-  singer: string;
-  cover: string;
-  content: string;
+  music: IMusic;
   handlePlay: () => void;
 };
 
-export function TableRankingItem({
-  title,
-  singer,
-  cover,
-  content,
-  handlePlay,
-}: Iprop) {
+export function TableRankingItem({ music, handlePlay }: Iprop) {
   return (
-    <div className="w-[110vh] cursor-pointer" onClick={handlePlay}>
+    <div className="w-[40vh] cursor-pointer md:w-[110vh]" onClick={handlePlay}>
       <div className="flex items-center justify-between">
-        <div className="flex w-64 items-center justify-start gap-3">
-          {cover ? (
-            <Image
-              alt="cover"
-              src={cover}
-              width={300}
-              height={300}
-              className="size-16 rounded-2xl border border-zinc-900"
-            />
-          ) : (
-            <div className="size-16 rounded-2xl bg-zinc-800"></div>
-          )}
+        <AudioItemOrder className="size-20" music={music} />
 
-          <div>
-            <div className="font-semibold">{title || "TITLE SONG"}</div>
-            <div className="text-zinc-500">{singer || "SINGER"}</div>
-          </div>
+        <div className="line-clamp-1 hidden text-zinc-500 md:flex">
+          Rap VIET
         </div>
 
-        <div className="text-zinc-500">{content}</div>
-
-        <div className="text-zinc-500">3:00</div>
+        <div className="hidden text-zinc-500 md:flex">3:00</div>
       </div>
     </div>
   );

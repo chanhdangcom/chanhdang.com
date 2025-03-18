@@ -1,6 +1,19 @@
 import { MUSICS } from "@/features/profile/data/music";
 import { IMusic } from "@/features/profile/types/music";
-import React, { useCallback, useContext, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useRef,
+  useState,
+  useEffect,
+} from "react";
+
+type Subtitle = {
+  id: number;
+  start: number;
+  end: number;
+  text: string;
+};
 
 type IMusicContext = {
   audioRef: React.RefObject<HTMLAudioElement | null>;
@@ -8,9 +21,9 @@ type IMusicContext = {
   isPlaying: boolean;
   isPaused: boolean;
   isMuted: boolean;
+  currentLyrics: string | null;
 
   handlePlayAudio: (music: IMusic) => void;
-
   handlePlayRandomAudio: () => void;
   handlePauseAudio: () => void;
   handleResumeAudio: () => void;
@@ -19,39 +32,33 @@ type IMusicContext = {
   handleMute: () => void;
 };
 
-// !BAD
-function calc(
-  title: string,
-  singer: string,
-  audio: string,
-  cover: string,
-  youTube: string
-) {
-  console.log(title, singer, cover, youTube);
-}
+const parseSRT = (srt: string): Subtitle[] => {
+  const regex =
+    /(\d+)\n(\d{2}:\d{2}:\d{2},\d{3}) --> (\d{2}:\d{2}:\d{2},\d{3})\n([\s\S]*?)(?=\n\n|\n*$)/g;
+  let matches;
+  const subtitles: Subtitle[] = [];
 
-calc("Co chac yeu la day", "audio.mp3", "Son Tung", "abc.jpg", "youtube");
+  while ((matches = regex.exec(srt)) !== null) {
+    subtitles.push({
+      id: parseInt(matches[1], 10),
+      start: timeToSeconds(matches[2]),
+      end: timeToSeconds(matches[3]),
+      text: matches[4].trim(),
+    });
+  }
+  return subtitles;
+};
 
-// ?GOOD
-function calc2(params: {
-  id: string;
-  title: string;
-  singer: string;
-  audio: string;
-  cover: string;
-  youTube?: string;
-}) {
-  const { title, singer, audio, cover, youTube } = params;
-  console.log(title, singer, audio, cover, youTube);
-}
-
-calc2({
-  id: "id",
-  title: "Co chac yeu la day",
-  audio: "audio.mp3",
-  cover: "cover.jpg",
-  singer: "Son Tung",
-});
+const timeToSeconds = (time: string): number => {
+  const parts = time.split(":"),
+    seconds = parts[2].split(",");
+  return (
+    parseInt(parts[0], 10) * 3600 +
+    parseInt(parts[1], 10) * 60 +
+    parseInt(seconds[0], 10) +
+    parseInt(seconds[1], 10) / 1000
+  );
+};
 
 const MusicContext = React.createContext<IMusicContext | null>(null);
 
@@ -79,14 +86,44 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   const [isPaused, setIsPaused] = useState(false);
   const [currentMusic, setCurrentMusic] = useState<IMusic | null>(null);
   const [isMuted, setIsMuted] = useState(false);
+  const [subtitles, setSubtitles] = useState<Subtitle[]>([]);
+  const [currentLyrics, setCurrentLyrics] = useState<string | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    if (!currentMusic) return;
+
+    fetch(`/audio/MuonRoiMaSaoCon.mp3.srt`)
+      .then((res) => res.text())
+      .then((text) => setSubtitles(parseSRT(text)));
+  }, [currentMusic]);
+
+  useEffect(() => {
+    const syncLyrics = () => {
+      if (!audioRef.current) return;
+      const currentTime = audioRef.current.currentTime;
+      const activeSubtitle = subtitles.find(
+        (sub) => currentTime >= sub.start && currentTime <= sub.end
+      );
+      setCurrentLyrics(activeSubtitle ? activeSubtitle.text : null);
+    };
+
+    if (audioRef.current) {
+      audioRef.current.addEventListener("timeupdate", syncLyrics);
+    }
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.removeEventListener("timeupdate", syncLyrics);
+      }
+    };
+  }, [subtitles]);
 
   const handlePlayAudio = useCallback((music: IMusic) => {
     if (!audioRef.current) {
       audioRef.current = new Audio(music.audio);
       audioRef.current.preload = "auto";
-      // audioRef.current.addEventListener("timeupdate", handleTimeUpdate);
     }
 
     if (audioRef.current.src !== music.audio) {
@@ -108,13 +145,8 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   }, [handlePlayAudio]);
 
   const handlePauseAudio = useCallback(() => {
-    if (!audioRef.current) {
-      return;
-    }
-
-    if (audioRef.current.paused) {
-      return;
-    }
+    if (!audioRef.current) return;
+    if (audioRef.current.paused) return;
 
     audioRef.current.pause();
     setIsPlaying(false);
@@ -160,7 +192,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       isPlaying={isPlaying}
       isPaused={isPaused}
       isMuted={isMuted}
-      //
+      currentLyrics={currentLyrics}
       handlePlayAudio={handlePlayAudio}
       handlePlayRandomAudio={handlePlayRandomAudio}
       handlePauseAudio={handlePauseAudio}
@@ -169,8 +201,6 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       handAudioForward={handAudioForward}
       handleMute={handleMute}
     >
-      {/* <HeaderMotion /> */}
-
       {children}
     </Provider>
   );

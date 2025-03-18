@@ -67,9 +67,7 @@ export function Search() {
                   className="w-44"
                 >
                   <AuidoItem
-                    title={item.title}
-                    singer={item.singer}
-                    cover={item.cover}
+                    music={item}
                     handlePlay={() => handlePlayAudio(item)}
                   />
                 </motion.div>

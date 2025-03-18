@@ -1,0 +1,54 @@
+import { IMusic } from "@/features/profile/types/music";
+import Image from "next/image";
+import { IPlaylistItem } from "../type/playlist";
+import { cn } from "@/lib/utils";
+
+import { useState } from "react";
+
+type IProp = {
+  music: IMusic | IPlaylistItem;
+  className?: string;
+};
+
+export function AudioItemOrder({ music, className }: IProp) {
+  const [isClick, setIsClick] = useState(false);
+
+  if (!music) {
+    return <div className="text-red-500">Dữ liệu nhạc chưa sẵn sàng</div>;
+  }
+
+  const UnClick = () => {
+    return (
+      <div
+        className="flex w-64 items-center justify-start gap-3"
+        onClick={() => setIsClick(!isClick)}
+      >
+        {music.cover ? (
+          <Image
+            alt="cover"
+            src={music.cover}
+            width={300}
+            height={300}
+            className={cn(
+              "size-14 rounded-2xl border object-cover shadow-sm dark:border-zinc-900",
+              className
+            )}
+          />
+        ) : (
+          <div className="size-14 rounded-2xl bg-zinc-800"></div>
+        )}
+
+        <div>
+          <div className="line-clamp-1 w-36 text-base font-semibold">
+            {music.title || "TITLE SONG"}
+          </div>
+          <div className="line-clamp-1 text-sm text-zinc-500">
+            {music.singer || "SINGER"}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return <UnClick />;
+}

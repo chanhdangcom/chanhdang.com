@@ -19,9 +19,9 @@ export function CarouselAudio() {
   const { handlePlayAudio } = useAudio();
 
   return (
-    <Carousel className="mx-auto w-full max-w-5xl rounded-3xl border-b p-2 shadow-sm backdrop-blur-md dark:border-zinc-800">
-      <div className="font-bol mb-2 flex gap-1 text-2xl">
-        <MusicNotesSimple size={32} weight="fill" className="text-pink-500" />
+    <Carousel className="mx-auto w-full max-w-sm rounded-3xl border-b p-2 shadow-sm backdrop-blur-md dark:border-zinc-800 md:max-w-5xl">
+      <div className="font-bol container mb-2 flex gap-1 text-2xl">
+        <MusicNotesSimple size={32} weight="fill" className="text-zinc-500" />
 
         <div>Single song</div>
       </div>
@@ -29,12 +29,10 @@ export function CarouselAudio() {
         {MUSICS.map((music) => (
           <CarouselItem
             key={music.id}
-            className="flex items-center justify-center py-2 md:basis-1/2 lg:basis-1/6"
+            className="flex basis-1/2 items-center justify-center py-2 lg:basis-1/6"
           >
             <AuidoItem
-              title={music.title}
-              singer={music.singer}
-              cover={music.cover}
+              music={music}
               handlePlay={() => handlePlayAudio(music)}
             />
           </CarouselItem>

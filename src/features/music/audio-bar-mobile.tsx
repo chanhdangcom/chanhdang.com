@@ -25,7 +25,7 @@ import ReactMarkdown from "react-markdown";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export function AudioBar() {
+export function AudioBarMobile() {
   const {
     currentMusic,
     isPlaying,
@@ -50,11 +50,11 @@ export function AudioBar() {
             duration: 1,
             stiffness: 300,
           }}
-          className="fixed inset-x-2 bottom-2 flex justify-center rounded-[30px] border bg-zinc-100/80 px-4 py-2 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80 md:inset-x-4 md:bottom-4 md:rounded-[40px] md:px-8 md:py-4"
+          className="fixed inset-x-4 bottom-4 flex justify-center rounded-[40px] border bg-zinc-100/80 px-8 py-4 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80"
         >
           <div className="flex w-full items-center justify-between">
-            <div className="hidden items-center gap-8 md:flex">
-              <motion.div whileTap={{ scale: 0.5 }}>
+            <div className="flex items-center gap-8">
+              <motion.div className="hidden md:flex" whileTap={{ scale: 0.5 }}>
                 <Rewind
                   size={32}
                   onClick={handAudioForward}
@@ -81,7 +81,7 @@ export function AudioBar() {
                   />
                 </motion.div>
               )}
-              <motion.div whileTap={{ scale: 0.5 }}>
+              <motion.div className="hidden md:flex" whileTap={{ scale: 0.5 }}>
                 <FastForward
                   onClick={handleAudioSkip}
                   weight="fill"
@@ -123,7 +123,7 @@ export function AudioBar() {
                     width={192}
                     height={192}
                     src={currentMusic?.cover}
-                    className="size-14 rounded-2xl border shadow-sm dark:border-zinc-800 md:size-16 md:rounded-2xl"
+                    className="size-16 rounded-2xl border shadow-sm dark:border-zinc-800"
                   />
                 </motion.div>
               )}
@@ -136,7 +136,7 @@ export function AudioBar() {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ ease: "easeOut", duration: 0.7 }}
-                    className="line-clamp-1 text-lg font-medium"
+                    className="text-lg font-medium"
                   >
                     {currentMusic?.title || (
                       <motion.div
@@ -159,7 +159,7 @@ export function AudioBar() {
                     exit={{ opacity: 0 }}
                     layoutId="Singer"
                     transition={{ ease: "easeOut", duration: 0.5 }}
-                    className="line-clamp-1 text-base font-medium text-zinc-500"
+                    className="text-base font-medium text-zinc-500"
                   >
                     {currentMusic?.singer || (
                       <motion.div
@@ -182,7 +182,6 @@ export function AudioBar() {
                 exit={{ opacity: 0 }}
                 layout
                 transition={{ ease: "easeOut", duration: 0.5 }}
-                className="hidden md:flex"
               >
                 {currentMusic?.cover && (
                   <DynamicIslandWave
@@ -193,9 +192,9 @@ export function AudioBar() {
               </motion.div>
 
               <motion.div
-                initial={{ y: 10 }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
                 key={currentLyrics}
                 className="hidden w-96 justify-center text-sm text-zinc-500 md:flex"
               >
@@ -245,28 +244,6 @@ export function AudioBar() {
                   onClick={() => setIsShow(!isShow)}
                 />
               </motion.div>
-            </div>
-
-            <div className="md:hidden">
-              {isPlaying ? (
-                <motion.div whileTap={{ scale: 0.5 }}>
-                  <Pause
-                    onClick={handlePauseAudio}
-                    weight="fill"
-                    size={30.5}
-                    className="cursor-pointer"
-                  />
-                </motion.div>
-              ) : (
-                <motion.div whileTap={{ scale: 0.5 }}>
-                  <Play
-                    onClick={handleResumeAudio}
-                    weight="fill"
-                    size={32}
-                    className="cursor-pointer"
-                  />
-                </motion.div>
-              )}
             </div>
           </div>
         </motion.div>
