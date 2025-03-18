@@ -52,8 +52,6 @@ export const HeaderMusicPage = () => {
 
           <Search />
         </div>
-
-        <SwitchTheme />
       </div>
     </div>
   );
