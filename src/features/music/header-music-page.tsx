@@ -1,4 +1,3 @@
-import { SwitchTheme } from "@/components/switch-theme";
 import { Progress } from "@/components/ui/progress";
 
 import React from "react";
