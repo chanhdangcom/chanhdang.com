@@ -8,7 +8,7 @@ import { TableRanking } from "./table-ranking";
 
 export function MusicPage() {
   return (
-    <div className="flex bg-zinc-500/10 dark:bg-zinc-950">
+    <div className="flex bg-zinc-950">
       <MenuBar />
 
       <div className="mx-auto w-full">

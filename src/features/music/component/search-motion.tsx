@@ -40,7 +40,7 @@ export function SearchMotion() {
           className="fixed inset-0 z-50 flex"
         >
           <div className="w-full">
-            <motion.div className="container bg-zinc-100 p-2 dark:border-zinc-800 dark:bg-zinc-950">
+            <motion.div className="container border-zinc-800 bg-zinc-950 p-2">
               <motion.div
                 layoutId="Search"
                 layout
@@ -50,14 +50,14 @@ export function SearchMotion() {
                   <CaretLeft
                     size={30}
                     weight="bold"
-                    className="rounded-full bg-zinc-200 p-1 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-500"
+                    className="rounded-full bg-zinc-900 p-1 text-zinc-900 dark:text-zinc-500"
                   />
                 </Link>
 
                 <Input
                   type="text"
                   placeholder="Music, Playlist ..."
-                  className="z-10 rounded-2xl border-none dark:bg-zinc-800"
+                  className="z-10 rounded-2xl border-none bg-zinc-800"
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
                   autoFocus

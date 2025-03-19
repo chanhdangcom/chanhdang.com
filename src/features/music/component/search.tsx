@@ -28,7 +28,7 @@ export function Search() {
       <Input
         type="text"
         placeholder="Music, Playlist ..."
-        className="w-[84vh] transform rounded-2xl bg-zinc-100 shadow-sm transition-transform duration-300 focus:scale-105 dark:border-zinc-800 dark:bg-zinc-900"
+        className="w-[84vh] transform rounded-2xl border-zinc-800 bg-zinc-900 shadow-sm transition-transform duration-300 focus:scale-105"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onClick={() => setIsSearch(true)}
@@ -38,7 +38,7 @@ export function Search() {
         <div className="">
           <div
             ref={ref}
-            className="fixed top-20 rounded-3xl border bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+            className="fixed top-20 rounded-3xl border border-zinc-800 bg-zinc-900 shadow-sm"
           >
             <div className="grid w-full grid-cols-4">
               {MUSICS.filter((music) => {

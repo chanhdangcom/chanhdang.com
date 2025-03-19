@@ -51,7 +51,7 @@ export function AudioBar() {
             duration: 1,
             stiffness: 300,
           }}
-          className="fixed inset-x-2 bottom-2 z-20 flex justify-center rounded-[30px] border bg-zinc-100/80 px-4 py-2 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80 md:inset-x-4 md:bottom-4 md:rounded-[40px] md:px-8 md:py-4"
+          className="fixed inset-x-2 bottom-2 z-20 flex justify-center rounded-[30px] border border-zinc-800 bg-zinc-900/80 px-4 py-2 text-zinc-50 shadow-sm backdrop-blur-md md:inset-x-4 md:bottom-4 md:rounded-[40px] md:px-8 md:py-4"
         >
           <div className="flex w-full items-center justify-between">
             <div className="hidden items-center gap-8 md:flex">
@@ -95,7 +95,7 @@ export function AudioBar() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex w-[700px] items-center justify-start gap-3">
               {!currentMusic?.cover ? (
                 <motion.div
                   layoutId="Cover"
@@ -103,7 +103,7 @@ export function AudioBar() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="flex size-16 items-center justify-center rounded-2xl bg-zinc-900"
+                  className="flex size-14 items-center justify-center rounded-2xl bg-zinc-900"
                 >
                   <MusicNotes
                     size={32}
@@ -112,13 +112,17 @@ export function AudioBar() {
                   />
                 </motion.div>
               ) : (
-                <motion.div layoutId="Cover" transition={{ duration: 0.5 }}>
+                <motion.div
+                  layoutId="Cover"
+                  transition={{ duration: 0.5 }}
+                  className="shrink-0"
+                >
                   <Image
                     alt="cover"
                     width={192}
                     height={192}
                     src={currentMusic?.cover}
-                    className="size-14 rounded-2xl border shadow-sm dark:border-zinc-800 md:size-16 md:rounded-2xl"
+                    className="flex size-14 items-center justify-center rounded-xl md:size-16 md:rounded-2xl"
                   />
                 </motion.div>
               )}
@@ -292,10 +296,10 @@ export function AudioBar() {
           transition={{
             type: "spring",
             damping: 20,
-            duration: 1,
+            duration: 0.3,
             stiffness: 300,
           }}
-          className="fixed inset-44 mx-auto rounded-[40px] border bg-zinc-200/80 p-4 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80"
+          className="fixed inset-44 mx-auto rounded-[40px] border border-zinc-800 bg-zinc-900/80 p-4 shadow-sm backdrop-blur-md"
         >
           <div className="flex justify-between">
             <div className="space-y-2 p-2">
@@ -314,16 +318,16 @@ export function AudioBar() {
                     width={192}
                     height={192}
                     src={currentMusic?.cover}
-                    className="size-80 shrink-0 rounded-[24px] border shadow-sm dark:border-zinc-800"
+                    className="size-80 shrink-0 rounded-[24px] border border-zinc-800 shadow-sm"
                   />
                 </motion.div>
               )}
 
-              <div className="flex items-center justify-center text-2xl font-semibold">
+              <div className="flex items-center justify-start text-2xl font-semibold">
                 {currentMusic?.title || "TITLE SONG"}
               </div>
 
-              <div className="flex items-center justify-center text-xl">
+              <div className="justify-starts flex items-center text-xl">
                 {currentMusic?.singer || "SINGER"}
               </div>
             </div>

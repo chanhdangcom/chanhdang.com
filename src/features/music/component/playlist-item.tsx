@@ -25,8 +25,8 @@ export function PlaylistItem({ music }: IProp) {
 
   return (
     <Drawer>
-      <DrawerTrigger className="">
-        <div className="cursor-pointer space-y-2 rounded-3xl p-3 hover:bg-zinc-100 hover:dark:bg-zinc-900">
+      <DrawerTrigger>
+        <div className="cursor-pointer space-y-2 rounded-3xl p-3 hover:bg-zinc-900">
           {music.cover ? (
             <Image
               height={300}
@@ -34,7 +34,7 @@ export function PlaylistItem({ music }: IProp) {
               alt="cover"
               src={music.cover}
               quality={100}
-              className="mx-auto size-32 justify-center rounded-2xl border object-cover shadow-sm dark:border-zinc-800"
+              className="mx-auto size-32 justify-center rounded-2xl border border-zinc-800 object-cover"
             />
           ) : (
             <div className="size-32 rounded-2xl bg-zinc-800"></div>
@@ -53,14 +53,14 @@ export function PlaylistItem({ music }: IProp) {
       </DrawerTrigger>
 
       <div className="text-xl">
-        <DrawerContent className="border bg-zinc-50 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-          <DrawerHeader className="border-b shadow-sm dark:border-zinc-900">
-            <div className="absolute inset-0 top-4 mx-auto h-1.5 w-32 rounded-full bg-zinc-200 dark:bg-zinc-800"></div>
+        <DrawerContent className="border border-zinc-800 bg-zinc-950">
+          <DrawerHeader className="border-b border-zinc-900">
+            <div className="absolute inset-0 top-4 mx-auto h-1.5 w-32 rounded-full bg-zinc-800"></div>
             <DrawerTitle className="mx-auto font-mono text-xl">
               {music.title}
             </DrawerTitle>
 
-            <DrawerDescription className="mx-auto font-mono">
+            <DrawerDescription className="mx-auto font-mono text-zinc-50">
               Playlist of {music.singer}
             </DrawerDescription>
           </DrawerHeader>

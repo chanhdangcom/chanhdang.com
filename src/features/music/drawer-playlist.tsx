@@ -21,18 +21,18 @@ export async function DrawerPlaylist() {
     <Drawer>
       <HoverCard>
         <HoverCardTrigger>
-          <DrawerTrigger className="rounded-xl border px-4 py-2 shadow-sm hover:underline dark:border-zinc-800">
+          <DrawerTrigger className="rounded-xl border border-zinc-800 px-4 py-2 shadow-sm hover:underline">
             List
           </DrawerTrigger>
         </HoverCardTrigger>
-        <HoverCardContent className="hidden w-fit border bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 md:flex">
+        <HoverCardContent className="hidden w-fit border border-zinc-800 bg-zinc-950 shadow-sm md:flex">
           Displayed as a list
         </HoverCardContent>
       </HoverCard>
 
-      <DrawerContent className="border bg-zinc-50 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-        <DrawerHeader className="border-b shadow-sm dark:border-zinc-900">
-          <div className="absolute inset-0 top-4 mx-auto h-1.5 w-32 rounded-full bg-zinc-200 dark:bg-zinc-800"></div>
+      <DrawerContent className="border border-zinc-800 bg-zinc-950 shadow-sm">
+        <DrawerHeader className="border-b border-zinc-900 shadow-sm">
+          <div className="absolute inset-0 top-4 mx-auto h-1.5 w-32 rounded-full bg-zinc-800"></div>
           <DrawerTitle className="mx-auto font-mono text-xl">
             Blog list
           </DrawerTitle>

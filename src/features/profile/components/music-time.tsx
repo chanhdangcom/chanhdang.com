@@ -35,7 +35,7 @@ export function MusicTime() {
   console.log("Render MusicTime");
 
   return (
-    <div className="font-sf mx-auto mt-4 flex items-center justify-between gap-2">
+    <div className="mx-auto mt-4 flex items-center justify-between gap-2 font-sf">
       <div className="text-xs text-zinc-400">
         {duration ? format(new Date(currentTime * 1000), "m:ss") : "0:00"}
       </div>

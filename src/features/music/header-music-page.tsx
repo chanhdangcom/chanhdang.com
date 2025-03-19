@@ -51,12 +51,12 @@ export const HeaderMusicPage = () => {
             <CaretLeft
               size={25}
               weight="bold"
-              className="rounded-full bg-zinc-200 p-1 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-500"
+              className="rounded-full bg-zinc-900 p-1 text-zinc-50"
             />
             <CaretRight
               size={25}
               weight="bold"
-              className="rounded-full bg-zinc-200 p-1 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-500"
+              className="rounded-full bg-zinc-900 p-1 text-zinc-50"
             />
           </div>
 

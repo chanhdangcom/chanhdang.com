@@ -1,6 +1,5 @@
 "use client";
 import { useAudio } from "@/components/music-provider";
-import { AudioTimeLine } from "./component/audio-time-line";
 
 import {
   CaretDown,
@@ -17,6 +16,9 @@ import Image from "next/image";
 
 import { AnimatePresence, motion } from "motion/react";
 
+import { AudioTimeLine } from "./component/audio-time-line";
+import AverageColorBackground from "./component/average-color-background";
+
 export function PlayerPage() {
   const {
     currentMusic,
@@ -31,32 +33,27 @@ export function PlayerPage() {
   } = useAudio();
 
   return (
-    <AnimatePresence>
-      <motion.div
-        transition={{
-          type: "spring",
-          damping: 20,
-          duration: 1,
-          stiffness: 300,
-        }}
-        layoutId="audio-bar"
-        className="m-4 space-y-8"
-      >
-        <header className="flex items-center justify-between">
-          <Link href="/music">
-            <CaretDown size={20} />
-          </Link>
+    <AverageColorBackground imageUrl={currentMusic?.cover}>
+      <AnimatePresence>
+        <motion.div
+          layoutId="audio-bar"
+          transition={{
+            type: "spring",
+            damping: 20,
+            duration: 1,
+            stiffness: 300,
+          }}
+          className="container z-10 space-y-4 py-2"
+        >
+          <header className="flex items-center justify-between">
+            <Link href="/music">
+              <CaretDown size={20} className="text-zinc-50" />
+            </Link>
 
-          <div className="flex gap-3 rounded-2xl border border-zinc-800 p-2">
-            <div>Music</div>
-            <div>video</div>
-          </div>
+            <Screencast size={20} className="text-zinc-50" />
+          </header>
 
-          <Screencast size={20} />
-        </header>
-
-        <AnimatePresence>
-          <div className="mx-8 space-y-8">
+          <div className="mx-3 space-y-6">
             {currentMusic?.cover ? (
               <motion.div
                 layoutId="Cover"
@@ -68,11 +65,7 @@ export function PlayerPage() {
                   scale: 1,
                 }}
                 transition={{
-                  type: "spring",
-                  stiffness: 150,
-                  damping: 20,
-                  ease: "easeInOut",
-                  duration: 0.3,
+                  duration: 0.5,
                 }}
               >
                 <Image
@@ -80,18 +73,18 @@ export function PlayerPage() {
                   alt="Cover"
                   width={500}
                   height={500}
-                  className="flex h-[450px] w-full justify-center rounded-2xl"
+                  className="flex h-[45vh] w-full shrink-0 justify-center rounded-2xl object-cover"
                 />
               </motion.div>
             ) : (
-              <div className="flex h-[450px] w-full justify-center rounded-2xl bg-zinc-600"></div>
+              <div className="flex h-[45vh] w-full shrink-0 justify-center rounded-2xl bg-zinc-700"></div>
             )}
 
-            <div className="space-y-2">
-              <div className="text-3xl">
+            <div>
+              <div className="text-2xl font-semibold">
                 {currentMusic?.title || "TITLE SONG"}
               </div>
-              <div className="text-xl text-zinc-600">
+              <div className="text-lg text-zinc-500">
                 {currentMusic?.singer || "SINGER"}
               </div>
             </div>
@@ -101,7 +94,11 @@ export function PlayerPage() {
             </div>
 
             <div className="jus flex items-center justify-between">
-              <Shuffle size={25} />
+              <Shuffle
+                onClick={() => handlePlayRandomAudio()}
+                size={25}
+                className="cursor-pointer text-zinc-50"
+              />
 
               <div className="flex gap-8">
                 <motion.button
@@ -139,17 +136,17 @@ export function PlayerPage() {
                 </motion.button>
               </div>
 
-              <Repeat size={25} />
+              <Repeat size={25} className="text-zinc-50" />
             </div>
 
-            <div className="m-4 flex justify-between text-zinc-500">
+            <div className="flex justify-between text-base text-zinc-500">
               <div>UP NEXT</div>
-              <div>UP NEXT</div>
-              <div>UP NEXT</div>
+              <div>LYRIC</div>
+              <div>RELATED</div>
             </div>
           </div>
-        </AnimatePresence>
-      </motion.div>
-    </AnimatePresence>
+        </motion.div>
+      </AnimatePresence>
+    </AverageColorBackground>
   );
 }

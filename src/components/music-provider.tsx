@@ -94,7 +94,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!currentMusic) return;
 
-    fetch(`/audio/MuonRoiMaSaoCon.mp3.srt`)
+    fetch(`/audio/MuonRoiMaSaoCons.mp3.srt`)
       .then((res) => res.text())
       .then((text) => setSubtitles(parseSRT(text)));
   }, [currentMusic]);
