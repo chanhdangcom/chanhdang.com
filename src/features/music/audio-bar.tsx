@@ -19,11 +19,6 @@ import {
   SpeakerHigh,
   SpeakerSlash,
 } from "@phosphor-icons/react/dist/ssr";
-import { useRef, useState } from "react";
-import { useOutsideClick } from "../profile/hook/use-outside-click";
-import ReactMarkdown from "react-markdown";
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 
 export function AudioBar() {
@@ -42,15 +37,9 @@ export function AudioBar() {
 
   const Show = () => {
     return (
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         <motion.div
           layoutId="audio-bar"
-          transition={{
-            type: "spring",
-            damping: 20,
-            duration: 1,
-            stiffness: 300,
-          }}
           className="fixed inset-x-2 bottom-2 z-20 flex justify-center rounded-[30px] border border-zinc-800 bg-zinc-900/80 px-4 py-2 text-zinc-50 shadow-sm backdrop-blur-md md:inset-x-4 md:bottom-4 md:rounded-[40px] md:px-8 md:py-4"
         >
           <div className="flex w-full items-center justify-between">
@@ -99,10 +88,6 @@ export function AudioBar() {
               {!currentMusic?.cover ? (
                 <motion.div
                   layoutId="Cover"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.5 }}
                   className="flex size-14 items-center justify-center rounded-2xl bg-zinc-900"
                 >
                   <MusicNotes
@@ -112,11 +97,7 @@ export function AudioBar() {
                   />
                 </motion.div>
               ) : (
-                <motion.div
-                  layoutId="Cover"
-                  transition={{ duration: 0.5 }}
-                  className="shrink-0"
-                >
+                <motion.div layoutId="Cover">
                   <Image
                     alt="cover"
                     width={192}
@@ -131,45 +112,21 @@ export function AudioBar() {
                 <AnimatePresence>
                   <motion.div
                     layoutId="Title"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ ease: "easeOut", duration: 0.7 }}
                     className="line-clamp-1 text-lg font-medium"
                   >
                     {currentMusic?.title || (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        layoutId="Title"
-                        transition={{ ease: "easeOut", duration: 0.7 }}
-                      >
-                        TITLE SONG
-                      </motion.div>
+                      <motion.div layoutId="Title">TITLE SONG</motion.div>
                     )}
                   </motion.div>
                 </AnimatePresence>
 
                 <AnimatePresence>
                   <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
                     layoutId="Singer"
-                    transition={{ ease: "easeOut", duration: 0.5 }}
                     className="line-clamp-1 text-base font-medium text-zinc-500"
                   >
                     {currentMusic?.singer || (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        layoutId="Singer"
-                        transition={{ ease: "easeOut", duration: 0.5 }}
-                      >
-                        SINGER
-                      </motion.div>
+                      <motion.div layoutId="Singer">SINGER</motion.div>
                     )}
                   </motion.div>
                 </AnimatePresence>
@@ -237,12 +194,7 @@ export function AudioBar() {
               </motion.div>
 
               <motion.div whileTap={{ scale: 0.5 }}>
-                <Control
-                  size={20}
-                  weight="fill"
-                  className="cursor-pointer"
-                  onClick={() => setIsShow(!isShow)}
-                />
+                <Control size={20} weight="fill" className="cursor-pointer" />
               </motion.div>
             </div>
 
@@ -284,82 +236,5 @@ export function AudioBar() {
     );
   };
 
-  const Small = () => {
-    const st =
-      "Ta về ta tắm ao ta Dù trong, dù đục, ao nhà vẫn hơn (vẫn hơn)\n\n Tình quê son sắt keo sơn Hương đồng gió nội, cây rơm đợi chờ\n\n Tình quê son sắt keo sơn Hương đồng gió nội, cây rơm đợi chờ\n\n Tình quê son sắt keo sơn Hương đồng gió nội, cây rơm đợi chờ\n\n Tình quê son sắt keo sơn Hương đồng gió nội, cây rơm đợi chờ\n\n Tình quê son sắt keo sơn Hương đồng gió nội, cây rơm đợi chờ\n\n Tình quê son sắt keo sơn Hương đồng gió nội, cây rơm đợi chờ\n\n Tình quê son sắt keo sơn Hương đồng gió nội, cây rơm đợi chờ\n\n Tình quê son sắt keo sơn Hương đồng gió nội, cây rơm đợi chờ\n\n Tình quê son sắt keo sơn Hương đồng gió nội, cây rơm đợi chờ\n\n Tình quê son sắt keo sơn Hương đồng gió nội, cây rơm đợi chờ\n\n Tình quê son sắt keo sơn Hương đồng gió nội, cây rơm đợi chờ\n\n Tình quê son sắt keo sơn Hương đồng gió nội, cây rơm đợi chờ\n\n Tình quê son sắt keo sơn Hương đồng gió nội, cây rơm đợi chờ\n\n Tình quê son sắt keo sơn Hương đồng gió nội, cây rơm đợi chờ\n\n Tình quê son sắt keo sơn Hương đồng gió nội, cây rơm đợi chờ\n\n Tình quê son sắt keo sơn Hương đồng gió nội, cây rơm đợi chờ\n\n Tình quê son sắt keo sơn Hương đồng gió nội, cây rơm đợi chờ";
-
-    return (
-      <AnimatePresence>
-        <motion.div
-          ref={refDiv}
-          layoutId="audio-bar"
-          transition={{
-            type: "spring",
-            damping: 20,
-            duration: 0.3,
-            stiffness: 300,
-          }}
-          className="fixed inset-44 mx-auto rounded-[40px] border border-zinc-800 bg-zinc-900/80 p-4 shadow-sm backdrop-blur-md"
-        >
-          <div className="flex justify-between">
-            <div className="space-y-2 p-2">
-              {!currentMusic?.cover ? (
-                <motion.div className="flex size-80 items-center justify-center rounded-[24px] bg-zinc-900">
-                  <MusicNotes
-                    size={32}
-                    weight="fill"
-                    className="text-zinc-50"
-                  />
-                </motion.div>
-              ) : (
-                <motion.div>
-                  <Image
-                    alt="cover"
-                    width={192}
-                    height={192}
-                    src={currentMusic?.cover}
-                    className="size-80 shrink-0 rounded-[24px] border border-zinc-800 shadow-sm"
-                  />
-                </motion.div>
-              )}
-
-              <div className="flex items-center justify-start text-2xl font-semibold">
-                {currentMusic?.title || "TITLE SONG"}
-              </div>
-
-              <div className="justify-starts flex items-center text-xl">
-                {currentMusic?.singer || "SINGER"}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Tabs defaultValue="lyric" className="w-[400px]">
-                <TabsList className="grid w-full grid-cols-2 rounded-2xl">
-                  <TabsTrigger value="lyric">Lyric</TabsTrigger>
-
-                  <TabsTrigger value="playlist">Playlist</TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="lyric">
-                  <div className="h-96 overflow-y-auto rounded-[24px] bg-zinc-100 p-2">
-                    <div className="text-96 text-zin-950 text-base text-zinc-950">
-                      <ReactMarkdown>{st}</ReactMarkdown>
-                    </div>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="playlist">Playlist</TabsContent>
-              </Tabs>
-            </div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-    );
-  };
-
-  const [isShow, setIsShow] = useState(false);
-  const refDiv = useRef<HTMLDivElement>(null);
-  useOutsideClick(refDiv, () => setIsShow(false), isShow);
-
-  return <div>{isShow ? <Small /> : <Show />}</div>;
+  return <Show />;
 }
