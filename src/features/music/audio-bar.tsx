@@ -24,6 +24,7 @@ import { useOutsideClick } from "../profile/hook/use-outside-click";
 import ReactMarkdown from "react-markdown";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Link from "next/link";
 
 export function AudioBar() {
   const {
@@ -111,13 +112,7 @@ export function AudioBar() {
                   />
                 </motion.div>
               ) : (
-                <motion.div
-                  layoutId="Cover"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.5 }}
-                >
+                <motion.div layoutId="Cover" transition={{ duration: 0.5 }}>
                   <Image
                     alt="cover"
                     width={192}
@@ -248,14 +243,16 @@ export function AudioBar() {
             </div>
 
             <div className="ml-4 flex items-center gap-4 md:hidden">
-              <motion.div layout>
-                {currentMusic?.cover && (
-                  <DynamicIslandWave
-                    isPlay={isPlaying}
-                    coverUrl={currentMusic?.cover}
-                  />
-                )}
-              </motion.div>
+              <Link href="/music/player">
+                <motion.div layout>
+                  {currentMusic?.cover && (
+                    <DynamicIslandWave
+                      isPlay={isPlaying}
+                      coverUrl={currentMusic?.cover}
+                    />
+                  )}
+                </motion.div>
+              </Link>
 
               {isPlaying ? (
                 <motion.div whileTap={{ scale: 0.5 }}>
@@ -317,7 +314,7 @@ export function AudioBar() {
                     width={192}
                     height={192}
                     src={currentMusic?.cover}
-                    className="size-80 rounded-[24px] border shadow-sm dark:border-zinc-800"
+                    className="size-80 shrink-0 rounded-[24px] border shadow-sm dark:border-zinc-800"
                   />
                 </motion.div>
               )}

@@ -30,7 +30,7 @@ export function AudioTimeLine() {
   }, [isPlaying, audioRef]);
 
   return (
-    <div className="mx-auto h-0.5 w-[50vh] overflow-hidden rounded-full bg-zinc-800">
+    <div className="mx-auto h-1 w-[50vh] overflow-hidden rounded-full bg-zinc-800">
       <div
         className="h-full bg-zinc-50 transition-all duration-300"
         style={{ width: `${progress}%` }}

@@ -33,7 +33,7 @@ export function DurationAudio() {
       <div className="">
         {duration ? format(new Date(currentTime * 1000), "m:ss") : "0:00"}
       </div>
-      <div>/</div>
+
       <div className="">
         {duration ? format(new Date(duration * 1000), "m:ss") : "0:00"}
       </div>

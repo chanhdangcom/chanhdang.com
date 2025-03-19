@@ -22,7 +22,6 @@ export const HeaderMusicPage = () => {
       <div className="space-y-4 md:hidden">
         <div className="flex items-center justify-between">
           <ChanhdangLogotype />
-
           <AnimatePresence>
             <motion.div
               transition={{

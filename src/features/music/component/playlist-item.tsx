@@ -26,7 +26,7 @@ export function PlaylistItem({ music }: IProp) {
   return (
     <Drawer>
       <DrawerTrigger className="">
-        <div className="w-fit shrink-0 cursor-pointer space-y-2 rounded-3xl p-3 hover:bg-zinc-100 hover:dark:bg-zinc-900">
+        <div className="cursor-pointer space-y-2 rounded-3xl p-3 hover:bg-zinc-100 hover:dark:bg-zinc-900">
           {music.cover ? (
             <Image
               height={300}
@@ -52,7 +52,7 @@ export function PlaylistItem({ music }: IProp) {
         </div>
       </DrawerTrigger>
 
-      <div className="w-fit text-xl">
+      <div className="text-xl">
         <DrawerContent className="border bg-zinc-50 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
           <DrawerHeader className="border-b shadow-sm dark:border-zinc-900">
             <div className="absolute inset-0 top-4 mx-auto h-1.5 w-32 rounded-full bg-zinc-200 dark:bg-zinc-800"></div>
