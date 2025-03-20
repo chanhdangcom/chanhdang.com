@@ -18,7 +18,7 @@ export default function BlurredAverageBackground({
 
   useEffect(() => {
     if (!imageUrl) {
-      setBgColor("#18181b"); // Mặc định là zinc-950
+      setBgColor("#18181b");
       return;
     }
 

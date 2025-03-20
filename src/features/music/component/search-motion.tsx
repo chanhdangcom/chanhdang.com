@@ -94,13 +94,16 @@ export function SearchMotion() {
                       transition={{
                         duration: 0.5,
                       }}
+                      className="rounded-2xl p-1 hover:bg-zinc-900"
                     >
-                      <AudioItemOrder
-                        music={item}
-                        handlePlay={() => handlePlayAudio(item)}
-                        className="size-20"
-                        classNameOrder="w-96"
-                      />
+                      <Link href="/music">
+                        <AudioItemOrder
+                          music={item}
+                          handlePlay={() => handlePlayAudio(item)}
+                          className="size-20"
+                          classNameOrder="w-96"
+                        />
+                      </Link>
                     </motion.div>
                   ))}
               </div>

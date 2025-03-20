@@ -14,7 +14,6 @@ import {
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { AudioTimeLine } from "./component/audio-time-line";
-import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 
 type IProp = {
   setIsClick: () => void;
@@ -46,11 +45,14 @@ export function PlayerPage({ setIsClick }: IProp) {
             onClick={() => setIsClick()}
           />
 
-          <ChanhdangLogotype className="w-24" />
+          <div className="flex rounded-full border border-zinc-800 p-1 font-semibold">
+            <div className="rounded-full bg-zinc-800 px-3 py-1">Music</div>
+            <div className="px-3 py-1">Music</div>
+          </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-4">
             <Screencast size={20} className="text-zinc-50" />
-            <DotsThreeVertical size={20} />
+            <DotsThreeVertical size={20} weight="bold" />
           </div>
         </header>
 
@@ -129,7 +131,7 @@ export function PlayerPage({ setIsClick }: IProp) {
             <Repeat size={25} className="text-zinc-50" />
           </div>
 
-          <div className="flex justify-between text-base text-zinc-500">
+          <div className="flex justify-between px-4 text-base text-zinc-500">
             <div>UP NEXT</div>
             <div>LYRIC</div>
             <div>RELATED</div>
