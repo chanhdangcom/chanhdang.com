@@ -1,10 +1,4 @@
 "use client";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { PlayerPage } from "./player-page";
 
 import { useAudio } from "@/components/music-provider";
 import Image from "next/image";
@@ -26,6 +20,8 @@ import {
   SpeakerHigh,
   SpeakerSlash,
 } from "@phosphor-icons/react/dist/ssr";
+import { useState } from "react";
+import { PlayerPage } from "./player-page";
 
 export function AudioBar() {
   const {
@@ -41,7 +37,9 @@ export function AudioBar() {
     handleMute,
   } = useAudio();
 
-  const Show = () => {
+  const [isClick, setIsClick] = useState(false);
+
+  const Mini = () => {
     return (
       <AnimatePresence mode="wait">
         <motion.div
@@ -205,22 +203,14 @@ export function AudioBar() {
             </div>
 
             <div className="ml-4 flex items-center gap-4 md:hidden">
-              <AlertDialog>
-                <AlertDialogTrigger>
-                  <motion.div layout>
-                    {currentMusic?.cover && (
-                      <DynamicIslandWave
-                        isPlay={isPlaying}
-                        coverUrl={currentMusic?.cover}
-                      />
-                    )}
-                  </motion.div>
-                </AlertDialogTrigger>
-
-                <AlertDialogContent>
-                  <PlayerPage />
-                </AlertDialogContent>
-              </AlertDialog>
+              <motion.div layout onClick={() => setIsClick(true)}>
+                {currentMusic?.cover && (
+                  <DynamicIslandWave
+                    isPlay={isPlaying}
+                    coverUrl={currentMusic?.cover}
+                  />
+                )}
+              </motion.div>
 
               {isPlaying ? (
                 <motion.div whileTap={{ scale: 0.5 }}>
@@ -248,5 +238,13 @@ export function AudioBar() {
     );
   };
 
-  return <Show />;
+  return (
+    <div>
+      {!isClick ? (
+        <Mini />
+      ) : (
+        <PlayerPage setIsClick={() => setIsClick(false)} />
+      )}
+    </div>
+  );
 }
