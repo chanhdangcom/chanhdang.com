@@ -1,4 +1,11 @@
 "use client";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { PlayerPage } from "./player-page";
+
 import { useAudio } from "@/components/music-provider";
 import Image from "next/image";
 import {
@@ -19,7 +26,6 @@ import {
   SpeakerHigh,
   SpeakerSlash,
 } from "@phosphor-icons/react/dist/ssr";
-import Link from "next/link";
 
 export function AudioBar() {
   const {
@@ -199,16 +205,22 @@ export function AudioBar() {
             </div>
 
             <div className="ml-4 flex items-center gap-4 md:hidden">
-              <Link href="/music/player">
-                <motion.div layout>
-                  {currentMusic?.cover && (
-                    <DynamicIslandWave
-                      isPlay={isPlaying}
-                      coverUrl={currentMusic?.cover}
-                    />
-                  )}
-                </motion.div>
-              </Link>
+              <AlertDialog>
+                <AlertDialogTrigger>
+                  <motion.div layout>
+                    {currentMusic?.cover && (
+                      <DynamicIslandWave
+                        isPlay={isPlaying}
+                        coverUrl={currentMusic?.cover}
+                      />
+                    )}
+                  </motion.div>
+                </AlertDialogTrigger>
+
+                <AlertDialogContent>
+                  <PlayerPage />
+                </AlertDialogContent>
+              </AlertDialog>
 
               {isPlaying ? (
                 <motion.div whileTap={{ scale: 0.5 }}>

@@ -11,14 +11,12 @@ import {
   Screencast,
   Shuffle,
 } from "@phosphor-icons/react/dist/ssr";
-import Link from "next/link";
 import Image from "next/image";
-
 import { AnimatePresence, motion } from "motion/react";
-
 import { AudioTimeLine } from "./component/audio-time-line";
 import AverageColorBackground from "./component/average-color-background";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
+import { AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 export function PlayerPage() {
   const {
@@ -35,13 +33,16 @@ export function PlayerPage() {
 
   const Player = () => {
     return (
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         <AverageColorBackground imageUrl={currentMusic?.cover}>
-          <div className="container z-10 space-y-4 py-2">
+          <motion.div
+            layoutId="audio-bar"
+            className="container z-10 space-y-4 py-2"
+          >
             <header className="flex items-center justify-between">
-              <Link href="/music">
+              <AlertDialogTrigger>
                 <CaretDown size={20} className="text-zinc-50" />
-              </Link>
+              </AlertDialogTrigger>
 
               <ChanhdangLogotype className="w-24" />
 
@@ -129,18 +130,11 @@ export function PlayerPage() {
                 <div>RELATED</div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </AverageColorBackground>
       </AnimatePresence>
     );
   };
 
-  return (
-    <motion.div
-      style={{ willChange: "transform, opacity" }}
-      layoutId="audio-bar"
-    >
-      <Player />
-    </motion.div>
-  );
+  return <Player />;
 }
