@@ -23,7 +23,7 @@ export function MusicPage() {
             <TableRanking />
           </div>
 
-          <div className="mb-40 mt-8 flex justify-center">
+          <div className="mb-28 mt-8 flex justify-center md:mb-40">
             <CarouselAudioPlaylist />
           </div>
         </div>

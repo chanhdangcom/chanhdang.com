@@ -16,6 +16,7 @@ giữa chất Trap và một chút Melodic Rap, mang đến sự cân bằng gi�
 mạnh mẽ và cảm xúc. Đây là ca khúc thích hợp để nghe khi cần thêm động
 lực, muốn “chill” hoặc khuấy động bầu không khí.
     `,
+    type: "RAP"
   },
   {
     id: "9aa4e51d-a7fc-44a0-88ba-b6981eca64b7",
@@ -34,6 +35,7 @@ giữa chất Trap và một chút Melodic Rap, mang đến sự cân bằng gi�
 mạnh mẽ và cảm xúc. Đây là ca khúc thích hợp để nghe khi cần thêm động
 lực, muốn “chill” hoặc khuấy động bầu không khí.
     `,
+    type: "RAP"
   },
   {
     id: "e4a0b19c-4e31-41ff-b846-1d39aa2e3cef",
@@ -53,6 +55,7 @@ Với giai điệu nhẹ nhàng, sâu lắng cùng ca từ ý nghĩa, bài hát 
 đến trái tim của nhiều người từng trải qua một cuộc chia ly không mong
 muốn.
     `,
+    type: "RAP"
   },
   {
     id: "36b896d2-d27b-4fc6-b71b-7babaa44c9c2",
@@ -71,6 +74,7 @@ biết thầm nhủ “giá như” có thể thay đổi một điều gì đó
 đầy cảm xúc khiến người nghe dễ dàng đồng cảm, đặc biệt là những ai đã
 từng trải qua một cuộc tình dang dở.
 `,
+type: "RAP"
   },
 
   {
@@ -88,6 +92,7 @@ Giai điệu của bài hát có phần nhẹ nhàng, bay bổng hơn so với n
 khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
 mang phong cách đáng yêu, trẻ trung.
 `,
+    type: "Sad"
   },
 
   {
@@ -105,6 +110,7 @@ Giai điệu của bài hát có phần nhẹ nhàng, bay bổng hơn so với n
 khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
 mang phong cách đáng yêu, trẻ trung.
 `,
+    type: "Sad"
   },
 
   {
@@ -122,6 +128,7 @@ Giai điệu của bài hát có phần nhẹ nhàng, bay bổng hơn so với n
 khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
 mang phong cách đáng yêu, trẻ trung.
 `,
+    type: "Relax"
   },
 
   {
@@ -139,6 +146,7 @@ Giai điệu của bài hát có phần nhẹ nhàng, bay bổng hơn so với n
 khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
 mang phong cách đáng yêu, trẻ trung.
 `,
+    type: "Relax"
   },
 
   {
@@ -156,6 +164,7 @@ Giai điệu của bài hát có phần nhẹ nhàng, bay bổng hơn so với n
 khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
 mang phong cách đáng yêu, trẻ trung.
 `,
+    type: "Relax"    
   },
 
   {
@@ -173,6 +182,7 @@ Giai điệu của bài hát có phần nhẹ nhàng, bay bổng hơn so với n
 khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
 mang phong cách đáng yêu, trẻ trung.
 `,
+    type: "Feel good"
   },
 
   {
@@ -190,5 +200,6 @@ Giai điệu của bài hát có phần nhẹ nhàng, bay bổng hơn so với n
 khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
 mang phong cách đáng yêu, trẻ trung.
 `,
+    type: "Sleep"
   }
 ];

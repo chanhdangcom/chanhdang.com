@@ -7,14 +7,14 @@ import { PlaylistItem } from "./component/playlist-item";
 
 export function CarouselAudioPlaylist() {
   return (
-    <div className="mx-auto w-full rounded-lg border-b border-zinc-800 text-zinc-50 backdrop-blur-md md:max-w-5xl">
+    <div className="w-full rounded-lg border-b border-zinc-800 text-zinc-50 backdrop-blur-md md:max-w-2xl">
       <div className="font-bol container mb-2 flex gap-1 text-2xl">
         <Playlist size={32} weight="fill" className="text-zinc-500" />
 
         <div>Playlist</div>
       </div>
 
-      <div className="flex overflow-x-auto">
+      <div className="flex overflow-x-auto md:justify-center">
         {MUSICS.map((music) => (
           <div key={music.id} className="shrink-0">
             <PlaylistItem music={music} />

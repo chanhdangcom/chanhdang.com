@@ -6,4 +6,5 @@ export type IMusic = {
   audio: string;
   youtube: string;
   content: string;
+  type?: string;
 };

@@ -6,9 +6,11 @@ import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { AudioItemOrder } from "./audio-item-order";
-import { MusicType } from "../music-type";
+
 import { CaretLeft } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
+
+import { MusicType } from "../music-type";
 
 export function SearchMotion() {
   const { handlePlayAudio } = useAudio();
@@ -64,9 +66,7 @@ export function SearchMotion() {
                 />
               </motion.div>
 
-              <div className="">
-                <MusicType />
-              </div>
+              <MusicType />
 
               <div className="container mt-4 h-screen space-y-4 overflow-y-auto">
                 {MUSICS.filter((music) => {
@@ -88,12 +88,10 @@ export function SearchMotion() {
                   .map((item) => (
                     <motion.div
                       key={item.id}
+                      layout
                       initial={{ scale: 0.9 }}
                       animate={{ scale: 1 }}
                       exit={{ scale: 0.9 }}
-                      transition={{
-                        duration: 0.5,
-                      }}
                       className="rounded-2xl p-1 hover:bg-zinc-900"
                     >
                       <Link href="/music">

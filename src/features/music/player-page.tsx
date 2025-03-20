@@ -13,7 +13,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
-import { AudioTimeLine } from "./component/audio-time-line";
+import { MusicTime } from "../profile/components/music-time";
 
 type IProp = {
   setIsClick: () => void;
@@ -82,7 +82,7 @@ export function PlayerPage({ setIsClick }: IProp) {
           </div>
 
           <div className="flex items-center justify-center">
-            <AudioTimeLine />
+            <MusicTime />
           </div>
 
           <div className="jus flex items-center justify-between">
