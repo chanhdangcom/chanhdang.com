@@ -8,12 +8,12 @@ import {
   Play,
   Repeat,
   Rewind,
-  Screencast,
   Shuffle,
 } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { MusicTime } from "../profile/components/music-time";
+import { useEffect } from "react";
 
 type IProp = {
   setIsClick: () => void;
@@ -32,13 +32,20 @@ export function PlayerPage({ setIsClick }: IProp) {
     handAudioForward,
   } = useAudio();
 
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
         layoutId="audio-bar"
         className="container fixed inset-0 z-50 space-y-4 bg-zinc-950"
       >
-        <header className="flex items-center justify-between">
+        <header className="flex items-center justify-between p-1">
           <CaretDown
             size={20}
             className="cursor-pointer text-zinc-50"
@@ -50,13 +57,10 @@ export function PlayerPage({ setIsClick }: IProp) {
             <div className="px-3 py-1">Music</div>
           </div>
 
-          <div className="flex gap-4">
-            <Screencast size={20} className="text-zinc-50" />
-            <DotsThreeVertical size={20} weight="bold" />
-          </div>
+          <DotsThreeVertical size={20} weight="bold" />
         </header>
 
-        <div className="mx-3 space-y-6">
+        <div className="mx-3 space-y-4">
           {currentMusic?.cover ? (
             <motion.div layoutId="Cover" key={currentMusic?.cover}>
               <Image
@@ -64,7 +68,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                 alt="Cover"
                 width={500}
                 height={500}
-                className="flex h-[45vh] w-full shrink-0 justify-center rounded-2xl object-cover"
+                className="flex h-[42vh] w-full shrink-0 justify-center rounded-2xl object-cover"
               />
             </motion.div>
           ) : (
@@ -85,7 +89,7 @@ export function PlayerPage({ setIsClick }: IProp) {
             <MusicTime />
           </div>
 
-          <div className="jus flex items-center justify-between">
+          <div className="flex items-center justify-between">
             <Shuffle
               onClick={() => handlePlayRandomAudio()}
               size={25}
