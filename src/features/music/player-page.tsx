@@ -68,11 +68,11 @@ export function PlayerPage({ setIsClick }: IProp) {
                 alt="Cover"
                 width={500}
                 height={500}
-                className="flex h-[42vh] w-full shrink-0 justify-center rounded-2xl object-cover"
+                className="flex h-[50vh] w-full shrink-0 justify-center rounded-2xl object-cover"
               />
             </motion.div>
           ) : (
-            <div className="flex h-[45vh] w-full shrink-0 justify-center rounded-2xl bg-zinc-700"></div>
+            <div className="flex h-[50vh] w-full shrink-0 justify-center rounded-2xl bg-zinc-700"></div>
           )}
 
           <div>
