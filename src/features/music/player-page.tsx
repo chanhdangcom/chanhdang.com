@@ -10,10 +10,23 @@ import {
   Rewind,
   Shuffle,
 } from "@phosphor-icons/react/dist/ssr";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
-import { MusicTime } from "../profile/components/music-time";
 import { useEffect } from "react";
+import { AudioTimeLine } from "./component/audio-time-line";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 type IProp = {
   setIsClick: () => void;
@@ -30,6 +43,7 @@ export function PlayerPage({ setIsClick }: IProp) {
     handleResumeAudio,
     handleAudioSkip,
     handAudioForward,
+    currentLyrics,
   } = useAudio();
 
   useEffect(() => {
@@ -86,7 +100,7 @@ export function PlayerPage({ setIsClick }: IProp) {
           </div>
 
           <div className="flex items-center justify-center">
-            <MusicTime />
+            <AudioTimeLine />
           </div>
 
           <div className="flex items-center justify-between">
@@ -137,7 +151,30 @@ export function PlayerPage({ setIsClick }: IProp) {
 
           <div className="flex justify-between px-4 text-base text-zinc-500">
             <div>UP NEXT</div>
-            <div>LYRIC</div>
+            <Drawer>
+              <HoverCard>
+                <HoverCardTrigger>
+                  <DrawerTrigger className="">Lyric</DrawerTrigger>
+                </HoverCardTrigger>
+                <HoverCardContent className="hidden w-fit border border-zinc-800 bg-zinc-950 shadow-sm md:flex">
+                  Displayed as a list
+                </HoverCardContent>
+              </HoverCard>
+
+              <DrawerContent className="h-[80vh] border border-zinc-800 bg-zinc-950 shadow-sm">
+                <DrawerHeader className="border-b border-zinc-900 shadow-sm">
+                  <div className="absolute inset-0 top-4 mx-auto h-1.5 w-32 rounded-full bg-zinc-800"></div>
+                  <DrawerTitle className="mx-auto font-mono text-xl"></DrawerTitle>
+                  <DrawerDescription className="mx-auto font-mono">
+                    Technology news.
+                  </DrawerDescription>
+                </DrawerHeader>
+
+                <div className="flex items-center justify-center">
+                  {currentLyrics || "..."}
+                </div>
+              </DrawerContent>
+            </Drawer>
             <div>RELATED</div>
           </div>
         </div>

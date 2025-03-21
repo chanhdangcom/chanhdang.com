@@ -94,29 +94,41 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!currentMusic) return;
 
-    fetch(`/audio/MuonRoiMaSaoCons.mp3.srt`)
+    fetch(`/audio/MuonRoiMaSaoCon.mp3.srt`)
       .then((res) => res.text())
       .then((text) => setSubtitles(parseSRT(text)));
   }, [currentMusic]);
 
   useEffect(() => {
+    if (!audioRef.current) return;
+
     const syncLyrics = () => {
       if (!audioRef.current) return;
       const currentTime = audioRef.current.currentTime;
       const activeSubtitle = subtitles.find(
         (sub) => currentTime >= sub.start && currentTime <= sub.end
       );
-      setCurrentLyrics(activeSubtitle ? activeSubtitle.text : null);
+
+      // Chỉ cập nhật nếu lyrics thực sự thay đổi
+      setCurrentLyrics((prevLyrics) =>
+        activeSubtitle?.text !== prevLyrics
+          ? activeSubtitle?.text || null
+          : prevLyrics
+      );
+
+      // 🔥 Tự động cuộn đến dòng hiện tại
+      const activeElement = document.getElementById(
+        `subtitle-${activeSubtitle?.id}`
+      );
+      if (activeElement) {
+        activeElement.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
     };
 
-    if (audioRef.current) {
-      audioRef.current.addEventListener("timeupdate", syncLyrics);
-    }
+    audioRef.current.addEventListener("timeupdate", syncLyrics);
 
     return () => {
-      if (audioRef.current) {
-        audioRef.current.removeEventListener("timeupdate", syncLyrics);
-      }
+      audioRef.current?.removeEventListener("timeupdate", syncLyrics);
     };
   }, [subtitles]);
 

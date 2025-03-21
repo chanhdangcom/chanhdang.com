@@ -101,7 +101,7 @@ export function AudioBar() {
                   />
                 </motion.div>
               ) : (
-                <motion.div layoutId="Cover">
+                <motion.div layoutId="Cover" className="shrink-0">
                   <Image
                     alt="cover"
                     width={192}
