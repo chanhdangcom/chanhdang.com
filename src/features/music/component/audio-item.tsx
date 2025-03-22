@@ -15,11 +15,11 @@ export function AuidoItem({ music, handlePlay }: IProp) {
       >
         {music.cover ? (
           <Image
-            height={300}
-            width={300}
+            height={128}
+            width={128}
             alt="cover"
             src={music.cover}
-            quality={100}
+            quality={90}
             className="mx-auto size-32 justify-center rounded-2xl border border-zinc-800"
           />
         ) : (

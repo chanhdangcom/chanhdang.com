@@ -5,8 +5,15 @@ import { HeaderMusicPage } from "./header-music-page";
 import { MenuBar } from "./menu-bar";
 
 import { TableRanking } from "./table-ranking";
+import { IMusic } from "../profile/types/music";
 
-export function MusicPage() {
+export async function MusicPage() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/musics`, {
+    method: "GET",
+  });
+
+  const jsonData = (await res.json()) as IMusic[];
+
   return (
     <div className="flex bg-zinc-950">
       <MenuBar />
@@ -16,7 +23,7 @@ export function MusicPage() {
           <HeaderMusicPage />
 
           <div className="mt-8 flex justify-center">
-            <CarouselAudio />
+            <CarouselAudio musics={jsonData} />
           </div>
 
           <div className="mt-8 flex justify-center">
