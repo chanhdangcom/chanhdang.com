@@ -28,7 +28,6 @@ export function AudioBar() {
     currentMusic,
     isPlaying,
     isMuted,
-    currentLyrics,
     handlePlayRandomAudio,
     handleResumeAudio,
     handlePauseAudio,
@@ -149,20 +148,6 @@ export function AudioBar() {
                     isPlay={isPlaying}
                     coverUrl={currentMusic?.cover}
                   />
-                )}
-              </motion.div>
-
-              <motion.div
-                initial={{ y: 10 }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                key={currentLyrics}
-                className="hidden w-96 justify-center text-sm text-zinc-500 md:flex"
-              >
-                {currentLyrics ? (
-                  <motion.p key={currentLyrics}>{currentLyrics}</motion.p>
-                ) : (
-                  <p className="text-xl">...</p>
                 )}
               </motion.div>
             </div>

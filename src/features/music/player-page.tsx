@@ -20,13 +20,10 @@ import {
 } from "@/components/ui/drawer";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AudioTimeLine } from "./component/audio-time-line";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+import DynamicIslandWave from "@/components/ui/dynamic-island";
+import { FastAverageColor } from "fast-average-color";
 
 type IProp = {
   setIsClick: () => void;
@@ -53,11 +50,38 @@ export function PlayerPage({ setIsClick }: IProp) {
     };
   }, []);
 
+  const [waveColor, setWaveColor] = useState("");
+
+  useEffect(() => {
+    if (!currentMusic?.cover) {
+      setWaveColor("rgba(250, 250, 250, 0.6)"); // Màu trắng mờ
+      return;
+    }
+
+    const fac = new FastAverageColor();
+    fac
+      .getColorAsync(currentMusic?.cover)
+      .then((color) => {
+        const rgbaColor = `rgba(${color.value[0]}, ${color.value[1]}, ${color.value[2]}, 0.8)`;
+        setWaveColor(rgbaColor);
+      })
+      .catch(() => setWaveColor("rgba(250, 250, 250, 0.6)"));
+  }, [currentMusic?.cover]);
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
         layoutId="audio-bar"
-        className="container fixed inset-0 z-50 space-y-4 bg-zinc-950"
+        className="container fixed inset-0 z-50 space-y-4"
+        style={{
+          background: `linear-gradient(to bottom,  
+            ${waveColor}, 
+            rgba(24, 24, 27, 0.7),  
+            rgba(24, 24, 27, 0.7),  
+            #18181b)`,
+          backdropFilter: "blur(30px)",
+          WebkitBackdropFilter: "blur(30px)",
+        }}
       >
         <header className="flex items-center justify-between p-1">
           <CaretDown
@@ -66,9 +90,9 @@ export function PlayerPage({ setIsClick }: IProp) {
             onClick={() => setIsClick()}
           />
 
-          <div className="flex rounded-full border border-zinc-800 p-1 font-semibold">
+          <div className="flex rounded-full p-1 font-semibold">
             <div className="rounded-full bg-zinc-800 px-3 py-1">Music</div>
-            <div className="px-3 py-1">Music</div>
+            <div className="px-3 py-1">Video</div>
           </div>
 
           <DotsThreeVertical size={20} weight="bold" />
@@ -82,21 +106,28 @@ export function PlayerPage({ setIsClick }: IProp) {
                 alt="Cover"
                 width={500}
                 height={500}
-                className="flex h-[50vh] w-full shrink-0 justify-center rounded-2xl object-cover"
+                className="flex h-[45vh] w-full shrink-0 justify-center rounded-2xl object-cover"
               />
             </motion.div>
           ) : (
-            <div className="flex h-[50vh] w-full shrink-0 justify-center rounded-2xl bg-zinc-700"></div>
+            <div className="flex h-[45vh] w-full shrink-0 justify-center rounded-2xl bg-zinc-700"></div>
           )}
 
-          <div>
-            <div className="text-2xl font-semibold">
-              {currentMusic?.title || "TITLE SONG"}
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="line-clamp-1 text-xl font-semibold">
+                {currentMusic?.title || "TITLE SONG"}
+              </div>
+
+              <div className="text-lg text-zinc-500">
+                {currentMusic?.singer || "SINGER"}
+              </div>
             </div>
 
-            <div className="text-lg text-zinc-500">
-              {currentMusic?.singer || "SINGER"}
-            </div>
+            <DynamicIslandWave
+              isPlay={isPlaying}
+              coverUrl={currentMusic?.cover}
+            />
           </div>
 
           <div className="flex items-center justify-center">
@@ -152,22 +183,13 @@ export function PlayerPage({ setIsClick }: IProp) {
           <div className="flex justify-between px-4 text-base text-zinc-500">
             <div>UP NEXT</div>
             <Drawer>
-              <HoverCard>
-                <HoverCardTrigger>
-                  <DrawerTrigger className="">Lyric</DrawerTrigger>
-                </HoverCardTrigger>
-                <HoverCardContent className="hidden w-fit border border-zinc-800 bg-zinc-950 shadow-sm md:flex">
-                  Displayed as a list
-                </HoverCardContent>
-              </HoverCard>
+              <DrawerTrigger className="">LYRIC</DrawerTrigger>
 
               <DrawerContent className="h-[80vh] border border-zinc-800 bg-zinc-950 shadow-sm">
                 <DrawerHeader className="border-b border-zinc-900 shadow-sm">
                   <div className="absolute inset-0 top-4 mx-auto h-1.5 w-32 rounded-full bg-zinc-800"></div>
                   <DrawerTitle className="mx-auto font-mono text-xl"></DrawerTitle>
-                  <DrawerDescription className="mx-auto font-mono">
-                    Technology news.
-                  </DrawerDescription>
+                  <DrawerDescription className="mx-auto font-mono"></DrawerDescription>
                 </DrawerHeader>
 
                 <div className="flex items-center justify-center">
