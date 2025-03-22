@@ -4,6 +4,7 @@ import React from "react";
 import { ThemeProvider } from "next-themes";
 import { AppProgressProvider as ProgressProvider } from "@bprogress/next";
 import { MusicProvider } from "@/components/music-provider";
+import { Provider as JotaiProvider } from "jotai";
 
 type IProps = {
   children: React.ReactNode;
@@ -25,7 +26,9 @@ export const Providers = ({ children }: IProps) => {
         delay={500}
         shallowRouting
       >
-        <MusicProvider>{children}</MusicProvider>
+        <JotaiProvider>
+          <MusicProvider>{children}</MusicProvider>
+        </JotaiProvider>
       </ProgressProvider>
     </ThemeProvider>
   );

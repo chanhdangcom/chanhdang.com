@@ -13,6 +13,7 @@ import { IMusic } from "./types/music";
 import { Play as PlayIcon, Pause as PauseIcon } from "phosphor-react";
 import { cn } from "@/lib/utils";
 import { useEscapePress } from "./hook/use-escape-press";
+import { useUserEmail } from "@/store/user";
 
 export function MusicList() {
   const [musicView, setMusicView] = useState<IMusic | null>(null);
@@ -32,6 +33,8 @@ export function MusicList() {
 
   console.log("Render Music List");
 
+  const [email] = useUserEmail();
+
   return (
     <div className="rounded-3xl border-b shadow-sm dark:border-zinc-800">
       <div className="space-y-8">
@@ -42,6 +45,8 @@ export function MusicList() {
           />
         </div>
       </div>
+
+      <div>{email}</div>
 
       <AnimatePresence>
         {musicView && (

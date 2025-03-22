@@ -23,6 +23,9 @@ type IMusicContext = {
   isMuted: boolean;
   currentLyrics: string | null;
 
+  count: number;
+  handleUpdateCount: (newCount: number) => void;
+
   handlePlayAudio: (music: IMusic) => void;
   handlePlayRandomAudio: () => void;
   handlePauseAudio: () => void;
@@ -88,6 +91,8 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   const [isMuted, setIsMuted] = useState(false);
   const [subtitles, setSubtitles] = useState<Subtitle[]>([]);
   const [currentLyrics, setCurrentLyrics] = useState<string | null>(null);
+
+  const [count, setCount] = useState(0);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -212,6 +217,9 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       handleAudioSkip={handleAudioSkip}
       handAudioForward={handAudioForward}
       handleMute={handleMute}
+      //
+      count={count}
+      handleUpdateCount={setCount}
     >
       {children}
     </Provider>

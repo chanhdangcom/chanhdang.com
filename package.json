@@ -38,6 +38,7 @@
     "i": "^0.3.7",
     "iconsax-react": "^0.0.8",
     "install": "^0.13.0",
+    "jotai": "^2.12.2",
     "lucide-react": "^0.475.0",
     "mini-svg-data-uri": "^1.4.4",
     "motion": "^12.4.7",

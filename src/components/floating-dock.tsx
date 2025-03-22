@@ -4,6 +4,8 @@
  * Mobile navbar is better positioned at bottom right.
  **/
 
+import { useCount } from "@/store/count";
+import { useUserFullName } from "@/store/user";
 import { cn } from "@/utils/cn";
 // import { IconLayoutNavbarCollapse } from "@tabler/icons-react";
 import {
@@ -26,8 +28,15 @@ export const FloatingDock = ({
   desktopClassName?: string;
   mobileClassName?: string;
 }) => {
+  const [count] = useCount();
+  const [fullName] = useUserFullName();
+
+  console.log("Render FloatingDock");
+
   return (
     <>
+      <div>{count}</div>
+      <div>{fullName}</div>
       <FloatingDockDesktop items={items} className={desktopClassName} />
       <FloatingDockMobile items={items} className={mobileClassName} />
     </>
