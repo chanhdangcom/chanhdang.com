@@ -148,10 +148,10 @@ Thênh thang bước đi giữa trời rực rỡ\n`;
         className="fixed inset-0 z-50 space-y-4 rounded-3xl px-4 md:inset-x-96 md:inset-y-20"
         style={{
           background: `linear-gradient(to bottom,  
-            ${waveColor}, 
-            rgba(24, 24, 27, 0.7),  
-            rgba(24, 24, 27, 0.7),  
-            #18181b)`,
+          ${waveColor}, 
+          rgba(24, 24, 27, 0.7),  
+          rgba(24, 24, 27, 0.7),  
+          #18181b)`,
           backdropFilter: "blur(30px)",
           WebkitBackdropFilter: "blur(30px)",
         }}
@@ -218,11 +218,13 @@ Thênh thang bước đi giữa trời rực rỡ\n`;
           </div>
 
           <div className="flex items-center justify-between">
-            <Shuffle
-              onClick={() => handlePlayRandomAudio()}
-              size={25}
-              className="cursor-pointer text-zinc-50"
-            />
+            <motion.div whileTap={{ scale: 0.5 }}>
+              <Shuffle
+                onClick={() => handlePlayRandomAudio()}
+                size={25}
+                className="cursor-pointer text-zinc-50"
+              />
+            </motion.div>
 
             <div className="flex gap-8">
               <motion.button

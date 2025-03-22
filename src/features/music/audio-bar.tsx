@@ -22,7 +22,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { useRef, useState } from "react";
 import { PlayerPage } from "./player-page";
-import { useOutsideClick } from "../profile/hook/use-outside-click";
+// import { useOutsideClick } from "../profile/hook/use-outside-click";
 
 export function AudioBar() {
   const {
@@ -39,14 +39,14 @@ export function AudioBar() {
 
   const [isClick, setIsClick] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  useOutsideClick(ref, () => setIsClick(false), isClick);
+  // useOutsideClick(ref, () => setIsClick(false), isClick);
 
   const Mini = () => {
     return (
       <AnimatePresence mode="wait">
         <motion.div
           layoutId="audio-bar"
-          className="fixed inset-x-2 bottom-2 z-20 flex justify-center rounded-[30px] border border-zinc-800 bg-zinc-900/80 px-4 py-2 text-zinc-50 shadow-sm backdrop-blur-md md:inset-x-4 md:bottom-4 md:rounded-[40px] md:px-8 md:py-4"
+          className="fixed inset-x-2 bottom-2 z-20 flex justify-center rounded-3xl border border-zinc-800 bg-zinc-900/80 p-2 text-zinc-50 shadow-sm backdrop-blur-md md:inset-x-4 md:bottom-4 md:rounded-[40px] md:px-8 md:py-4"
         >
           <div className="flex w-full items-center justify-between">
             <div className="hidden items-center gap-8 md:flex">
@@ -109,7 +109,7 @@ export function AudioBar() {
                     width={192}
                     height={192}
                     src={currentMusic?.cover}
-                    className="flex size-14 items-center justify-center rounded-xl md:size-16 md:rounded-2xl"
+                    className="flex size-14 items-center justify-center rounded-2xl md:size-16 md:rounded-2xl"
                   />
                 </motion.div>
               )}
