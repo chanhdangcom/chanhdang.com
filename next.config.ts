@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
         hostname: "res.cloudinary.com",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.chanhdang.com",
+        port: "",
+      },
     ],
   },
 };
