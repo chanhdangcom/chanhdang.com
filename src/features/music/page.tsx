@@ -1,6 +1,6 @@
 import { AudioBar } from "./audio-bar";
 import { CarouselAudioPlaylist } from "./carousel-audio-playlist";
-import { CarouselAudio } from "./carousel-audio.";
+import { CarouselAudio } from "./carousel-audio";
 import { HeaderMusicPage } from "./header-music-page";
 import { MenuBar } from "./menu-bar";
 

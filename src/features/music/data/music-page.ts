@@ -4,20 +4,13 @@ export const MUSICS = [
 
   {
     id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231",
-    title: "Hồng NHAN",
+    title: "HỒNG NHAN",
     singer: "Jack - J97",
     cover: "/img/music-cover/HongNhan.jpg",
     audio: "/audio/HongNhan.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
     content: `
-Hustlang All Day” bài hát xoay quanh sự tận hưởng cuộc sống, những
-khoảnh khắc vui vẻ và thái độ “chơi tới bến” của tuổi trẻ. Với phần
-rap cuốn hút, flow mượt mà cùng cách gieo vần đầy sáng tạo, Huslang đã
-tạo nên một bản nhạc dễ gây nghiện, khiến người nghe cảm thấy hứng
-khởi ngay từ những giây đầu tiên. Giai điệu của “All Day” pha trộn
-giữa chất Trap và một chút Melodic Rap, mang đến sự cân bằng giữa sự
-mạnh mẽ và cảm xúc. Đây là ca khúc thích hợp để nghe khi cần thêm động
-lực, muốn “chill” hoặc khuấy động bầu không khí.
+
     `,
     type: "Jack"
   },
@@ -30,14 +23,7 @@ lực, muốn “chill” hoặc khuấy động bầu không khí.
     audio: "/audio/BacPhan.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
     content: `
-Hustlang All Day” bài hát xoay quanh sự tận hưởng cuộc sống, những
-khoảnh khắc vui vẻ và thái độ “chơi tới bến” của tuổi trẻ. Với phần
-rap cuốn hút, flow mượt mà cùng cách gieo vần đầy sáng tạo, Huslang đã
-tạo nên một bản nhạc dễ gây nghiện, khiến người nghe cảm thấy hứng
-khởi ngay từ những giây đầu tiên. Giai điệu của “All Day” pha trộn
-giữa chất Trap và một chút Melodic Rap, mang đến sự cân bằng giữa sự
-mạnh mẽ và cảm xúc. Đây là ca khúc thích hợp để nghe khi cần thêm động
-lực, muốn “chill” hoặc khuấy động bầu không khí.
+
     `,
     type: "Jack"
   },
@@ -50,14 +36,7 @@ lực, muốn “chill” hoặc khuấy động bầu không khí.
     audio: "/audio/SongGio.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
     content: `
-Hustlang All Day” bài hát xoay quanh sự tận hưởng cuộc sống, những
-khoảnh khắc vui vẻ và thái độ “chơi tới bến” của tuổi trẻ. Với phần
-rap cuốn hút, flow mượt mà cùng cách gieo vần đầy sáng tạo, Huslang đã
-tạo nên một bản nhạc dễ gây nghiện, khiến người nghe cảm thấy hứng
-khởi ngay từ những giây đầu tiên. Giai điệu của “All Day” pha trộn
-giữa chất Trap và một chút Melodic Rap, mang đến sự cân bằng giữa sự
-mạnh mẽ và cảm xúc. Đây là ca khúc thích hợp để nghe khi cần thêm động
-lực, muốn “chill” hoặc khuấy động bầu không khí.
+
     `,
     type: "Jack"
   },
@@ -70,14 +49,7 @@ lực, muốn “chill” hoặc khuấy động bầu không khí.
     audio: "/audio/EmGiOi.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
     content: `
-Hustlang All Day” bài hát xoay quanh sự tận hưởng cuộc sống, những
-khoảnh khắc vui vẻ và thái độ “chơi tới bến” của tuổi trẻ. Với phần
-rap cuốn hút, flow mượt mà cùng cách gieo vần đầy sáng tạo, Huslang đã
-tạo nên một bản nhạc dễ gây nghiện, khiến người nghe cảm thấy hứng
-khởi ngay từ những giây đầu tiên. Giai điệu của “All Day” pha trộn
-giữa chất Trap và một chút Melodic Rap, mang đến sự cân bằng giữa sự
-mạnh mẽ và cảm xúc. Đây là ca khúc thích hợp để nghe khi cần thêm động
-lực, muốn “chill” hoặc khuấy động bầu không khí.
+
     `,
     type: "Jack"
   },
@@ -90,14 +62,7 @@ lực, muốn “chill” hoặc khuấy động bầu không khí.
     audio: "/audio/DiGiuaTroiRucRo.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
     content: `
-Hustlang All Day” bài hát xoay quanh sự tận hưởng cuộc sống, những
-khoảnh khắc vui vẻ và thái độ “chơi tới bến” của tuổi trẻ. Với phần
-rap cuốn hút, flow mượt mà cùng cách gieo vần đầy sáng tạo, Huslang đã
-tạo nên một bản nhạc dễ gây nghiện, khiến người nghe cảm thấy hứng
-khởi ngay từ những giây đầu tiên. Giai điệu của “All Day” pha trộn
-giữa chất Trap và một chút Melodic Rap, mang đến sự cân bằng giữa sự
-mạnh mẽ và cảm xúc. Đây là ca khúc thích hợp để nghe khi cần thêm động
-lực, muốn “chill” hoặc khuấy động bầu không khí.
+
     `,
     type: "Jack"
   },
@@ -110,14 +75,7 @@ lực, muốn “chill” hoặc khuấy động bầu không khí.
     audio: "/audio/HUSTLANGALLDAY.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
     content: `
-Hustlang All Day” bài hát xoay quanh sự tận hưởng cuộc sống, những
-khoảnh khắc vui vẻ và thái độ “chơi tới bến” của tuổi trẻ. Với phần
-rap cuốn hút, flow mượt mà cùng cách gieo vần đầy sáng tạo, Huslang đã
-tạo nên một bản nhạc dễ gây nghiện, khiến người nghe cảm thấy hứng
-khởi ngay từ những giây đầu tiên. Giai điệu của “All Day” pha trộn
-giữa chất Trap và một chút Melodic Rap, mang đến sự cân bằng giữa sự
-mạnh mẽ và cảm xúc. Đây là ca khúc thích hợp để nghe khi cần thêm động
-lực, muốn “chill” hoặc khuấy động bầu không khí.
+
     `,
     type: "RAP"
   },
@@ -129,14 +87,7 @@ lực, muốn “chill” hoặc khuấy động bầu không khí.
     audio: "/audio/1TINHYEU.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
     content: `
-Hustlang All Day” bài hát xoay quanh sự tận hưởng cuộc sống, những
-khoảnh khắc vui vẻ và thái độ “chơi tới bến” của tuổi trẻ. Với phần
-rap cuốn hút, flow mượt mà cùng cách gieo vần đầy sáng tạo, Huslang đã
-tạo nên một bản nhạc dễ gây nghiện, khiến người nghe cảm thấy hứng
-khởi ngay từ những giây đầu tiên. Giai điệu của “All Day” pha trộn
-giữa chất Trap và một chút Melodic Rap, mang đến sự cân bằng giữa sự
-mạnh mẽ và cảm xúc. Đây là ca khúc thích hợp để nghe khi cần thêm động
-lực, muốn “chill” hoặc khuấy động bầu không khí.
+
     `,
     type: "RAP"
   },
@@ -314,14 +265,7 @@ mang phong cách đáng yêu, trẻ trung.
     audio: "/audio/BongLan.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
     content: `
-Hustlang All Day” bài hát xoay quanh sự tận hưởng cuộc sống, những
-khoảnh khắc vui vẻ và thái độ “chơi tới bến” của tuổi trẻ. Với phần
-rap cuốn hút, flow mượt mà cùng cách gieo vần đầy sáng tạo, Huslang đã
-tạo nên một bản nhạc dễ gây nghiện, khiến người nghe cảm thấy hứng
-khởi ngay từ những giây đầu tiên. Giai điệu của “All Day” pha trộn
-giữa chất Trap và một chút Melodic Rap, mang đến sự cân bằng giữa sự
-mạnh mẽ và cảm xúc. Đây là ca khúc thích hợp để nghe khi cần thêm động
-lực, muốn “chill” hoặc khuấy động bầu không khí.
+
     `,
     type: "Tân Cổ"
   },

@@ -14,7 +14,7 @@ export function CarouselAudio() {
   return (
     <div className="mx-auto w-full rounded-lg border-b border-zinc-800 text-zinc-50 backdrop-blur-md md:max-w-5xl">
       <div className="font-bol container mb-2 flex gap-1 text-2xl">
-        <MusicNotesSimple size={32} weight="fill" className="text-zinc-500" />
+        <MusicNotesSimple size={32} weight="fill" className="text-pink-500" />
 
         <div>Single song</div>
       </div>

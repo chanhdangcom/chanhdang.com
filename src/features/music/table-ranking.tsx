@@ -152,7 +152,7 @@ export function TableRanking() {
   return (
     <div className="z-10 mx-auto rounded-3xl md:p-2">
       <div className="container flex gap-2">
-        <Ranking size={32} weight="fill" className="text-zinc-500" />
+        <Ranking size={32} weight="fill" className="text-pink-500" />
         <div className="text-2xl text-zinc-50">Ranking</div>
       </div>
 
