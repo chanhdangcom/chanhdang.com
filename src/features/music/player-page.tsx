@@ -72,7 +72,7 @@ export function PlayerPage({ setIsClick }: IProp) {
     <AnimatePresence mode="wait">
       <motion.div
         layoutId="audio-bar"
-        className="container fixed inset-0 z-50 space-y-4"
+        className="fixed inset-0 z-50 space-y-4 rounded-3xl px-4 md:inset-x-96 md:inset-y-20"
         style={{
           background: `linear-gradient(to bottom,  
             ${waveColor}, 

@@ -20,8 +20,9 @@ import {
   SpeakerHigh,
   SpeakerSlash,
 } from "@phosphor-icons/react/dist/ssr";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { PlayerPage } from "./player-page";
+import { useOutsideClick } from "../profile/hook/use-outside-click";
 
 export function AudioBar() {
   const {
@@ -37,6 +38,8 @@ export function AudioBar() {
   } = useAudio();
 
   const [isClick, setIsClick] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useOutsideClick(ref, () => setIsClick(false), isClick);
 
   const Mini = () => {
     return (
@@ -183,7 +186,12 @@ export function AudioBar() {
               </motion.div>
 
               <motion.div whileTap={{ scale: 0.5 }}>
-                <Control size={20} weight="fill" className="cursor-pointer" />
+                <Control
+                  size={20}
+                  weight="fill"
+                  className="cursor-pointer"
+                  onClick={() => setIsClick(true)}
+                />
               </motion.div>
             </div>
 
@@ -228,7 +236,9 @@ export function AudioBar() {
       {!isClick ? (
         <Mini />
       ) : (
-        <PlayerPage setIsClick={() => setIsClick(false)} />
+        <div ref={ref}>
+          <PlayerPage setIsClick={() => setIsClick(false)} />
+        </div>
       )}
     </div>
   );
