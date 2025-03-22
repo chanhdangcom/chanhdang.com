@@ -14,7 +14,7 @@ export function CarouselAudioPlaylist() {
         <div>Playlist</div>
       </div>
 
-      <div className="flex overflow-x-auto md:justify-center">
+      <div className="flex overflow-x-auto md:mx-auto md:justify-center">
         {MUSICS.map((music) => (
           <div key={music.id} className="shrink-0">
             <PlaylistItem music={music} />
