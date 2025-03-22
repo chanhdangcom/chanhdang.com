@@ -2,7 +2,7 @@ export const MUSICS = [
   {
     id: "0",
     title: "Vì Tính Tú",
-    singer: "Jack-j97",
+    singer: "Jack - J97",
     cover: "/img/music-cover/playlist-cover/Jack.jpg",
     musics: [
       {
