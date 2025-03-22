@@ -3,7 +3,7 @@ export const MUSICS = [
   {
     id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231",
     title: "Hồng NHAN",
-    singer: "A J97",
+    singer: "Jack - J97",
     cover: "/img/music-cover/HongNhan.jpg",
     audio: "/audio/HongNhan.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
@@ -23,7 +23,7 @@ lực, muốn “chill” hoặc khuấy động bầu không khí.
   {
     id: "7ff65b56-3fd3-4814-9fea-9f722b4250d724",
     title: "BẠC PHẬN",
-    singer: "A J97",
+    singer: "Jack - J97",
     cover: "/img/music-cover/BacPhan.jpg",
     audio: "/audio/BacPhan.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
@@ -43,7 +43,7 @@ lực, muốn “chill” hoặc khuấy động bầu không khí.
   {
     id: "7ff65b56-3fd3-4814-9fea-9f722b4250d725",
     title: "SÓNG GIÓ",
-    singer: "A J97",
+    singer: "Jack - J97",
     cover: "/img/music-cover/SongGio.jpg",
     audio: "/audio/SongGio.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
@@ -63,7 +63,7 @@ lực, muốn “chill” hoặc khuấy động bầu không khí.
   {
     id: "7ff65b56-3fd3-4814-9fea-9f722b4250d726",
     title: "EM GÌ ƠI",
-    singer: "A J97",
+    singer: "Jack - J97",
     cover: "/img/music-cover/EmGiOi.jpg",
     audio: "/audio/EmGiOi.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
