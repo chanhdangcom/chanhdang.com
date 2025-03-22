@@ -65,13 +65,15 @@ export function PlaylistItem({ music }: IProp) {
             </DrawerDescription>
           </DrawerHeader>
 
-          <div className="mx-auto flex h-[40vh] items-center overflow-y-auto p-4">
+          <div className="flex h-[40vh] items-center overflow-x-auto p-4">
             {music.musics?.map((music) => (
-              <AuidoItem
-                key={music.id}
-                music={music}
-                handlePlay={() => handlePlayAudio(music)}
-              />
+              <div key={music.id} className="shrink-0s">
+                <AuidoItem
+                  key={music.id}
+                  music={music}
+                  handlePlay={() => handlePlayAudio(music)}
+                />
+              </div>
             ))}
           </div>
         </DrawerContent>

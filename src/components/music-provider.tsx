@@ -1,4 +1,4 @@
-import { MUSICS } from "@/features/profile/data/music";
+import { MUSICS } from "@/features/music/data/music-page";
 import { IMusic } from "@/features/profile/types/music";
 import React, {
   useCallback,
