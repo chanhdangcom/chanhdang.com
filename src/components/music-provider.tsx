@@ -109,7 +109,6 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         (sub) => currentTime >= sub.start && currentTime <= sub.end
       );
 
-      // Chỉ cập nhật nếu lyrics thực sự thay đổi
       setCurrentLyrics((prevLyrics) =>
         activeSubtitle?.text !== prevLyrics
           ? activeSubtitle?.text || null
@@ -132,22 +131,42 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     };
   }, [subtitles]);
 
-  const handlePlayAudio = useCallback((music: IMusic) => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio(music.audio);
-      audioRef.current.preload = "auto";
-    }
+  const handlePlayAudio = useCallback(
+    (music: IMusic) => {
+      if (currentMusic?.id === music.id) return;
 
-    if (audioRef.current.src !== music.audio) {
-      audioRef.current.src = music.audio;
-      audioRef.current.load();
-    }
+      if (!audioRef.current) {
+        audioRef.current = new Audio();
+        audioRef.current.preload = "auto";
+      }
 
-    audioRef.current.play();
-    setIsPlaying(true);
-    setIsPaused(false);
-    setCurrentMusic(music);
-  }, []);
+      if (audioRef.current.src !== music.audio) {
+        audioRef.current.src = music.audio;
+        audioRef.current.load();
+      }
+
+      audioRef.current.play();
+      setIsPlaying(true);
+      setIsPaused(false);
+      setCurrentMusic(music);
+
+      const handleEnded = () => {
+        let randomIndex;
+        do {
+          randomIndex = Math.floor(Math.random() * MUSICS.length);
+        } while (MUSICS[randomIndex].id === music.id);
+
+        const nextMusic = MUSICS[randomIndex];
+        setCurrentMusic(nextMusic);
+        handlePlayAudio(nextMusic);
+      };
+
+      // Xóa event cũ trước khi thêm mới
+      audioRef.current.removeEventListener("ended", handleEnded);
+      audioRef.current.addEventListener("ended", handleEnded);
+    },
+    [currentMusic]
+  );
 
   const handlePlayRandomAudio = useCallback(() => {
     const randomIndex = Math.floor(Math.random() * MUSICS.length);
