@@ -258,6 +258,19 @@ mang phong cách đáng yêu, trẻ trung.
   },
 
   {
+    id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231221",
+    title: "Rap With Tran Nha",
+    singer: "Ê Khánh Vin",
+    cover: "/img/music-cover/RapWithTranNha.jpg",
+    audio: "/audio/RapWithTranNha.mp3",
+    youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+    content: `
+
+    `,
+    type: "Jack"
+  },
+
+  {
     id: "7ff65b56-3fd3-4814-9fea-9f722b4250d72321",
     title: "BÔNG LAN",
     singer: "Minh Vương & Lệ Thuỷ",

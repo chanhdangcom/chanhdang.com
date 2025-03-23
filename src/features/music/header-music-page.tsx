@@ -16,7 +16,7 @@ import Link from "next/link";
 
 export const HeaderMusicPage = () => {
   return (
-    <div className="container sticky inset-0 top-0 z-40 pb-2 backdrop-blur-md">
+    <div className="container sticky inset-0 top-0 z-10 pb-2 backdrop-blur-md">
       <Progress className="w-[60%]" value={33} />
 
       <div className="space-y-4 md:hidden">

@@ -17,7 +17,7 @@ export function CarouselReplayAudio() {
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
-      const scrollAmount = 300; // Khoảng cách cuộn mỗi lần
+      const scrollAmount = 100; // Khoảng cách cuộn mỗi lần
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
 
       if (direction === "left" && scrollLeft <= 0) return; // Đã ở đầu, không cuộn nữa
@@ -44,11 +44,11 @@ export function CarouselReplayAudio() {
           />
           <div>
             <div className="text-lg text-zinc-400">Nguyễn Chánh Đang</div>
-            <div className="text-xl font-semibold">Replay</div>
+            <div className="text-xl">Song suggestions</div>
           </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <button
             className="flex size-8 items-center justify-center rounded-full border border-zinc-700 bg-zinc-900 p-1"
             onClick={() => scroll("left")}
@@ -65,7 +65,7 @@ export function CarouselReplayAudio() {
         </div>
       </div>
 
-      <div className="mx-auto w-full rounded-lg border-b border-zinc-800 text-zinc-50 backdrop-blur-md md:max-w-5xl">
+      <div className="mx-auto mt-1 w-full rounded-lg border-b border-zinc-800 text-zinc-50 backdrop-blur-md md:max-w-5xl">
         <div ref={scrollRef} className="flex overflow-x-auto">
           {MUSICS.map((music) => (
             <div key={music.id} className="shrink-0">

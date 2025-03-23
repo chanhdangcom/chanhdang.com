@@ -150,7 +150,7 @@ export function TableRanking() {
   const { handlePlayAudio } = useAudio();
 
   return (
-    <div className="z-10 rounded-3xl md:max-w-xl md:p-2">
+    <div className="z-[1] rounded-3xl md:max-w-xl md:p-2">
       <div className="container flex gap-2">
         <Ranking size={32} weight="fill" className="text-zinc-500" />
         <div className="text-2xl text-zinc-50">Ranking</div>

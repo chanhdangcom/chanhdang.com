@@ -18,7 +18,7 @@ export function CarouselAudio() {
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
-      const scrollAmount = 300; // Khoảng cách cuộn mỗi lần
+      const scrollAmount = 100; // Khoảng cách cuộn mỗi lần
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
 
       if (direction === "left" && scrollLeft <= 0) return; // Đã ở đầu, không cuộn nữa
