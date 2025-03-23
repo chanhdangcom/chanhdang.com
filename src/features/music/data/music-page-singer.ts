@@ -55,6 +55,19 @@ export const MUSICS = [
         `,
         type: "Jack"
       },
+
+      {
+        id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7267",
+        title: "SAO EM VÔ TÌNH",
+        singer: "Jack - J97",
+        cover: "/img/music-cover/SaoEmVoTinh.jpg",
+        audio: "/audio/SaoEmVoTinh.mp3",
+        youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+        content: `
+    
+        `,
+        type: "Jack"
+      },
     
     ]
   },
@@ -216,7 +229,20 @@ export const MUSICS = [
     id: "3",
     singer: "Quốc Thiên",
     cover: "/img/music-cover/playlist-cover/QuocThien.jpg",
-    
+    musics:[
+      {
+        id: "1f027516-868d-4749-a7a0-8e55f8b5faf00",
+        title: "CHIA CÁCH BÌNH YÊN",
+        singer: "Quốc Thiên",
+        cover: "/img/music-cover/ChiaCachBinhYen.jpg",
+        audio: "/audio/ChiaCachBinhYen.mp3",
+        youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+        content: `
+    “
+    `,
+        type: "Sad"
+      },
+    ]
 
   },
 

@@ -55,6 +55,19 @@ export const MUSICS = [
   },
 
   {
+    id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7267",
+    title: "SAO EM VÔ TÌNH",
+    singer: "Jack - J97",
+    cover: "/img/music-cover/SaoEmVoTinh.jpg",
+    audio: "/audio/SaoEmVoTinh.mp3",
+    youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+    content: `
+
+    `,
+    type: "Jack"
+  },
+
+  {
     id: "7ff65b56-3fd3-4814-9fea-9f722b4250d72313",
     title: "ĐI GIỮA TRỜI RỰC RỠ",
     singer: "Ngô Lan Hương",
@@ -99,15 +112,7 @@ export const MUSICS = [
     audio: "/audio/QUATUNGKHUNGHINH.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
     content: `
-“Chia Cách Bình Yên” là một ca khúc giàu cảm xúc, mang giai điệu nhẹ
-nhàng nhưng đầy day dứt về một cuộc chia ly. Bài hát kể về hai người
-yêu nhau nhưng buộc phải rời xa nhau, không phải vì hết yêu, mà vì
-những lý do ngoài tầm kiểm soát. Lời bài hát mang đến cảm giác tiếc
-nuối nhưng không quá bi lụy. Thay vì đau khổ dằn vặt, nó gợi lên sự
-chấp nhận trong lặng lẽ, một sự “chia cách bình yên” đúng như tên gọi.
-Với giai điệu nhẹ nhàng, sâu lắng cùng ca từ ý nghĩa, bài hát đã chạm
-đến trái tim của nhiều người từng trải qua một cuộc chia ly không mong
-muốn.
+“
     `,
     type: "RAP"
   },
@@ -139,12 +144,7 @@ type: "RAP"
     audio: "/audio/ChiaCachBinhYen.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
     content: `
-“Có Chắc Yêu Là Đây” mang đến cảm giác vui tươi, lãng mạn và tràn đầy
-năng lượng tích cực về tình yêu. Lời bài hát thể hiện những cảm xúc
-bồi hồi, rung động của chàng trai khi đang đắm chìm trong tình yêu.
-Giai điệu của bài hát có phần nhẹ nhàng, bay bổng hơn so với những ca
-khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
-mang phong cách đáng yêu, trẻ trung.
+“
 `,
     type: "Sad"
   },
