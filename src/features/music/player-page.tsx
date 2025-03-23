@@ -145,15 +145,15 @@ Thênh thang bước đi giữa trời rực rỡ\n`;
     <AnimatePresence mode="wait">
       <motion.div
         layoutId="audio-bar"
-        className="fixed inset-0 z-50 space-y-4 rounded-3xl px-4 md:inset-x-96 md:inset-y-20"
+        className="fixed inset-0 z-50 space-y-4 px-4 md:inset-x-96 md:inset-y-20 md:rounded-3xl"
         style={{
           background: `linear-gradient(to bottom,  
           ${waveColor}, 
           rgba(24, 24, 27, 0.7),  
           rgba(24, 24, 27, 0.7),  
           #18181b)`,
-          backdropFilter: "blur(30px)",
-          WebkitBackdropFilter: "blur(30px)",
+          backdropFilter: "blur(80px)",
+          WebkitBackdropFilter: "blur(80px)",
         }}
       >
         <header className="flex items-center justify-between p-1">

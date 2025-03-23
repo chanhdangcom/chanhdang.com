@@ -5,15 +5,14 @@ import * as React from "react";
 import { AuidoItem } from "./component/audio-item";
 
 import { useAudio } from "@/components/music-provider";
-import { MUSICS } from "./data/music-page";
-import {
-  CaretLeft,
-  CaretRight,
-  MusicNotesSimple,
-} from "@phosphor-icons/react/dist/ssr";
 
-export function CarouselAudio() {
+import { MUSICS } from "../profile/data/music";
+import Image from "next/image";
+import { CaretLeft, CaretRight } from "@phosphor-icons/react/dist/ssr";
+
+export function CarouselReplayAudio() {
   const { handlePlayAudio } = useAudio();
+
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
   const scroll = (direction: "left" | "right") => {
@@ -33,15 +32,23 @@ export function CarouselAudio() {
   };
 
   return (
-    <div className="mx-auto w-full rounded-lg border-b border-zinc-800 text-zinc-50 backdrop-blur-md md:max-w-5xl">
-      <div className="container flex justify-between">
-        <div className="font-bol flex gap-1 text-2xl">
-          <MusicNotesSimple size={32} weight="fill" className="text-zinc-400" />
-
-          <div className="text-zinc-50">Single song</div>
+    <div className="md:hidden">
+      <div className="container flex items-center justify-between gap-2 backdrop-blur-md">
+        <div className="flex gap-2">
+          <Image
+            src="/img/avatar.jpeg"
+            height={64}
+            width={64}
+            alt="avt"
+            className="size-14 rounded-full border border-zinc-800"
+          />
+          <div>
+            <div className="text-lg text-zinc-400">Nguyễn Chánh Đang</div>
+            <div className="text-xl font-semibold">Replay</div>
+          </div>
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex gap-2">
           <button
             className="flex size-8 items-center justify-center rounded-full border border-zinc-700 bg-zinc-900 p-1"
             onClick={() => scroll("left")}
@@ -58,15 +65,17 @@ export function CarouselAudio() {
         </div>
       </div>
 
-      <div ref={scrollRef} className="flex overflow-x-auto">
-        {MUSICS.map((music) => (
-          <div key={music.id} className="shrink-0">
-            <AuidoItem
-              music={music}
-              handlePlay={() => handlePlayAudio(music)}
-            />
-          </div>
-        ))}
+      <div className="mx-auto w-full rounded-lg border-b border-zinc-800 text-zinc-50 backdrop-blur-md md:max-w-5xl">
+        <div ref={scrollRef} className="flex overflow-x-auto">
+          {MUSICS.map((music) => (
+            <div key={music.id} className="shrink-0">
+              <AuidoItem
+                music={music}
+                handlePlay={() => handlePlayAudio(music)}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

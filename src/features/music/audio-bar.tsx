@@ -48,7 +48,10 @@ export function AudioBar() {
           layoutId="audio-bar"
           className="fixed inset-x-2 bottom-2 z-20 flex justify-center rounded-3xl border border-zinc-800 bg-zinc-900/80 p-2 text-zinc-50 shadow-sm backdrop-blur-md md:inset-x-4 md:bottom-4 md:rounded-[40px] md:px-8 md:py-4"
         >
-          <div className="flex w-full items-center justify-between">
+          <div
+            onClick={() => setIsClick(true)}
+            className="flex w-full items-center justify-between"
+          >
             <div className="hidden items-center gap-8 md:flex">
               <motion.div whileTap={{ scale: 0.5 }}>
                 <Rewind
@@ -196,7 +199,7 @@ export function AudioBar() {
             </div>
 
             <div className="ml-4 flex items-center gap-4 md:hidden">
-              <motion.div layout onClick={() => setIsClick(true)}>
+              <motion.div layout>
                 {currentMusic?.cover && (
                   <DynamicIslandWave
                     isPlay={isPlaying}
@@ -206,22 +209,26 @@ export function AudioBar() {
               </motion.div>
 
               {isPlaying ? (
-                <motion.div whileTap={{ scale: 0.5 }}>
-                  <Pause
-                    onClick={handlePauseAudio}
-                    weight="fill"
-                    size={30.5}
-                    className="cursor-pointer"
-                  />
+                <motion.div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePauseAudio();
+                  }}
+                  whileTap={{ scale: 0.5 }}
+                  className="mr-4"
+                >
+                  <Pause weight="fill" size={23} className="cursor-pointer" />
                 </motion.div>
               ) : (
-                <motion.div whileTap={{ scale: 0.5 }}>
-                  <Play
-                    onClick={handleResumeAudio}
-                    weight="fill"
-                    size={32}
-                    className="cursor-pointer"
-                  />
+                <motion.div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleResumeAudio();
+                  }}
+                  whileTap={{ scale: 0.5 }}
+                  className="mr-4"
+                >
+                  <Play weight="fill" size={23} className="cursor-pointer" />
                 </motion.div>
               )}
             </div>

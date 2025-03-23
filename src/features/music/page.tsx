@@ -6,6 +6,10 @@ import { MenuBar } from "./menu-bar";
 
 import { TableRanking } from "./table-ranking";
 
+import { CarouselReplayAudio } from "./carousel-replay-audio";
+import { MusicType } from "./music-type";
+import { SingerList } from "./singer-list";
+
 export function MusicPage() {
   return (
     <div className="flex bg-zinc-950">
@@ -15,8 +19,20 @@ export function MusicPage() {
         <div className="relative z-10 bg-opacity-50 bg-gradient-to-b from-[#112233] to-zinc-950 backdrop-blur-sm before:absolute before:inset-0 before:w-2/3 before:bg-gradient-to-r before:from-zinc-950 before:via-zinc-950/50 before:to-transparent">
           <HeaderMusicPage />
 
+          <div className="ml-28 hidden md:flex">
+            <MusicType />
+          </div>
+
+          <div className="mt-8">
+            <CarouselReplayAudio />
+          </div>
+
           <div className="mt-8 flex justify-center">
             <CarouselAudio />
+          </div>
+
+          <div className="mt-8 flex justify-center">
+            <SingerList />
           </div>
 
           <div className="mt-8 flex justify-center">
