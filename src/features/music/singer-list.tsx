@@ -10,7 +10,7 @@ export function SingerList() {
 
   return (
     <motion.div layoutId="singer" layout>
-      <div className="container w-full backdrop-blur-md">
+      <div className="container w-full">
         <div className="font-bol flex gap-1 text-2xl">
           <Guitar size={32} weight="fill" className="text-zinc-500" />
           <div className="text-zinc-50">Singer</div>
