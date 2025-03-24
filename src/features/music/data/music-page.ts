@@ -1,6 +1,4 @@
 export const MUSICS = [
-  
-  
 
   {
     id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231",
@@ -81,11 +79,24 @@ export const MUSICS = [
   },
 
   {
-    id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7",
-    title: "HUSTLANG ALL DAY",
-    singer: "Hustlang Robber",
-    cover: "https://cdn.chanhdang.com/cover_hustlang_all_day.jpg",
-    audio: "https://cdn.chanhdang.com/music_hustlang-all-day.mp3",
+    id: "7ff65b56-3fd3-4814-9fea-9f722b4250d72313342",
+    title: "SỰ NGHIỆP CHƯỚNG",
+    singer: "Pháo",
+    cover: "https://cdn.chanhdang.com/cover_su_nghiep_chuong.jpg",
+    audio: "https://cdn.chanhdang.com/music_su_nghiep_chuong.mp3",
+    youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+    content: `
+
+    `,
+    type: "Jack"
+  },
+
+  {
+    id: "7ff65b56-3fd3-4814-9fea-9f722b4250d732",
+    title: "TÌNH ĐẦU QUÁ CHÉN",
+    singer: "NEGAV x Quang Hùng MasterD x Erik x Pháp Kiều",
+    cover: "https://cdn.chanhdang.com/cover_tinh_dau_qua_chen.jpg",
+    audio: "https://cdn.chanhdang.com/music_tinh_dau_qua_chen.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
     content: `
 
@@ -93,17 +104,33 @@ export const MUSICS = [
     type: "RAP"
   },
   {
-    id: "9aa4e51d-a7fc-44a0-88ba-b6981eca64b7",
-    title: "1TINHYEU",
-    singer: "Hustlang Robber",
-    cover: "https://cdn.chanhdang.com/cover_1love.jpg",
-    audio: "https://cdn.chanhdang.com/music_1love.mp3",
+    id: "9aa4e51d-a7fc-44a0-88ba-b6981eca64b7123",
+    title: "TRÓI EM LẠI",
+    singer: "Quang Hùng MasterD",
+    cover: "https://cdn.chanhdang.com/cover_troi_em_lai.jpg",
+    audio: "https://cdn.chanhdang.com/music_troi_em_lai.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
     content: `
 
     `,
     type: "RAP"
   },
+
+  {
+    id: "7ff65b56-3fd3-4814-9fea-9f722b4250d732543",
+    title: "CATCH ME IF YOU CAN",
+    singer: "Negav x Quang Hùng MasterD x Nicky x Công Dương",
+    cover: "https://cdn.chanhdang.com/cover_catch_me_if_you_can.jpg",
+    audio: "https://cdn.chanhdang.com/music_catch_me_if_you_can.mp3",
+    youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+    content: `
+
+    `,
+    type: "RAP"
+  },
+  
+  
+
   {
     id: "e4a0b19c-4e31-41ff-b846-1d39aa2e3cef",
     title: "QUA TỪNG KHUNG HÌNH",
