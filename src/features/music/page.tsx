@@ -43,7 +43,7 @@ export function MusicPage() {
           className="relative z-10"
           style={{
             background: `linear-gradient(to right, #101012, ${waveColor}),
-                         linear-gradient(to bottom, ${waveColor}, rgba(20, 20, 25, 0.8), #101012)`,
+                         linear-gradient(to bottom, ${waveColor}, rgba(20, 20, 25, 0.9), #101012)`,
             backdropFilter: "blur(40px)",
             WebkitBackdropFilter: "blur(40px)",
             backgroundBlendMode: "multiply",

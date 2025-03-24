@@ -20,7 +20,7 @@ export function AuidoItem({ music, handlePlay }: IProp) {
             alt="cover"
             src={music.cover}
             quality={100}
-            className="mx-auto size-32 justify-center rounded-2xl border border-zinc-800"
+            className="mx-auto size-32 justify-center rounded-2xl"
           />
         ) : (
           <div className="size-32 rounded-2xl bg-zinc-800"></div>
