@@ -20,7 +20,7 @@ export function MusicPage() {
 
   useEffect(() => {
     if (!currentMusic?.cover) {
-      setWaveColor("rgba(128, 128, 128, 0.6)"); // Xanh dương đậm mờ
+      setWaveColor("rgba(128, 128, 128, 0.6)"); // Xanh
       return;
     }
 
@@ -31,7 +31,7 @@ export function MusicPage() {
         const rgbaColor = `rgba(${color.value[0]}, ${color.value[1]}, ${color.value[2]}, 0.8)`;
         setWaveColor(rgbaColor);
       })
-      .catch(() => setWaveColor("rgba(250, 250, 250, 0.6)"));
+      .catch(() => setWaveColor("rgba(128, 128, 128, 0.6)"));
   }, [currentMusic?.cover]);
 
   return (

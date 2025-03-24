@@ -145,28 +145,37 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         audioRef.current.load();
       }
 
-      audioRef.current.play();
+      audioRef.current
+        .play()
+        .catch((error) => console.error("Lỗi phát nhạc:", error));
+
       setIsPlaying(true);
       setIsPaused(false);
       setCurrentMusic(music);
-
-      const handleEnded = () => {
-        let randomIndex;
-        do {
-          randomIndex = Math.floor(Math.random() * MUSICS.length);
-        } while (MUSICS[randomIndex].id === music.id);
-
-        const nextMusic = MUSICS[randomIndex];
-        setCurrentMusic(nextMusic);
-        handlePlayAudio(nextMusic);
-      };
-
-      // Xóa event cũ trước khi thêm mới
-      audioRef.current.removeEventListener("ended", handleEnded);
-      audioRef.current.addEventListener("ended", handleEnded);
     },
     [currentMusic]
   );
+
+  // Random nhạc khi bài hát kết thúc
+  useEffect(() => {
+    if (!audioRef.current) return;
+
+    const handleEnded = () => {
+      let randomIndex;
+      do {
+        randomIndex = Math.floor(Math.random() * MUSICS.length);
+      } while (MUSICS[randomIndex].id === currentMusic?.id);
+
+      const nextMusic = MUSICS[randomIndex];
+      setCurrentMusic(nextMusic);
+      handlePlayAudio(nextMusic);
+    };
+
+    audioRef.current.addEventListener("ended", handleEnded);
+    return () => {
+      audioRef.current?.removeEventListener("ended", handleEnded);
+    };
+  }, [currentMusic, handlePlayAudio]);
 
   const handlePlayRandomAudio = useCallback(() => {
     const randomIndex = Math.floor(Math.random() * MUSICS.length);
