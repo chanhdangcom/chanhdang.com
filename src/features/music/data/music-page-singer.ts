@@ -246,7 +246,7 @@ export const MUSICS = [
   {
     id: "4",
     singer: "Vũ",
-    cover: "/img/music-cover/playlist-cover/singer_vu.jpg",
+    cover: "https://cdn.chanhdang.com/singer_vu.jpg",
   
   },
 

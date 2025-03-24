@@ -3,7 +3,7 @@ export const MUSICS = [
     id: "0",
     title: "Vì Tính Tú",
     singer: "Jack - J97",
-    cover: "/img/music-cover/playlist-cover/Jack.jpg",
+    cover: "https://cdn.chanhdang.com/singer_jack.jpg",
     musics: [
       {
         id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231",
@@ -76,7 +76,7 @@ export const MUSICS = [
     id: "1",
     title: "RapViet",
     singer: "Hustlang Robber",
-    cover: "/img/music-cover/playlist-cover/Robber.jpg",
+    cover: "https://cdn.chanhdang.com/singer_robber.jpg",
     musics: [
       {
         id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7",
@@ -140,7 +140,7 @@ export const MUSICS = [
     id: "2",
     title: "Các bài hát của Sơn Tùng M-TP",
     singer: "Sơn Tùng M-TP",
-    cover: "/img/music-cover/playlist-cover/SonTungMTP.jpg",
+    cover: "https://cdn.chanhdang.com/singer_son_tung_mtp.jpg",
     musics:[
       {
         id: "1f027516-868d-4749-a7a0-8e55f8b5faf0",
@@ -239,7 +239,7 @@ export const MUSICS = [
     id: "3",
     title: "Các bài hát của Quốc Thiên",
     singer: "Quốc Thiên",
-    cover: "/img/music-cover/playlist-cover/QuocThien.jpg",
+    cover: "https://cdn.chanhdang.com/singer_quoc_thien.jpg",
     
 
   },
@@ -248,7 +248,7 @@ export const MUSICS = [
     id: "4",
     title: "King of indies",
     singer: "Vũ",
-    cover: "/img/music-cover/playlist-cover/Vu.jpg",
+    cover: "https://cdn.chanhdang.com/singer_vu.jpg",
   
   },
 ];
