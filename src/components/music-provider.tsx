@@ -132,7 +132,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   }, [subtitles]);
 
   const handlePlayAudio = useCallback(
-    (music: IMusic) => {
+    async (music: IMusic) => {
       if (currentMusic?.id === music.id) return;
 
       if (!audioRef.current) {
@@ -142,12 +142,19 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
 
       if (audioRef.current.src !== music.audio) {
         audioRef.current.src = music.audio;
-        audioRef.current.load();
+        try {
+          await audioRef.current.play(); // Chờ phát nhạc trước khi cập nhật trạng thái
+        } catch (error) {
+          console.error("Lỗi phát nhạc:", error);
+        }
+      } else {
+        audioRef.current.currentTime = 0;
+        try {
+          await audioRef.current.play();
+        } catch (error) {
+          console.error("Lỗi phát lại:", error);
+        }
       }
-
-      audioRef.current
-        .play()
-        .catch((error) => console.error("Lỗi phát nhạc:", error));
 
       setIsPlaying(true);
       setIsPaused(false);
