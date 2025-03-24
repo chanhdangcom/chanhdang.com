@@ -35,10 +35,10 @@ export function MusicPage() {
   }, [currentMusic?.cover]);
 
   return (
-    <div className="flex bg-zinc-950">
+    <div className="">
       <MenuBar />
 
-      <div className="mx-auto w-full">
+      <div className="mx-auto w-full bg-zinc-950">
         <div
           className="relative z-10"
           style={{
