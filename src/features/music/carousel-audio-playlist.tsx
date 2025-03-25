@@ -2,7 +2,7 @@
 import * as React from "react";
 
 import { Playlist } from "@phosphor-icons/react/dist/ssr";
-import { MUSICS } from "./data/music-page-playlist";
+import { MUSICSPLAYLIST } from "./data/music-page-playlist";
 import { PlaylistItem } from "./component/playlist-item";
 
 export function CarouselAudioPlaylist() {
@@ -15,7 +15,7 @@ export function CarouselAudioPlaylist() {
       </div>
 
       <div className="flex overflow-x-auto md:mx-auto md:justify-center">
-        {MUSICS.map((music) => (
+        {MUSICSPLAYLIST.map((music) => (
           <div key={music.id} className="shrink-0">
             <PlaylistItem music={music} />
           </div>

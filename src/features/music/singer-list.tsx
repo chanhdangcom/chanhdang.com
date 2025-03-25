@@ -1,9 +1,10 @@
 "use client";
 import { Guitar } from "@phosphor-icons/react/dist/ssr";
 import { SingerItem } from "./component/singer-item";
-import { MUSICS } from "./data/music-page-singer";
+
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
+import { MUSICSSINGER } from "./data/music-page-singer";
 
 export function SingerList() {
   const router = useRouter();
@@ -18,7 +19,7 @@ export function SingerList() {
           </div>
 
           <div className="mt-2 flex w-full items-center gap-4 overflow-auto">
-            {MUSICS.map((music) => (
+            {MUSICSSINGER.map((music) => (
               <div key={music.id} className="shrink-0">
                 <SingerItem
                   music={music}

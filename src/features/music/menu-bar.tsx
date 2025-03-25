@@ -4,7 +4,7 @@ import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { BookBookmark, Browsers, House } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import { AudioItemOrder } from "./component/audio-item-order";
-import { MUSICS } from "./data/music-page-playlist";
+import { MUSICSPLAYLIST } from "./data/music-page-playlist";
 import { useAudio } from "@/components/music-provider";
 
 export function MenuBar() {
@@ -38,7 +38,7 @@ export function MenuBar() {
           <div className="fixed h-0.5 w-56 bg-zinc-800"></div>
 
           <div className="mt-16 space-y-4 font-semibold">
-            {MUSICS.map((music) => (
+            {MUSICSPLAYLIST.map((music) => (
               <AudioItemOrder
                 music={music}
                 key={music.id}

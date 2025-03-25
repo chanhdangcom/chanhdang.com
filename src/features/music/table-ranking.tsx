@@ -1,8 +1,9 @@
 "use client";
 import { useAudio } from "@/components/music-provider";
 import { TableRankingItem } from "./component/table-ranking-item";
-import { MUSICS } from "./data/music-page-ranking";
+
 import { Ranking } from "@phosphor-icons/react/dist/ssr";
+import { MUSICSRANKING } from "./data/music-page-ranking";
 
 export function TableRanking() {
   const { handlePlayAudio } = useAudio();
@@ -14,7 +15,7 @@ export function TableRanking() {
         <div className="text-2xl text-zinc-50">Top songs</div>
       </div>
 
-      {MUSICS.map((music, index) => (
+      {MUSICSRANKING.map((music, index) => (
         <div
           key={music.id}
           className="transform rounded-3xl transition-transform duration-300 hover:bg-zinc-100 hover:dark:bg-zinc-900 md:p-1 md:hover:scale-105"

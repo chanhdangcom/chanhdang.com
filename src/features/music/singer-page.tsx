@@ -2,12 +2,13 @@
 import Image from "next/image";
 
 import { ShareFat, Shuffle } from "@phosphor-icons/react/dist/ssr";
-import { MUSICS } from "./data/music-page-singer";
+
 import { AudioSingerItem } from "./component/audio-singer-item";
 import { HeaderMusicSingerPage } from "./header-music-singer-page";
 import { AudioBar } from "./audio-bar";
 import { motion } from "motion/react";
 import { AnimatePresence } from "framer-motion";
+import { MUSICSSINGER } from "./data/music-page-singer";
 
 type IProp = {
   idSinger: string;
@@ -28,9 +29,11 @@ export function SingerPage({ idSinger }: IProp) {
             <HeaderMusicSingerPage />
 
             <div className="mt-24 space-y-4 p-4 text-xl font-semibold">
-              {MUSICS.filter((item) => item.id === idSinger).map((item) => (
-                <div key={item.id}>{item.singer}</div>
-              ))}
+              {MUSICSSINGER.filter((item) => item.id === idSinger).map(
+                (item) => (
+                  <div key={item.id}>{item.singer}</div>
+                )
+              )}
 
               <div className="flex gap-2">
                 <div className="flex w-fit items-center justify-center gap-2 rounded-3xl border bg-zinc-50 px-3 py-1 text-zinc-950">
@@ -48,7 +51,7 @@ export function SingerPage({ idSinger }: IProp) {
             </div>
           </div>
 
-          {MUSICS.filter((item) => item.id === idSinger).map((item) => (
+          {MUSICSSINGER.filter((item) => item.id === idSinger).map((item) => (
             <div key={item.id}>
               <Image
                 alt=""
@@ -63,7 +66,7 @@ export function SingerPage({ idSinger }: IProp) {
 
         <div className="container">
           {/* <div className="text-xl font-semibold">Song</div> */}
-          {MUSICS.filter((item) => item.id === idSinger).map((item) => (
+          {MUSICSSINGER.filter((item) => item.id === idSinger).map((item) => (
             <div key={item.id}>
               <AudioSingerItem music={item} />
             </div>

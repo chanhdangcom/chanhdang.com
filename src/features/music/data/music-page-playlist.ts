@@ -1,4 +1,4 @@
-export const MUSICS = [
+export const MUSICSPLAYLIST = [
   {
     id: "0",
     title: "Vì Tính Tú",
