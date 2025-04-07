@@ -309,4 +309,17 @@ mang phong cách đáng yêu, trẻ trung.
     `,
     type: "Tân Cổ"
   },
+
+  {
+    id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7232142",
+    title: "QUYỂN NHẬT KÝ TRƯỜNG SƠN",
+    singer: "Minh Trường",
+    cover: "https://cdn.chanhdang.com/cover_quyen_nhat_ky_truong_son.jpg",
+    audio: "https://cdn.chanhdang.com/music_quyen_nhat_ky_truong_son.mp3",
+    youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+    content: `
+
+    `,
+    type: "Tân Cổ"
+  },
 ];
