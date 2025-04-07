@@ -20,10 +20,10 @@ import {
 } from "@/components/ui/drawer";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { AudioTimeLine } from "./component/audio-time-line";
 import DynamicIslandWave from "@/components/ui/dynamic-island";
-import { FastAverageColor } from "fast-average-color";
+
 import Markdown from "react-markdown";
 
 type IProp = {
@@ -49,24 +49,6 @@ export function PlayerPage({ setIsClick }: IProp) {
       document.body.style.overflow = "auto";
     };
   }, []);
-
-  const [waveColor, setWaveColor] = useState("");
-
-  useEffect(() => {
-    if (!currentMusic?.cover) {
-      setWaveColor("rgba(250, 250, 250, 0.6)"); // Màu trắng mờ
-      return;
-    }
-
-    const fac = new FastAverageColor();
-    fac
-      .getColorAsync(currentMusic?.cover)
-      .then((color) => {
-        const rgbaColor = `rgba(${color.value[0]}, ${color.value[1]}, ${color.value[2]}, 0.8)`;
-        setWaveColor(rgbaColor);
-      })
-      .catch(() => setWaveColor("rgba(250, 250, 250, 0.6)"));
-  }, [currentMusic?.cover]);
 
   const lyrics = `Mát lành như dòng suối\n
 Tâm hồn mới chớm đôi mươi vô tư nơi rừng núi\n
@@ -146,16 +128,17 @@ Thênh thang bước đi giữa trời rực rỡ\n`;
       <motion.div
         layoutId="audio-bar"
         className="fixed inset-0 z-50 space-y-4 px-4 md:inset-x-96 md:inset-y-20 md:rounded-3xl"
-        style={{
-          background: `linear-gradient(to bottom,  
-          ${waveColor}, 
-          rgba(24, 24, 27, 0.7),  
-          rgba(24, 24, 27, 0.7),  
-          #18181b)`,
-          backdropFilter: "blur(80px)",
-          WebkitBackdropFilter: "blur(80px)",
-        }}
       >
+        <div className="absolute inset-0 -z-10 bg-zinc-950">
+          <Image
+            alt="cover"
+            width={1000}
+            height={1000}
+            src={currentMusic?.cover || ""}
+            className="blur-2xl"
+          />
+        </div>
+
         <header className="flex items-center justify-between p-1">
           <CaretDown
             size={20}
