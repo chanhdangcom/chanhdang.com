@@ -285,9 +285,63 @@ mang phong cách đáng yêu, trẻ trung.
   },
 
   {
+    id: "7ff65b56-3fd3-4814-9fea-9f722b4250d723211234",
+    title: "NGƯỜI ĐÀN ÔNG THAM LAM",
+    singer: "Hoàng Châu",
+    cover: "https://cdn.chanhdang.com/cover_nguoi_dan_ong_tham_lam.png",
+    audio: "https://cdn.chanhdang.com/music_nguoi_dan_ong_tham_lam.mp3",
+    youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+    content: `
+
+    `,
+    type: "Tân Cổ"
+  },
+
+  {
+    id: "7ff65b56-3fd3-4814-9fea-9f722b4250d723211234123",
+    title: "PHẢI CỐ QUÊN ĐI NGƯỜI TA",
+    singer: "Khánh Phương",
+    cover: "https://cdn.chanhdang.com/cover_phai_co_quen_di_nguoi_ta.png",
+    audio: "https://cdn.chanhdang.com/music_phai_co_quen_di_nguoi_ta.mp3",
+    youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+    content: `
+
+    `,
+    type: "Tân Cổ"
+  },
+
+  {
+    id: "7ff65b56-3fd3-4814-9fea-9f722b4250d723211234123142",
+    title: "DỆT MỘNG UYÊN ƯƠNG",
+    singer: "Lý Hải",
+    cover: "https://cdn.chanhdang.com/cover_det_mong_uyen_uong.jpg",
+    // cover: "/img/photo-me/1.jpg",
+    audio: "https://cdn.chanhdang.com/music_det_mong_uyen_uong.mp3",
+    youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+    content: `
+
+    `,
+    type: "Tân Cổ"
+  },
+
+  {
+    id: "7ff65b56-3fd3-4814-9fea-9f722b4250d72321123412314214",
+    title: "GIÂY PHÚT CHIA XA",
+    singer: "Đàm Vĩnh Hưng",
+    cover: "https://cdn.chanhdang.com/cover_giay_phut_chia_xa.jpg",
+    audio: "https://cdn.chanhdang.com/music_giay_phut_chia_xa.mp3",
+    youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+    content: `
+
+    `,
+    type: "Tân Cổ"
+  },
+  
+
+  {
     id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231221",
-    title: "Rap With Tran Nha",
-    singer: "Ê Khánh Vin",
+    title: "ANH CHƯA MỘT LẦN NÓI",
+    singer: "Ê Kê Vin",
     cover: "https://cdn.chanhdang.com/cover_rap_with_tran_nha.jpg",
     audio: "https://cdn.chanhdang.com/music_rap_with_tran_nha.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",

@@ -259,13 +259,13 @@ export const MUSICSSINGER = [
 
   {
     id: "6",
-    singer: "Ê Khánh Vin",
-    cover: "https://cdn.chanhdang.com/cover_khanhvin_2.png.jpg",
+    singer: "Ê Kê Vin",
+    cover: "https://cdn.chanhdang.com/singer_khanh_vin.jpg",
     musics: [
       {
       id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231221",
-      title: "Rap With Tran Nha",
-      singer: "Ê Khánh Vin",
+      title: "ANH CHƯA MỘT LẦN NÓI",
+      singer: "Ê Kê Vin",
       cover: "https://cdn.chanhdang.com/cover_rap_with_tran_nha.jpg",
       audio: "https://cdn.chanhdang.com/music_rap_with_tran_nha.mp3",
       youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
