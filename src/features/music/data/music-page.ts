@@ -339,6 +339,20 @@ mang phong cách đáng yêu, trẻ trung.
   },
 
   {
+    id: "7ff65b56-3fd3-4814-9fea-9f722b4250d72124321123412312432",
+    title: "RU CON NGỦ MIỀN NAM",
+    singer: "Tài Linh",
+    // cover: "https://cdn.chanhdang.com/cover_det_mong_uyen_uong.jpg",
+    cover: "/img/photo-me/3.jpg",
+    audio: "https://cdn.chanhdang.com/music_ru_con_nam_bo.mp3",
+    youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+    content: `
+
+    `,
+    type: "Tân Cổ"
+  },
+
+  {
     id: "7ff65b56-3fd3-4814-9fea-9f722b4250d72321123412314214",
     title: "GIÂY PHÚT CHIA XA",
     singer: "Đàm Vĩnh Hưng",
