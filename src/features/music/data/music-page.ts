@@ -327,7 +327,7 @@ mang phong cách đáng yêu, trẻ trung.
   {
     id: "7ff65b56-3fd3-4814-9fea-9f722b4250d72321123412314232",
     title: "CHÚNG MÌNH BA ĐỨA",
-    singer: "Tam ca",
+    singer: "Trường Vũ",
     // cover: "https://cdn.chanhdang.com/cover_det_mong_uyen_uong.jpg",
     cover: "/img/photo-me/2.jpg",
     audio: "https://cdn.chanhdang.com/music_minh_co_ba_nguoi.mp3",

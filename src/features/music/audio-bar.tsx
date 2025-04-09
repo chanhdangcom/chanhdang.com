@@ -112,7 +112,7 @@ export function AudioBar() {
                     width={192}
                     height={192}
                     src={currentMusic?.cover}
-                    className="flex size-14 items-center justify-center rounded-2xl md:size-16 md:rounded-2xl"
+                    className="flex size-14 items-center justify-center rounded-2xl object-cover md:size-16 md:rounded-2xl"
                   />
                 </motion.div>
               )}
