@@ -16,14 +16,15 @@ import Link from "next/link";
 
 export const HeaderMusicPage = () => {
   return (
-    <div className="container sticky inset-0 top-0 z-10 pb-2 backdrop-blur-md">
+    <div className="container sticky inset-0 top-0 z-10 border-zinc-800 pb-4 backdrop-blur-md md:border-b md:pb-8">
       <Progress className="w-[60%]" value={33} />
 
-      <div className="space-y-4 md:hidden">
+      <div className="space-y-8 md:hidden">
         <div className="flex items-center justify-between">
           <Link href="/">
             <ChanhdangLogotype />
           </Link>
+
           <AnimatePresence>
             <motion.div
               transition={{
@@ -47,7 +48,7 @@ export const HeaderMusicPage = () => {
         <MusicType />
       </div>
 
-      <div className="hidden h-14 items-center justify-between md:flex">
+      <div className="hidden h-14 items-center justify-between p-4 md:flex">
         <div className="flex gap-16">
           <div className="flex items-center gap-4">
             <CaretLeft

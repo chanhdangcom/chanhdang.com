@@ -113,7 +113,7 @@ export const HeaderMotion = () => {
                     {currentMusic?.title || "TITLE SONG"}
                   </div>
 
-                  <div className="font-sf font-normal text-zinc-400">
+                  <div className="l font-sf font-normal text-zinc-400">
                     {currentMusic?.singer || "Singer"}
                   </div>
                 </motion.div>

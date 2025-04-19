@@ -20,7 +20,7 @@ export function MusicPage() {
         <div className="relative z-10">
           <HeaderMusicPage />
 
-          <div className="ml-28 hidden md:flex">
+          <div className="ml-28 mt-4 hidden md:flex">
             <MusicType />
           </div>
 

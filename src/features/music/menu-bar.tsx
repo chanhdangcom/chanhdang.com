@@ -12,7 +12,7 @@ export function MenuBar() {
   return (
     <div className="relative hidden md:flex">
       <div className="h-96 w-64"></div>
-      <div className="fixed top-0 h-full w-64 border-zinc-800 bg-zinc-950/80 p-4">
+      <div className="fixed top-0 h-full w-64 border border-zinc-800 bg-zinc-950 p-4">
         <div className="">
           <Link href="/">
             <ChanhdangLogotype />

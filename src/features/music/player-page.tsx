@@ -25,6 +25,7 @@ import { AudioTimeLine } from "./component/audio-time-line";
 import DynamicIslandWave from "@/components/ui/dynamic-island";
 
 import Markdown from "react-markdown";
+import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 
 type IProp = {
   setIsClick: () => void;
@@ -135,7 +136,7 @@ Thênh thang bước đi giữa trời rực rỡ\n`;
             width={1000}
             height={1000}
             src={currentMusic?.cover || ""}
-            className="blur-2xl"
+            className="border-3xl h-1/2 blur-2xl"
           />
         </div>
 
@@ -146,8 +147,9 @@ Thênh thang bước đi giữa trời rực rỡ\n`;
             onClick={() => setIsClick()}
           />
 
-          <div className="flex rounded-full p-1 font-semibold">
+          <div className="flex justify-center gap-4 rounded-full p-1 font-semibold">
             <div className="rounded-full bg-zinc-800 px-3 py-1">Music</div>
+            <ChanhdangLogotype className="w-32" />
             <div className="px-3 py-1">Video</div>
           </div>
 
