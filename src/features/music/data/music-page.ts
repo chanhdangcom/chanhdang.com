@@ -383,7 +383,7 @@ mang phong cách đáng yêu, trẻ trung.
     id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231223r3221",
     title: "Tháp Drill Tự Do",
     singer: "Ê Kê Vin",
-    cover: "https://cdn.chanhdang.com/beauty_singer_khanh_vin.jpg",
+    cover: "https://cdn.chanhdang.com/cover_thap_drill_tu_do.jpg",
     audio: "https://cdn.chanhdang.com/music_thap_drill_tu_do.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
     content: `
