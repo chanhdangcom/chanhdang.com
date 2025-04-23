@@ -258,7 +258,7 @@ export const MUSICSSINGER = [
   },
 
   {
-    id: "6",
+    id: "haizzdowncotsong",
     singer: "Ê Kê Vin",
     cover: "https://cdn.chanhdang.com/singer_khanh_vin.jpg",
     musics: [
