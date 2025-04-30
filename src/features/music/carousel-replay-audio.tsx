@@ -32,7 +32,7 @@ export function CarouselReplayAudio() {
   };
 
   return (
-    <div className="md:hidden">
+    <div className="max-w-full rounded-3xl">
       <div className="container flex items-center justify-between gap-2">
         <div className="flex gap-2">
           <Image
@@ -65,7 +65,7 @@ export function CarouselReplayAudio() {
         </div>
       </div>
 
-      <div className="mx-auto mt-1 w-full rounded-lg text-zinc-50 md:max-w-5xl">
+      <div className="mx-auto mt-1 w-full rounded-lg text-zinc-50">
         <div ref={scrollRef} className="flex overflow-x-auto">
           {MUSICS.map((music) => (
             <div key={music.id} className="shrink-0">

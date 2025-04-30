@@ -33,7 +33,7 @@ export function CarouselAudio() {
   };
 
   return (
-    <div className="mx-auto w-full text-zinc-50 md:max-w-5xl">
+    <div className="w-full rounded-3xl p-8 text-zinc-50 md:bg-zinc-900">
       <div className="container flex justify-between">
         <div className="font-bol flex gap-1 text-2xl">
           <MusicNotesSimple size={32} weight="fill" className="text-zinc-400" />
