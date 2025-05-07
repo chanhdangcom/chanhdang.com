@@ -65,7 +65,7 @@ export function CarouselReplayAudio() {
         </div>
       </div>
 
-      <div className="mx-auto mt-1 w-full rounded-lg text-zinc-50">
+      <div className="mx-auto mt-1 w-screen rounded-lg text-zinc-50 md:w-fit">
         <div ref={scrollRef} className="flex overflow-x-auto">
           {MUSICS.map((music) => (
             <div key={music.id} className="shrink-0">
