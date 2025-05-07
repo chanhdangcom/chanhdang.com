@@ -32,7 +32,7 @@ export function CarouselReplayAudio() {
   };
 
   return (
-    <div className="max-w-full rounded-3xl">
+    <div className="w-fit rounded-3xl md:bg-zinc-900 md:p-4">
       <div className="container flex items-center justify-between gap-2">
         <div className="flex gap-2">
           <Image

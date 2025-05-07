@@ -33,7 +33,7 @@ export function CarouselAudio() {
   };
 
   return (
-    <div className="w-full rounded-3xl p-8 text-zinc-50 md:bg-zinc-900">
+    <div className="w-full rounded-3xl text-zinc-50 md:max-w-6xl md:bg-zinc-900 md:p-4">
       <div className="container flex justify-between">
         <div className="font-bol flex gap-1 text-2xl">
           <MusicNotesSimple size={32} weight="fill" className="text-zinc-400" />
@@ -43,14 +43,14 @@ export function CarouselAudio() {
 
         <div className="flex gap-4">
           <button
-            className="flex size-8 items-center justify-center rounded-full bg-zinc-900 p-1"
+            className="flex size-8 items-center justify-center rounded-full bg-zinc-100 p-1"
             onClick={() => scroll("left")}
           >
-            <CaretLeft size={16} />
+            <CaretLeft size={16} className="text-zinc-800" />
           </button>
 
           <button
-            className="flex size-8 items-center justify-center rounded-full bg-zinc-900 p-2"
+            className="flex size-8 items-center justify-center rounded-full bg-zinc-100 p-2"
             onClick={() => scroll("right")}
           >
             <CaretRight size={16} />
