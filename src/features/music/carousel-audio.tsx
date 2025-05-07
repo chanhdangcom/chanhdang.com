@@ -43,14 +43,14 @@ export function CarouselAudio() {
 
         <div className="flex gap-4">
           <button
-            className="flex size-8 items-center justify-center rounded-full bg-zinc-100 p-1"
+            className="flex size-8 items-center justify-center rounded-full bg-zinc-800 p-1"
             onClick={() => scroll("left")}
           >
-            <CaretLeft size={16} className="text-zinc-800" />
+            <CaretLeft size={16} />
           </button>
 
           <button
-            className="flex size-8 items-center justify-center rounded-full bg-zinc-100 p-2"
+            className="flex size-8 items-center justify-center rounded-full bg-zinc-800 p-2"
             onClick={() => scroll("right")}
           >
             <CaretRight size={16} />
