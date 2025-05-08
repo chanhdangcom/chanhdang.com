@@ -8,7 +8,6 @@ import { MenuBar } from "./menu-bar";
 import { TableRanking } from "./table-ranking";
 
 import { CarouselReplayAudio } from "./carousel-replay-audio";
-import { MusicType } from "./music-type";
 import { SingerList } from "./singer-list";
 
 export function MusicPage() {
@@ -20,14 +19,8 @@ export function MusicPage() {
         <div className="relative z-10">
           <HeaderMusicPage />
 
-          <div className="ml-8 mt-4 hidden md:flex">
-            <MusicType />
-          </div>
-
-          <div className="flex items-center justify-between gap-4 md:mx-8">
-            <div className="mt-8">
-              <CarouselReplayAudio />
-            </div>
+          <div className="flex items-center justify-between gap-4 md:mx-8 md:mt-8">
+            <CarouselReplayAudio />
 
             <div className="hidden md:flex">
               <TableRanking />
