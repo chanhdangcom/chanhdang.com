@@ -19,6 +19,10 @@ export function MusicPage() {
         <div className="relative z-10">
           <HeaderMusicPage />
 
+          <div className="mx-8 my-6 flex justify-center bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text pb-5 font-handwritten text-5xl text-transparent md:mt-8">
+            Chanh Dang Hello
+          </div>
+
           <div className="flex items-center justify-between gap-4 md:mx-8 md:mt-8">
             <CarouselReplayAudio />
 
