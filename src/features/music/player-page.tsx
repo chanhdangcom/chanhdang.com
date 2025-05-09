@@ -136,7 +136,7 @@ Thênh thang bước đi giữa trời rực rỡ\n`;
             width={1000}
             height={1000}
             src={currentMusic?.cover || ""}
-            className="md:3/4 h-1/2 blur-2xl"
+            className="md:3/4 h-1/2 blur-2xl md:hidden"
           />
         </div>
 

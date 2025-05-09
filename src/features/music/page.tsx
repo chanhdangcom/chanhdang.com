@@ -19,7 +19,7 @@ export function MusicPage() {
         <div className="relative z-10">
           <HeaderMusicPage />
 
-          <div className="mx-8 my-2 flex justify-center bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text pb-5 font-handwritten text-4xl text-transparent md:mt-8 md:text-5xl">
+          <div className="mx-8 my-2 flex justify-center bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text pb-5 font-handwritten text-4xl text-transparent md:mt-8 md:justify-start md:text-5xl">
             Chanh Dang Hello
           </div>
 
