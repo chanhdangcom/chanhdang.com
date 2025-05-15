@@ -61,17 +61,33 @@ export function SingerPage({ idSinger }: IProp) {
               </div>
             </div>
 
-            {MUSICSSINGER.filter((item) => item.id === idSinger).map((item) => (
+            <div className="w-full">
+              {MUSICSSINGER.filter((item) => item.id === idSinger).map(
+                (item) => (
+                  <div key={item.id}>
+                    <Image
+                      alt=""
+                      height={300}
+                      width={300}
+                      src={item.cover}
+                      className="mx-auto flex h-[35vh] w-full object-cover md:h-[55vh]"
+                    />
+                  </div>
+                )
+              )}
+            </div>
+
+            {/* {MUSICSSINGER.filter((item) => item.id === idSinger).map((item) => (
               <div key={item.id}>
                 <Image
                   alt=""
                   height={300}
                   width={300}
                   src={item.cover}
-                  className="mx-auto h-[35vh] w-full object-cover md:h-[55vh]"
+                  className="mx-auto h-[35vh] w-full object-cover md:h-[55vh] md:w-auto"
                 />
               </div>
-            ))}
+            ))} */}
           </div>
 
           <div className="md:mx-16">
