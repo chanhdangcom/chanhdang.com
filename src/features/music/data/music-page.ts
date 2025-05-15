@@ -394,8 +394,8 @@ mang phong cách đáng yêu, trẻ trung.
 
   {
     id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231223r3221234s",
-    title: "MÃI MÃI MỘT TÌNH YÊU",
-    singer: "Ê Kê Vin",
+    title: "TÌNH KHÚC VÀNG",
+    singer: "Khầy",
     cover: "https://cdn.chanhdang.com/cover_mai_mai_mot_tinh_yeu.JPG",
     audio: "https://cdn.chanhdang.com/music_mai_mai_mot_tinh_yeu.mp3",
     youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
