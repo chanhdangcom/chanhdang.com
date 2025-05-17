@@ -15,6 +15,20 @@ export function PhotoListAnimate() {
     },
     {
       quote:
+        "With heart and unity, the IT Department brings a performance full of passion and teamwork. Together, we don’t just code — we create, connect, and shine.",
+      title: "Ca Múa Nhạc AGU",
+      time: "16/5/2025",
+      src: "/img/photo-me/12.JPG",
+    },
+    {
+      quote:
+        "With burning passion and unbreakable teamwork, the IT Department delivered a stunning performance that earned high praise and a well-deserved award. More than a show — it was the spirit of unity and dedication brought to life on stage.",
+      title: "Múa Nhạc AGU Công Nghệ Thông tin",
+      time: "16/5/2025",
+      src: "/img/photo-me/13.JPG",
+    },
+    {
+      quote:
         "Welcoming the Lunar New Year with colorful performances, we filled the stage with music, dance, and festive spirit. It was a celebration of tradition, unity, and the joy of the new season and won first prize.",
       title: "Hội Xuân AGU",
       time: "19/2/2024",
