@@ -18,7 +18,7 @@ export function PhotoListAnimate() {
         "With heart and unity, the IT Department brings a performance full of passion and teamwork. Together, we don’t just code — we create, connect, and shine.",
       title: "Ca Múa Nhạc AGU",
       time: "16/5/2025",
-      src: "/img/photo-me/12.JPG",
+      src: "/img/photo-me/12.jpg",
     },
     {
       quote:
