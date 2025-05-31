@@ -77,13 +77,13 @@ export const products = [
   },
 
   {
-    title: "Demo",
+    title: "Demo1",
     link: "https://cremedigital.com1",
     thumbnail: "/img/helper/QLBanHang.jpg",
   },
 
   {
-    title: "Demo",
+    title: "Demo2",
     link: "https://invoker.lol1",
     thumbnail: "/img/helper/ThanhToan.jpg",
   },
