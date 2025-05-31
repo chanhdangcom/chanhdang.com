@@ -1,30 +1,65 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 import { Lens } from "@/components/ui/lens";
 import { motion } from "motion/react";
 import { PointerHighlight } from "@/components/ui/pointer-highlight";
 import { Confetti } from "../profile/components/confetti";
 import { Footer } from "../profile/footer";
+import { Introduce } from "./introduce";
 
 export function HelperPage() {
   const [hovering, setHovering] = useState(false);
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hash = window.location.hash;
+      if (hash) {
+        const el = document.getElementById(hash.substring(1));
+        if (el) {
+          setTimeout(() => {
+            el.scrollIntoView({ behavior: "smooth" });
+          }, 300);
+        }
+      }
+    }
+  }, []);
+
   return (
     <div>
       <Confetti />
+
+      <div className="flex">
+        <a href="/helper#Login" className="text-blue-500 underline">
+          Đăng nhập
+        </a>
+
+        <a href="/helper#QLThucUong" className="text-blue-500 underline">
+          Quản lí thức uống
+        </a>
+
+        <a href="/helper#LQBanHang" className="text-blue-500 underline">
+          Quản lí bán hàng
+        </a>
+
+        <a href="/helper#QLBan" className="text-blue-500 underline">
+          Quản lí bàn
+        </a>
+      </div>
+
+      <Introduce />
       <TracingBeam className="px-6">
-        <div className="mx-auto mt-16 max-w-lg text-2xl tracking-tight md:text-6xl">
-          <div className="text-5xl">Hướng dẫn sử dụng</div>
+        <div className="mx-auto mt-16 max-w-lg text-2xl tracking-tight md:text-5xl">
+          <div className="text-4xl">Hướng dẫn sử dụng phần mềm</div>
           <PointerHighlight>
-            <span className="font-bold text-blue-500">Quản lí bán coffee</span>
+            <span className="font-bold text-blue-500">Quản lí quản cà phê</span>
           </PointerHighlight>
         </div>
 
         <div className="relative mx-auto max-w-6xl pt-4 antialiased">
           {dummyContent.map((item, index) => (
-            <div key={`content-${index}`} className="mb-10">
+            <div key={`content-${index}`} id={item.badge} className="mb-10">
               <>
                 {item?.image && (
                   <div className="relative mx-auto my-10 max-w-6xl overflow-hidden rounded-3xl bg-gradient-to-r from-[#1D2235] to-[#121318] p-8">
@@ -81,7 +116,7 @@ const dummyContent = [
         </p>
       </>
     ),
-    badge: "UI",
+    badge: "Login",
     image: "/img/helper/DangNhap.jpg",
   },
   {
@@ -95,7 +130,7 @@ const dummyContent = [
         </p>
       </>
     ),
-    badge: "UI",
+    badge: "QLBanHang",
     image: "/img/helper/QLBanHang.jpg",
   },
   {
@@ -109,7 +144,7 @@ const dummyContent = [
         </p>
       </>
     ),
-    badge: "UI",
+    badge: "QLBan",
     image: "/img/helper/QLBan.jpg",
   },
 
@@ -124,7 +159,7 @@ const dummyContent = [
         </p>
       </>
     ),
-    badge: "UIg",
+    badge: "QLThucUong",
     image: "/img/helper/QLThucUong.jpg",
   },
 ];
