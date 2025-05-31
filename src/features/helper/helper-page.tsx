@@ -6,7 +6,6 @@ import { Lens } from "@/components/ui/lens";
 import { motion } from "motion/react";
 import { PointerHighlight } from "@/components/ui/pointer-highlight";
 import { Confetti } from "../profile/components/confetti";
-import { Footer } from "../profile/footer";
 import { Introduce } from "./introduce";
 
 export function HelperPage() {
@@ -94,9 +93,6 @@ export function HelperPage() {
               </>
             </div>
           ))}
-        </div>
-        <div className="mb-16">
-          <Footer />
         </div>
       </TracingBeam>
     </div>
