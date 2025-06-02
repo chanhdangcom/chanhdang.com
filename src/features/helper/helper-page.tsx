@@ -38,14 +38,12 @@ export function HelperPage() {
     <div className="bg-black">
       <Confetti />
       <WavyBackground className="max-w-full mx-auto ">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto ">
           <p className="text-2xl md:text-4xl lg:text-6xl text-white font-bold inter-var text-center">
             Quản Lý Quán
 
-            <FlipWords className="text-2xl md:text-4xl lg:text-8xl  font-bold inter-var text-center" words={words} />
+            <FlipWords className="text-2xl md:text-4xl lg:text-6xl  font-bold inter-var text-center" words={words} />
           </p>
-
-
 
           <TextGenerateEffect className="text-lg font-normal inter-var text-center" words={string} />
         </div>
