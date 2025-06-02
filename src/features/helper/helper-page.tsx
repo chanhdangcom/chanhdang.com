@@ -7,8 +7,6 @@ import { WavyBackground } from "@/components/ui/wavy-background";
 import { TextGenerateEffect } from "@/components/text-generate-effect";
 import { FlipWords } from "@/components/flip-words";
 import { Footer } from "./footer";
-import { PinContainer } from "@/components/ui/3d-pin";
-
 
 export function HelperPage() {
 
