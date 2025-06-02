@@ -7,6 +7,7 @@ import { motion } from "motion/react";
 import { PointerHighlight } from "@/components/ui/pointer-highlight";
 import { Confetti } from "../profile/components/confetti";
 import { Introduce } from "./introduce";
+import { Header } from "../profile/header";
 
 export function HelperPage() {
   const [hovering, setHovering] = useState(false);
@@ -27,6 +28,7 @@ export function HelperPage() {
 
   return (
     <div>
+      <Header />
       <Confetti />
 
       <div className="flex">
@@ -48,6 +50,7 @@ export function HelperPage() {
       </div>
 
       <Introduce />
+
       <TracingBeam className="px-6">
         <div className="mx-auto mt-16 max-w-lg text-2xl tracking-tight md:text-5xl">
           <div className="text-4xl">Hướng dẫn sử dụng phần mềm</div>
