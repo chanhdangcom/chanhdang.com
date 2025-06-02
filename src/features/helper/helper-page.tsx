@@ -7,6 +7,8 @@ import { motion } from "motion/react";
 import { PointerHighlight } from "@/components/ui/pointer-highlight";
 import { Confetti } from "../profile/components/confetti";
 import { Introduce } from "./introduce";
+import { WavyBackground } from "@/components/ui/wavy-background";
+import { PinContainer } from "@/components/ui/3d-pin";
 
 export function HelperPage() {
   const [hovering, setHovering] = useState(false);
@@ -26,136 +28,50 @@ export function HelperPage() {
   }, []);
 
   return (
-    <div>
+    <div className="">
       <Confetti />
 
-      <div className="flex">
-        <a href="/helper#Login" className="text-blue-500 underline">
-          Đăng nhập
-        </a>
+      <WavyBackground className="max-w-full mx-auto ">
 
-        <a href="/helper#QLThucUong" className="text-blue-500 underline">
-          Quản lí thức uống
-        </a>
+        <div className="max-w-4xl mx-auto">
+          <p className="text-2xl md:text-4xl lg:text-7xl text-white font-bold inter-var text-center">
+            Quản Lý Quán Cà Phê
+          </p>
 
-        <a href="/helper#LQBanHang" className="text-blue-500 underline">
-          Quản lí bán hàng
-        </a>
+          <p className="text-base md:text-lg mt-4 text-white font-normal inter-var text-center">
+            Ứng dụng được phát triển bằng công nghệ C# .NET Windows Forms kết hợp
+            SQL Server, Entity, hỗ trợ quản lý bán hàng, bàn, thức uống và hóa đơn một cách
+            hiệu quả. Dự án là kết quả của sự hợp tác chặt chẽ trong nhóm 2 người,
+            trải qua nhiều giai đoạn thiết kế, lập trình và kiểm thử để đảm bảo tính
+            ổn định và dễ sử dụng.
+          </p></div>
 
-        <a href="/helper#QLBan" className="text-blue-500 underline">
-          Quản lí bàn
-        </a>
-      </div>
+        <div className="mt-8 space-y-4">
+          <div className="flex gap-4 bg-white w-fit bg-gradient-to-l from-gray-500 rounded-2xl  w-full" >
+            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Đăng nhập</a>
+            <a href="/helper#QLBanHang" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý bán hàng</a>
+            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý danh mục</a>
+            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý kho</a>
+            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý bàn</a>
+            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý nguyên liệu</a>
+            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Thanh toán</a>
+          </div>
+
+          <div className="flex gap-4 bg-white w-fit bg-gradient-to-l from-gray-500 rounded-2xl  w-full">
+            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý tài khoản</a>
+            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Đổi mật khẩu</a>
+            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Thanh toán</a>
+            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Thông kê doanh thu</a>
+            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Thống kê thức uống</a>
+            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Hoá đơn</a>
+
+          </div>
+        </div>
+
+      </WavyBackground>
 
       <Introduce />
-      <TracingBeam className="px-6">
-        <div className="mx-auto mt-16 max-w-lg text-2xl tracking-tight md:text-5xl">
-          <div className="text-4xl">Hướng dẫn sử dụng phần mềm</div>
-          <PointerHighlight>
-            <span className="font-bold text-blue-500">Quản lí quản cà phê</span>
-          </PointerHighlight>
-        </div>
-
-        <div className="relative mx-auto max-w-6xl pt-4 antialiased">
-          {dummyContent.map((item, index) => (
-            <div key={`content-${index}`} id={item.badge} className="mb-10">
-              <>
-                {item?.image && (
-                  <div className="relative mx-auto my-10 max-w-6xl overflow-hidden rounded-3xl bg-gradient-to-r from-[#1D2235] to-[#121318] p-8">
-                    <div className="relative z-10">
-                      <Lens hovering={hovering} setHovering={setHovering}>
-                        <img
-                          src={item.image}
-                          alt="blog thumbnail"
-                          height="5000"
-                          width="5000"
-                          className="mb-10 h-auto max-w-full rounded-lg object-cover"
-                        />
-                      </Lens>
-
-                      <motion.div
-                        animate={{
-                          filter: hovering ? "blur(2px)" : "blur(0px)",
-                        }}
-                        className="relative z-20 py-4"
-                      >
-                        <h2 className="text-left text-2xl font-bold text-white">
-                          {item.title}
-                        </h2>
-
-                        <p className="mt-4 text-left text-neutral-200">
-                          {item.description}
-                        </p>
-                      </motion.div>
-                    </div>
-                  </div>
-                )}
-              </>
-            </div>
-          ))}
-        </div>
-      </TracingBeam>
-    </div>
+    </div >
   );
 }
 
-const dummyContent = [
-  {
-    title: "Đăng nhập",
-    description: (
-      <>
-        <p>
-          Cho phép người dùng (Quản trị viên hoặc Nhân viên) truy cập vào hệ
-          thống bằng cách cung cấp tên đăng nhập và mật khẩu hợp lệ. Hệ thống sẽ
-          xác thực thông tin và chuyển hướng người dùng đến giao diện chính phù
-          hợp với quyền hạn của họ.
-        </p>
-      </>
-    ),
-    badge: "Login",
-    image: "/img/helper/DangNhap.jpg",
-  },
-  {
-    title: "Quản lí từng bàn",
-    description: (
-      <>
-        <p>
-          Cho phép nhân viên hoặc quản trị viên chọn một bàn cụ thể từ danh sách
-          các bàn có sẵn để bắt đầu hoặc tiếp tục một order. Trạng thái của bàn
-          (phục vụ, trống, đang phục vụ) được hiển thị trực quan.
-        </p>
-      </>
-    ),
-    badge: "QLBanHang",
-    image: "/img/helper/QLBanHang.jpg",
-  },
-  {
-    title: "Quản lí bàn",
-    description: (
-      <>
-        <p>
-          Cho phép nhân viên hoặc quản trị viên chọn một bàn cụ thể từ danh sách
-          các bàn có sẵn để bắt đầu hoặc tiếp tục một order. Trạng thái của bàn
-          (phục vụ, trống, đang phục vụ) được hiển thị trực quan.
-        </p>
-      </>
-    ),
-    badge: "QLBan",
-    image: "/img/helper/QLBan.jpg",
-  },
-
-  {
-    title: "Quản thức uống",
-    description: (
-      <>
-        <p>
-          Cho phép nhân viên hoặc quản trị viên chọn một bàn cụ thể từ danh sách
-          các bàn có sẵn để bắt đầu hoặc tiếp tục một order. Trạng thái của bàn
-          (phục vụ, trống, đang phục vụ) được hiển thị trực quan.
-        </p>
-      </>
-    ),
-    badge: "QLThucUong",
-    image: "/img/helper/QLThucUong.jpg",
-  },
-];
