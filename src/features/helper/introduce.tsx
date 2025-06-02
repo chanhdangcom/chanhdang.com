@@ -253,6 +253,44 @@ export function Introduce() {
     },
 
     {
+      title: "Quản lý thức uống",
+      content: (
+        <div id="QLThucUong">
+          <div className="mb-8 text-xl font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
+            Giao diện quản lý bàn cho phép người dùng tạo, sửa, xóa và lưu thông tin các bàn trong quán như số bàn, tên bàn hoặc trạng thái. Danh sách bàn được hiển thị rõ ràng, giúp dễ dàng sắp xếp và quản lý khu vực phục vụ. Giao diện thân thiện, thao tác nhanh chóng, hỗ trợ hiệu quả cho việc bố trí và theo dõi hoạt động tại từng bàn.
+          </div>
+
+          <div className="mb-4 space-y-4">
+            <div className="dark:text-black bg-white p-4 rounded-xl" >🔸 Giao diện hiển thị danh sách bàn theo bảng gồm: ID, Tên bàn và Trạng thái.</div>
+            <div className="dark:text-black bg-white p-4 rounded-xl">🔸 Trạng thái có thể là: <strong>0</strong> (Trống) hoặc <strong>1</strong> (Đang có khách).</div>
+            <div className="dark:text-black bg-white p-4 rounded-xl">🔸 Nhấn vào từng dòng để chọn bàn muốn thao tác.</div>
+            <div className="dark:text-black bg-white p-4 rounded-xl">🔹 Các chức năng chính:</div>
+
+            <ul className="list-disc list-inside ml-4 space-y-1 dark:text-black bg-white p-4 rounded-xl">
+              <li><strong>Thêm:</strong> Nhập tên bàn mới → nhấn nút <span className="text-green-600">Thêm</span> để tạo bàn.</li>
+              <li><strong>Sửa:</strong> Chọn bàn từ danh sách → chỉnh sửa tên → nhấn <span className="text-blue-600">Sửa</span>.</li>
+              <li><strong>Xóa:</strong> Chọn bàn cần xóa → nhấn nút <span className="text-red-600">Xóa</span>.</li>
+              <li><strong>Lưu:</strong> Lưu các thay đổi sau khi thêm hoặc sửa.</li>
+              <li><strong>Hủy:</strong> Hủy bỏ thao tác đang thực hiện, làm sạch form nhập liệu.</li>
+              <li><strong>Thoát:</strong> Rời khỏi màn hình Quản lý bàn.</li>
+            </ul></div>
+          <div className="">
+            <Lens hovering={hovering} setHovering={setHovering}>
+              <Image
+                src="/img/helper/QLBan.jpg"
+                alt="hero template"
+                width={1000}
+                height={1000}
+                className="h-auto w-full rounded-lg object-cover shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
+              />
+            </Lens>
+
+          </div>
+        </div>
+      ),
+    },
+
+    {
       title: "Quản lý nguyên liệu",
       content: (
         <div id="QLNguyenLieu">
@@ -487,6 +525,30 @@ export function Introduce() {
             <Lens hovering={hovering} setHovering={setHovering}>
               <Image
                 src="/img/helper/HoaDon.jpg"
+                alt="hero template"
+                width={1000}
+                height={1000}
+                className="h-auto w-full rounded-lg object-cover shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
+              />
+            </Lens>
+
+          </div>
+        </div>
+      ),
+    },
+
+    {
+      title: "Danh sách hóa đơn",
+      content: (
+        <div id="HHHoaDon">
+          <div className="mb-8 text-xl font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
+            Chức năng hiển thị giao diện, chi tiết hóa đơn gồm tổng tiền. giảm giá tông thanh toán và các thông tin cơ bản của hóa đơn
+          </div>
+
+          <div className="">
+            <Lens hovering={hovering} setHovering={setHovering}>
+              <Image
+                src="/img/helper/HHHoaDon.jpg"
                 alt="hero template"
                 width={1000}
                 height={1000}
