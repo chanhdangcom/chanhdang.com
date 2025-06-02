@@ -1,23 +1,17 @@
 "use client";
 import React, { useEffect } from "react";
-// Removed unused imports:
-// import { TracingBeam } from "@/components/ui/tracing-beam";
-// import { Lens } from "@/components/ui/lens";
-// import { motion } from "motion/react";
-// import { PointerHighlight } from "@/components/ui/pointer-highlight";
-// import { PinContainer } from "@/components/ui/3d-pin";
 
 import { Confetti } from "../profile/components/confetti";
 import { Introduce } from "./introduce";
 import { WavyBackground } from "@/components/ui/wavy-background";
 import { TextGenerateEffect } from "@/components/text-generate-effect";
 import { FlipWords } from "@/components/flip-words";
+import { Footer } from "./footer";
+
 
 export function HelperPage() {
-  // Removed unused state variables:
-  // const [hovering, setHovering] = useState(false);
 
-  const string = ` Ứng dụng được phát triển bằng công nghệ C# .NET Windows Forms kết hợp
+  const string = `Ứng dụng được phát triển bằng công nghệ C# .NET Windows Forms kết hợp
             SQL Server, Entity, hỗ trợ quản lý bán hàng, bàn, thức uống và hóa đơn một cách
             hiệu quả. Dự án là kết quả của sự hợp tác chặt chẽ trong nhóm 2 người,
             trải qua nhiều giai đoạn thiết kế, lập trình và kiểm thử để đảm bảo tính
@@ -43,7 +37,6 @@ export function HelperPage() {
   return (
     <div className="bg-black">
       <Confetti />
-
       <WavyBackground className="max-w-full mx-auto ">
         <div className="max-w-4xl mx-auto">
           <p className="text-2xl md:text-4xl lg:text-6xl text-white font-bold inter-var text-center">
@@ -79,6 +72,8 @@ export function HelperPage() {
       </WavyBackground>
 
       <Introduce />
+
+      <div className="mt-16"><Footer /></div>
     </div >
   );
 
