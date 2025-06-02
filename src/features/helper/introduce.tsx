@@ -500,7 +500,7 @@ export function Introduce() {
     },
   ];
   return (
-    <div className="relative w-full overflow-clip bg-black">
+    <div className="relative w-full overflow-clip bg-black ">
       <Timeline data={data} />
     </div>
   );
