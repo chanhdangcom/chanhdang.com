@@ -65,6 +65,7 @@ export function HelperPage() {
             <a href="/helper#TKDoanhThu" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Thông kê doanh thu</a>
             <a href="/helper#TKThucUong" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Thống kê thức uống</a>
             <a href="/helper#HoaDon" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Hoá đơn</a>
+            <a href="/helper#HHHoaDon" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Hiển thị hóa đơn</a>
           </div>
         </div>
       </WavyBackground>

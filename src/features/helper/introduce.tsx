@@ -18,10 +18,21 @@ export function Introduce() {
             xác thực thông tin và chuyển hướng người dùng đến giao diện chính phù
             hợp với quyền hạn của họ.
           </p>
+
+          <div className="space-y-4">
+            <div>🔸 Bước 1: Nhập tên đăng nhập vào ô tương ứng (ví dụ: admin).</div>
+            <div>🔸 Bước 2: Nhập mật khẩu vào ô phía dưới. Mật khẩu sẽ được ẩn dưới dạng dấu chấm để đảm bảo bảo mật.</div>
+            <div>🔸 Bước 3:
+
+              Nhấn nút "Đăng nhập" để xác thực và vào hệ thống.
+              Nếu thông tin đúng, bạn sẽ được chuyển đến giao diện chính.
+              Nếu sai, hệ thống sẽ hiển thị thông báo lỗi.
+
+              Hoặc nhấn "Hủy bỏ" nếu muốn xóa dữ liệu hoặc thoát khỏi màn hình này.</div></div>
           <div className="">
             <Lens hovering={hovering} setHovering={setHovering}>
               <Image
-                src="/img/helper/DangNhap.jpg"
+                src="/img/helper/Login.jpg"
                 alt="startup template"
                 width={1000}
                 height={1000}
@@ -39,6 +50,39 @@ export function Introduce() {
           <p className="mb-8 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
             Phần mềm quản lý bán hàng này có giao diện đơn giản, phù hợp cho quán cà phê hoặc cửa hàng nhỏ. Người dùng có thể chọn món bằng cách nhấn vào biểu tượng sản phẩm, thông tin đơn hàng sẽ hiển thị ở bảng bên phải gồm tên món, số lượng, đơn giá và thành tiền. Ngoài ra, phần mềm hỗ trợ nhập tên khách, chọn hình thức thanh toán, tính tổng tiền và in hóa đơn một cách nhanh chóng và tiện lợi.
           </p>
+
+          <div className="space-y-4">
+            <div> 🔹 Bước 1: Chọn bàn
+              Nhấp vào một ô bàn trên sơ đồ (ví dụ: Lầu 1 Bàn 2). Bàn đang được chọn sẽ hiển thị ở góc trên phải.
+            </div>
+
+            <div> 🔹 Bước 2: Thêm món
+              Chọn danh mục (ví dụ: Cà phê, Trà sữa...).
+              <div> Chọn thức uống từ danh sách.</div>
+              <div> Nhập số lượng (hoặc giữ mặc định là 1).</div>
+              <div>
+                Nhấn nút Thêm để đưa món vào bảng hóa đơn.</div>
+            </div>
+
+            <div> 🔹 Bước 3: Quản lý món
+              <div> Muốn xóa món, chọn dòng cần xóa và nhấn Xóa.</div>
+
+              <div>  Nhấn Lưu để cập nhật lại hóa đơn sau khi chỉnh sửa.</div>
+            </div>
+
+            <div> 🔹 Bước 4: Gộp / Chuyển bàn (nếu cần)
+              <div>  Chọn bàn đang phục vụ và bàn cần gộp/chuyển tại 2 combobox.</div>
+
+              <div>Nhấn Chuyển bàn hoặc Gộp bàn.</div>
+            </div>
+
+            <div>  🔹 Bước 5: Tính tiền
+              <div> Nhập giảm giá nếu có (%).</div>
+
+              <div> Hệ thống sẽ tự tính tổng tiền sau giảm giá.</div>
+              <div>Nhấn TÍNH TIỀN để in hóa đơn và kết thúc.</div>
+            </div>
+          </div>
 
           <div className="">
             <Lens hovering={hovering} setHovering={setHovering}>
@@ -62,6 +106,44 @@ export function Introduce() {
           <p className="mb-8 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
             Giao diện quản lý danh mục cho phép người dùng thêm, sửa, xóa và lưu các loại danh mục sản phẩm như cà phê, nước ngọt... Danh sách danh mục hiển thị ở giữa màn hình, còn bên phải là các ô nhập liệu và các nút chức năng như Thêm, Sửa, Xóa, Lưu, Hủy và Thoát. Giao diện trực quan, dễ thao tác, giúp quản lý loại sản phẩm nhanh chóng và hiệu quả.
           </p>
+
+          <div className="space-y-4">
+            <div> 🔹 Thêm danh mục mới
+              <div> Bấm nút Thêm.</div>
+
+              <div> Nhập tên danh mục vào ô “Tên danh mục”.</div>
+
+              <div> Bấm Lưu để hoàn tất.</div>
+            </div>
+
+            <div> 🔹 Sửa danh mục
+              <div>Chọn danh mục cần chỉnh sửa trong danh sách.</div>
+              <div> Bấm nút Sửa.</div>
+
+              <div> Chỉnh sửa tên trong ô nhập liệu.</div>
+
+              <div>Nhấn Lưu để cập nhật.</div>
+            </div>
+
+            <div>  🔹 Xóa danh mục
+              <div> Chọn danh mục cần xóa.</div>
+
+              <div>Bấm nút Xóa.</div>
+
+              <div> Xác nhận khi có hộp thoại hỏi bạn có chắc muốn xóa không.</div>
+            </div>
+
+            <div>
+              <div> 🔹 Hủy thao tác
+                Nếu bạn đang chỉnh sửa hoặc nhập sai, bấm Hủy để làm mới lại biểu mẫu.
+              </div>
+
+              <div> 🔹 Thoát
+                Bấm Thoát để rời khỏi giao diện “Danh mục” và quay về menu chính.
+              </div>
+            </div>
+          </div>
+
           <Lens hovering={hovering} setHovering={setHovering}>
             <Image
               src="/img/helper/QLDanhMuc.jpg"
@@ -71,7 +153,7 @@ export function Introduce() {
               className="h-auto w-full rounded-lg object-cover shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
             />
           </Lens>
-        </div>
+        </div >
       ),
     },
 
