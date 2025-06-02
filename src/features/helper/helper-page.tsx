@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect} from "react";
+import React, { useEffect } from "react";
 // Removed unused imports:
 // import { TracingBeam } from "@/components/ui/tracing-beam";
 // import { Lens } from "@/components/ui/lens";
@@ -10,10 +10,21 @@ import React, { useEffect} from "react";
 import { Confetti } from "../profile/components/confetti";
 import { Introduce } from "./introduce";
 import { WavyBackground } from "@/components/ui/wavy-background";
+import { TextGenerateEffect } from "@/components/text-generate-effect";
+import { FlipWords } from "@/components/flip-words";
 
 export function HelperPage() {
   // Removed unused state variables:
   // const [hovering, setHovering] = useState(false);
+
+  const string = ` Ứng dụng được phát triển bằng công nghệ C# .NET Windows Forms kết hợp
+            SQL Server, Entity, hỗ trợ quản lý bán hàng, bàn, thức uống và hóa đơn một cách
+            hiệu quả. Dự án là kết quả của sự hợp tác chặt chẽ trong nhóm 2 người,
+            trải qua nhiều giai đoạn thiết kế, lập trình và kiểm thử để đảm bảo tính
+            ổn định và dễ sử dụng.`;
+
+  const words = ["Cà Phê", "Coffee", "Café", "Espresso"];
+
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -27,45 +38,42 @@ export function HelperPage() {
         }
       }
     }
-  }, []); // Empty dependency array means this effect runs once after the initial render
+  }, []);
 
   return (
-    <div className="">
+    <div className="bg-black">
       <Confetti />
 
       <WavyBackground className="max-w-full mx-auto ">
         <div className="max-w-4xl mx-auto">
-          <p className="text-2xl md:text-4xl lg:text-7xl text-white font-bold inter-var text-center">
-            Quản Lý Quán Cà Phê
+          <p className="text-2xl md:text-4xl lg:text-6xl text-white font-bold inter-var text-center">
+            Quản Lý Quán
+
+            <FlipWords className="text-2xl md:text-4xl lg:text-8xl  font-bold inter-var text-center" words={words} />
           </p>
 
-          <p className="text-base md:text-lg mt-4 text-white font-normal inter-var text-center">
-            Ứng dụng được phát triển bằng công nghệ C# .NET Windows Forms kết hợp
-            SQL Server, Entity, hỗ trợ quản lý bán hàng, bàn, thức uống và hóa đơn một cách
-            hiệu quả. Dự án là kết quả của sự hợp tác chặt chẽ trong nhóm 2 người,
-            trải qua nhiều giai đoạn thiết kế, lập trình và kiểm thử để đảm bảo tính
-            ổn định và dễ sử dụng.
-          </p>
+
+
+          <TextGenerateEffect className="text-lg font-normal inter-var text-center" words={string} />
         </div>
 
         <div className="mt-8 space-y-4">
           <div className="flex gap-4 bg-white w-fit bg-gradient-to-l from-gray-500 rounded-2xl w-full">
             <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Đăng nhập</a>
             <a href="/helper#QLBanHang" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý bán hàng</a>
-            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý danh mục</a>
-            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý kho</a>
-            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý bàn</a>
-            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý nguyên liệu</a>
-            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Thanh toán</a>
+            <a href="/helper#QLDanhMuc" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý danh mục</a>
+            <a href="/helper#QLKho" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý kho</a>
+            <a href="/helper#QLBan" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý bàn</a>
+            <a href="/helper#QLNguyenLieu" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý nguyên liệu</a>
+            <a href="/helper#ThanhToan" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Thanh toán</a>
           </div>
 
           <div className="flex gap-4 bg-white w-fit bg-gradient-to-l from-gray-500 rounded-2xl w-full">
-            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý tài khoản</a>
-            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Đổi mật khẩu</a>
-            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Thanh toán</a>
-            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Thông kê doanh thu</a>
-            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Thống kê thức uống</a>
-            <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Hoá đơn</a>
+            <a href="/helper#QLTK" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý tài khoản</a>
+            <a href="/helper#DoiMK" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Đổi mật khẩu</a>
+            <a href="/helper#TKDoanhThu" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Thông kê doanh thu</a>
+            <a href="/helper#TKThucUong" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Thống kê thức uống</a>
+            <a href="/helper#HoaDon" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Hoá đơn</a>
           </div>
         </div>
       </WavyBackground>
@@ -73,4 +81,6 @@ export function HelperPage() {
       <Introduce />
     </div >
   );
+
+
 }
