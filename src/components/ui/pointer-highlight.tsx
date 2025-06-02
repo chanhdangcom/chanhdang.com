@@ -18,10 +18,11 @@ export function PointerHighlight({
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
-    if (containerRef.current) {
-      const { width, height } = containerRef.current.getBoundingClientRect();
-      setDimensions({ width, height });
-    }
+    const container = containerRef.current;
+    if (!container) return;
+
+    const { width, height } = container.getBoundingClientRect();
+    setDimensions({ width, height });
 
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
@@ -30,22 +31,15 @@ export function PointerHighlight({
       }
     });
 
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
+    resizeObserver.observe(container);
 
     return () => {
-      if (containerRef.current) {
-        resizeObserver.unobserve(containerRef.current);
-      }
+      resizeObserver.unobserve(container);
     };
   }, []);
 
   return (
-    <div
-      className={cn("relative w-fit", containerClassName)}
-      ref={containerRef}
-    >
+    <div className={cn("relative w-fit", containerClassName)} ref={containerRef}>
       {children}
       {dimensions.width > 0 && dimensions.height > 0 && (
         <motion.div
@@ -89,7 +83,7 @@ export function PointerHighlight({
               ease: "easeInOut",
             }}
           >
-            <Pointer className={cn("text-while h-5 w-5", pointerClassName)} />
+            <Pointer className={cn("text-white h-5 w-5", pointerClassName)} />
           </motion.div>
         </motion.div>
       )}
@@ -111,7 +105,7 @@ const Pointer = ({ ...props }: React.SVGProps<SVGSVGElement>) => {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <path d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103z"></path>
+      <path d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103z" />
     </svg>
   );
 };

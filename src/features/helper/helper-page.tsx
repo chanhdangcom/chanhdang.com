@@ -1,17 +1,19 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
-import React, { useEffect, useState } from "react";
-import { TracingBeam } from "@/components/ui/tracing-beam";
-import { Lens } from "@/components/ui/lens";
-import { motion } from "motion/react";
-import { PointerHighlight } from "@/components/ui/pointer-highlight";
+import React, { useEffect} from "react";
+// Removed unused imports:
+// import { TracingBeam } from "@/components/ui/tracing-beam";
+// import { Lens } from "@/components/ui/lens";
+// import { motion } from "motion/react";
+// import { PointerHighlight } from "@/components/ui/pointer-highlight";
+// import { PinContainer } from "@/components/ui/3d-pin";
+
 import { Confetti } from "../profile/components/confetti";
 import { Introduce } from "./introduce";
 import { WavyBackground } from "@/components/ui/wavy-background";
-import { PinContainer } from "@/components/ui/3d-pin";
 
 export function HelperPage() {
-  const [hovering, setHovering] = useState(false);
+  // Removed unused state variables:
+  // const [hovering, setHovering] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -25,14 +27,13 @@ export function HelperPage() {
         }
       }
     }
-  }, []);
+  }, []); // Empty dependency array means this effect runs once after the initial render
 
   return (
     <div className="">
       <Confetti />
 
       <WavyBackground className="max-w-full mx-auto ">
-
         <div className="max-w-4xl mx-auto">
           <p className="text-2xl md:text-4xl lg:text-7xl text-white font-bold inter-var text-center">
             Quản Lý Quán Cà Phê
@@ -44,10 +45,11 @@ export function HelperPage() {
             hiệu quả. Dự án là kết quả của sự hợp tác chặt chẽ trong nhóm 2 người,
             trải qua nhiều giai đoạn thiết kế, lập trình và kiểm thử để đảm bảo tính
             ổn định và dễ sử dụng.
-          </p></div>
+          </p>
+        </div>
 
         <div className="mt-8 space-y-4">
-          <div className="flex gap-4 bg-white w-fit bg-gradient-to-l from-gray-500 rounded-2xl  w-full" >
+          <div className="flex gap-4 bg-white w-fit bg-gradient-to-l from-gray-500 rounded-2xl w-full">
             <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Đăng nhập</a>
             <a href="/helper#QLBanHang" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý bán hàng</a>
             <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý danh mục</a>
@@ -57,21 +59,18 @@ export function HelperPage() {
             <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Thanh toán</a>
           </div>
 
-          <div className="flex gap-4 bg-white w-fit bg-gradient-to-l from-gray-500 rounded-2xl  w-full">
+          <div className="flex gap-4 bg-white w-fit bg-gradient-to-l from-gray-500 rounded-2xl w-full">
             <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Quản lý tài khoản</a>
             <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Đổi mật khẩu</a>
             <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Thanh toán</a>
             <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Thông kê doanh thu</a>
             <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Thống kê thức uống</a>
             <a href="/helper#Login" className="text-black p-2 px-6 font-semibold hover:bg-zinc-300 cursor-pointer rounded-xl p-1">Hoá đơn</a>
-
           </div>
         </div>
-
       </WavyBackground>
 
       <Introduce />
     </div >
   );
 }
-

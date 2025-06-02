@@ -1,5 +1,6 @@
 import React from "react";
 import { Timeline } from "@/components/ui/timeline";
+import Image from "next/image";
 
 export function Introduce() {
   const data = [
@@ -14,7 +15,7 @@ export function Introduce() {
             hợp với quyền hạn của họ.
           </p>
           <div className="">
-            <img
+            <Image
               src="/img/helper/DangNhap.jpg"
               alt="startup template"
               width={500}
@@ -39,7 +40,7 @@ export function Introduce() {
             not. Here are some more example of beautiful designs I built.
           </p>
           <div className="">
-            <img
+            <Image
               src="/img/helper/QLBanHang.jpg"
               alt="hero template"
               width={500}
