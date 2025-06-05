@@ -16,7 +16,10 @@ export const TextGenerateEffect = ({
 }) => {
   const [scope, animate] = useAnimate();
   const wordsArray = words.split(" ");
+
   useEffect(() => {
+    if (!scope.current) return;
+
     animate(
       "span",
       {
@@ -24,31 +27,27 @@ export const TextGenerateEffect = ({
         filter: filter ? "blur(0px)" : "none",
       },
       {
-        duration: duration ? duration : 1,
+        duration,
         delay: stagger(0.2),
       }
     );
-  }, [scope.current]);
+  }, [animate, duration, filter, scope]);
 
-  const renderWords = () => {
-    return (
-      <motion.div ref={scope}>
-        {wordsArray.map((word, idx) => {
-          return (
-            <motion.span
-              key={word + idx}
-              className="text-black opacity-0 dark:text-white"
-              style={{
-                filter: filter ? "blur(10px)" : "none",
-              }}
-            >
-              {word}{" "}
-            </motion.span>
-          );
-        })}
-      </motion.div>
-    );
-  };
+  const renderWords = () => (
+    <motion.div ref={scope}>
+      {wordsArray.map((word, idx) => (
+        <motion.span
+          key={word + idx}
+          className="text-black opacity-0 dark:text-white"
+          style={{
+            filter: filter ? "blur(10px)" : "none",
+          }}
+        >
+          {word}{" "}
+        </motion.span>
+      ))}
+    </motion.div>
+  );
 
   return (
     <div className={cn("", className)}>
