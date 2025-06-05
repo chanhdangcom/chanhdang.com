@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: 'ChanhDang ',
     short_name: 'chanhdang',
     description: 'A Progressive Web App built with Next.js',
-    start_url: '/',
+    start_url: '/music',
     display: 'standalone',
     background_color: '#ffffff',
     theme_color: '#000000',
