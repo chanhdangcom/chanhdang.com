@@ -25,6 +25,18 @@ const fontMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Chánh Đang - I am a Developer",
   description: "I am a developer.",
+  manifest: "/manifest.webmanifest",
+  themeColor: "#000000",
+  icons: {
+    icon: "/img/Logomark",
+    apple: "/img/Logomark",
+    shortcut: "/img/Logomark",
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Chánh Đang",
+  },
 };
 
 export default function RootLayout({
