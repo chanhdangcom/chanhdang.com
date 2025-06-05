@@ -304,7 +304,7 @@ export const MUSICSSINGER = [
 {
       id: "7ff65b56-3fd3-4814-9fea-9f722b4223450d7231223r3221",
       title: "Tháp Drill Dừng Chân",
-      singer: "Ê Kê Vinh ft. Jack-J97",
+      singer: "Ê Kê Vin ft. Jack-J97",
       cover: "https://cdn.chanhdang.com/cover_thap_drill_dung_chan.JPG",
       audio: "https://cdn.chanhdang.com/music_thap_drill_dung_chan.mp3",
       youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
