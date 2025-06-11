@@ -23,7 +23,7 @@ export const Profile = () => {
       {/* <HeaderMotionGlass /> */}
       <div className="relative">
         <div className="absolute left-0 top-8 -z-[1] h-[calc(100vh-120px)] rounded-3xl dark:bg-zinc-900/30 md:w-2/6 xl:bg-zinc-100"></div>
-        <Hello className="my-8 md:hidden" />
+        <Hello className="mb-8 p-8 md:hidden" />
 
         <WavyBackground className="mx-auto max-w-full">
           <div className="container space-y-8 xl:px-16">
