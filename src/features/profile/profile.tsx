@@ -23,12 +23,11 @@ export const Profile = () => {
       {/* <HeaderMotionGlass /> */}
       <div className="relative">
         <div className="absolute left-0 top-8 -z-[1] h-[calc(100vh-120px)] rounded-3xl dark:bg-zinc-900/30 md:w-2/6 xl:bg-zinc-100"></div>
+        <Hello className="mt-16 md:hidden" />
 
         <WavyBackground className="mx-auto max-w-full">
           <div className="container space-y-8 xl:px-16">
             <div className="min-h-[calc(100vh-56px)] items-center space-y-8 md:flex md:space-y-0">
-              <Hello className="relative mt-32 md:hidden" />
-
               <div className="grid items-center gap-x-16 md:grid-cols-2 xl:gap-x-28">
                 <Overview />
                 <AboutMe />
