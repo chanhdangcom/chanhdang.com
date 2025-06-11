@@ -27,7 +27,7 @@ export const Profile = () => {
         <WavyBackground className="mx-auto max-w-full">
           <div className="container space-y-8 xl:px-16">
             <div className="min-h-[calc(100vh-56px)] items-center space-y-8 md:flex md:space-y-0">
-              <Hello className="mt-60 md:hidden" />
+              <Hello className="relative mt-32 md:hidden" />
 
               <div className="grid items-center gap-x-16 md:grid-cols-2 xl:gap-x-28">
                 <Overview />
