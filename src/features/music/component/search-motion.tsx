@@ -50,7 +50,7 @@ export function SearchMotion() {
               <motion.div
                 layoutId="Search"
                 layout
-                className="flex items-center gap-4"
+                className="mb-2 flex items-center gap-4"
               >
                 <Link href="/music">
                   <CaretLeft
@@ -155,7 +155,7 @@ export function SearchMotion() {
   };
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="justify-centeri flex items-center">
       <LargerSearch />
     </div>
   );

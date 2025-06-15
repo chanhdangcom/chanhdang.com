@@ -38,16 +38,5 @@ export const MUSICS = [
     type: "Jack"
   },
 
-  {
-    id: "7ff65b56-3fd3-4814-9fea-9f722b4250d726",
-    title: "EM GÌ ƠI",
-    singer: "Jack - J97",
-    cover: "https://cdn.chanhdang.com/cover_em_gi_oi.jpg",
-    audio: "https://cdn.chanhdang.com/music_em_gi_oi.mp3",
-    youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
-    content: `
 
-    `,
-    type: "Jack"
-  },
 ];

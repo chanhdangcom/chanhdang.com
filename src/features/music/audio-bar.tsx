@@ -46,7 +46,7 @@ export function AudioBar() {
       <AnimatePresence mode="wait">
         <motion.div
           layoutId="audio-bar"
-          className="fixed inset-x-2 bottom-2 z-20 flex justify-center rounded-3xl border border-zinc-800 bg-zinc-900/80 p-2 text-zinc-50 shadow-sm backdrop-blur-md md:inset-x-4 md:bottom-4 md:rounded-[40px] md:px-8 md:py-4"
+          className="fixed inset-x-2 bottom-2 z-20 flex justify-center rounded-3xl border border-zinc-800 bg-zinc-900/80 p-2 text-zinc-50 shadow-sm backdrop-blur-md md:inset-x-16 md:bottom-4 md:rounded-3xl md:px-8 md:py-4"
         >
           <div
             onClick={() => setIsClick(true)}

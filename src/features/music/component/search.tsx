@@ -28,7 +28,7 @@ export function Search() {
       <Input
         type="text"
         placeholder="Music, Playlist ..."
-        className="w-[84vh] transform rounded-2xl border-zinc-400 bg-zinc-400 placeholder-zinc-950 shadow-sm transition-transform duration-300 focus:scale-105"
+        className="h-12 w-[80vh] rounded-full border-zinc-800 bg-zinc-800 placeholder-white shadow-sm"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onClick={() => setIsSearch(true)}
@@ -38,9 +38,9 @@ export function Search() {
         <div className="">
           <div
             ref={ref}
-            className="fixed top-20 rounded-3xl border border-zinc-800 bg-zinc-900 shadow-sm"
+            className="fixed top-20 rounded-lg border border-zinc-800 bg-zinc-900 p-4 shadow-sm"
           >
-            <div className="grid w-full grid-cols-4">
+            <div className="grid grid-cols-4">
               {MUSICS.filter((music) => {
                 if (value == "") return null;
 
@@ -55,23 +55,25 @@ export function Search() {
                     titleWordsRemoveVietnameseTones.includes(word) ||
                     titleWords.includes(word)
                 );
-              }).map((item) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ scale: 0.9 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0.9 }}
-                  transition={{
-                    duration: 0.5,
-                  }}
-                  className="w-44"
-                >
-                  <AuidoItem
-                    music={item}
-                    handlePlay={() => handlePlayAudio(item)}
-                  />
-                </motion.div>
-              ))}
+              })
+                .slice(0, 8)
+                .map((item) => (
+                  <motion.div
+                    key={item.id}
+                    initial={{ scale: 0.9 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0.9 }}
+                    transition={{
+                      duration: 0.5,
+                    }}
+                    className="w-44"
+                  >
+                    <AuidoItem
+                      music={item}
+                      handlePlay={() => handlePlayAudio(item)}
+                    />
+                  </motion.div>
+                ))}
             </div>
           </div>
         </div>

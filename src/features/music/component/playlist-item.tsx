@@ -34,10 +34,10 @@ export function PlaylistItem({ music }: IProp) {
               alt="cover"
               src={music.cover}
               quality={100}
-              className="mx-auto size-32 justify-center rounded-2xl border border-zinc-800 object-cover"
+              className="mx-auto size-32 justify-center rounded-2xl border border-zinc-800 object-cover md:size-44"
             />
           ) : (
-            <div className="size-32 rounded-2xl bg-zinc-800"></div>
+            <div className="size-32 rounded-2xl bg-zinc-800 md:size-44"></div>
           )}
 
           <div className="text-center">

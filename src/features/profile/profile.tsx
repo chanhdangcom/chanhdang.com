@@ -35,6 +35,7 @@ export const Profile = () => {
             </div>
           </div>
         </WavyBackground>
+
         <div className="container my-8 justify-center md:flex md:items-center">
           <PhotoListAnimate />
         </div>

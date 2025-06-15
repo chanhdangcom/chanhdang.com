@@ -16,10 +16,10 @@ export function SingerItem({ music, onClick }: IProp) {
           width={128}
           height={128}
           src={music.cover}
-          className="size-32 rounded-full object-cover"
+          className="size-32 rounded-full object-cover md:size-44"
         />
       ) : (
-        <div className="size-32 rounded-full bg-zinc-600"></div>
+        <div className="size-32 rounded-full bg-zinc-600 md:size-44"></div>
       )}
 
       <div className="mt-2 line-clamp-1 flex justify-center text-zinc-500">

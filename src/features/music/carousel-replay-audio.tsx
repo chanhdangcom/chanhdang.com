@@ -32,7 +32,7 @@ export function CarouselReplayAudio() {
   };
 
   return (
-    <div className="w-fit rounded-3xl md:bg-zinc-900 md:p-4">
+    <div className="w-fit rounded-3xl md:p-4">
       <div className="container flex items-center justify-between gap-2">
         <div className="flex gap-2">
           <Image
@@ -44,7 +44,7 @@ export function CarouselReplayAudio() {
           />
           <div>
             <div className="text-lg text-zinc-400">Nguyễn Chánh Đang</div>
-            <div className="text-xl">Song suggestions</div>
+            <div className="text-2xl font-semibold">Song suggestions</div>
           </div>
         </div>
 

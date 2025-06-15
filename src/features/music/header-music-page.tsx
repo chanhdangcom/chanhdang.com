@@ -1,13 +1,8 @@
 "use client";
-import { Progress } from "@/components/ui/progress";
 
 import React from "react";
-import { Search } from "./component/search";
-import {
-  CaretLeft,
-  CaretRight,
-  MagnifyingGlass,
-} from "@phosphor-icons/react/dist/ssr";
+// import { Search } from "./component/search";
+import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { MusicType } from "./music-type";
 
@@ -16,14 +11,22 @@ import Link from "next/link";
 
 export const HeaderMusicPage = () => {
   return (
-    <div className="container sticky inset-0 top-0 z-10 border-zinc-800 pb-4 backdrop-blur-md md:border-b md:pb-8">
-      <Progress className="w-[60%]" value={33} />
-
-      <div className="space-y-8 md:hidden">
+    <div className="container sticky inset-0 top-0 z-10 py-4 backdrop-blur-md">
+      <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <Link href="/">
-            <ChanhdangLogotype />
-          </Link>
+          <div className="flex items-center gap-4">
+            <div className="flex items-end gap-1">
+              <Link href="/">
+                <ChanhdangLogotype />
+              </Link>
+
+              <div className="mb-1 text-xs font-semibold">Premium</div>
+            </div>
+
+            <div className="hidden md:flex">
+              <MusicType />
+            </div>
+          </div>
 
           <AnimatePresence>
             <motion.div
@@ -36,8 +39,6 @@ export const HeaderMusicPage = () => {
               layoutId="Search"
               className="flex gap-4 text-zinc-500"
             >
-              {/* <Screencast size={25} /> */}
-
               <Link href="/music/search">
                 <MagnifyingGlass size={25} />
               </Link>
@@ -45,27 +46,16 @@ export const HeaderMusicPage = () => {
           </AnimatePresence>
         </div>
 
-        <MusicType />
-      </div>
-
-      <div className="hidden h-14 items-center justify-between p-4 md:flex">
-        <div className="flex gap-16">
-          <div className="flex items-center gap-4">
-            <CaretLeft
-              size={25}
-              weight="bold"
-              className="rounded-full bg-zinc-900 p-1 text-zinc-50"
-            />
-            <CaretRight
-              size={25}
-              weight="bold"
-              className="rounded-full bg-zinc-900 p-1 text-zinc-50"
-            />
-          </div>
-
-          <Search />
+        <div className="md:hidden">
+          <MusicType />
         </div>
       </div>
+
+      {/* <div className="hidden items-center justify-between md:flex">
+        <div className="flex">
+          <Search />
+        </div>
+      </div> */}
     </div>
   );
 };

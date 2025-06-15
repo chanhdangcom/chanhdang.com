@@ -1,6 +1,6 @@
 "use client";
 import { AudioBar } from "./audio-bar";
-import { CarouselAudioPlaylist } from "./carousel-audio-playlist";
+// import { CarouselAudioPlaylist } from "./carousel-audio-playlist";
 import { CarouselAudio } from "./carousel-audio";
 import { HeaderMusicPage } from "./header-music-page";
 import { MenuBar } from "./menu-bar";
@@ -9,6 +9,7 @@ import { TableRanking } from "./table-ranking";
 
 import { CarouselReplayAudio } from "./carousel-replay-audio";
 import { SingerList } from "./singer-list";
+import { Footer } from "../profile/footer";
 
 export function MusicPage() {
   return (
@@ -19,36 +20,48 @@ export function MusicPage() {
         <div className="relative z-10">
           <HeaderMusicPage />
 
-          <div className="mx-8 my-2 flex justify-center bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text pb-5 font-handwritten text-4xl text-transparent md:mt-8 md:text-5xl">
-            Chanh Dang Hello
-          </div>
+          <div className="md:mx-4">
+            <div className="rounded-lg from-zinc-900 to-zinc-950 md:bg-gradient-to-b md:p-4">
+              <div className="mx-8 my-2 flex justify-center bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text pb-5 font-handwritten text-4xl text-transparent md:mt-8 md:hidden md:text-5xl">
+                Chanh Dang Hello
+              </div>
 
-          <div className="flex items-center justify-center gap-4 md:mx-8 md:mt-8">
-            <CarouselReplayAudio />
+              <div className="flex justify-start">
+                <CarouselAudio />
+              </div>
 
-            <div className="hidden md:flex">
-              <TableRanking />
-            </div>
-          </div>
+              <div className="m-8">
+                <SingerList />
+              </div>
 
-          <div className="mt-8 flex justify-start md:ml-8">
-            <CarouselAudio />
-          </div>
+              <div className="flex justify-start">
+                <CarouselAudio />
+              </div>
 
-          <div className="mt-8 flex justify-start md:ml-8">
-            <SingerList />
-          </div>
+              <div className="flex items-center justify-start gap-4">
+                <CarouselReplayAudio />
 
-          <div className="mt-8 flex justify-center md:hidden">
-            <TableRanking />
-          </div>
+                <div className="hidden md:flex">
+                  <TableRanking />
+                </div>
+              </div>
 
-          <div className="mb-28 mt-8 flex justify-start md:mb-40 md:ml-8">
+              <div className="mt-8 flex justify-start md:hidden">
+                <TableRanking />
+              </div>
+
+              {/* <div className="mb-28 mt-8 flex justify-start md:ml-8">
             <CarouselAudioPlaylist />
+          </div> */}
+
+              <Footer />
+            </div>
           </div>
         </div>
 
-        <AudioBar />
+        <div className="my-32">
+          <AudioBar />
+        </div>
       </div>
     </div>
   );

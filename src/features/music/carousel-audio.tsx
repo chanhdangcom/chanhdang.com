@@ -9,7 +9,7 @@ import { MUSICS } from "./data/music-page";
 import {
   CaretLeft,
   CaretRight,
-  MusicNotesSimple,
+  // MusicNotesSimple,
 } from "@phosphor-icons/react/dist/ssr";
 
 export function CarouselAudio() {
@@ -33,12 +33,12 @@ export function CarouselAudio() {
   };
 
   return (
-    <div className="w-full rounded-3xl text-zinc-50 md:max-w-6xl md:bg-zinc-900 md:p-4">
+    <div className="w-full rounded-3xl text-zinc-50 md:max-w-6xl">
       <div className="container flex justify-between">
-        <div className="font-bol flex gap-1 text-2xl">
-          <MusicNotesSimple size={32} weight="fill" className="text-zinc-400" />
+        <div className="flex gap-1 text-3xl font-bold">
+          {/* <MusicNotesSimple size={32} weight="fill" className="text-zinc-400" /> */}
 
-          <div className="text-zinc-50">Single song</div>
+          <div className="text-2xl text-zinc-50">Trending songs</div>
         </div>
 
         <div className="flex gap-4">

@@ -1,15 +1,15 @@
 "use client";
 import * as React from "react";
 
-import { Playlist } from "@phosphor-icons/react/dist/ssr";
+// import { Playlist } from "@phosphor-icons/react/dist/ssr";
 import { MUSICSPLAYLIST } from "./data/music-page-playlist";
 import { PlaylistItem } from "./component/playlist-item";
 
 export function CarouselAudioPlaylist() {
   return (
-    <div className="w-full rounded-lg border-b border-zinc-800 text-zinc-50 backdrop-blur-md md:max-w-3xl">
-      <div className="font-bol container mb-2 flex gap-1 text-2xl">
-        <Playlist size={32} weight="fill" className="text-zinc-500" />
+    <div className="w-full text-zinc-50 md:max-w-7xl">
+      <div className="container mb-2 flex gap-1 text-3xl font-semibold">
+        {/* <Playlist size={32} weight="fill" className="text-zinc-500" /> */}
 
         <div className="text-zinc-50">Playlist</div>
       </div>
