@@ -22,7 +22,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { useRef, useState } from "react";
 import { PlayerPage } from "./player-page";
-// import { useOutsideClick } from "../profile/hook/use-outside-click";
+import { useOutsideClick } from "../profile/hook/use-outside-click";
 
 export function AudioBar() {
   const {
@@ -39,7 +39,7 @@ export function AudioBar() {
 
   const [isClick, setIsClick] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  // useOutsideClick(ref, () => setIsClick(false), isClick);
+  useOutsideClick(ref, () => setIsClick(false), isClick);
 
   const Mini = () => {
     return (
@@ -49,7 +49,11 @@ export function AudioBar() {
           className="fixed inset-x-2 bottom-2 z-20 flex justify-center rounded-3xl border border-zinc-800 bg-zinc-900/80 p-2 text-zinc-50 shadow-sm backdrop-blur-md md:inset-x-16 md:bottom-4 md:rounded-3xl md:px-8 md:py-4"
         >
           <div
-            onClick={() => setIsClick(true)}
+            onClick={() => {
+              if (window.innerWidth < 768) {
+                setIsClick(true);
+              }
+            }}
             className="flex w-full items-center justify-between"
           >
             <div className="hidden items-center gap-8 md:flex">
