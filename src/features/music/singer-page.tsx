@@ -63,7 +63,7 @@ export function SingerPage({ idSinger }: IProp) {
               </div>
             </div>
 
-            <div className="mx-4 hidden rounded-lg bg-gradient-to-b from-zinc-700 to-zinc-950 md:flex">
+            <div className="mx-4 hidden rounded-lg bg-gradient-to-b from-zinc-900 to-zinc-950 md:flex">
               <div className="flex items-center">
                 {MUSICSSINGER.filter((item) => item.id === idSinger).map(
                   (item) => (
