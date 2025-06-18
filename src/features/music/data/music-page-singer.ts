@@ -317,4 +317,24 @@ export const MUSICSSINGER = [
     ]
   
   },
+
+  {
+    id: "6",
+    singer: "Hà Lê Quốc Thiên",
+    cover: "https://cdn.chanhdang.com/singer_ha_le_quoc_thien.png",
+    musics:[
+       {
+      id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231223r322131",
+      title: "LỜI BÁC SÁNG MÃI MUÔN ĐỜI",
+      singer: "Hà Lê Quốc Thiên",
+      cover: "https://cdn.chanhdang.com/cover_loi_bac_sang_mai_muon_doi.webp",
+      audio: "https://cdn.chanhdang.com/loi_bac_sang_mai_muon_doi.mp3",
+      youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+      content: `
+  
+      `,
+      type: "Jack"
+    },
+    ]
+  },
 ];
