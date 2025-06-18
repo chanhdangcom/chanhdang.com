@@ -12,13 +12,13 @@ export function SingerList() {
   return (
     <AnimatePresence>
       <motion.div layoutId="singer" layout>
-        <div className="w-fulll">
+        <div className="container w-full">
           <div className="flex gap-1 text-2xl font-semibold">
             {/* <Guitar size={32} weight="fill" className="text-zinc-500" /> */}
             <div className="text-zinc-50">Popular artists</div>
           </div>
 
-          <div className="mt-2 flex w-full max-w-6xl items-center gap-4 overflow-auto">
+          <div className="mt-4 flex items-center gap-4 overflow-x-auto">
             {MUSICSSINGER.map((music) => (
               <div key={music.id} className="shrink-0">
                 <SingerItem

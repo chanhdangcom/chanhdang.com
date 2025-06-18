@@ -30,7 +30,7 @@ export function MusicPage() {
                 <CarouselAudio />
               </div>
 
-              <div className="m-8">
+              <div className="my-8">
                 <SingerList />
               </div>
 
@@ -39,14 +39,16 @@ export function MusicPage() {
               </div>
 
               <div className="flex items-center justify-start gap-4">
-                <CarouselReplayAudio />
+                <div className="my-8">
+                  <CarouselReplayAudio />
+                </div>
 
                 <div className="hidden md:flex">
                   <TableRanking />
                 </div>
               </div>
 
-              <div className="mt-8 flex justify-start md:hidden">
+              <div className="mb-8 flex justify-start md:hidden">
                 <TableRanking />
               </div>
 
