@@ -21,7 +21,7 @@ export function MusicPage() {
           <HeaderMusicPage />
 
           <div className="md:mx-4">
-            <div className="rounded-lg from-zinc-900 to-zinc-950 md:bg-gradient-to-b md:p-4">
+            <div className="rounded-3xl from-zinc-900 to-zinc-950 md:bg-gradient-to-b md:p-4">
               <div className="mx-8 my-2 flex justify-center bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text pb-5 font-handwritten text-4xl text-transparent md:mt-8 md:hidden md:text-5xl">
                 Chanh Dang Hello
               </div>

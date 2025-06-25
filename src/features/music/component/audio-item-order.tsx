@@ -33,12 +33,12 @@ export function AudioItemOrder({
             width={300}
             height={300}
             className={cn(
-              "size-20 shrink-0 rounded-lg object-cover shadow-sm",
+              "size-20 shrink-0 rounded-2xl object-cover shadow-sm",
               className
             )}
           />
         ) : (
-          <div className="size-18 rounded-lg bg-zinc-800"></div>
+          <div className="size-18 rounded-2xl bg-zinc-800"></div>
         )}
 
         <div>

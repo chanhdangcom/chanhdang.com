@@ -12,8 +12,8 @@ export function SingerList() {
   return (
     <AnimatePresence>
       <motion.div layoutId="singer" layout>
-        <div className="container w-full">
-          <div className="flex gap-1 text-2xl font-semibold">
+        <div className="w-full">
+          <div className="container flex gap-1 text-2xl font-semibold">
             {/* <Guitar size={32} weight="fill" className="text-zinc-500" /> */}
             <div className="text-zinc-50">Popular artists</div>
           </div>

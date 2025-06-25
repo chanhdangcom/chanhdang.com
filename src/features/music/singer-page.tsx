@@ -38,7 +38,7 @@ export function SingerPage({ idSinger }: IProp) {
 
             <div className="absolute inset-0 md:hidden">
               <HeaderMusicSingerPage />
-              <div className="mt-20 space-y-4 p-4 text-xl font-semibold">
+              <div className="mt-32 space-y-4 p-4 text-xl font-semibold">
                 {MUSICSSINGER.filter((item) => item.id === idSinger).map(
                   (item) => (
                     <div className="text-3xl" key={item.id}>
@@ -63,7 +63,7 @@ export function SingerPage({ idSinger }: IProp) {
               </div>
             </div>
 
-            <div className="mx-4 hidden rounded-lg bg-gradient-to-b from-zinc-900 to-zinc-950 md:flex">
+            <div className="mx-4 hidden rounded-3xl bg-gradient-to-b from-zinc-900 to-zinc-950 md:flex">
               <div className="flex items-center">
                 {MUSICSSINGER.filter((item) => item.id === idSinger).map(
                   (item) => (
@@ -73,7 +73,7 @@ export function SingerPage({ idSinger }: IProp) {
                         height={300}
                         width={300}
                         src={item.cover}
-                        className="m-8 flex size-60 rounded-lg object-cover shadow-2xl"
+                        className="m-8 flex size-60 rounded-3xl object-cover shadow-2xl"
                       />
                     </div>
                   )
@@ -104,7 +104,7 @@ export function SingerPage({ idSinger }: IProp) {
                           </div>
                         </div>
 
-                        <div className="hidden w-fit rounded-2xl bg-red-500 px-4 py-2 text-xl font-semibold md:flex">
+                        <div className="hidden w-fit rounded-3xl bg-red-500 px-4 py-2 text-xl font-semibold md:flex">
                           17,4 Tr lượt nghe
                         </div>
                       </div>
