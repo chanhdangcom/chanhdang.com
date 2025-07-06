@@ -13,6 +13,8 @@ import { IMusic } from "./types/music";
 import { Play as PlayIcon, Pause as PauseIcon } from "phosphor-react";
 import { cn } from "@/lib/utils";
 import { useEscapePress } from "./hook/use-escape-press";
+import Link from "next/link";
+import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 
 export function MusicList() {
   const [musicView, setMusicView] = useState<IMusic | null>(null);
@@ -33,13 +35,22 @@ export function MusicList() {
   console.log("Render Music List");
 
   return (
-    <div className="rounded-3xl border-b shadow-sm dark:border-zinc-800">
+    <div className="rounded-3xl border-b p-4 shadow-sm dark:border-zinc-800">
       <div className="space-y-8">
-        <div className="my-2 flex items-center space-x-2 font-mono text-sm">
-          <ExperienceInfoItem
-            icon={<ListMusicIcon />}
-            content="Music Gallery"
-          />
+        <div className="my-2 flex items-center justify-between space-x-2 font-mono text-sm">
+          <ExperienceInfoItem icon={<ListMusicIcon />} content="Music" />
+
+          <Link
+            href={"/music"}
+            className="flex gap-1 rounded-3xl px-3 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+          >
+            <ChanhdangLogotype className="w-28" />
+
+            <div className="mt-4 flex text-xs font-bold text-pink-400">
+              <div>Mus</div>
+              <div className="text-cyan-400">ic</div>
+            </div>
+          </Link>
         </div>
       </div>
 
@@ -122,7 +133,7 @@ export function MusicList() {
                   </motion.a>
                 </div>
 
-                <div className="relative px-4 pt-4">
+                <div className="relative px-4">
                   <motion.div
                     layout
                     initial={{ opacity: 0 }}
@@ -148,7 +159,7 @@ export function MusicList() {
               key={`card-${music.id}`}
               layoutId={`card-${music.id}`}
               onClick={() => setMusicView(music)}
-              className="flex cursor-pointer flex-row items-center justify-between rounded-xl p-4 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+              className="flex cursor-pointer flex-row items-center justify-between rounded-3xl p-4 hover:bg-zinc-200 dark:hover:bg-zinc-800"
             >
               <div className="flex flex-row gap-4">
                 <motion.div layoutId={`cover-${music.id}`}>
