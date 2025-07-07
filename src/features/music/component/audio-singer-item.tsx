@@ -15,7 +15,7 @@ export function AudioSingerItem({ music }: IProp) {
   }
 
   return (
-    <div className="h-[40vh] overflow-auto">
+    <div>
       {music.musics?.map((music) => (
         <div key={music.id} className="border-b border-zinc-800 p-2">
           <AudioItemOrder

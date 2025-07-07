@@ -1,6 +1,6 @@
 "use client";
 import { AudioBar } from "./audio-bar";
-// import { CarouselAudioPlaylist } from "./carousel-audio-playlist";
+
 import { CarouselAudio } from "./carousel-audio";
 import { HeaderMusicPage } from "./header-music-page";
 import { MenuBar } from "./menu-bar";
@@ -10,6 +10,8 @@ import { TableRanking } from "./table-ranking";
 import { CarouselReplayAudio } from "./carousel-replay-audio";
 import { SingerList } from "./singer-list";
 import { Footer } from "../profile/footer";
+
+import { MenuBarMobile } from "./menu-bar-mobile";
 
 export function MusicPage() {
   return (
@@ -52,17 +54,14 @@ export function MusicPage() {
                 <TableRanking />
               </div>
 
-              {/* <div className="mb-28 mt-8 flex justify-start md:ml-8">
-            <CarouselAudioPlaylist />
-          </div> */}
-
               <Footer />
             </div>
           </div>
         </div>
 
-        <div className="my-32">
+        <div className="my-48">
           <AudioBar />
+          <MenuBarMobile />
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 
-import { ShareFat, Shuffle } from "@phosphor-icons/react/dist/ssr";
+import { Shuffle } from "@phosphor-icons/react/dist/ssr";
 
 import { AudioSingerItem } from "./component/audio-singer-item";
 
@@ -11,7 +11,11 @@ import { AnimatePresence } from "framer-motion";
 import { MUSICSSINGER } from "./data/music-page-singer";
 import { MenuBar } from "./menu-bar";
 import { HeaderMusicPage } from "./header-music-page";
-import { HeaderMusicSingerPage } from "./header-music-singer-page";
+
+import { MenuBarMobile } from "./menu-bar-mobile";
+import { Play } from "phosphor-react";
+import Link from "next/link";
+import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 
 type IProp = {
   idSinger: string;
@@ -19,61 +23,47 @@ type IProp = {
 
 export function SingerPage({ idSinger }: IProp) {
   return (
-    <div className="flex">
+    <div className="md:flex">
       <MenuBar />
 
       <AnimatePresence>
         <motion.div
-          className="fixed inset-0 z-50 mx-auto h-screen bg-zinc-950 md:ml-64 md:max-w-full"
+          className="mx-auto mb-48 bg-zinc-950 md:ml-64 md:max-w-full"
           layoutId="singer"
         >
           <AudioBar />
+          <MenuBarMobile />
 
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-zinc-950 md:hidden"></div>
-
+          <div className="">
             <div className="hidden md:flex">
               <HeaderMusicPage />
             </div>
 
-            <div className="absolute inset-0 md:hidden">
-              <HeaderMusicSingerPage />
-              <div className="mt-32 space-y-4 p-4 text-xl font-semibold">
-                {MUSICSSINGER.filter((item) => item.id === idSinger).map(
-                  (item) => (
-                    <div className="text-3xl" key={item.id}>
-                      {item.singer}
-                    </div>
-                  )
-                )}
+            <div className="mb-4 flex items-end gap-1 md:hidden">
+              <Link
+                href={"/music"}
+                className="flex gap-1 rounded-3xl px-3 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+              >
+                <ChanhdangLogotype />
 
-                <div className="flex gap-2">
-                  <div className="flex w-fit items-center justify-center gap-2 rounded-3xl border bg-zinc-50 px-3 py-1 text-zinc-950">
-                    <Shuffle size={25} />
-
-                    <div className="text-base">Mix song</div>
-                  </div>
-
-                  <div className="flex w-fit items-center justify-center gap-2 rounded-3xl border bg-zinc-50 px-3 py-1 text-zinc-950">
-                    <ShareFat size={25} />
-
-                    <div className="text-base">Share</div>
-                  </div>
+                <div className="mt-2 flex text-lg text-pink-400">
+                  <div>Mus</div>
+                  <div className="text-cyan-400">ic</div>
                 </div>
-              </div>
+              </Link>
             </div>
 
-            <div className="mx-4 hidden rounded-3xl bg-gradient-to-b from-zinc-900 to-zinc-950 md:flex">
-              <div className="flex items-center">
+            <div className="mx-4 flex rounded-3xl from-zinc-900 to-zinc-950 md:bg-gradient-to-b">
+              <div className="flex w-full flex-col items-center">
                 {MUSICSSINGER.filter((item) => item.id === idSinger).map(
                   (item) => (
                     <div key={item.id}>
                       <Image
-                        alt=""
+                        alt="cover-singer"
                         height={300}
                         width={300}
                         src={item.cover}
-                        className="m-8 flex size-60 rounded-3xl object-cover shadow-2xl"
+                        className="size-60 rounded-3xl object-cover shadow-2xl md:m-8"
                       />
                     </div>
                   )
@@ -81,26 +71,41 @@ export function SingerPage({ idSinger }: IProp) {
 
                 {MUSICSSINGER.filter((item) => item.id === idSinger).map(
                   (item) => (
-                    <div className="space-y-6 text-6xl" key={item.id}>
-                      <div>
+                    <div className="space-y-2 text-6xl" key={item.id}>
+                      <div className="hidden md:block">
                         <div className="text-4xl font-semibold">
                           Các bài hát của
                         </div>
+
                         <div className="font-bold"> {item.singer}</div>
                       </div>
 
-                      <div className="space-y-4">
-                        <div className="flex gap-2">
-                          <div className="flex w-fit items-center justify-center gap-2 rounded-3xl border bg-zinc-50 px-3 py-1 text-zinc-950">
-                            <Shuffle size={25} />
+                      <div className="flex items-center justify-center gap-1 md:hidden">
+                        <div className="text-2xl font-semibold">
+                          Các bài hát của
+                        </div>
 
-                            <div className="text-base">Mix song</div>
+                        <div className="text-2xl font-semibold">
+                          {item.singer}
+                        </div>
+                      </div>
+
+                      <div className="text-center text-lg text-zinc-500">
+                        ChanhDang Music
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="flex w-full justify-between gap-4">
+                          <div className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-900 px-4 py-1 font-semibold text-red-500">
+                            <Play size={20} weight="fill" />
+
+                            <div className="text-xl">Play</div>
                           </div>
 
-                          <div className="flex w-fit items-center justify-center gap-2 rounded-3xl border bg-zinc-50 px-3 py-1 text-zinc-950">
-                            <ShareFat size={25} />
+                          <div className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-900 px-4 py-2 font-semibold text-red-500">
+                            <Shuffle size={20} weight="fill" />
 
-                            <div className="text-base">Share</div>
+                            <div className="text-xl">Mix song</div>
                           </div>
                         </div>
 
@@ -108,42 +113,21 @@ export function SingerPage({ idSinger }: IProp) {
                           17,4 Tr lượt nghe
                         </div>
                       </div>
+
+                      <div className="text-base text-zinc-500">
+                        <div>
+                          Tận hưởng bữa tiệc âm nhạc đầy đặc sắc với{" "}
+                          {item.singer}
+                        </div>
+                      </div>
                     </div>
                   )
                 )}
               </div>
             </div>
-
-            <div className="w-full md:hidden">
-              {MUSICSSINGER.filter((item) => item.id === idSinger).map(
-                (item) => (
-                  <div key={item.id}>
-                    <Image
-                      alt=""
-                      height={300}
-                      width={300}
-                      src={item.cover}
-                      className="mx-auto flex h-[35vh] w-full object-cover md:h-[55vh]"
-                    />
-                  </div>
-                )
-              )}
-            </div>
-
-            {/* {MUSICSSINGER.filter((item) => item.id === idSinger).map((item) => (
-              <div key={item.id}>
-                <Image
-                  alt=""
-                  height={300}
-                  width={300}
-                  src={item.cover}
-                  className="mx-auto h-[35vh] w-full object-cover md:h-[55vh] md:w-auto"
-                />
-              </div>
-            ))} */}
           </div>
 
-          <div className="mt-4 px-3 md:mx-16 md:mt-0">
+          <div className="mt-8 px-3 md:mx-16 md:mt-0">
             {MUSICSSINGER.filter((item) => item.id === idSinger).map((item) => (
               <div key={item.id}>
                 <AudioSingerItem music={item} />

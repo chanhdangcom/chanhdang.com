@@ -12,10 +12,6 @@ export function MenuBar() {
       <div className="h-96 w-60"></div>
       <div className="fixed h-full w-60 rounded-3xl bg-gradient-to-b from-zinc-900 to-zinc-950 p-4">
         <div className="">
-          {/* <Link href="/">
-            <ChanhdangLogotype />
-          </Link> */}
-
           <div className="space-y-2 text-base font-medium text-zinc-50">
             <div className="flex items-center gap-2 rounded-2xl bg-zinc-800 p-2">
               <House size={20} className="" weight="fill" />
