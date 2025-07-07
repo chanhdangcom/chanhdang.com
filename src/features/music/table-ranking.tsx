@@ -18,7 +18,7 @@ export function TableRanking() {
       {MUSICSRANKING.map((music, index) => (
         <div
           key={music.id}
-          className="transform rounded-lg transition-transform duration-300 hover:bg-zinc-100 hover:dark:bg-zinc-900 md:p-1 md:hover:scale-105"
+          className="transform rounded-3xl transition-transform duration-300 hover:bg-zinc-100 hover:dark:bg-zinc-900 md:p-1 md:hover:scale-105"
         >
           <div className="flex items-center gap-6 p-2">
             <div className="text-xl text-zinc-500">{index + 1}</div>

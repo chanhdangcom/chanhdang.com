@@ -40,7 +40,7 @@ export function MusicPage() {
                 <CarouselAudio />
               </div>
 
-              <div className="flex items-center justify-start gap-4">
+              <div className="flex items-center justify-between gap-4">
                 <div className="my-8">
                   <CarouselReplayAudio />
                 </div>
@@ -50,7 +50,7 @@ export function MusicPage() {
                 </div>
               </div>
 
-              <div className="mb-8 flex justify-start md:hidden">
+              <div className="mb-8 flex justify-center md:hidden">
                 <TableRanking />
               </div>
 

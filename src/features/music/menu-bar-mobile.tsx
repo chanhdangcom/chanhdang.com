@@ -14,24 +14,24 @@ export function MenuBarMobile() {
     <div className="fixed inset-x-2 bottom-4 z-20 flex items-center justify-between sm:hidden">
       <div className="flex items-center justify-center gap-8 rounded-3xl bg-zinc-900/50 px-6 py-2 backdrop-blur-md">
         <div className="flex gap-8">
-          <div className="flex flex-col items-center">
-            <House size={32} color="#dedede" weight="fill" />
-            <div className="">Home</div>
+          <div className="flex flex-col items-center text-red-500">
+            <House size={32} weight="fill" />
+            <div className="font-semibold">Home</div>
           </div>
 
           <div className="flex flex-col items-center">
             <SquaresFour size={32} color="#dedede" weight="fill" />
-            <div className="">New</div>
+            <div className="font-semibold">New</div>
           </div>
 
           <div className="flex flex-col items-center">
             <Broadcast size={32} color="#dedede" weight="fill" />
-            <div className="">Radio</div>
+            <div className="font-semibold">Radio</div>
           </div>
 
           <div className="flex flex-col items-center">
             <Bookmarks size={32} color="#dedede" weight="fill" />
-            <div>Library</div>
+            <div className="font-semibold"> Library</div>
           </div>
         </div>
       </div>
