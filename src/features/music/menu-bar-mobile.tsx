@@ -21,17 +21,17 @@ export function MenuBarMobile() {
 
           <div className="flex flex-col items-center">
             <SquaresFour size={32} color="#dedede" weight="fill" />
-            <div className="font-semibold">New</div>
+            <div className="">New</div>
           </div>
 
           <div className="flex flex-col items-center">
             <Broadcast size={32} color="#dedede" weight="fill" />
-            <div className="font-semibold">Radio</div>
+            <div className="">Radio</div>
           </div>
 
           <div className="flex flex-col items-center">
             <Bookmarks size={32} color="#dedede" weight="fill" />
-            <div className="font-semibold"> Library</div>
+            <div className=""> Library</div>
           </div>
         </div>
       </div>
