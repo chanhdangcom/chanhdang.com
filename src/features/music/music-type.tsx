@@ -20,7 +20,7 @@ export function MusicType() {
     <div className="z-10">
       <div
         onClick={() => setIsHide(false)}
-        className="flex items-center gap-4 overflow-x-auto font-semibold text-zinc-50"
+        className="flex items-center gap-4 overflow-x-auto font-semibold text-zinc-50 backdrop-blur-md"
       >
         <MusicTypeItem title="Relax" onClick={(title) => setIsTitle(title)} />
         <MusicTypeItem title="Sad" onClick={(title) => setIsTitle(title)} />

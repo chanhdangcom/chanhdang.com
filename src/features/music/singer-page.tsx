@@ -13,9 +13,8 @@ import { MenuBar } from "./menu-bar";
 import { HeaderMusicPage } from "./header-music-page";
 
 import { MenuBarMobile } from "./menu-bar-mobile";
-import { Play } from "phosphor-react";
+import { CaretLeft, Play } from "phosphor-react";
 import Link from "next/link";
-import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 
 type IProp = {
   idSinger: string;
@@ -39,17 +38,9 @@ export function SingerPage({ idSinger }: IProp) {
               <HeaderMusicPage />
             </div>
 
-            <div className="mb-4 flex items-end gap-1 md:hidden">
-              <Link
-                href={"/music"}
-                className="flex gap-1 rounded-3xl px-3 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
-              >
-                <ChanhdangLogotype />
-
-                <div className="mt-2 flex text-lg text-pink-400">
-                  <div>Mus</div>
-                  <div className="text-cyan-400">ic</div>
-                </div>
+            <div className="sticky top-0 z-10 m-4 flex items-end gap-1 md:hidden">
+              <Link href={"/music"} className="rounded-full bg-zinc-900 p-2">
+                <CaretLeft size={28} weight="bold" />
               </Link>
             </div>
 
