@@ -148,7 +148,6 @@ Thênh thang bước đi giữa trời rực rỡ\n`;
           />
 
           <div className="flex justify-center gap-4 rounded-full p-1 font-semibold">
-            <div className="rounded-full bg-zinc-800 px-3 py-1">Music</div>
             <ChanhdangLogotype className="w-28" />
             {/* <div className="px-3 py-1">Video</div> */}
           </div>
