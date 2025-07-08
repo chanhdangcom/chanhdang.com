@@ -20,6 +20,8 @@ export function MusicPage() {
 
       <div className="mx-auto w-full">
         <div className="relative z-10">
+          <div className="z-5 fixed top-0 h-32 w-full bg-gradient-to-b from-black/95 via-black/60 to-transparent"></div>
+
           <HeaderMusicPage />
 
           <div className="md:mx-4">

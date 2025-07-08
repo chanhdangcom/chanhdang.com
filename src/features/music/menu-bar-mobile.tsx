@@ -34,12 +34,11 @@ export function MenuBarMobile() {
   }, [lastScrollY]);
 
   return (
-    <div className="fixed inset-x-2 bottom-4 z-20 flex items-center justify-between sm:hidden">
+    <div className="fixed bottom-4 z-20 flex w-full items-center justify-between sm:hidden">
       <AnimatePresence>
         {show ? (
           <motion.div
             layout
-            layoutId="item"
             initial={{ opacity: 1, scale: 0.9 }}
             exit={{ opacity: 1, scale: 0.9 }}
             transition={{
@@ -50,28 +49,27 @@ export function MenuBarMobile() {
               mass: 0.1,
               ease: "easeInOut",
             }}
-            className="flex items-center justify-center rounded-[50px] bg-zinc-900/50 px-8 py-2 backdrop-blur-md"
+            layoutId="item"
+            className="flex gap-8 rounded-full bg-zinc-900/50 px-8 py-2 backdrop-blur-md"
           >
-            <div className="flex gap-10">
-              <div className="flex flex-col items-center text-red-600">
-                <House size={35} weight="fill" />
-                <div className="font-semibold">Home</div>
-              </div>
+            <div className="flex flex-col items-center text-red-600">
+              <House size={35} weight="fill" />
+              <div className="font-semibold">Home</div>
+            </div>
 
-              <div className="flex flex-col items-center">
-                <SquaresFour size={35} color="#dedede" weight="fill" />
-                <div className="">New</div>
-              </div>
+            <div className="flex flex-col items-center">
+              <SquaresFour size={35} color="#dedede" weight="fill" />
+              <div className="">New</div>
+            </div>
 
-              <div className="flex flex-col items-center">
-                <Broadcast size={35} color="#dedede" weight="fill" />
-                <div className="">Radio</div>
-              </div>
+            <div className="flex flex-col items-center">
+              <Broadcast size={35} color="#dedede" weight="fill" />
+              <div className="">Radio</div>
+            </div>
 
-              <div className="flex flex-col items-center">
-                <Bookmarks size={35} color="#dedede" weight="fill" />
-                <div className=""> Library</div>
-              </div>
+            <div className="flex flex-col items-center">
+              <Bookmarks size={35} color="#dedede" weight="fill" />
+              <div className=""> Library</div>
             </div>
           </motion.div>
         ) : (
@@ -110,7 +108,7 @@ export function MenuBarMobile() {
             ease: "easeInOut",
           }}
           layoutId="Search"
-          className="rounded-full p-4 backdrop-blur-md"
+          className="mr-4 rounded-full p-4 backdrop-blur-md"
         >
           <Link href={"/music/search"}>
             <MagnifyingGlass size={28} color="#dedede" weight="bold" />
