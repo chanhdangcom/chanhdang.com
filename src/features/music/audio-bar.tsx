@@ -13,7 +13,7 @@ import {
 } from "phosphor-react";
 
 import { AnimatePresence, motion } from "motion/react";
-import DynamicIslandWave from "@/components/ui/dynamic-island";
+// import DynamicIslandWave from "@/components/ui/dynamic-island";
 import { DurationAudio } from "./component/duration-audio";
 import {
   Control,
@@ -68,7 +68,7 @@ export function AudioBar() {
         <motion.div
           transition={{ duration: 0.2 }}
           layoutId="audio-bar"
-          className="fixed inset-x-2 bottom-24 z-20 flex justify-center rounded-3xl bg-zinc-900/50 p-2 text-zinc-50 shadow-sm backdrop-blur-md md:inset-x-16 md:bottom-4 md:rounded-3xl md:px-8 md:py-4"
+          className="fixed inset-x-2 bottom-24 z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-sm md:inset-x-16 md:bottom-4 md:rounded-[55px] md:px-8 md:py-4"
         >
           <div
             onClick={() => {
@@ -159,7 +159,7 @@ export function AudioBar() {
                 </AnimatePresence>
               </div>
 
-              <motion.div
+              {/* <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -173,7 +173,7 @@ export function AudioBar() {
                     coverUrl={currentMusic?.cover}
                   />
                 )}
-              </motion.div>
+              </motion.div> */}
             </div>
 
             <div className="hidden items-center gap-8 md:flex">
@@ -217,14 +217,14 @@ export function AudioBar() {
             </div>
 
             <div className="ml-4 flex items-center gap-4 md:hidden">
-              <motion.div layout>
+              {/* <motion.div layout>
                 {currentMusic?.cover && (
                   <DynamicIslandWave
                     isPlay={isPlaying}
                     coverUrl={currentMusic?.cover}
                   />
                 )}
-              </motion.div>
+              </motion.div> */}
 
               {isPlaying ? (
                 <motion.div
@@ -262,7 +262,7 @@ export function AudioBar() {
         <motion.div
           transition={{ duration: 0.2 }}
           layoutId="audio-bar"
-          className="fixed inset-x-20 bottom-4 z-20 flex justify-center rounded-3xl bg-zinc-900/50 p-2 text-zinc-50 shadow-sm backdrop-blur-md md:inset-x-16 md:bottom-4 md:rounded-3xl md:px-8 md:py-4"
+          className="fixed inset-x-20 bottom-4 z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-sm md:inset-x-16 md:bottom-4 md:rounded-[50px] md:px-8 md:py-4"
         >
           <div
             onClick={() => {
@@ -353,7 +353,7 @@ export function AudioBar() {
                 </AnimatePresence>
               </div>
 
-              <motion.div
+              {/* <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -367,7 +367,7 @@ export function AudioBar() {
                     coverUrl={currentMusic?.cover}
                   />
                 )}
-              </motion.div>
+              </motion.div> */}
             </div>
 
             <div className="hidden items-center gap-8 md:flex">
@@ -411,14 +411,14 @@ export function AudioBar() {
             </div>
 
             <div className="ml-4 flex items-center gap-4 md:hidden">
-              <motion.div layout>
+              {/* <motion.div layout>
                 {currentMusic?.cover && (
                   <DynamicIslandWave
                     isPlay={isPlaying}
                     coverUrl={currentMusic?.cover}
                   />
                 )}
-              </motion.div>
+              </motion.div> */}
 
               {isPlaying ? (
                 <motion.div
