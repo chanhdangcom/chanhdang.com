@@ -26,9 +26,6 @@ export function SingerList() {
                 />
               </div>
             ))}
-
-            {/* Lớp mờ gợi ý kéo ngang bên phải */}
-            <div className="pointer-events-none absolute right-0 top-0 h-full w-12 bg-gradient-to-l from-white/80 to-transparent dark:from-zinc-900/80" />
           </div>
         </div>
       </motion.div>

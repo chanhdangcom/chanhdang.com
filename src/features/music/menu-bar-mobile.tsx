@@ -73,47 +73,70 @@ export function MenuBarMobile() {
             </div>
           </motion.div>
         ) : (
-          <AnimatePresence>
-            <motion.div
-              layout
-              initial={{ opacity: 1 }}
-              exit={{ opacity: 1 }}
-              transition={{
-                duration: 0.3,
-                type: "spring",
-                stiffness: 300,
-                damping: 10,
-                mass: 0.1,
-                ease: "easeInOut",
-              }}
-              layoutId="item"
-              className="ml-4 rounded-full bg-zinc-900/50 backdrop-blur-md"
-            >
-              <div className="rounded-full p-4 text-red-600 backdrop-blur-md">
-                <House size={35} weight="fill" />
-              </div>
-            </motion.div>
-          </AnimatePresence>
+          <motion.div
+            layout
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 1 }}
+            transition={{
+              duration: 0.3,
+              type: "spring",
+              stiffness: 300,
+              damping: 10,
+              mass: 0.1,
+              ease: "easeInOut",
+            }}
+            layoutId="item"
+            className="ml-4 rounded-full bg-zinc-900/50 backdrop-blur-md"
+          >
+            <div className="rounded-full p-4 text-red-600 backdrop-blur-md">
+              <House size={28} weight="fill" />
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
 
       <AnimatePresence>
-        <motion.div
-          transition={{
-            duration: 0.1,
-            type: "spring",
-            stiffness: 150,
-            damping: 20,
-            mass: 0.6,
-            ease: "easeInOut",
-          }}
-          layoutId="Search"
-          className="mr-4 rounded-full p-4 backdrop-blur-md"
-        >
-          <Link href={"/music/search"}>
-            <MagnifyingGlass size={28} color="#dedede" weight="bold" />
-          </Link>
-        </motion.div>
+        {!show ? (
+          <motion.div
+            layout
+            layoutId="Search"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 1 }}
+            transition={{
+              duration: 0.5,
+              type: "spring",
+              stiffness: 300,
+              damping: 10,
+              mass: 0.2,
+              ease: "easeInOut",
+            }}
+            className="mr-4 rounded-full p-4 backdrop-blur-md"
+          >
+            <Link href={"/music/search"}>
+              <MagnifyingGlass size={28} color="#dedede" weight="bold" />
+            </Link>
+          </motion.div>
+        ) : (
+          <motion.div
+            layout
+            layoutId="Search"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 1 }}
+            transition={{
+              duration: 0.5,
+              type: "spring",
+              stiffness: 300,
+              damping: 10,
+              mass: 0.1,
+              ease: "easeInOut",
+            }}
+            className="mr-4 rounded-full p-4 backdrop-blur-md"
+          >
+            <Link href={"/music/search"}>
+              <MagnifyingGlass size={35} color="#dedede" weight="bold" />
+            </Link>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );

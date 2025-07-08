@@ -42,13 +42,12 @@ export function MusicList() {
 
           <Link
             href={"/music"}
-            className="flex gap-1 rounded-3xl px-3 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+            className="flex gap-1 rounded-3xl px-3 py-1 hover:underline"
           >
             <ChanhdangLogotype className="w-28" />
 
-            <div className="mt-4 flex text-xs font-bold text-pink-400">
-              <div>Mus</div>
-              <div className="text-cyan-400">ic</div>
+            <div className="mt-4 flex text-xs font-bold">
+              <div>Music</div>
             </div>
           </Link>
         </div>
