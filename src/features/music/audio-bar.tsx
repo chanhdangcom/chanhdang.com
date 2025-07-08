@@ -41,26 +41,25 @@ export function AudioBar() {
   const ref = useRef<HTMLDivElement>(null);
   useOutsideClick(ref, () => setIsClick(false), isClick);
   const [scroll, setScroll] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-
+  // const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollY = useRef(0);
   useEffect(() => {
+    // không gây re-render
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      if (currentScrollY > lastScrollY && currentScrollY > 50) {
-        // scroll xuống
+      if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
         setScroll(false);
       } else {
-        // scroll lên
         setScroll(true);
       }
 
-      setLastScrollY(currentScrollY);
+      lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, []);
 
   const Mini = () => {
     return (
@@ -121,14 +120,11 @@ export function AudioBar() {
 
             <div className="flex w-[700px] items-center justify-start gap-3">
               {!currentMusic?.cover ? (
-                <motion.div
-                  layoutId="Cover"
-                  className="flex size-12 items-center justify-center rounded-2xl bg-zinc-900"
-                >
+                <div className="flex size-12 items-center justify-center rounded-2xl bg-zinc-900">
                   <MusicNotes size={28} weight="fill" className="text-white" />
-                </motion.div>
+                </div>
               ) : (
-                <motion.div layoutId="Cover" className="shrink-0">
+                <div className="shrink-0">
                   <Image
                     alt="cover"
                     width={192}
@@ -136,7 +132,7 @@ export function AudioBar() {
                     src={currentMusic?.cover}
                     className="flex size-12 items-center justify-center rounded-2xl object-cover md:size-16 md:rounded-2xl"
                   />
-                </motion.div>
+                </div>
               )}
 
               <div>
@@ -315,12 +311,9 @@ export function AudioBar() {
 
             <div className="flex w-[700px] items-center justify-start gap-3">
               {!currentMusic?.cover ? (
-                <motion.div
-                  layoutId="Cover"
-                  className="flex size-12 items-center justify-center rounded-2xl bg-zinc-900"
-                >
+                <div className="flex size-12 items-center justify-center rounded-2xl bg-zinc-900">
                   <MusicNotes size={28} weight="fill" className="text-white" />
-                </motion.div>
+                </div>
               ) : (
                 <motion.div layoutId="Cover" className="shrink-0">
                   <Image
