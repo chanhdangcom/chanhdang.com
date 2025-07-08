@@ -25,7 +25,7 @@ export const HeaderMusicPage = () => {
 
   return (
     <div
-      className={`transition-all duration-300 ease-in-out ${isTop ? "pb-4" : "pb-32"} container sticky inset-0 top-0 z-10 bg-gradient-to-b from-black/95 via-black/70 to-transparent pt-4 transition`}
+      className={`transition-all duration-300 ease-in-out ${isTop ? "pb-4" : "pb-28"} container sticky inset-0 top-0 z-10 bg-gradient-to-b from-black/95 via-black/60 to-transparent pt-4 transition`}
     >
       <div className="space-y-4">
         <div className="flex items-center justify-between">

@@ -38,7 +38,7 @@ export function SingerPage({ idSinger }: IProp) {
               <HeaderMusicPage />
             </div>
 
-            <div className="sticky top-0 z-10 m-4 flex items-end gap-1 md:hidden">
+            <div className="sticky top-0 z-10 m-4 flex items-center gap-1 md:hidden">
               <Link href={"/music"} className="rounded-full bg-zinc-900 p-2">
                 <CaretLeft size={28} weight="bold" />
               </Link>
