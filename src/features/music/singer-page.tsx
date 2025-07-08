@@ -33,10 +33,13 @@ export function SingerPage({ idSinger }: IProp) {
           <AudioBar />
           <MenuBarMobile />
 
-          <div className="">
+          <div>
             <div className="hidden md:flex">
               <HeaderMusicPage />
             </div>
+
+            <div className="z-5 fixed top-0 h-32 w-full rounded-b-xl bg-gradient-to-b from-black/90 via-black/55 to-transparent"></div>
+            <div className="fixed bottom-0 z-10 h-32 w-full bg-gradient-to-t from-black/95 via-black/60 to-transparent"></div>
 
             <div className="sticky top-0 z-10 m-4 flex items-center gap-1 md:hidden">
               <Link href={"/music"} className="rounded-full bg-zinc-900 p-2">

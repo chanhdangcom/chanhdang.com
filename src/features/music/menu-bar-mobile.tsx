@@ -42,7 +42,7 @@ export function MenuBarMobile() {
             initial={{ opacity: 1, scale: 0.9 }}
             exit={{ opacity: 1, scale: 0.9 }}
             transition={{
-              duration: 0.2,
+              duration: 0.3,
               type: "spring",
               stiffness: 300,
               damping: 10,
@@ -76,10 +76,10 @@ export function MenuBarMobile() {
           <AnimatePresence>
             <motion.div
               layout
-              initial={{ opacity: 1, scale: 0.9 }}
-              exit={{ opacity: 1, scale: 0.9 }}
+              initial={{ opacity: 1 }}
+              exit={{ opacity: 1 }}
               transition={{
-                duration: 0.2,
+                duration: 0.3,
                 type: "spring",
                 stiffness: 300,
                 damping: 10,
@@ -87,10 +87,10 @@ export function MenuBarMobile() {
                 ease: "easeInOut",
               }}
               layoutId="item"
-              className="rounded-full bg-zinc-900/50 backdrop-blur-md"
+              className="ml-4 rounded-full bg-zinc-900/50 backdrop-blur-md"
             >
               <div className="rounded-full p-4 text-red-600 backdrop-blur-md">
-                <House size={28} weight="fill" />
+                <House size={35} weight="fill" />
               </div>
             </motion.div>
           </AnimatePresence>

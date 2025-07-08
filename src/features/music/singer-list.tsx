@@ -1,7 +1,5 @@
 "use client";
-// import { Guitar } from "@phosphor-icons/react/dist/ssr";
 import { SingerItem } from "./component/singer-item";
-
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { MUSICSSINGER } from "./data/music-page-singer";
@@ -14,11 +12,10 @@ export function SingerList() {
       <motion.div layoutId="singer" layout>
         <div className="w-full">
           <div className="container flex gap-1 text-2xl font-semibold">
-            {/* <Guitar size={32} weight="fill" className="text-zinc-500" /> */}
             <div className="text-zinc-50">Popular artists</div>
           </div>
 
-          <div className="mt-4 flex items-center gap-4 overflow-x-auto">
+          <div className="container relative mt-4 flex items-center gap-4 overflow-x-auto">
             {MUSICSSINGER.map((music) => (
               <div key={music.id} className="shrink-0">
                 <SingerItem
@@ -29,6 +26,9 @@ export function SingerList() {
                 />
               </div>
             ))}
+
+            {/* Lớp mờ gợi ý kéo ngang bên phải */}
+            <div className="pointer-events-none absolute right-0 top-0 h-full w-12 bg-gradient-to-l from-white/80 to-transparent dark:from-zinc-900/80" />
           </div>
         </div>
       </motion.div>
