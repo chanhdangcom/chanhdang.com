@@ -59,6 +59,8 @@ export function MusicPage() {
           </div>
         </div>
 
+        <div className="fixed bottom-0 z-10 h-32 w-full bg-gradient-to-t from-black/95 via-black/60 to-transparent"></div>
+
         <div className="my-48">
           <AudioBar />
           <MenuBarMobile />
