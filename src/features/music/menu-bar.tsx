@@ -10,7 +10,7 @@ export function MenuBar() {
   return (
     <div className="relative ml-4 mt-4 hidden md:flex">
       <div className="h-96 w-60"></div>
-      <div className="fixed h-full w-60 rounded-3xl bg-gradient-to-b from-zinc-900 to-zinc-950 p-4">
+      <div className="absolute h-full w-60 rounded-3xl bg-gradient-to-b from-zinc-900 to-zinc-950 p-4">
         <div className="">
           <div className="space-y-2 text-base font-medium text-zinc-50">
             <div className="flex items-center gap-2 rounded-2xl bg-zinc-800 p-2">
