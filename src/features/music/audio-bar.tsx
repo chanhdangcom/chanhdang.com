@@ -40,6 +40,7 @@ export function AudioBar() {
   const [isClick, setIsClick] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useOutsideClick(ref, () => setIsClick(false), isClick);
+
   const [scroll, setScroll] = useState(true);
   const lastScrollY = useRef(0);
   const scrollDir = useRef<"up" | "down" | null>(null);
@@ -49,7 +50,7 @@ export function AudioBar() {
       const currentScrollY = window.scrollY;
 
       const isScrollingDown =
-        currentScrollY > lastScrollY.current && currentScrollY > 250;
+        currentScrollY > lastScrollY.current && currentScrollY > 5;
       const isScrollingUp = currentScrollY < lastScrollY.current;
 
       if (isScrollingDown && scrollDir.current !== "down") {
@@ -69,11 +70,15 @@ export function AudioBar() {
 
   const Mini = () => {
     return (
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         <motion.div
-          transition={{ duration: 0.3 }}
+          transition={{
+            duration: 1,
+            type: "spring",
+          }}
+          layout
           layoutId="audio-bar"
-          className="fixed inset-x-2 bottom-24 z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-sm md:inset-x-16 md:bottom-4 md:rounded-[55px] md:px-8 md:py-4"
+          className="fixed inset-x-2 bottom-24 z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-br from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-sm md:inset-x-16 md:bottom-4 md:rounded-[55px] md:px-8 md:py-4"
         >
           <div
             onClick={() => {
@@ -126,8 +131,8 @@ export function AudioBar() {
 
             <div className="flex w-[700px] items-center justify-start gap-3">
               {!currentMusic?.cover ? (
-                <div className="flex size-12 items-center justify-center rounded-2xl bg-zinc-900">
-                  <MusicNotes size={28} weight="fill" className="text-white" />
+                <div className="flex size-10 items-center justify-center rounded-2xl bg-zinc-900">
+                  <MusicNotes size={20} weight="fill" className="text-white" />
                 </div>
               ) : (
                 <div className="shrink-0">
@@ -136,7 +141,7 @@ export function AudioBar() {
                     width={192}
                     height={192}
                     src={currentMusic?.cover}
-                    className="flex size-12 items-center justify-center rounded-2xl object-cover md:size-16 md:rounded-2xl"
+                    className="flex size-10 items-center justify-center rounded-2xl object-cover md:size-16 md:rounded-2xl"
                   />
                 </div>
               )}
@@ -260,11 +265,15 @@ export function AudioBar() {
 
   const MiniScroll = () => {
     return (
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         <motion.div
-          transition={{ duration: 0.3 }}
+          transition={{
+            type: "spring",
+            duration: 1,
+          }}
+          layout
           layoutId="audio-bar"
-          className="fixed inset-x-20 bottom-4 z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-sm md:inset-x-16 md:bottom-4 md:rounded-[50px] md:px-8 md:py-4"
+          className="fixed inset-x-20 bottom-4 z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-br from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-sm md:inset-x-16 md:bottom-4 md:rounded-[50px] md:px-8 md:py-4"
         >
           <div
             onClick={() => {
@@ -317,7 +326,7 @@ export function AudioBar() {
 
             <div className="flex w-[700px] items-center justify-start gap-3">
               {!currentMusic?.cover ? (
-                <div className="flex size-12 items-center justify-center rounded-2xl bg-zinc-900">
+                <div className="flex size-10 items-center justify-center rounded-2xl bg-zinc-900">
                   <MusicNotes size={28} weight="fill" className="text-white" />
                 </div>
               ) : (
@@ -327,7 +336,7 @@ export function AudioBar() {
                     width={192}
                     height={192}
                     src={currentMusic?.cover}
-                    className="flex size-12 items-center justify-center rounded-2xl object-cover md:size-16 md:rounded-2xl"
+                    className="flex size-10 items-center justify-center rounded-2xl object-cover md:size-16 md:rounded-2xl"
                   />
                 </motion.div>
               )}

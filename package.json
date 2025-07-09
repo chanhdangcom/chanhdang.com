@@ -39,6 +39,7 @@
     "iconsax-react": "^0.0.8",
     "install": "^0.13.0",
     "liquid-glass-react": "^1.0.0",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.475.0",
     "mini-svg-data-uri": "^1.4.4",
     "motion": "^12.4.7",
@@ -64,6 +65,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/typography": "^0.5.16",
+    "@types/lodash": "^4.17.20",
     "@types/node": "^20",
     "@types/qs": "^6.9.18",
     "@types/react": "^19",

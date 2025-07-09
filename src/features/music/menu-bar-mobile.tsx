@@ -15,27 +15,40 @@ export function MenuBarMobile() {
   const lastScrollY = useRef(0);
   const scrollDir = useRef<"up" | "down" | null>(null);
 
+  const timeoutRef = useRef<number | null>(null);
+
   useEffect(() => {
+    const threshold = 15; // chỉ xử lý nếu chênh lệch đủ lớn
+    const delay = 10; // debounce nhẹ để phản ứng mượt hơn
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      const delta = currentScrollY - lastScrollY.current;
 
-      const isScrollingDown =
-        currentScrollY > lastScrollY.current && currentScrollY > 250;
-      const isScrollingUp = currentScrollY < lastScrollY.current;
+      if (Math.abs(delta) < threshold) return;
 
-      if (isScrollingDown && scrollDir.current !== "down") {
-        setShow(false); // scroll xuống, ẩn
-        scrollDir.current = "down";
-      } else if (isScrollingUp && scrollDir.current !== "up") {
-        setShow(true); // scroll lên, hiện
-        scrollDir.current = "up";
+      if (timeoutRef.current !== null) {
+        clearTimeout(timeoutRef.current);
       }
 
-      lastScrollY.current = currentScrollY;
+      timeoutRef.current = window.setTimeout(() => {
+        if (delta > 0 && scrollDir.current !== "down") {
+          setShow(false); // scroll xuống → ẩn
+          scrollDir.current = "down";
+        } else if (delta < 0 && scrollDir.current !== "up") {
+          setShow(true); // scroll lên → hiện
+          scrollDir.current = "up";
+        }
+
+        lastScrollY.current = currentScrollY;
+      }, delay);
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (timeoutRef.current !== null) clearTimeout(timeoutRef.current);
+    };
   }, []);
 
   return (
@@ -47,12 +60,8 @@ export function MenuBarMobile() {
             initial={{ opacity: 1, scale: 0.9 }}
             exit={{ opacity: 1, scale: 0.9 }}
             transition={{
-              duration: 0.3,
+              duration: 1,
               type: "spring",
-              stiffness: 300,
-              damping: 10,
-              mass: 0.1,
-              ease: "easeInOut",
             }}
             layoutId="item"
             className="flex gap-8 rounded-full border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 px-8 py-2 backdrop-blur-sm"
@@ -80,15 +89,9 @@ export function MenuBarMobile() {
         ) : (
           <motion.div
             layout
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 1 }}
             transition={{
-              duration: 0.3,
+              duration: 0.7,
               type: "spring",
-              stiffness: 300,
-              damping: 10,
-              mass: 0.1,
-              ease: "easeInOut",
             }}
             layoutId="item"
             className="ml-4 rounded-full border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 backdrop-blur-sm"
@@ -105,15 +108,9 @@ export function MenuBarMobile() {
           <motion.div
             layout
             layoutId="Search"
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 1 }}
             transition={{
-              duration: 0.5,
+              duration: 1,
               type: "spring",
-              stiffness: 300,
-              damping: 10,
-              mass: 0.2,
-              ease: "easeInOut",
             }}
             className="mr-4 rounded-full border border-transparent bg-gradient-to-tl from-transparent to-white/10 p-4 backdrop-blur-sm"
           >
@@ -125,15 +122,9 @@ export function MenuBarMobile() {
           <motion.div
             layout
             layoutId="Search"
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 1 }}
             transition={{
-              duration: 0.5,
+              duration: 1,
               type: "spring",
-              stiffness: 300,
-              damping: 10,
-              mass: 0.1,
-              ease: "easeInOut",
             }}
             className="mr-4 rounded-full p-4 backdrop-blur-sm"
           >
