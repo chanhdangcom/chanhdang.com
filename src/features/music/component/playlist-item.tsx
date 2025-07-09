@@ -17,7 +17,9 @@ export function PlaylistItem({ music }: IProp) {
       <div className="p-1">
         {/* <div className="text-sm font-semibold text-zinc-50">Sing: VietPop</div> */}
 
-        <div className="text-sm text-zinc-400">ChanhDang Music Hits</div>
+        <div className="text-center text-sm text-zinc-400">
+          ChanhDang Music Hits
+        </div>
 
         <div className="my-1 space-y-2">
           <div className="relative overflow-hidden rounded-lg">
