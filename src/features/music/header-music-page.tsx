@@ -10,7 +10,7 @@ import Link from "next/link";
 
 export const HeaderMusicPage = () => {
   return (
-    <div className="container sticky inset-0 top-0 z-10 rounded-b-xl py-4 transition">
+    <div className="container sticky inset-0 top-0 z-50 rounded-b-xl py-4 transition">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
