@@ -15,7 +15,7 @@ export function SingerList() {
             <div className="text-zinc-50">Popular artists</div>
           </div>
 
-          <div className="container relative mt-4 flex items-center gap-4 overflow-x-auto">
+          <div className="mt-4 flex items-center gap-3 overflow-x-auto p-1">
             {MUSICSSINGER.map((music) => (
               <div key={music.id} className="shrink-0">
                 <SingerItem

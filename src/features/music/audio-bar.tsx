@@ -38,23 +38,26 @@ export function AudioBar() {
   } = useAudio();
 
   const [isClick, setIsClick] = useState(false);
-
   const ref = useRef<HTMLDivElement>(null);
-
   useOutsideClick(ref, () => setIsClick(false), isClick);
-
   const [scroll, setScroll] = useState(true);
-
   const lastScrollY = useRef(0);
+  const scrollDir = useRef<"up" | "down" | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
-        setScroll(false);
-      } else {
-        setScroll(true);
+      const isScrollingDown =
+        currentScrollY > lastScrollY.current && currentScrollY > 250;
+      const isScrollingUp = currentScrollY < lastScrollY.current;
+
+      if (isScrollingDown && scrollDir.current !== "down") {
+        setScroll(false); // scroll xuống, ẩn
+        scrollDir.current = "down";
+      } else if (isScrollingUp && scrollDir.current !== "up") {
+        setScroll(true); // scroll lên, hiện
+        scrollDir.current = "up";
       }
 
       lastScrollY.current = currentScrollY;

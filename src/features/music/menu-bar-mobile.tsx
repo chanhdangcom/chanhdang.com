@@ -8,30 +8,35 @@ import {
   MagnifyingGlass,
   SquaresFour,
 } from "phosphor-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function MenuBarMobile() {
   const [show, setShow] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollY = useRef(0);
+  const scrollDir = useRef<"up" | "down" | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      if (currentScrollY > lastScrollY && currentScrollY > 50) {
-        // scroll xuống
-        setShow(false);
-      } else {
-        // scroll lên
-        setShow(true);
+      const isScrollingDown =
+        currentScrollY > lastScrollY.current && currentScrollY > 250;
+      const isScrollingUp = currentScrollY < lastScrollY.current;
+
+      if (isScrollingDown && scrollDir.current !== "down") {
+        setShow(false); // scroll xuống, ẩn
+        scrollDir.current = "down";
+      } else if (isScrollingUp && scrollDir.current !== "up") {
+        setShow(true); // scroll lên, hiện
+        scrollDir.current = "up";
       }
 
-      setLastScrollY(currentScrollY);
+      lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, []);
 
   return (
     <div className="fixed bottom-4 z-20 flex w-full items-center justify-between sm:hidden">

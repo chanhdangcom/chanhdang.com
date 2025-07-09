@@ -12,6 +12,7 @@ import { SingerList } from "./singer-list";
 import { Footer } from "../profile/footer";
 
 import { MenuBarMobile } from "./menu-bar-mobile";
+// import Image from "next/image";
 
 export function MusicPage() {
   return (
@@ -26,13 +27,34 @@ export function MusicPage() {
 
           <div className="md:mx-4">
             <div className="rounded-3xl from-zinc-900 to-zinc-950 md:bg-gradient-to-b md:p-4">
-              <div className="mx-8 my-2 flex justify-center bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text pb-5 font-handwritten text-4xl text-transparent md:mt-8 md:hidden md:text-5xl">
+              {/* <div className="mx-8 my-2 flex justify-center bg-gradient-to-r from-pink-500 to-cyan-500 bg-clip-text pb-5 font-handwritten text-4xl text-transparent md:mt-8 md:hidden md:text-5xl">
                 Chanh Dang Hello
-              </div>
+              </div> */}
 
               <div className="flex justify-start">
                 <CarouselAudio />
               </div>
+
+              {/* <div className="container my-8">
+                <div className="">
+                  <div className="text-xl text-zinc-50">Hits</div>
+
+                  <div className="text-xl text-zinc-400">
+                    ChanhDang Music Hits
+                  </div>
+
+                  <div className="mt-1">
+                    <Image
+                      alt="1"
+                      src="https://cdn.chanhdang.com/cover_rap_with_tran_nha.jpg"
+                      width={300}
+                      height={300}
+                      className="h-52 w-80 rounded-xl bg-gradient-to-b from-transparent via-zinc-900/60 to-zinc-900/90"
+                    />
+                    <div className="">Title</div>
+                  </div>
+                </div>
+              </div> */}
 
               <div className="my-8">
                 <SingerList />
