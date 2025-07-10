@@ -92,7 +92,7 @@ export function AudioBar() {
           }}
           layout
           layoutId="audio-bar"
-          className="fixed inset-x-2 bottom-24 z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-bl from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-md md:inset-x-16 md:bottom-4 md:rounded-[55px] md:px-8 md:py-4"
+          className="fixed inset-x-2 bottom-24 z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-bl from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-md md:inset-x-96 md:bottom-4 md:rounded-[55px] md:px-4 md:py-2"
         >
           <div
             onClick={() => {
@@ -102,10 +102,19 @@ export function AudioBar() {
             }}
             className="flex w-full items-center justify-between"
           >
-            <div className="hidden items-center gap-8 md:flex">
+            <div className="hidden items-center gap-4 md:flex">
+              <motion.div whileTap={{ scale: 0.5 }}>
+                <Shuffle
+                  onClick={() => handlePlayRandomAudio()}
+                  size={18}
+                  weight="bold"
+                  className="cursor-pointer text-zinc-500"
+                />
+              </motion.div>
+
               <motion.div whileTap={{ scale: 0.5 }}>
                 <Rewind
-                  size={32}
+                  size={25}
                   onClick={handAudioForward}
                   weight="fill"
                   className="cursor-pointer"
@@ -116,7 +125,7 @@ export function AudioBar() {
                   <Pause
                     onClick={handlePauseAudio}
                     weight="fill"
-                    size={30.5}
+                    size={30}
                     className="cursor-pointer"
                   />
                 </motion.div>
@@ -125,7 +134,7 @@ export function AudioBar() {
                   <Play
                     onClick={handleResumeAudio}
                     weight="fill"
-                    size={32}
+                    size={25}
                     className="cursor-pointer"
                   />
                 </motion.div>
@@ -134,18 +143,17 @@ export function AudioBar() {
                 <FastForward
                   onClick={handleAudioSkip}
                   weight="fill"
-                  size={32}
+                  size={25}
                   className="cursor-pointer"
                 />
               </motion.div>
-              <div className="hidden md:flex">
-                <DurationAudio />
-              </div>
+
+              <Repeat size={18} weight="bold" className="text-zinc-500" />
             </div>
 
-            <div className="flex w-[700px] items-center justify-start gap-3">
+            <div className="flex w-[700px] items-center justify-start gap-2 md:ml-6 md:gap-2">
               {!currentMusic?.cover ? (
-                <div className="flex size-10 items-center justify-center rounded-2xl bg-zinc-900">
+                <div className="flex size-10 items-center justify-center rounded-2xl bg-zinc-900 md:rounded-lg">
                   <MusicNotes size={20} weight="fill" className="text-white" />
                 </div>
               ) : (
@@ -155,57 +163,56 @@ export function AudioBar() {
                     width={192}
                     height={192}
                     src={currentMusic?.cover}
-                    className="flex size-10 items-center justify-center rounded-2xl object-cover md:size-16 md:rounded-2xl"
+                    className="flex size-10 items-center justify-center rounded-xl object-cover md:rounded-lg"
                   />
                 </div>
               )}
 
-              <div>
-                <AnimatePresence>
-                  <motion.div
-                    layoutId="title"
-                    layout
-                    className="line-clamp-1 text-sm font-semibold"
-                  >
-                    {currentMusic?.title || (
-                      <motion.div className="text-sm font-semibold">
-                        Title Song
-                      </motion.div>
-                    )}
-                  </motion.div>
-                </AnimatePresence>
+              <div className="flex items-center gap-4">
+                <div>
+                  <AnimatePresence>
+                    <motion.div
+                      layoutId="title"
+                      layout
+                      className="line-clamp-1 text-sm font-semibold"
+                    >
+                      {currentMusic?.title || (
+                        <motion.div className="text-sm font-semibold">
+                          Title Song
+                        </motion.div>
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
 
-                <AnimatePresence>
-                  <motion.div
-                    layoutId="singer-bar"
-                    layout
-                    className="line-clamp-1 text-sm font-medium text-zinc-500"
-                  >
-                    {currentMusic?.singer || (
-                      <motion.div className="text-sm">Singer</motion.div>
-                    )}
-                  </motion.div>
-                </AnimatePresence>
+                  <AnimatePresence>
+                    <motion.div
+                      layoutId="singer-bar"
+                      layout
+                      className="line-clamp-1 text-sm font-medium text-zinc-500"
+                    >
+                      {currentMusic?.singer || (
+                        <motion.div className="text-sm">Singer</motion.div>
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+
+                <div className="hidden md:flex">
+                  <DurationAudio />
+                </div>
               </div>
 
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                layout
-                transition={{ ease: "easeOut", duration: 0.5 }}
-                className="hidden md:flex"
-              >
+              {/* <div>
                 {currentMusic?.cover && (
                   <DynamicIslandWave
                     isPlay={isPlaying}
                     coverUrl={currentMusic?.cover}
                   />
                 )}
-              </motion.div>
+              </div> */}
             </div>
 
-            <div className="hidden items-center gap-8 md:flex">
+            <div className="hidden items-center gap-4 md:flex">
               {isMuted ? (
                 <motion.div whileTap={{ scale: 0.5 }}>
                   <SpeakerSlash
@@ -224,16 +231,6 @@ export function AudioBar() {
                   />
                 </motion.div>
               )}
-
-              <Repeat size={20} weight="fill" />
-              <motion.div whileTap={{ scale: 0.5 }}>
-                <Shuffle
-                  onClick={() => handlePlayRandomAudio()}
-                  size={20}
-                  weight="fill"
-                  className="cursor-pointer"
-                />
-              </motion.div>
 
               <motion.div whileTap={{ scale: 0.5 }}>
                 <Control
@@ -296,7 +293,7 @@ export function AudioBar() {
           }}
           layout
           layoutId="audio-bar"
-          className="fixed inset-x-20 bottom-6 z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-md md:inset-x-16 md:bottom-4 md:rounded-[50px] md:px-8 md:py-4"
+          className="fixed inset-x-20 bottom-6 z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-md md:inset-x-80 md:bottom-4 md:rounded-[50px] md:px-8 md:py-4"
         >
           <div
             onClick={() => {

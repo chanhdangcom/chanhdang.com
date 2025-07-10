@@ -29,7 +29,7 @@ export function DurationAudio() {
   }, [isPlaying, audioRef]);
 
   return (
-    <div className="flex gap-2 text-zinc-500">
+    <div className="flex gap-2 text-sm font-semibold text-zinc-300">
       <div className="">
         {duration ? format(new Date(currentTime * 1000), "m:ss") : "0:00"}
       </div>

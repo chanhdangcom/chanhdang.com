@@ -1,9 +1,10 @@
 "use client";
 
 import { BookBookmark, Browsers, House } from "@phosphor-icons/react/dist/ssr";
-import { AudioItemOrder } from "./component/audio-item-order";
+
 import { MUSICSPLAYLIST } from "./data/music-page-playlist";
 import { useAudio } from "@/components/music-provider";
+import { AudioItemOrder } from "./component/audio-item-order";
 
 export function MenuBar() {
   const { handlePlayAudio } = useAudio();

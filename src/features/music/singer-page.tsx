@@ -121,7 +121,7 @@ export function SingerPage({ idSinger }: IProp) {
             </div>
           </div>
 
-          <div className="mt-8 px-3 md:mx-16 md:mt-0">
+          <div className="mt-8 flex justify-center px-3 md:mx-16 md:mt-0">
             {MUSICSSINGER.filter((item) => item.id === idSinger).map((item) => (
               <div key={item.id}>
                 <AudioSingerItem music={item} />
