@@ -36,7 +36,7 @@ export function CarouselAudio() {
     <div className="w-full rounded-3xl text-zinc-50 md:max-w-6xl">
       <div className="flex justify-between">
         <div className="flex gap-1 text-3xl font-bold">
-          <div className="px-1 text-xl text-zinc-50">Trending songs</div>
+          <div className="px-1 text-xl text-zinc-50">Trending Now</div>
         </div>
 
         <div className="flex gap-2 rounded-full bg-zinc-950">

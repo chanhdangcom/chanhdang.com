@@ -8,7 +8,7 @@ import { PlaylistItem } from "./component/playlist-item";
 export function CarouselAudioPlaylist() {
   return (
     <div className="w-full md:max-w-6xl">
-      <div className="scrollbar-hide mt-2 flex overflow-x-auto md:mx-auto">
+      <div className="scrollbar-hide flex overflow-x-auto md:mx-auto">
         {MUSICSPLAYLIST.map((music) => (
           <div key={music.id} className="shrink-0">
             <PlaylistItem music={music} />

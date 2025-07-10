@@ -12,7 +12,7 @@ export function SingerList() {
       <motion.div layoutId="singer" layout>
         <div className="w-full">
           <div className="flex gap-1 px-1 text-xl font-semibold">
-            <div className="text-zinc-50">Popular artists</div>
+            <div className="text-zinc-50">Popular Artists</div>
           </div>
 
           <div className="scrollbar-hide mt-2 flex items-center gap-3 overflow-x-auto p-1">
