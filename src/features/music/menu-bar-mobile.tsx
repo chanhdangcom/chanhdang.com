@@ -62,26 +62,26 @@ export function MenuBarMobile() {
               duration: 1,
             }}
             layoutId="item"
-            className="flex gap-8 rounded-full border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 px-8 py-2 backdrop-blur-md"
+            className="ml-2 flex items-center gap-8 rounded-full border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 px-8 py-1.5 backdrop-blur-sm"
           >
             <div className="flex flex-col items-center text-red-600">
-              <House size={35} weight="fill" />
-              <div className="font-semibold">Home</div>
+              <House size={30} weight="fill" />
+              <div className="text-sm font-semibold">Home</div>
             </div>
 
             <div className="flex flex-col items-center">
-              <SquaresFour size={35} color="#dedede" weight="fill" />
-              <div className="">New</div>
+              <SquaresFour size={30} color="#dedede" weight="fill" />
+              <div className="text-sm">New</div>
             </div>
 
             <div className="flex flex-col items-center">
-              <Broadcast size={35} color="#dedede" weight="fill" />
-              <div className="">Radio</div>
+              <Broadcast size={30} color="#dedede" weight="fill" />
+              <div className="text-sm">Radio</div>
             </div>
 
             <div className="flex flex-col items-center">
-              <Bookmarks size={35} color="#dedede" weight="fill" />
-              <div className=""> Library</div>
+              <Bookmarks size={30} color="#dedede" weight="fill" />
+              <div className="text-sm"> Library</div>
             </div>
           </motion.div>
         ) : (
@@ -92,7 +92,7 @@ export function MenuBarMobile() {
               type: "spring",
             }}
             layoutId="item"
-            className="ml-4 rounded-full border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 backdrop-blur-md"
+            className="ml-4 rounded-full border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 backdrop-blur-sm"
           >
             <div className="rounded-full p-4 text-red-600 backdrop-blur-md">
               <House size={28} weight="fill" />
@@ -111,7 +111,7 @@ export function MenuBarMobile() {
               duration: 1,
               ease: "easeInOut",
             }}
-            className="mr-4 rounded-full border-2 border-transparent bg-gradient-to-bl from-transparent to-zinc-400/10 p-4 backdrop-blur-md"
+            className="mr-4 rounded-full border-2 border-transparent bg-gradient-to-bl from-transparent to-zinc-400/10 p-4 backdrop-blur-sm"
           >
             <Link href={"/music/search"}>
               <MagnifyingGlass size={28} color="#dedede" weight="bold" />
@@ -125,10 +125,10 @@ export function MenuBarMobile() {
               duration: 1,
               type: "spring",
             }}
-            className="order mr-4 rounded-full border border-transparent bg-gradient-to-bl from-transparent to-zinc-400/10 p-4 backdrop-blur-md"
+            className="order mr-4 rounded-full border border-transparent bg-gradient-to-bl from-transparent to-zinc-400/10 p-4 backdrop-blur-sm"
           >
             <Link href={"/music/search"}>
-              <MagnifyingGlass size={35} color="#dedede" weight="bold" />
+              <MagnifyingGlass size={30} color="#dedede" weight="bold" />
             </Link>
           </motion.div>
         )}
