@@ -11,11 +11,11 @@ export function SingerList() {
     <AnimatePresence>
       <motion.div layoutId="singer" layout>
         <div className="w-full">
-          <div className="container flex gap-1 text-2xl font-semibold">
+          <div className="flex gap-1 px-1 text-2xl font-semibold">
             <div className="text-zinc-50">Popular artists</div>
           </div>
 
-          <div className="mt-2 flex items-center gap-3 overflow-x-auto p-1">
+          <div className="scrollbar-hide mt-2 flex items-center gap-3 overflow-x-auto p-1">
             {MUSICSSINGER.map((music) => (
               <div key={music.id} className="shrink-0">
                 <SingerItem

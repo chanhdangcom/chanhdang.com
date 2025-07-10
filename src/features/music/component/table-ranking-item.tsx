@@ -16,7 +16,7 @@ export function TableRankingItem({ music, handlePlay }: Iprop) {
     <div className="z-10 cursor-pointer text-zinc-50" onClick={handlePlay}>
       <div className="flex items-center justify-between">
         <AudioItemOrder
-          className="size-16"
+          className="size-12"
           music={music}
           handlePlay={() => handlePlayAudio}
         />

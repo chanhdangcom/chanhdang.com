@@ -92,7 +92,7 @@ export function AudioBar() {
           }}
           layout
           layoutId="audio-bar"
-          className="fixed inset-x-2 bottom-24 z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-sm md:inset-x-16 md:bottom-4 md:rounded-[55px] md:px-8 md:py-4"
+          className="fixed inset-x-2 bottom-24 z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-bl from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-md md:inset-x-16 md:bottom-4 md:rounded-[55px] md:px-8 md:py-4"
         >
           <div
             onClick={() => {
@@ -296,7 +296,7 @@ export function AudioBar() {
           }}
           layout
           layoutId="audio-bar"
-          className="fixed inset-x-20 bottom-6 z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-sm md:inset-x-16 md:bottom-4 md:rounded-[50px] md:px-8 md:py-4"
+          className="fixed inset-x-20 bottom-6 z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-md md:inset-x-16 md:bottom-4 md:rounded-[50px] md:px-8 md:py-4"
         >
           <div
             onClick={() => {

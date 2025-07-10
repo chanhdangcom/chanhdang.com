@@ -34,14 +34,12 @@ export function CarouselAudio() {
 
   return (
     <div className="w-full rounded-3xl text-zinc-50 md:max-w-6xl">
-      <div className="container flex justify-between">
+      <div className="flex justify-between">
         <div className="flex gap-1 text-3xl font-bold">
-          {/* <MusicNotesSimple size={32} weight="fill" className="text-zinc-400" /> */}
-
-          <div className="text-2xl text-zinc-50">Trending songs</div>
+          <div className="px-1 text-2xl text-zinc-50">Trending songs</div>
         </div>
 
-        <div className="flex gap-2 rounded-full bg-zinc-950 p-1">
+        <div className="flex gap-2 rounded-full bg-zinc-950">
           <button
             className="flex size-8 items-center justify-center rounded-full bg-zinc-800 p-1"
             onClick={() => scroll("left")}
@@ -58,7 +56,7 @@ export function CarouselAudio() {
         </div>
       </div>
 
-      <div ref={scrollRef} className="flex overflow-x-auto">
+      <div ref={scrollRef} className="scrollbar-hide flex overflow-x-auto">
         {MUSICS.map((music) => (
           <div key={music.id} className="shrink-0">
             <AuidoItem

@@ -90,6 +90,7 @@ const config: Config = {
     backgroundUtilities,
     require("tailwindcss-animate"),
     typography, // ✅ Thêm vào đây
+    require('tailwind-scrollbar-hide')
   ],
 };
 

@@ -22,10 +22,7 @@ export function AudioItemOrder({
 
   const UnClick = () => {
     return (
-      <div
-        className="flex w-64 items-center justify-start gap-3"
-        onClick={handlePlay}
-      >
+      <div className="flex w-60 items-center gap-3" onClick={handlePlay}>
         {music.cover ? (
           <Image
             alt="cover"
@@ -33,20 +30,17 @@ export function AudioItemOrder({
             width={300}
             height={300}
             className={cn(
-              "size-12 shrink-0 rounded-xl object-cover shadow-sm md:size-20",
+              "size-12 shrink-0 rounded-md object-cover shadow-sm md:size-20",
               className
             )}
           />
         ) : (
-          <div className="size-18 rounded-2xl bg-zinc-800"></div>
+          <div className="size-12 rounded-2xl bg-zinc-800"></div>
         )}
 
-        <div>
+        <div className="w-80">
           <div
-            className={cn(
-              "line-clamp-1 w-36 text-base font-semibold",
-              classNameOrder
-            )}
+            className={cn("line-clamp-1 text-sm font-semibold", classNameOrder)}
           >
             {music.title || "TITLE SONG"}
           </div>

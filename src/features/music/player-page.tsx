@@ -130,7 +130,7 @@ Thênh thang bước đi giữa trời rực rỡ\n`;
         layoutId="audio-bar"
         className="fixed inset-0 z-50 space-y-4 px-4 md:inset-x-96 md:inset-y-20 md:rounded-3xl"
       >
-        <div className="absolute inset-0 -z-10 bg-zinc-900/60 backdrop-blur-3xl md:rounded-3xl">
+        <div className="absolute inset-0 -z-10 bg-zinc-950 backdrop-blur-3xl md:rounded-3xl">
           <Image
             alt="cover"
             width={1000}
