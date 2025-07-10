@@ -2,6 +2,7 @@ import { IMusic } from "@/features/profile/types/music";
 import Image from "next/image";
 import { IPlaylistItem } from "../type/playlist";
 import { cn } from "@/lib/utils";
+import { DotsThree } from "phosphor-react";
 
 type IProp = {
   music: IMusic | IPlaylistItem;
@@ -14,7 +15,7 @@ export function AudioItemOrder({
   music,
   handlePlay,
   className,
-  classNameOrder,
+  // classNameOrder,
 }: IProp) {
   if (!music) {
     return <div className="text-red-500">Dữ liệu nhạc chưa sẵn sàng</div>;
@@ -22,7 +23,10 @@ export function AudioItemOrder({
 
   const UnClick = () => {
     return (
-      <div className="flex w-60 items-center gap-3" onClick={handlePlay}>
+      <div
+        className="flex w-80 items-center gap-3 md:w-96"
+        onClick={handlePlay}
+      >
         {music.cover ? (
           <Image
             alt="cover"
@@ -30,7 +34,7 @@ export function AudioItemOrder({
             width={300}
             height={300}
             className={cn(
-              "size-12 shrink-0 rounded-md object-cover shadow-sm md:size-20",
+              "size-12 shrink-0 rounded-md object-cover shadow-sm md:size-14",
               className
             )}
           />
@@ -38,14 +42,21 @@ export function AudioItemOrder({
           <div className="size-12 rounded-2xl bg-zinc-800"></div>
         )}
 
-        <div className="w-80">
-          <div
-            className={cn("line-clamp-1 text-sm font-semibold", classNameOrder)}
-          >
-            {music.title || "TITLE SONG"}
-          </div>
-          <div className="line-clamp-1 text-sm text-zinc-500">
-            {music.singer || "SINGER"}
+        <div className="flex-2 flex-1 flex-col border-b border-zinc-900 pb-2">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-1 text-sm font-semibold text-white">
+                <span className="line-clamp-1">
+                  {music.title || "TITLE SONG"}
+                </span>
+              </div>
+
+              <div className="line-clamp-1 text-sm text-zinc-400">
+                {music.singer || "SINGER"}
+              </div>
+            </div>
+
+            <DotsThree size={20} weight="bold" />
           </div>
         </div>
       </div>

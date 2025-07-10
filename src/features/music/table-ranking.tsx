@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 import { useAudio } from "@/components/music-provider";
 import { TableRankingItem } from "./component/table-ranking-item";
@@ -10,8 +11,8 @@ export function TableRanking() {
   return (
     <div className="z-[1] rounded-3xl p-1 md:max-w-6xl md:p-2">
       <div className="mb-2">
-        <div className="px-1 text-2xl font-semibold text-zinc-50">
-          Todays Hits
+        <div className="px-1 text-xl font-semibold text-zinc-50">
+          Today's Hits
         </div>
       </div>
 

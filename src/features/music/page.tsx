@@ -43,16 +43,6 @@ export function MusicPage() {
                 <SingerList />
               </div>
 
-              {/* <div className="flex items-center justify-between gap-4">
-                <div className="my-8">
-                  <CarouselReplayAudio />
-                </div>
-
-                <div className="hidden md:flex">
-                  <TableRanking />
-                </div>
-              </div> */}
-
               <Footer />
             </div>
           </div>

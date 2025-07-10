@@ -2,7 +2,6 @@
 import { useAudio } from "@/components/music-provider";
 import { AudioItemOrder } from "./audio-item-order";
 import { IMusic } from "@/features/profile/types/music";
-import { DotsThree } from "@phosphor-icons/react/dist/ssr";
 
 type Iprop = {
   music: IMusic;
@@ -20,7 +19,6 @@ export function TableRankingItem({ music, handlePlay }: Iprop) {
           music={music}
           handlePlay={() => handlePlayAudio}
         />
-        <DotsThree size={20} weight="bold" />
       </div>
     </div>
   );
