@@ -57,11 +57,9 @@ export function MenuBarMobile() {
         {show ? (
           <motion.div
             layout
-            initial={{ opacity: 1, scale: 0.9 }}
-            exit={{ opacity: 1, scale: 0.9 }}
             transition={{
-              duration: 1,
               type: "spring",
+              duration: 1,
             }}
             layoutId="item"
             className="flex gap-8 rounded-full border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 px-8 py-2 backdrop-blur-sm"
@@ -90,7 +88,7 @@ export function MenuBarMobile() {
           <motion.div
             layout
             transition={{
-              duration: 0.7,
+              duration: 0.5,
               type: "spring",
             }}
             layoutId="item"
@@ -109,10 +107,11 @@ export function MenuBarMobile() {
             layout
             layoutId="Search"
             transition={{
-              duration: 1,
               type: "spring",
+              duration: 1,
+              ease: "easeInOut",
             }}
-            className="mr-4 rounded-full border border-transparent bg-gradient-to-tl from-transparent to-white/10 p-4 backdrop-blur-sm"
+            className="mr-4 rounded-full border-2 border-transparent bg-gradient-to-bl from-transparent to-zinc-400/10 p-4 backdrop-blur-sm"
           >
             <Link href={"/music/search"}>
               <MagnifyingGlass size={28} color="#dedede" weight="bold" />
@@ -126,7 +125,7 @@ export function MenuBarMobile() {
               duration: 1,
               type: "spring",
             }}
-            className="mr-4 rounded-full p-4 backdrop-blur-sm"
+            className="order mr-4 rounded-full border border-transparent bg-gradient-to-bl from-transparent to-zinc-400/10 p-4 backdrop-blur-sm"
           >
             <Link href={"/music/search"}>
               <MagnifyingGlass size={35} color="#dedede" weight="bold" />

@@ -3,7 +3,7 @@ export const MUSICSPLAYLIST = [
   {
     id: "1",
     title: "Festival Hits",
-    singer: "Quốc Thiên",
+    singer: "New Playlist",
     cover: "https://cdn.chanhdang.com/festival_cover.png",
     
 
@@ -12,7 +12,7 @@ export const MUSICSPLAYLIST = [
   {
     id: "2",
     title: "Retro Hits",
-    singer: "Vũ",
+    singer: "Coming Soon",
     cover: "https://cdn.chanhdang.com/retro_cover.png",
   
   },
@@ -20,7 +20,7 @@ export const MUSICSPLAYLIST = [
   {
     id: "3",
     title: "Study Music",
-    singer: "Quốc Thiên",
+    singer: "Update Playlist",
     cover: "https://cdn.chanhdang.com/study_cover.webp",
     
 
@@ -29,7 +29,7 @@ export const MUSICSPLAYLIST = [
   {
     id: "4",
     title: "Vpop Hits 2025",
-    singer: "Vũ",
+    singer: "New Album",
     cover: "https://cdn.chanhdang.com/vpop_cover.jpg",
   
   },

@@ -17,14 +17,10 @@ export const HeaderMusicPage = () => {
             <div className="flex items-end gap-1">
               <Link
                 href={"/music"}
-                className="flex gap-1 rounded-3xl px-3 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                className="flex cursor-pointer gap-1 rounded-3xl px-3 py-1"
               >
                 <ChanhdangLogotype />
 
-                {/* <div className="mt-2 flex text-lg text-pink-400">
-                  <div>Mus</div>
-                  <div className="text-cyan-400">ic</div>
-                </div> */}
                 <div className="mt-2 flex text-lg font-semibold">Music</div>
               </Link>
             </div>

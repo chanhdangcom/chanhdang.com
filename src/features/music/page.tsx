@@ -28,16 +28,16 @@ export function MusicPage() {
 
           <div className="md:mx-4">
             <div className="rounded-3xl from-zinc-900 to-zinc-950 md:bg-gradient-to-b md:p-4">
-              <div className="mt-4 flex justify-start">
+              <div className="flex justify-start">
                 <CarouselAudioPlaylist />
               </div>
 
-              <div className="my-8">
-                <SingerList />
+              <div className="mt-8 flex justify-start">
+                <CarouselAudio />
               </div>
 
-              <div className="flex justify-start">
-                <CarouselAudio />
+              <div className="mt-8">
+                <SingerList />
               </div>
 
               <div className="flex items-center justify-between gap-4">
@@ -58,8 +58,6 @@ export function MusicPage() {
             </div>
           </div>
         </div>
-
-        {/* <div className="fixed bottom-0 z-10 h-56 w-full bg-gradient-to-t from-black/95 via-black/60 to-transparent"></div> */}
 
         <div className="my-48">
           <AudioBar />

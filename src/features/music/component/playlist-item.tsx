@@ -14,22 +14,19 @@ export function PlaylistItem({ music }: IProp) {
 
   return (
     <>
-      <div className="p-1">
-        {/* <div className="text-sm font-semibold text-zinc-50">Sing: VietPop</div> */}
-
-        <div className="text-center text-sm text-zinc-400">
-          ChanhDang Music Hits
-        </div>
+      <div className="p-1.5">
+        <div className="text-xl font-semibold text-white">{music.singer}</div>
+        <div className="text-sm text-zinc-400">ChanhDang Music</div>
 
         <div className="my-1 space-y-2">
-          <div className="relative overflow-hidden rounded-lg">
-            <div className="relative h-36 w-60">
+          <div className="relative overflow-hidden rounded-xl">
+            <div className="relative h-52 w-80">
               <Image
                 alt="1"
                 src={music.cover}
                 width={300}
                 height={300}
-                className="absolute inset-0 h-36 w-60 rounded-xl object-cover opacity-40 blur-md"
+                className="absolute inset-0 h-52 w-80 rounded-xl object-cover opacity-40 blur-md"
               />
 
               <Image
@@ -37,7 +34,7 @@ export function PlaylistItem({ music }: IProp) {
                 src={music.cover}
                 width={300}
                 height={300}
-                className="relative z-10 mx-auto h-36 w-auto rounded-lg object-cover"
+                className="relative z-10 mx-auto h-52 w-auto rounded-lg object-cover"
               />
             </div>
 

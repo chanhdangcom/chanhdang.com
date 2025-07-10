@@ -45,40 +45,54 @@ export function AudioBar() {
   const lastScrollY = useRef(0);
   const scrollDir = useRef<"up" | "down" | null>(null);
 
+  const timeoutRef = useRef<number | null>(null);
+
   useEffect(() => {
+    const threshold = 15; // chỉ xử lý nếu chênh lệch đủ lớn
+    const delay = 10; // debounce nhẹ để phản ứng mượt hơn
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      const delta = currentScrollY - lastScrollY.current;
 
-      const isScrollingDown =
-        currentScrollY > lastScrollY.current && currentScrollY > 5;
-      const isScrollingUp = currentScrollY < lastScrollY.current;
+      if (Math.abs(delta) < threshold) return;
 
-      if (isScrollingDown && scrollDir.current !== "down") {
-        setScroll(false); // scroll xuống, ẩn
-        scrollDir.current = "down";
-      } else if (isScrollingUp && scrollDir.current !== "up") {
-        setScroll(true); // scroll lên, hiện
-        scrollDir.current = "up";
+      if (timeoutRef.current !== null) {
+        clearTimeout(timeoutRef.current);
       }
 
-      lastScrollY.current = currentScrollY;
+      timeoutRef.current = window.setTimeout(() => {
+        if (delta > 0 && scrollDir.current !== "down") {
+          setScroll(false); // scroll xuống → ẩn
+          scrollDir.current = "down";
+        } else if (delta < 0 && scrollDir.current !== "up") {
+          setScroll(true); // scroll lên → hiện
+          scrollDir.current = "up";
+        }
+
+        lastScrollY.current = currentScrollY;
+      }, delay);
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (timeoutRef.current !== null) clearTimeout(timeoutRef.current);
+    };
   }, []);
 
   const Mini = () => {
     return (
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         <motion.div
           transition={{
-            duration: 1,
             type: "spring",
+            duration: 1,
+            ease: "easeInOut",
           }}
           layout
           layoutId="audio-bar"
-          className="fixed inset-x-2 bottom-24 z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-br from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-sm md:inset-x-16 md:bottom-4 md:rounded-[55px] md:px-8 md:py-4"
+          className="fixed inset-x-2 bottom-24 z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-sm md:inset-x-16 md:bottom-4 md:rounded-[55px] md:px-8 md:py-4"
         >
           <div
             onClick={() => {
@@ -148,7 +162,11 @@ export function AudioBar() {
 
               <div>
                 <AnimatePresence>
-                  <motion.div className="line-clamp-1 text-sm font-semibold">
+                  <motion.div
+                    layoutId="title"
+                    layout
+                    className="line-clamp-1 text-sm font-semibold"
+                  >
                     {currentMusic?.title || (
                       <motion.div className="text-sm font-semibold">
                         Title Song
@@ -158,7 +176,11 @@ export function AudioBar() {
                 </AnimatePresence>
 
                 <AnimatePresence>
-                  <motion.div className="line-clamp-1 text-sm font-medium text-zinc-500">
+                  <motion.div
+                    layoutId="singer-bar"
+                    layout
+                    className="line-clamp-1 text-sm font-medium text-zinc-500"
+                  >
                     {currentMusic?.singer || (
                       <motion.div className="text-sm">Singer</motion.div>
                     )}
@@ -265,15 +287,16 @@ export function AudioBar() {
 
   const MiniScroll = () => {
     return (
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         <motion.div
           transition={{
             type: "spring",
             duration: 1,
+            ease: "easeInOut",
           }}
           layout
           layoutId="audio-bar"
-          className="fixed inset-x-20 bottom-4 z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-br from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-sm md:inset-x-16 md:bottom-4 md:rounded-[50px] md:px-8 md:py-4"
+          className="fixed inset-x-20 bottom-6 z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-sm md:inset-x-16 md:bottom-4 md:rounded-[50px] md:px-8 md:py-4"
         >
           <div
             onClick={() => {
@@ -327,7 +350,7 @@ export function AudioBar() {
             <div className="flex w-[700px] items-center justify-start gap-3">
               {!currentMusic?.cover ? (
                 <div className="flex size-10 items-center justify-center rounded-2xl bg-zinc-900">
-                  <MusicNotes size={28} weight="fill" className="text-white" />
+                  <MusicNotes size={20} weight="fill" className="text-white" />
                 </div>
               ) : (
                 <motion.div layoutId="Cover" className="shrink-0">
@@ -343,7 +366,11 @@ export function AudioBar() {
 
               <div>
                 <AnimatePresence>
-                  <motion.div className="line-clamp-1 text-sm font-semibold">
+                  <motion.div
+                    layout
+                    layoutId="title"
+                    className="line-clamp-1 text-sm font-semibold"
+                  >
                     {currentMusic?.title || (
                       <motion.div className="text-sm font-semibold">
                         Title Song
@@ -353,7 +380,11 @@ export function AudioBar() {
                 </AnimatePresence>
 
                 <AnimatePresence>
-                  <motion.div className="line-clamp-1 text-sm font-medium text-zinc-500">
+                  <motion.div
+                    layout
+                    layoutId="singer-bar"
+                    className="line-clamp-1 text-sm font-medium text-zinc-500"
+                  >
                     {currentMusic?.singer || (
                       <motion.div className="text-sm">Singer</motion.div>
                     )}
