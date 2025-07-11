@@ -27,7 +27,7 @@ export function SingerPage({ idSinger }: IProp) {
 
       <AnimatePresence>
         <motion.div
-          className="mx-auto mb-48 bg-zinc-950 md:ml-64 md:max-w-full"
+          className="mx-auto mb-48 dark:bg-zinc-950 md:ml-64 md:max-w-full"
           layoutId="singer"
         >
           <AudioBar />
@@ -38,12 +38,18 @@ export function SingerPage({ idSinger }: IProp) {
               <HeaderMusicPage />
             </div>
 
-            <div className="z-5 fixed top-0 h-32 w-full rounded-b-xl bg-gradient-to-b from-black/90 via-black/55 to-transparent"></div>
-            <div className="fixed bottom-0 z-10 h-32 w-full bg-gradient-to-t from-black/95 via-black/60 to-transparent"></div>
+            <div className="z-5 fixed top-0 h-20 w-full rounded-b-xl bg-gradient-to-b from-white to-transparent dark:from-black/95 dark:via-black/60"></div>
 
             <div className="sticky top-0 z-10 m-4 flex items-center gap-1 md:hidden">
-              <Link href={"/music"} className="rounded-full bg-zinc-900 p-2">
-                <CaretLeft size={28} weight="bold" />
+              <Link
+                href={"/music"}
+                className="rounded-full bg-zinc-200 p-2 dark:bg-zinc-900"
+              >
+                <CaretLeft
+                  size={28}
+                  weight="bold"
+                  className="text-black dark:text-white"
+                />
               </Link>
             </div>
 
@@ -90,13 +96,13 @@ export function SingerPage({ idSinger }: IProp) {
 
                       <div className="space-y-4">
                         <div className="flex w-full justify-between gap-4">
-                          <div className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-900 px-4 py-1 font-semibold text-red-500">
+                          <div className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 dark:bg-zinc-900">
                             <Play size={20} weight="fill" />
 
                             <div className="text-xl">Play</div>
                           </div>
 
-                          <div className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-900 px-4 py-2 font-semibold text-red-500">
+                          <div className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-2 font-semibold text-red-500 dark:bg-zinc-900">
                             <Shuffle size={20} weight="fill" />
 
                             <div className="text-xl">Mix song</div>
