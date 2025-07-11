@@ -11,18 +11,15 @@ import { SwitchTheme } from "@/components/switch-theme";
 
 export const HeaderMusicPage = () => {
   return (
-    <div className="container sticky inset-0 top-0 z-50 rounded-b-xl py-4 transition">
+    <div className="sticky inset-0 top-0 z-50 rounded-b-xl py-4 transition md:container">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-end gap-1">
-              <Link
-                href={"/music"}
-                className="flex cursor-pointer gap-1 rounded-3xl px-3 py-1"
-              >
-                <ChanhdangLogotype />
+              <Link href={"/music"} className="flex cursor-pointer">
+                <ChanhdangLogotype className="w-40" />
 
-                <div className="mt-2 flex text-lg font-semibold">Music</div>
+                <div className="mt-4 flex text-sm font-semibold">Music</div>
               </Link>
             </div>
 
@@ -48,7 +45,10 @@ export const HeaderMusicPage = () => {
             </AnimatePresence>
           </div>
 
-          <SwitchTheme />
+          <div className="mr-2">
+            {" "}
+            <SwitchTheme />
+          </div>
         </div>
 
         {/* <div className="md:hidden">
