@@ -1,9 +1,9 @@
 "use client";
 
-import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import React, { useEffect, useState } from "react";
 import { ThemeItem } from "./theme-item";
+import { Monitor, Moon, Sun } from "phosphor-react";
 
 export const SwitchTheme = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -19,22 +19,22 @@ export const SwitchTheme = () => {
   }
 
   return (
-    <div className="flex items-center rounded-full border bg-zinc-100/100 shadow-sm backdrop-blur-md dark:border-zinc-700 dark:bg-zinc-950/80">
+    <div className="flex items-center rounded-full border shadow-sm backdrop-blur-sm dark:border-zinc-700">
       <ThemeItem
         themeKey="light"
-        themeIcon={<SunIcon size={20} />}
+        themeIcon={<Sun size={18} weight="fill" />}
         isActive={theme === "light"}
         onChangeTheme={setTheme}
       />
       <ThemeItem
         themeKey="dark"
-        themeIcon={<MoonIcon size={20} />}
+        themeIcon={<Moon size={18} weight="fill" />}
         isActive={theme === "dark"}
         onChangeTheme={setTheme}
       />
       <ThemeItem
         themeKey="system"
-        themeIcon={<MonitorIcon size={20} />}
+        themeIcon={<Monitor size={18} weight="bold" />}
         isActive={theme === "system"}
         onChangeTheme={setTheme}
       />

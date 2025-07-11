@@ -62,25 +62,25 @@ export function MenuBarMobile() {
               duration: 1,
             }}
             layoutId="item"
-            className="ml-2 flex items-center gap-8 rounded-full border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 px-8 py-1.5 backdrop-blur-sm"
+            className="hite ml-2 flex items-center gap-8 rounded-full border border-transparent bg-gradient-to-tl from-transparent to-black/10 px-8 py-1.5 text-black backdrop-blur-sm dark:border-2 dark:to-white/10 dark:text-white"
           >
-            <div className="flex flex-col items-center text-red-600">
+            <div className="flex flex-col items-center text-red-500">
               <House size={30} weight="fill" />
               <div className="text-sm font-semibold">Home</div>
             </div>
 
             <div className="flex flex-col items-center">
-              <SquaresFour size={30} color="#dedede" weight="fill" />
+              <SquaresFour size={30} weight="fill" className="" />
               <div className="text-sm">New</div>
             </div>
 
             <div className="flex flex-col items-center">
-              <Broadcast size={30} color="#dedede" weight="fill" />
+              <Broadcast size={30} weight="fill" />
               <div className="text-sm">Radio</div>
             </div>
 
             <div className="flex flex-col items-center">
-              <Bookmarks size={30} color="#dedede" weight="fill" />
+              <Bookmarks size={30} weight="fill" />
               <div className="text-sm"> Library</div>
             </div>
           </motion.div>
@@ -114,7 +114,11 @@ export function MenuBarMobile() {
             className="mr-4 rounded-full border-2 border-transparent bg-gradient-to-bl from-transparent to-zinc-400/10 p-4 backdrop-blur-sm"
           >
             <Link href={"/music/search"}>
-              <MagnifyingGlass size={28} color="#dedede" weight="bold" />
+              <MagnifyingGlass
+                size={28}
+                weight="bold"
+                className="text-black dark:text-white"
+              />
             </Link>
           </motion.div>
         ) : (
@@ -128,7 +132,11 @@ export function MenuBarMobile() {
             className="order mr-4 rounded-full border border-transparent bg-gradient-to-bl from-transparent to-zinc-400/10 p-4 backdrop-blur-sm"
           >
             <Link href={"/music/search"}>
-              <MagnifyingGlass size={30} color="#dedede" weight="bold" />
+              <MagnifyingGlass
+                size={30}
+                weight="bold"
+                className="text-black dark:text-white"
+              />
             </Link>
           </motion.div>
         )}

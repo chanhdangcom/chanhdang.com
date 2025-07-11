@@ -7,6 +7,7 @@ import { MusicType } from "./music-type";
 
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { SwitchTheme } from "@/components/switch-theme";
 
 export const HeaderMusicPage = () => {
   return (
@@ -46,6 +47,8 @@ export const HeaderMusicPage = () => {
               </motion.div>
             </AnimatePresence>
           </div>
+
+          <SwitchTheme />
         </div>
 
         {/* <div className="md:hidden">

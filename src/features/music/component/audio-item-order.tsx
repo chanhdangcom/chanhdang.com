@@ -42,10 +42,10 @@ export function AudioItemOrder({
           <div className="size-12 rounded-2xl bg-zinc-800"></div>
         )}
 
-        <div className="flex-2 flex-1 flex-col border-b border-zinc-900 pb-2">
+        <div className="flex-2 flex-1 flex-col border-b border-zinc-200 pb-2 text-black dark:border-zinc-900 dark:text-white">
           <div className="flex items-center justify-between">
             <div>
-              <div className="flex items-center gap-1 text-sm font-semibold text-white">
+              <div className="flex items-center gap-1 text-sm font-semibold">
                 <span className="line-clamp-1">
                   {music.title || "TITLE SONG"}
                 </span>

@@ -10,7 +10,7 @@ export function AuidoItem({ music, handlePlay }: IProp) {
   return (
     <>
       <div
-        className="w-fit shrink-0 cursor-pointer space-y-2 rounded-xl p-1.5 text-zinc-50 hover:bg-zinc-900"
+        className="w-fit shrink-0 cursor-pointer space-y-2 rounded-xl p-1.5 text-zinc-50 hover:bg-zinc-100 dark:hover:bg-zinc-900"
         onClick={handlePlay}
       >
         {music.cover ? (
@@ -26,7 +26,7 @@ export function AuidoItem({ music, handlePlay }: IProp) {
           <div className="size-32 rounded-2xl bg-zinc-800"></div>
         )}
 
-        <div className="">
+        <div className="text-black dark:text-white">
           <div className="line-clamp-1 w-32 text-sm font-semibold">
             {music.title || "TITLE"}
           </div>

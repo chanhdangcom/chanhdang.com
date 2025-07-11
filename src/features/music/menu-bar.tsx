@@ -11,21 +11,21 @@ export function MenuBar() {
   return (
     <div className="relative ml-4 mt-4 hidden md:flex">
       <div className="h-96 w-60"></div>
-      <div className="absolute h-full w-60 rounded-3xl bg-gradient-to-b from-zinc-900 to-zinc-950 p-4">
+      <div className="absolute h-full w-60 rounded-3xl bg-gradient-to-b from-zinc-200 to-zinc-100 p-4 dark:from-zinc-900 dark:to-zinc-950">
         <div className="">
-          <div className="space-y-2 text-base font-medium text-zinc-50">
-            <div className="flex items-center gap-2 rounded-2xl bg-zinc-800 p-2">
-              <House size={20} className="" weight="fill" />
+          <div className="space-y-2 text-base font-medium text-black dark:text-white">
+            <div className="flex items-center gap-2 rounded-2xl bg-zinc-300 p-2 dark:bg-zinc-800">
+              <House size={20} weight="fill" />
               <div className="font-semibold">Home</div>
             </div>
 
-            <div className="flex items-center gap-2 rounded-2xl bg-zinc-800 p-2">
-              <Browsers size={20} className="text-zinc-50" />
+            <div className="flex items-center gap-2 rounded-2xl bg-zinc-300 p-2 dark:bg-zinc-800">
+              <Browsers size={20} weight="fill" />
               <div className="font-semibold">Brower</div>
             </div>
 
-            <div className="flex items-center gap-2 rounded-2xl bg-zinc-800 p-2">
-              <BookBookmark size={20} className="" />
+            <div className="flex items-center gap-2 rounded-2xl bg-zinc-300 p-2 dark:bg-zinc-800">
+              <BookBookmark size={20} weight="fill" />
               <div className="font-semibold">Library</div>
             </div>
           </div>

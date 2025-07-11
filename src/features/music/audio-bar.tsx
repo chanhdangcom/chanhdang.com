@@ -13,7 +13,7 @@ import {
 } from "phosphor-react";
 
 import { AnimatePresence, motion } from "motion/react";
-import DynamicIslandWave from "@/components/ui/dynamic-island";
+
 import { DurationAudio } from "./component/duration-audio";
 import {
   Control,
@@ -92,7 +92,7 @@ export function AudioBar() {
           }}
           layout
           layoutId="audio-bar"
-          className="fixed inset-x-2 bottom-[85px] z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-sm md:inset-x-96 md:bottom-4 md:rounded-[55px] md:px-4 md:py-2"
+          className="d fixed inset-x-2 bottom-[85px] z-20 flex justify-center rounded-[50px] border border-transparent bg-gradient-to-tl from-transparent to-black/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-sm dark:border-2 dark:to-white/10 md:inset-x-96 md:bottom-4 md:rounded-[55px] md:px-4 md:py-2"
         >
           <div
             onClick={() => {
@@ -174,7 +174,7 @@ export function AudioBar() {
                     <motion.div
                       layoutId="title"
                       layout
-                      className="line-clamp-1 text-sm font-semibold"
+                      className="line-clamp-1 text-sm font-semibold text-black dark:text-white"
                     >
                       {currentMusic?.title || (
                         <motion.div className="text-sm font-semibold">
@@ -242,15 +242,15 @@ export function AudioBar() {
               </motion.div>
             </div>
 
-            <div className="ml-4 flex items-center gap-4 md:hidden">
-              <motion.div layout>
+            <div className="ml-4 flex items-center md:hidden md:gap-4">
+              {/* <motion.div layout>
                 {currentMusic?.cover && (
                   <DynamicIslandWave
                     isPlay={isPlaying}
                     coverUrl={currentMusic?.cover}
                   />
                 )}
-              </motion.div>
+              </motion.div> */}
 
               {isPlaying ? (
                 <motion.div
@@ -261,7 +261,11 @@ export function AudioBar() {
                   whileTap={{ scale: 0.5 }}
                   className="mr-4"
                 >
-                  <Pause weight="fill" size={23} className="cursor-pointer" />
+                  <Pause
+                    weight="fill"
+                    size={23}
+                    className="cursor-pointer text-black dark:text-white"
+                  />
                 </motion.div>
               ) : (
                 <motion.div
@@ -272,9 +276,22 @@ export function AudioBar() {
                   whileTap={{ scale: 0.5 }}
                   className="mr-4"
                 >
-                  <Play weight="fill" size={23} className="cursor-pointer" />
+                  <Play
+                    weight="fill"
+                    size={23}
+                    className="cursor-pointer text-black dark:text-white"
+                  />
                 </motion.div>
               )}
+
+              <motion.div whileTap={{ scale: 0.5 }}>
+                <FastForward
+                  onClick={handleAudioSkip}
+                  weight="fill"
+                  size={30}
+                  className="cursor-pointer text-black dark:text-white"
+                />
+              </motion.div>
             </div>
           </div>
         </motion.div>
@@ -293,7 +310,7 @@ export function AudioBar() {
           }}
           layout
           layoutId="audio-bar"
-          className="fixed inset-x-20 bottom-6 z-20 flex justify-center rounded-[50px] border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-md md:inset-x-80 md:bottom-4 md:rounded-[50px] md:px-4 md:py-2"
+          className="fixed inset-x-20 bottom-6 z-20 flex justify-center rounded-[50px] border border-transparent bg-gradient-to-tl from-transparent to-black/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-sm dark:border-2 dark:to-white/10 md:inset-x-80 md:bottom-4 md:rounded-[50px] md:px-4 md:py-2"
         >
           <div
             onClick={() => {
@@ -375,7 +392,7 @@ export function AudioBar() {
                     <motion.div
                       layoutId="title"
                       layout
-                      className="line-clamp-1 text-sm font-semibold"
+                      className="line-clamp-1 text-sm font-semibold text-black dark:text-white"
                     >
                       {currentMusic?.title || (
                         <motion.div className="text-sm font-semibold">
@@ -415,7 +432,7 @@ export function AudioBar() {
 
             <div className="hidden items-center gap-4 md:flex">
               {isMuted ? (
-                <motion.div whileTap={{ scale: 0.5 }}>
+                <motion.div whileTap={{ scale: 0.5 }} className="">
                   <SpeakerSlash
                     size={20}
                     weight="fill"
@@ -453,7 +470,11 @@ export function AudioBar() {
                   whileTap={{ scale: 0.5 }}
                   className="mr-4"
                 >
-                  <Pause weight="fill" size={23} className="cursor-pointer" />
+                  <Pause
+                    weight="fill"
+                    size={23}
+                    className="cursor-pointer text-black dark:text-white"
+                  />
                 </motion.div>
               ) : (
                 <motion.div
@@ -464,7 +485,11 @@ export function AudioBar() {
                   whileTap={{ scale: 0.5 }}
                   className="mr-4"
                 >
-                  <Play weight="fill" size={23} className="cursor-pointer" />
+                  <Play
+                    weight="fill"
+                    size={23}
+                    className="cursor-pointer text-black dark:text-white"
+                  />
                 </motion.div>
               )}
             </div>

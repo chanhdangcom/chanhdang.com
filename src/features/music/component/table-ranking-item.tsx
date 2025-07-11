@@ -12,7 +12,10 @@ export function TableRankingItem({ music, handlePlay }: Iprop) {
   const { handlePlayAudio } = useAudio();
 
   return (
-    <div className="z-10 cursor-pointer text-zinc-50" onClick={handlePlay}>
+    <div
+      className="z-10 cursor-pointer text-black dark:text-white"
+      onClick={handlePlay}
+    >
       <div className="flex items-center justify-between">
         <AudioItemOrder
           className="size-12"

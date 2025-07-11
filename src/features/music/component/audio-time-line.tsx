@@ -32,9 +32,9 @@ export function AudioTimeLine() {
 
   return (
     <div className="w-full">
-      <div className="mx-auto h-1 w-full overflow-hidden rounded-full bg-zinc-400">
+      <div className="bg-z mx-auto h-1 w-full overflow-hidden rounded-full dark:bg-zinc-400">
         <div
-          className="h-full bg-zinc-50 transition-all duration-300"
+          className="h-full bg-zinc-900 transition-all duration-300 dark:bg-zinc-50"
           style={{ width: `${progress}%` }}
         />
       </div>

@@ -130,7 +130,7 @@ Thênh thang bước đi giữa trời rực rỡ\n`;
         layoutId="audio-bar"
         className="fixed inset-0 z-50 space-y-4 px-4 md:inset-x-96 md:inset-y-20 md:rounded-3xl"
       >
-        <div className="absolute inset-0 -z-10 bg-zinc-950 backdrop-blur-3xl md:rounded-3xl">
+        <div className="absolute inset-0 -z-10 bg-zinc-100 backdrop-blur-3xl dark:bg-zinc-950 md:rounded-3xl">
           <Image
             alt="cover"
             width={1000}
@@ -140,10 +140,10 @@ Thênh thang bước đi giữa trời rực rỡ\n`;
           />
         </div>
 
-        <header className="flex items-center justify-between p-1">
+        <header className="flex items-center justify-between p-1 text-black dark:text-white">
           <CaretDown
             size={20}
-            className="cursor-pointer text-zinc-50"
+            className="cursor-pointer"
             onClick={() => setIsClick()}
           />
 
@@ -206,15 +206,15 @@ Thênh thang bước đi giữa trời rực rỡ\n`;
               <Shuffle
                 onClick={() => handlePlayRandomAudio()}
                 size={25}
-                className="cursor-pointer text-zinc-50"
+                className="cursor-pointer"
               />
             </motion.div>
 
-            <div className="flex gap-8">
+            <div className="flex gap-8 text-black dark:text-white">
               <motion.button
                 onClick={handAudioForward}
                 whileTap={{ scale: 0.5 }}
-                className="flex cursor-pointer items-center justify-center text-zinc-50"
+                className="flex cursor-pointer items-center justify-center"
               >
                 <Rewind size={30} weight="fill" />
               </motion.button>
@@ -228,7 +228,7 @@ Thênh thang bước đi giữa trời rực rỡ\n`;
                       ? handleResumeAudio
                       : handlePlayRandomAudio
                 }
-                className="flex cursor-pointer items-center justify-center text-zinc-50"
+                className="flex cursor-pointer items-center justify-center"
               >
                 {isPlaying ? (
                   <Pause size={36} weight="fill" />
@@ -240,13 +240,13 @@ Thênh thang bước đi giữa trời rực rỡ\n`;
               <motion.button
                 onClick={handleAudioSkip}
                 whileTap={{ scale: 0.5 }}
-                className="flex cursor-pointer items-center justify-center text-zinc-50"
+                className="flex cursor-pointer items-center justify-center"
               >
                 <FastForward size={32} weight="fill" />
               </motion.button>
             </div>
 
-            <Repeat size={25} className="text-zinc-50" />
+            <Repeat size={25} className="" />
           </div>
 
           <div className="flex justify-between px-4 text-base text-zinc-500">

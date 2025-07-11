@@ -22,7 +22,7 @@ export function SingerItem({ music, onClick }: IProp) {
         <div className="size-44 rounded-full bg-zinc-600 md:size-44"></div>
       )}
 
-      <div className="mt-2 line-clamp-1 flex justify-center font-semibold text-zinc-500">
+      <div className="mt-2 line-clamp-1 flex justify-center font-semibold text-black dark:text-white">
         {music.singer}
       </div>
     </div>

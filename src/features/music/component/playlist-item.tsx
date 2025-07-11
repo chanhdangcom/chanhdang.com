@@ -15,7 +15,9 @@ export function PlaylistItem({ music }: IProp) {
   return (
     <>
       <div className="p-1.5">
-        <div className="text-xl font-semibold text-white">{music.singer}</div>
+        <div className="font-semibold text-black dark:text-white">
+          {music.singer}
+        </div>
         <div className="text-sm text-zinc-400">ChanhDang Music</div>
 
         <div className="my-1 space-y-2">

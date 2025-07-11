@@ -8,12 +8,11 @@ import { Footer } from "./footer";
 
 import { SectionBlog } from "./section-blog";
 import { PhotoListAnimate } from "./photo-list-animate";
-import { MusicList } from "./music-list";
 
 import { ScrollHeaderPage } from "@/components/scroll-header-page";
 import { HeaderMotion } from "./components/header-motion";
 import { WavyBackground } from "@/components/ui/wavy-background";
-// import { HeaderMotionGlass } from "./components/header-motion-glass";
+import { MusicList } from "./music-list";
 
 export const Profile = () => {
   return (
@@ -44,7 +43,7 @@ export const Profile = () => {
           <ExperienceList />
         </div>
 
-        <div className="container my-8 max-w-4xl">
+        <div className="container relative my-8 max-w-3xl">
           <MusicList />
         </div>
 
