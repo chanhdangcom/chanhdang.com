@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 
 import { Shuffle } from "@phosphor-icons/react/dist/ssr";
 
@@ -58,11 +57,17 @@ export function SingerPage({ idSinger }: IProp) {
                 {MUSICSSINGER.filter((item) => item.id === idSinger).map(
                   (item) => (
                     <div key={item.id}>
-                      <Image
+                      {/* <Image
                         alt="cover-singer"
                         height={300}
                         width={300}
                         src={item.cover}
+                        className="mx-auto my-4 size-60 rounded-3xl object-cover shadow-2xl"
+                      /> */}
+
+                      <img
+                        src={item.cover}
+                        alt="cover"
                         className="mx-auto my-4 size-60 rounded-3xl object-cover shadow-2xl"
                       />
                     </div>
@@ -122,12 +127,18 @@ export function SingerPage({ idSinger }: IProp) {
                   <div key={music.id}>
                     <div className="hidden w-fit shrink-0 cursor-pointer gap-4 space-y-2 rounded-xl p-1.5 text-zinc-50 hover:bg-zinc-100 dark:hover:bg-zinc-900 md:flex">
                       {music.cover ? (
-                        <Image
-                          height={300}
-                          width={300}
+                        // <Image
+                        //   height={300}
+                        //   width={300}
+                        //   alt="cover"
+                        //   src={music.cover}
+                        //   quality={100}
+                        //   className="mx-auto h-40 w-40 justify-center rounded-lg object-cover md:size-44"
+                        // />
+
+                        <img
+                          src="{music.cover}"
                           alt="cover"
-                          src={music.cover}
-                          quality={100}
                           className="mx-auto h-40 w-40 justify-center rounded-lg object-cover md:size-44"
                         />
                       ) : (
