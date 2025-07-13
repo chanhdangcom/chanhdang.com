@@ -138,7 +138,7 @@ export function SingerPage({ idSinger }: IProp) {
                         // />
 
                         <img
-                          src="{music.cover}"
+                          src={music.cover}
                           alt="cover"
                           className="mx-auto h-40 w-40 justify-center rounded-lg object-cover md:size-44"
                         />
