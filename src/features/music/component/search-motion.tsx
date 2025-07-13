@@ -46,24 +46,29 @@ export function SearchMotion() {
           className="fixed inset-0 z-50 flex"
         >
           <div className="w-full">
-            <motion.div className="container border-zinc-800 bg-zinc-950 p-2">
+            <motion.div className="container border-zinc-800 bg-zinc-50 p-2 dark:bg-zinc-950">
               <motion.div
                 layoutId="Search"
                 layout
                 className="mb-2 flex items-center gap-4"
               >
-                <Link href="/music">
-                  <CaretLeft
-                    size={30}
-                    weight="bold"
-                    className="rounded-full bg-zinc-900 p-1 text-zinc-900 dark:text-zinc-500"
-                  />
-                </Link>
+                <div className="sticky top-0 z-10 flex items-center gap-1">
+                  <Link
+                    href={"/music"}
+                    className="rounded-full bg-zinc-200 p-2 dark:bg-zinc-900"
+                  >
+                    <CaretLeft
+                      size={28}
+                      weight="bold"
+                      className="text-black dark:text-white"
+                    />
+                  </Link>
+                </div>
 
                 <Input
                   type="text"
                   placeholder="Music, Playlist ..."
-                  className="z-10 rounded-2xl border-none bg-zinc-800"
+                  className="z-10 rounded-2xl border-none bg-zinc-200 dark:bg-zinc-800"
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
                   autoFocus
@@ -97,7 +102,7 @@ export function SearchMotion() {
                       initial={{ scale: 0.9 }}
                       animate={{ scale: 1 }}
                       exit={{ scale: 0.9 }}
-                      className="shrink-0 rounded-2xl p-1 hover:bg-zinc-900"
+                      className="h shrink-0 rounded-2xl p-1"
                     >
                       <SingerItem
                         music={item}
@@ -134,7 +139,7 @@ export function SearchMotion() {
                       initial={{ scale: 0.9 }}
                       animate={{ scale: 1 }}
                       exit={{ scale: 0.9 }}
-                      className="rounded-2xl p-1 hover:bg-zinc-900"
+                      className="rounded-2xl p-1"
                     >
                       <Link href="/music">
                         <AudioItemOrder
