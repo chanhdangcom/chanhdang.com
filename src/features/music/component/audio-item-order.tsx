@@ -6,7 +6,7 @@ import { DotsThree } from "phosphor-react";
 
 type IProp = {
   music: IMusic | IPlaylistItem;
-  handlePlay: () => void;
+  handlePlay?: () => void;
   className?: string;
   classNameOrder?: string;
 };
@@ -24,7 +24,7 @@ export function AudioItemOrder({
   const UnClick = () => {
     return (
       <div
-        className="flex w-80 items-center gap-3 md:w-[90vh]"
+        className="flex w-80 items-center gap-3 md:w-[50vh]"
         onClick={handlePlay}
       >
         {music.cover ? (

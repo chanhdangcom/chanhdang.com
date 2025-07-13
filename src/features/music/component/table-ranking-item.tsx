@@ -5,7 +5,7 @@ import { IMusic } from "@/features/profile/types/music";
 
 type Iprop = {
   music: IMusic;
-  handlePlay: () => void;
+  handlePlay?: () => void;
 };
 
 export function TableRankingItem({ music, handlePlay }: Iprop) {

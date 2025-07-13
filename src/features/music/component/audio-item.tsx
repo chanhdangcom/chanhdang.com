@@ -3,7 +3,7 @@ import Image from "next/image";
 
 type IProp = {
   music: IMusic;
-  handlePlay: () => void;
+  handlePlay?: () => void;
 };
 
 export function AuidoItem({ music, handlePlay }: IProp) {

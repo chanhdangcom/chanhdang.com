@@ -16,14 +16,31 @@ export function AudioSingerItem({ music }: IProp) {
 
   return (
     <div>
-      {music.musics?.map((music) => (
-        <div key={music.id} className="p-2">
-          <AudioItemOrder
-            music={music}
-            handlePlay={() => handlePlayAudio(music)}
-          />
+      <div className="md:hidden">
+        {music.musics?.map((music) => (
+          <div key={music.id} className="p-2">
+            <AudioItemOrder
+              music={music}
+              handlePlay={() => handlePlayAudio(music)}
+            />
+          </div>
+        ))}
+      </div>
+
+      <div className="scrollbar-hide hidden w-full overflow-x-auto md:flex">
+        <div className="grid grid-flow-col grid-rows-3 gap-x-4">
+          {music.musics?.map((music) => (
+            <div key={music.id}>
+              <div className="flex items-center gap-6 px-1 py-2">
+                <AudioItemOrder
+                  music={music}
+                  handlePlay={() => handlePlayAudio(music)}
+                />
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
   );
 }

@@ -16,6 +16,9 @@ import { MenuBarMobile } from "./menu-bar-mobile";
 import { CaretLeft, Play } from "phosphor-react";
 import Link from "next/link";
 
+import { CarouselAudio } from "./carousel-audio";
+import { SingerList } from "./singer-list";
+
 type IProp = {
   idSinger: string;
 };
@@ -50,7 +53,7 @@ export function SingerPage({ idSinger }: IProp) {
               </Link>
             </div>
 
-            <div className="mx-4 flex rounded-3xl from-zinc-200 to-zinc-50 dark:from-zinc-900 dark:to-zinc-950 md:bg-gradient-to-b">
+            <div className="mx-4 flex rounded-3xl from-zinc-200 to-zinc-50 dark:from-zinc-900 dark:to-zinc-950 md:bg-gradient-to-b md:p-4">
               <div className="w-full flex-col items-center md:flex-none">
                 {MUSICSSINGER.filter((item) => item.id === idSinger).map(
                   (item) => (
@@ -69,14 +72,6 @@ export function SingerPage({ idSinger }: IProp) {
                 {MUSICSSINGER.filter((item) => item.id === idSinger).map(
                   (item) => (
                     <div className="space-y-2 text-6xl" key={item.id}>
-                      {/* <div className="hidden md:block">
-                        <div className="text-4xl font-semibold">
-                          Các bài hát của
-                        </div>
-
-                        <div className="font-bold"> {item.singer}</div>
-                      </div> */}
-
                       <div className="flex items-center justify-center gap-1">
                         <div className="text-2xl font-semibold">
                           Các bài hát của
@@ -120,12 +115,70 @@ export function SingerPage({ idSinger }: IProp) {
             </div>
           </div>
 
-          <div className="md:mx-a mt-8 flex justify-center px-3 md:mt-0 md:justify-center">
+          <div className="mx-8 flex items-center justify-center md:justify-between">
             {MUSICSSINGER.filter((item) => item.id === idSinger).map((item) => (
               <div key={item.id}>
-                <AudioSingerItem music={item} />
+                {item.musics?.slice(-1).map((music) => (
+                  <div key={music.id}>
+                    <div className="hidden w-fit shrink-0 cursor-pointer gap-4 space-y-2 rounded-xl p-1.5 text-zinc-50 hover:bg-zinc-100 dark:hover:bg-zinc-900 md:flex">
+                      {music.cover ? (
+                        <Image
+                          height={300}
+                          width={300}
+                          alt="cover"
+                          src={music.cover}
+                          quality={100}
+                          className="mx-auto h-40 w-40 justify-center rounded-lg object-cover md:size-44"
+                        />
+                      ) : (
+                        <div className="size-40 rounded-2xl bg-zinc-800"></div>
+                      )}
+
+                      <div className="flex flex-col justify-center gap-4 py-4 text-black dark:text-white">
+                        <div>
+                          <div className="line-clamp-2 w-40 text-lg font-semibold">
+                            {music.title || "TITLE"}
+                          </div>
+                          <div className="line-clamp-1 w-32 text-sm text-zinc-500">
+                            {music.singer || "SINGER"}
+                          </div>
+                        </div>
+
+                        <div className="w-fit rounded-2xl bg-zinc-200 px-4 py-1 text-blue-600 dark:bg-zinc-400">
+                          Add +
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             ))}
+
+            <div className="md:mx-a mt-8 justify-center px-3 md:mt-0 md:max-w-3xl md:justify-center">
+              {MUSICSSINGER.filter((item) => item.id === idSinger).map(
+                (item) => (
+                  <div key={item.id}>
+                    <AudioSingerItem music={item} />
+                  </div>
+                )
+              )}
+            </div>
+          </div>
+
+          {/* <div className="scrollbar-hide mt-8 flex overflow-x-auto md:justify-center">
+            {MUSICSSINGER.filter((item) => item.id === idSinger).map((item) => (
+              <div key={item.id} className="shrink-0">
+                <AudioSingerItemOrder music={item} />
+              </div>
+            ))}
+          </div> */}
+
+          <div className="mt-8 flex justify-center">
+            <CarouselAudio />
+          </div>
+
+          <div className="mt-8 flex justify-center md:mx-8">
+            <SingerList />
           </div>
         </motion.div>
       </AnimatePresence>
