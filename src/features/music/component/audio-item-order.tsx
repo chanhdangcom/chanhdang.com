@@ -1,5 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 import { IMusic } from "@/features/profile/types/music";
-import Image from "next/image";
 import { IPlaylistItem } from "../type/playlist";
 import { cn } from "@/lib/utils";
 import { DotsThree } from "phosphor-react";
@@ -28,11 +28,20 @@ export function AudioItemOrder({
         onClick={handlePlay}
       >
         {music.cover ? (
-          <Image
-            alt="cover"
+          // <Image
+          //   alt="cover"
+          //   src={music.cover}
+          //   width={300}
+          //   height={300}
+          //   className={cn(
+          //     "size-12 shrink-0 rounded-md object-cover shadow-sm md:size-14",
+          //     className
+          //   )}
+          // />
+
+          <img
             src={music.cover}
-            width={300}
-            height={300}
+            alt="cover"
             className={cn(
               "size-12 shrink-0 rounded-md object-cover shadow-sm md:size-14",
               className

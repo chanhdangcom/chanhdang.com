@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useAudio } from "@/components/music-provider";
 import {
@@ -18,7 +19,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import Image from "next/image";
+
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect } from "react";
 import { AudioTimeLine } from "./component/audio-time-line";
@@ -131,11 +132,17 @@ Thênh thang bước đi giữa trời rực rỡ\n`;
         className="fixed inset-0 z-50 space-y-4 px-4 md:inset-x-96 md:inset-y-20 md:rounded-3xl"
       >
         <div className="absolute inset-0 -z-10 bg-zinc-100 backdrop-blur-3xl dark:bg-zinc-950 md:rounded-3xl">
-          <Image
+          {/* <Image
             alt="cover"
             width={1000}
             height={1000}
             src={currentMusic?.cover || ""}
+            className="md:3/4 h-1/2 blur-2xl md:hidden"
+          /> */}
+
+          <img
+            src={currentMusic?.cover || ""}
+            alt="cover"
             className="md:3/4 h-1/2 blur-2xl md:hidden"
           />
         </div>
@@ -162,11 +169,17 @@ Thênh thang bước đi giữa trời rực rỡ\n`;
               key={currentMusic?.cover}
               className="flex justify-between gap-4"
             >
-              <Image
+              {/* <Image
                 src={currentMusic?.cover}
                 alt="Cover"
                 width={500}
                 height={500}
+                className="flex h-[45vh] w-full shrink-0 justify-center rounded-2xl object-cover md:w-[40vh]"
+              /> */}
+
+              <img
+                src={currentMusic?.cover}
+                alt="cover"
                 className="flex h-[45vh] w-full shrink-0 justify-center rounded-2xl object-cover md:w-[40vh]"
               />
               <div className="hidden h-[45vh] overflow-y-auto md:block">

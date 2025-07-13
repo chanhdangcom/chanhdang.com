@@ -1,7 +1,7 @@
 "use client";
 
 import { useAudio } from "@/components/music-provider";
-import Image from "next/image";
+
 import {
   FastForward,
   MusicNotes,
