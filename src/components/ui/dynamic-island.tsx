@@ -15,10 +15,8 @@ export function DynamicIslandWave({ isPlay, coverUrl }: IPlay) {
   const [waveColor, setWaveColor] = useState("");
 
   useEffect(() => {
-    const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-
     if (!coverUrl) {
-      setWaveColor(isDark ? "#111111" : "#fafafa");
+      setWaveColor("#FFFFFF");
       return;
     }
 
@@ -26,7 +24,7 @@ export function DynamicIslandWave({ isPlay, coverUrl }: IPlay) {
     fac
       .getColorAsync(coverUrl)
       .then((color) => setWaveColor(color.hex))
-      .catch(() => setWaveColor(isDark ? "#111111" : "#fafafa"));
+      .catch(() => setWaveColor("#FFFFFF"));
   }, [coverUrl]);
 
   const getRandomHeight = () =>

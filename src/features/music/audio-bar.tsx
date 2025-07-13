@@ -102,7 +102,7 @@ export function AudioBar() {
             }}
             className="flex w-full items-center justify-between"
           >
-            <div className="hidden items-center gap-4 md:flex">
+            <div className="hidden items-center gap-4 text-black dark:text-white md:flex">
               <motion.div whileTap={{ scale: 0.5 }}>
                 <Shuffle
                   onClick={() => handlePlayRandomAudio()}
@@ -212,7 +212,7 @@ export function AudioBar() {
               </div> */}
             </div>
 
-            <div className="hidden items-center gap-4 md:flex">
+            <div className="hidden items-center gap-4 text-black dark:text-white md:flex">
               {isMuted ? (
                 <motion.div whileTap={{ scale: 0.5 }}>
                   <SpeakerSlash
@@ -310,7 +310,7 @@ export function AudioBar() {
           }}
           layout
           layoutId="audio-bar"
-          className="fixed inset-x-20 bottom-6 z-20 flex justify-center rounded-[50px] border border-transparent bg-gradient-to-tl from-transparent to-black/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-sm dark:border-2 dark:to-white/10 md:inset-x-80 md:bottom-4 md:rounded-[50px] md:px-4 md:py-2"
+          className="fixed inset-x-20 bottom-6 z-20 flex justify-center rounded-[50px] border border-transparent bg-gradient-to-tl from-transparent to-black/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-sm dark:border-2 dark:to-white/10 md:inset-x-96 md:bottom-4 md:rounded-[50px] md:px-4 md:py-2"
         >
           <div
             onClick={() => {
@@ -320,7 +320,7 @@ export function AudioBar() {
             }}
             className="flex w-full items-center justify-between"
           >
-            <div className="hidden items-center gap-4 md:flex">
+            <div className="hidden items-center gap-4 text-black dark:text-white md:flex">
               <motion.div whileTap={{ scale: 0.5 }}>
                 <Shuffle
                   onClick={() => handlePlayRandomAudio()}
@@ -430,7 +430,7 @@ export function AudioBar() {
               </div> */}
             </div>
 
-            <div className="hidden items-center gap-4 md:flex">
+            <div className="hidden items-center gap-4 text-black dark:text-white md:flex">
               {isMuted ? (
                 <motion.div whileTap={{ scale: 0.5 }} className="">
                   <SpeakerSlash
