@@ -20,10 +20,10 @@ export function AuidoItem({ music, handlePlay }: IProp) {
             alt="cover"
             src={music.cover}
             quality={100}
-            className="mx-auto size-36 justify-center rounded-lg object-cover md:size-44"
+            className="mx-auto h-auto w-40 justify-center rounded-lg object-cover md:size-44"
           />
         ) : (
-          <div className="size-32 rounded-2xl bg-zinc-800"></div>
+          <div className="size-40 rounded-2xl bg-zinc-800"></div>
         )}
 
         <div className="text-black dark:text-white">
