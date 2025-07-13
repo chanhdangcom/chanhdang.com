@@ -269,7 +269,7 @@ export const MUSICSSINGER = [
       },
 
       {
-        id: "7ff65b56-3fd3-4814-9fea-9f722b4250d2e7231223r3221234s",
+        id: "7ff65b56-3fd3-4814-9fea-9f722b4250d2e7231223r3089221234s",
         title: "Mõi Người Một Suy Nghĩ",
         singer: "Khầy",
         cover: "https://cdn.chanhdang.com/cover_moi_nguoi_mot_suy_nghi.jpg",
