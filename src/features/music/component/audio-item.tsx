@@ -1,5 +1,5 @@
 import { IMusic } from "@/features/profile/types/music";
-import Image from "next/image";
+// import Image from "next/image";
 
 type IProp = {
   music: IMusic;
@@ -14,12 +14,18 @@ export function AuidoItem({ music, handlePlay }: IProp) {
         onClick={handlePlay}
       >
         {music.cover ? (
-          <Image
-            height={300}
-            width={300}
-            alt="cover"
+          // <Image
+          //   height={300}
+          //   width={300}
+          //   alt="cover"
+          //   src={music.cover}
+          //   quality={100}
+          //   className="mx-auto h-40 w-40 justify-center rounded-lg object-cover md:size-44"
+          // />
+
+          <img
             src={music.cover}
-            quality={100}
+            alt="cover"
             className="mx-auto h-40 w-40 justify-center rounded-lg object-cover md:size-44"
           />
         ) : (
