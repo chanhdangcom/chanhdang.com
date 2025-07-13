@@ -158,11 +158,16 @@ export function AudioBar() {
                 </div>
               ) : (
                 <div className="shrink-0">
-                  <Image
+                  {/* <Image
                     alt="cover"
                     width={192}
                     height={192}
                     src={currentMusic?.cover}
+                    className="flex size-10 items-center justify-center rounded-xl object-cover md:rounded-lg"
+                  /> */}
+                  <img
+                    src={currentMusic?.cover}
+                    alt="cover"
                     className="flex size-10 items-center justify-center rounded-xl object-cover md:rounded-lg"
                   />
                 </div>
@@ -376,11 +381,17 @@ export function AudioBar() {
                 </div>
               ) : (
                 <div className="shrink-0">
-                  <Image
+                  {/* <Image
                     alt="cover"
                     width={192}
                     height={192}
                     src={currentMusic?.cover}
+                    className="flex size-10 items-center justify-center rounded-xl object-cover md:rounded-lg"
+                  /> */}
+
+                  <img
+                    src={currentMusic?.cover}
+                    alt="cover"
                     className="flex size-10 items-center justify-center rounded-xl object-cover md:rounded-lg"
                   />
                 </div>
