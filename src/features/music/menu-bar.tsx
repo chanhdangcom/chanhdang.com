@@ -2,12 +2,7 @@
 
 import { BookBookmark, Browsers, House } from "@phosphor-icons/react/dist/ssr";
 
-import { MUSICSPLAYLIST } from "./data/music-page-playlist";
-import { useAudio } from "@/components/music-provider";
-import { AudioItemOrder } from "./component/audio-item-order";
-
 export function MenuBar() {
-  const { handlePlayAudio } = useAudio();
   return (
     <div className="relative ml-4 mt-4 hidden md:flex">
       <div className="h-96 w-60"></div>
