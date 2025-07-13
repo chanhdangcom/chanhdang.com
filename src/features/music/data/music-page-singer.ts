@@ -266,7 +266,20 @@ export const MUSICSSINGER = [
 
         `,
         type: "Jack"
-      }
+      },
+
+      {
+        id: "7ff65b56-3fd3-4814-9fea-9f722b4250d2e7231223r3221234s",
+        title: "Mõi Người Một Suy Nghĩ",
+        singer: "Khầy",
+        cover: "https://cdn.chanhdang.com/cover_mai_mai_mot_tinh_yeu.JPG",
+        audio: "https://cdn.chanhdang.com/music_moi_nguoi_mot_suy_nghi.mp3",
+        youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+        content: `
+
+        `,
+        type: "Jack"
+      },
     ]
   },
 

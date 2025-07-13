@@ -32,7 +32,7 @@ export function MenuBar() {
 
           {/* <div className="fixed h-0.5 w-72 bg-zinc-800"></div> */}
 
-          <div className="mt-16 space-y-4 font-semibold">
+          {/* <div className="mt-16 space-y-4 font-semibold">
             {MUSICSPLAYLIST.map((music) => (
               <AudioItemOrder
                 music={music}
@@ -41,7 +41,7 @@ export function MenuBar() {
                 handlePlay={() => handlePlayAudio}
               />
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

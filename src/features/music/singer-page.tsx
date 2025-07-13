@@ -26,10 +26,7 @@ export function SingerPage({ idSinger }: IProp) {
       <MenuBar />
 
       <AnimatePresence>
-        <motion.div
-          className="mx-auto mb-48 dark:bg-zinc-950 md:ml-64 md:max-w-full"
-          layoutId="singer"
-        >
+        <motion.div className="mb-48 w-full dark:bg-zinc-950" layoutId="singer">
           <AudioBar />
           <MenuBarMobile />
 
@@ -53,8 +50,8 @@ export function SingerPage({ idSinger }: IProp) {
               </Link>
             </div>
 
-            <div className="mx-4 flex rounded-3xl from-zinc-900 to-zinc-950 md:bg-gradient-to-b">
-              <div className="flex w-full flex-col items-center">
+            <div className="mx-4 flex rounded-3xl from-zinc-200 to-zinc-50 dark:from-zinc-900 dark:to-zinc-950 md:bg-gradient-to-b">
+              <div className="w-full flex-col items-center md:flex-none">
                 {MUSICSSINGER.filter((item) => item.id === idSinger).map(
                   (item) => (
                     <div key={item.id}>
@@ -63,7 +60,7 @@ export function SingerPage({ idSinger }: IProp) {
                         height={300}
                         width={300}
                         src={item.cover}
-                        className="size-60 rounded-3xl object-cover shadow-2xl md:m-8"
+                        className="mx-auto my-4 size-60 rounded-3xl object-cover shadow-2xl"
                       />
                     </div>
                   )
@@ -72,15 +69,15 @@ export function SingerPage({ idSinger }: IProp) {
                 {MUSICSSINGER.filter((item) => item.id === idSinger).map(
                   (item) => (
                     <div className="space-y-2 text-6xl" key={item.id}>
-                      <div className="hidden md:block">
+                      {/* <div className="hidden md:block">
                         <div className="text-4xl font-semibold">
                           Các bài hát của
                         </div>
 
                         <div className="font-bold"> {item.singer}</div>
-                      </div>
+                      </div> */}
 
-                      <div className="flex items-center justify-center gap-1 md:hidden">
+                      <div className="flex items-center justify-center gap-1">
                         <div className="text-2xl font-semibold">
                           Các bài hát của
                         </div>
@@ -108,13 +105,9 @@ export function SingerPage({ idSinger }: IProp) {
                             <div className="text-xl">Mix song</div>
                           </div>
                         </div>
-
-                        <div className="hidden w-fit rounded-3xl bg-red-500 px-4 py-2 text-xl font-semibold md:flex">
-                          17,4 Tr lượt nghe
-                        </div>
                       </div>
 
-                      <div className="text-base text-zinc-500">
+                      <div className="text-center text-base text-zinc-500">
                         <div>
                           Tận hưởng bữa tiệc âm nhạc đầy đặc sắc với{" "}
                           {item.singer}
@@ -127,7 +120,7 @@ export function SingerPage({ idSinger }: IProp) {
             </div>
           </div>
 
-          <div className="mt-8 flex justify-center px-3 md:mx-16 md:mt-0">
+          <div className="md:mx-a mt-8 flex justify-center px-3 md:mt-0 md:justify-center">
             {MUSICSSINGER.filter((item) => item.id === idSinger).map((item) => (
               <div key={item.id}>
                 <AudioSingerItem music={item} />
