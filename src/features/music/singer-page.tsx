@@ -17,7 +17,6 @@ import { CaretLeft, Play } from "phosphor-react";
 import Link from "next/link";
 
 import { CarouselAudio } from "./carousel-audio";
-import { SingerList } from "./singer-list";
 
 type IProp = {
   idSinger: string;
@@ -185,13 +184,13 @@ export function SingerPage({ idSinger }: IProp) {
             ))}
           </div> */}
 
-          <div className="mt-8 flex justify-center">
+          <div className="ml-4 mt-8 flex justify-center md:ml-0">
             <CarouselAudio />
           </div>
 
-          <div className="mt-8 flex justify-center md:mx-8">
+          {/* <div className="mt-8 flex justify-center md:mx-8">
             <SingerList />
-          </div>
+          </div> */}
         </motion.div>
       </AnimatePresence>
     </div>

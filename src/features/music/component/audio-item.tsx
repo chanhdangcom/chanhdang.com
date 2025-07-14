@@ -10,7 +10,7 @@ export function AuidoItem({ music, handlePlay }: IProp) {
   return (
     <>
       <div
-        className="w-fit shrink-0 cursor-pointer space-y-2 rounded-xl p-1.5 text-zinc-50 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+        className="w-40 shrink-0 cursor-pointer space-y-2 rounded-xl p-1.5 text-zinc-50 hover:bg-zinc-100 dark:hover:bg-zinc-900 md:w-48"
         onClick={handlePlay}
       >
         {music.cover ? (
@@ -23,10 +23,11 @@ export function AuidoItem({ music, handlePlay }: IProp) {
           //   className="mx-auto h-40 w-40 justify-center rounded-lg object-cover md:size-44"
           // />
 
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={music.cover}
             alt="cover"
-            className="mx-auto h-40 w-40 justify-center rounded-lg object-cover md:size-44"
+            className="mx-auto h-40 w-40 shrink-0 justify-center rounded-lg object-cover md:size-48"
           />
         ) : (
           <div className="size-40 rounded-2xl bg-zinc-800"></div>

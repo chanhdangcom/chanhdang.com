@@ -58,9 +58,12 @@ export function CarouselAudio() {
         </div> */}
       </div>
 
-      <div ref={scrollRef} className="scrollbar-hide flex overflow-x-auto">
+      <div
+        ref={scrollRef}
+        className="scrollbar-hide grid grid-flow-col grid-rows-2 gap-x-1 gap-y-2 overflow-x-auto"
+      >
         {MUSICS.map((music) => (
-          <div key={music.id} className="shrink-0">
+          <div key={music.id} className="w-full shrink-0">
             <AuidoItem
               music={music}
               handlePlay={() => handlePlayAudio(music)}

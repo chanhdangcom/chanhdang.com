@@ -22,13 +22,13 @@ export function PlaylistItem({ music }: IProp) {
 
         <div className="my-1 space-y-2">
           <div className="relative overflow-hidden rounded-xl">
-            <div className="relative h-52 w-80">
+            <div className="md:h-50 relative h-60 w-80 md:w-96">
               <Image
                 alt="1"
                 src={music.cover}
                 width={300}
                 height={300}
-                className="absolute inset-0 h-52 w-80 rounded-xl object-cover opacity-40 blur-md"
+                className="md:h-50 absolute inset-0 h-60 w-80 rounded-xl object-cover opacity-40 blur-md md:w-96"
               />
 
               <Image
@@ -36,7 +36,7 @@ export function PlaylistItem({ music }: IProp) {
                 src={music.cover}
                 width={300}
                 height={300}
-                className="relative z-10 mx-auto h-52 w-auto rounded-lg object-cover"
+                className="md:h-50 relative z-10 mx-auto h-60 w-auto rounded-lg object-cover"
               />
             </div>
 

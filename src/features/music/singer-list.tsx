@@ -15,7 +15,7 @@ export function SingerList() {
             <div className="text-black dark:text-white">Popular Artists</div>
           </div>
 
-          <div className="scrollbar-hide mt-2 flex items-center gap-3 overflow-x-auto p-1">
+          <div className="scrollbar-hide flex items-center gap-3 overflow-x-auto p-1">
             {MUSICSSINGER.map((music) => (
               <div key={music.id} className="shrink-0">
                 <SingerItem

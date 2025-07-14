@@ -10,10 +10,8 @@ export function TableRanking() {
 
   return (
     <div className="z-[1] rounded-3xl p-1 md:max-w-6xl md:p-2">
-      <div className="mb-2">
-        <div className="px-1 text-xl font-semibold text-black dark:text-white">
-          Today's Hits
-        </div>
+      <div className="px-1 text-xl font-semibold text-black dark:text-white">
+        Today's Hits
       </div>
 
       <div className="scrollbar-hide w-full overflow-x-auto">

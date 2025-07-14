@@ -26,7 +26,7 @@ export function MusicPage() {
           <HeaderMusicPage />
 
           <div className="md:mx-4">
-            <div className="rounded-3xl from-zinc-200 to-zinc-100 dark:from-zinc-900 dark:to-zinc-950 md:bg-gradient-to-b md:p-4">
+            <div className="rounded-3xl from-zinc-200 to-zinc-50 dark:from-zinc-900 dark:to-zinc-950 md:bg-gradient-to-b md:p-4">
               <div className="flex justify-start">
                 <CarouselAudioPlaylist />
               </div>
