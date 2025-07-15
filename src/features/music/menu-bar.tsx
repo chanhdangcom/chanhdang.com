@@ -4,7 +4,7 @@ import { BookBookmark, Browsers, House } from "@phosphor-icons/react/dist/ssr";
 
 export function MenuBar() {
   return (
-    <div className="fixed relative ml-4 mt-4 hidden md:flex">
+    <div className="relative ml-4 mt-4 hidden md:flex">
       <div className="h-96 w-60"></div>
       <div className="absolute h-full w-60 rounded-3xl bg-gradient-to-b from-zinc-200 to-zinc-100 p-4 dark:from-zinc-900 dark:to-zinc-950">
         <div className="">

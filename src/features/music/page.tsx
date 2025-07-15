@@ -14,6 +14,8 @@ import { MenuBarMobile } from "./menu-bar-mobile";
 
 import { CarouselAudioPlaylist } from "./carousel-audio-playlist";
 
+import { PickForYou } from "./pick-for-you";
+
 export function MusicPage() {
   return (
     <div className="flex">
@@ -21,13 +23,17 @@ export function MusicPage() {
 
       <div className="mx-auto w-full">
         <div className="relative z-10">
-          <div className="fixed top-0 z-50 h-32 w-full bg-gradient-to-b from-white via-white/60 to-transparent dark:from-black/95 dark:via-black/60"></div>
+          <div className="fixed top-0 z-50 h-24 w-full bg-gradient-to-b from-white via-white/60 to-transparent dark:from-black/95 dark:via-black/60"></div>
 
           <HeaderMusicPage />
 
           <div className="md:mx-4">
             <div className="rounded-3xl from-zinc-200 to-zinc-50 dark:from-zinc-900 dark:to-zinc-950 md:bg-gradient-to-b md:p-4">
-              <div className="flex justify-start">
+              <div className="mt-4">
+                <PickForYou />
+              </div>
+
+              <div className="mt-2 flex justify-start">
                 <CarouselAudioPlaylist />
               </div>
 

@@ -50,40 +50,37 @@ const config: Config = {
   darkMode: ["class"],
   theme: {
   	extend: {
-  		colors: {
-  			background: 'var(--background)',
-  			foreground: 'var(--foreground)'
-  		},
-  		fontFamily: {
-  			body: 'var(--font-body)',
-  			handwritten: 'var(--font-handwritten)',
-  			mono: 'var(--font-mono)',
-        sf: [
-          "-apple-system",
-          "BlinkMacSystemFont",
-          '"SF Pro"',
-          '"Segoe UI"',
-          "Roboto",
-          "Helvetica",
-          "Arial",
-          "sans-serif",
-        ],
-  		},
-  		aspectRatio: {
-  			'3/1': '3 / 1'
-  		},
-  		borderRadius: {
-  			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
-  		}
-  	},
-  	container: {
-  		center: true,
-  		padding: {
-  			DEFAULT: '1rem'
-  		}
-  	}
+  colors: {
+    background: 'var(--background)',
+    foreground: 'var(--foreground)',
+  },
+  fontFamily: {
+    body: 'var(--font-body)',
+    handwritten: 'var(--font-handwritten)',
+    mono: 'var(--font-mono)',
+    sf: [/*...*/],
+  },
+  aspectRatio: {
+    '3/1': '3 / 1',
+  },
+  borderRadius: {
+    lg: 'var(--radius)',
+    md: 'calc(var(--radius) - 2px)',
+    sm: 'calc(var(--radius) - 4px)',
+  },
+  animation: {
+    'bg-gradient': 'bg-gradient 5s ease infinite',
+  },
+  keyframes: {
+    'bg-gradient': {
+      '0%, 100%': { backgroundPosition: '0% 50%' },
+      '50%': { backgroundPosition: '100% 50%' },
+    },
+  },
+  backgroundSize: {
+    '200': '200% 200%',
+  },
+},
   },
   plugins: [
     addVariablesForColors,
