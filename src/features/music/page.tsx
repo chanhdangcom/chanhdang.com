@@ -33,7 +33,7 @@ export function MusicPage() {
                 <PickForYou />
               </div>
 
-              <div className="mt-2 flex justify-start">
+              <div className="mt-4 flex justify-start">
                 <CarouselAudioPlaylist />
               </div>
 
