@@ -18,7 +18,7 @@ export function PickForYou() {
         >
           <div className="flex h-full flex-col justify-between">
             <div className="p-4">
-              <ChanhdangLogotype className="mb-4 w-24" />
+              <ChanhdangLogotype className="mb-4 w-24 text-white" />
               <div className="text-4xl font-bold">Get Up!</div>
               <div className="text-3xl">Mix</div>
             </div>
@@ -37,7 +37,7 @@ export function PickForYou() {
         >
           <div className="flex h-full flex-col justify-between">
             <div className="p-4">
-              <ChanhdangLogotype className="mb-4 w-24" />
+              <ChanhdangLogotype className="mb-4 w-24 text-white" />
               <div className="text-4xl font-bold">Chill</div>
               <div className="text-3xl">Mix</div>
             </div>
@@ -56,7 +56,7 @@ export function PickForYou() {
         >
           <div className="flex h-full flex-col justify-between">
             <div className="p-4">
-              <ChanhdangLogotype className="mb-4 w-24" />
+              <ChanhdangLogotype className="mb-4 w-24 text-white" />
               <div className="text-4xl font-bold">New Music</div>
               <div className="text-3xl">Mix</div>
             </div>
@@ -75,7 +75,7 @@ export function PickForYou() {
         >
           <div className="flex h-full flex-col justify-between">
             <div className="p-4">
-              <ChanhdangLogotype className="mb-4 w-24" />
+              <ChanhdangLogotype className="mb-4 w-24 text-white" />
               <div className="text-4xl font-bold">Hot</div>
               <div className="text-3xl">Mix</div>
             </div>
