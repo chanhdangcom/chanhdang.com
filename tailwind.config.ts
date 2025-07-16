@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import type { Config } from "tailwindcss";
 import typography from "@tailwindcss/typography"; 
 import { default as flattenColorPalette } from "tailwindcss/lib/util/flattenColorPalette";
@@ -59,6 +60,15 @@ const config: Config = {
     handwritten: 'var(--font-handwritten)',
     mono: 'var(--font-mono)',
     sf: [/*...*/],
+     apple: [
+        "-apple-system",
+        "BlinkMacSystemFont",
+        '"Segoe UI"',
+        "Roboto",
+        '"Helvetica Neue"',
+        "Arial",
+        "sans-serif",
+      ],
   },
   aspectRatio: {
     '3/1': '3 / 1',
