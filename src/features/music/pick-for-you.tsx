@@ -11,7 +11,7 @@ export function PickForYou() {
         </div>
       </div>
 
-      <div className="scrollbar-hide mt-2 flex w-full gap-3 overflow-x-auto p-2 text-white">
+      <div className="scrollbar-hide mt-2 flex w-full gap-3 overflow-x-auto px-1.5 text-white">
         <div
           onClick={() => handlePlayRandomAudio()}
           className="animate-bg-gradient h-72 w-56 shrink-0 rounded-xl bg-gradient-to-tr from-purple-500 via-pink-500 to-blue-500 bg-[length:200%_200%]"
