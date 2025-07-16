@@ -80,6 +80,14 @@ const config: Config = {
   backgroundSize: {
     '200': '200% 200%',
   },
+
+  container: {
+  		center: true,
+  		padding: {
+  			DEFAULT: '1rem'
+  		}
+  	}
+  
 },
   },
   plugins: [
