@@ -11,7 +11,7 @@ export function PickForYou() {
         </div>
       </div>
 
-      <div className="scrollbar-hide mt-2 flex w-full gap-3 overflow-x-auto text-white">
+      <div className="scrollbar-hide ml-2 mt-2 flex w-full gap-3 overflow-x-auto text-white">
         <div
           onClick={() => handlePlayRandomAudio()}
           className="animate-bg-gradient h-72 w-56 shrink-0 rounded-xl bg-gradient-to-tr from-purple-500 via-pink-500 to-blue-500 bg-[length:200%_200%]"
@@ -38,7 +38,7 @@ export function PickForYou() {
           <div className="flex h-full flex-col justify-between">
             <div className="p-4">
               <ChanhdangLogotype className="mb-4 w-24" />
-              <div className="text-4xl font-bold">Get Up!</div>
+              <div className="text-4xl font-bold">Chill</div>
               <div className="text-3xl">Mix</div>
             </div>
 
@@ -57,7 +57,7 @@ export function PickForYou() {
           <div className="flex h-full flex-col justify-between">
             <div className="p-4">
               <ChanhdangLogotype className="mb-4 w-24" />
-              <div className="text-4xl font-bold">New M</div>
+              <div className="text-4xl font-bold">New Music</div>
               <div className="text-3xl">Mix</div>
             </div>
 
@@ -76,7 +76,7 @@ export function PickForYou() {
           <div className="flex h-full flex-col justify-between">
             <div className="p-4">
               <ChanhdangLogotype className="mb-4 w-24" />
-              <div className="text-4xl font-bold">Chill</div>
+              <div className="text-4xl font-bold">Hot</div>
               <div className="text-3xl">Mix</div>
             </div>
 
