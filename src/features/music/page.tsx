@@ -18,7 +18,7 @@ import { PickForYou } from "./pick-for-you";
 
 export function MusicPage() {
   return (
-    <div className="font-apple flex">
+    <div className="flex font-apple">
       <MenuBar />
 
       <div className="mx-auto w-full">
@@ -28,7 +28,7 @@ export function MusicPage() {
           <HeaderMusicPage />
 
           <div className="md:mx-4">
-            <div className="rounded-3xl from-zinc-200 to-zinc-50 dark:from-zinc-900 dark:to-zinc-950 md:bg-gradient-to-b md:p-4">
+            <div className="rounded-3xl from-zinc-100 to-zinc-50 dark:from-zinc-900 dark:to-zinc-950 md:bg-gradient-to-b md:p-4">
               <div className="mt-4">
                 <PickForYou />
               </div>

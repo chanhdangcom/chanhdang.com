@@ -1,6 +1,6 @@
 "use client";
 
-// import { Search } from "./component/search";
+// import { Search } from "./component/search";md:
 import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { MusicType } from "./music-type";
@@ -15,7 +15,7 @@ export const HeaderMusicPage = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex items-end gap-1">
+            <div className="flex items-end gap-1 md:hidden">
               <Link href={"/music"} className="flex cursor-pointer">
                 <ChanhdangLogotype className="w-40" />
 
