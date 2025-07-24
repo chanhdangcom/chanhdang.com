@@ -13,41 +13,26 @@ export function PlaylistItem({ music }: IProp) {
   }
 
   return (
-    <>
-      <div className="p-1.5">
-        <div className="font-semibold text-black dark:text-white">
-          {music.singer}
-        </div>
-        <div className="text-sm text-zinc-400">ChanhDang Music</div>
+    <div className="p-1.5">
+      <div className="font-semibold text-black dark:text-white">
+        {music.singer}
+      </div>
 
-        <div className="my-1 space-y-2">
-          <div className="relative overflow-hidden rounded-xl">
-            <div className="md:h-50 relative h-48 w-80 md:h-60 md:w-96">
-              <Image
-                alt="1"
-                src={music.cover}
-                width={300}
-                height={300}
-                className="md:h-50 absolute inset-0 h-48 w-80 rounded-xl object-cover opacity-40 blur-md md:h-60 md:w-96"
-              />
+      <div className="text-sm text-zinc-400">ChanhDang Music</div>
 
-              <Image
-                alt="1"
-                src={music.cover}
-                width={300}
-                height={300}
-                className="md:h-50 relative z-10 mx-auto h-48 w-auto rounded-lg object-cover md:h-60"
-              />
-            </div>
+      <div className="my-1 space-y-2">
+        <Image
+          alt="1"
+          src={music.cover}
+          width={300}
+          height={300}
+          className="mx-auto h-40 w-40 shrink-0 justify-center rounded-lg object-cover md:size-52"
+        />
 
-            <div className="absolute inset-0 z-20 bg-gradient-to-t from-zinc-900/40 to-transparent" />
-
-            <div className="absolute bottom-2 left-4 right-4 z-20 line-clamp-1 text-lg font-semibold text-white">
-              {music.title}.
-            </div>
-          </div>
+        <div className="line-clamp-1 w-full text-sm font-semibold text-white">
+          {music.title}.
         </div>
       </div>
-    </>
+    </div>
   );
 }

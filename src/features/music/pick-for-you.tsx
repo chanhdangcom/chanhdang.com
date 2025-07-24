@@ -11,10 +11,10 @@ export function PickForYou() {
         </div>
       </div>
 
-      <div className="scrollbar-hide mt-2 flex w-full gap-3 overflow-x-auto px-1.5 text-white">
+      <div className="mt-2 flex w-full gap-3 overflow-x-auto px-1.5 text-white scrollbar-hide">
         <div
           onClick={() => handlePlayRandomAudio()}
-          className="animate-bg-gradient h-72 w-56 shrink-0 rounded-xl bg-gradient-to-tr from-purple-500 via-pink-500 to-blue-500 bg-[length:200%_200%]"
+          className="h-72 w-56 shrink-0 animate-bg-gradient rounded-xl bg-gradient-to-tr from-purple-500 via-pink-500 to-blue-500 bg-[length:200%_200%]"
         >
           <div className="flex h-full flex-col justify-between">
             <div className="p-4">
@@ -33,7 +33,7 @@ export function PickForYou() {
 
         <div
           onClick={() => handlePlayRandomAudio()}
-          className="animate-bg-gradient h-72 w-56 shrink-0 rounded-xl bg-gradient-to-tr from-[#ff6fd8] via-[#3813c2] to-[#4fd1c5] bg-[length:200%_200%]"
+          className="h-72 w-56 shrink-0 animate-bg-gradient rounded-xl bg-gradient-to-tr from-[#ff6fd8] via-[#3813c2] to-[#4fd1c5] bg-[length:200%_200%]"
         >
           <div className="flex h-full flex-col justify-between">
             <div className="p-4">
@@ -52,7 +52,7 @@ export function PickForYou() {
 
         <div
           onClick={() => handlePlayRandomAudio()}
-          className="animate-bg-gradient h-72 w-56 shrink-0 rounded-xl bg-gradient-to-br from-[#fbd3e9] via-[#bb377d] to-[#fbd3e9] bg-[length:400%_400%] text-white"
+          className="h-72 w-56 shrink-0 animate-bg-gradient rounded-xl bg-gradient-to-br from-[#fbd3e9] via-[#bb377d] to-[#fbd3e9] bg-[length:400%_400%] text-white"
         >
           <div className="flex h-full flex-col justify-between">
             <div className="p-4">
@@ -71,7 +71,7 @@ export function PickForYou() {
 
         <div
           onClick={() => handlePlayRandomAudio()}
-          className="animate-bg-gradient h-72 w-56 shrink-0 rounded-xl bg-gradient-to-br from-[#f83600] via-[#f9d423] to-[#f83600] bg-[length:400%_400%] text-white"
+          className="h-72 w-56 shrink-0 animate-bg-gradient rounded-xl bg-gradient-to-br from-[#f83600] via-[#f9d423] to-[#f83600] bg-[length:400%_400%] text-white"
         >
           <div className="flex h-full flex-col justify-between">
             <div className="p-4">

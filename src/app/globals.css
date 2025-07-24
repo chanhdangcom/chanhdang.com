@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 /* 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -23,4 +24,20 @@
 
     --radius: 0.5rem
   }
+}
+
+@keyframes moveGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-liquid-gradient {
+  animation: moveGradient 12s ease-in-out infinite;
 }

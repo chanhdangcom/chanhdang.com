@@ -127,6 +127,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     audioRef.current.addEventListener("timeupdate", syncLyrics);
 
     return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       audioRef.current?.removeEventListener("timeupdate", syncLyrics);
     };
   }, [subtitles]);
@@ -134,31 +135,17 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   const handlePlayAudio = useCallback(
     async (music: IMusic) => {
       if (currentMusic?.id === music.id) return;
-
-      if (!audioRef.current) {
-        audioRef.current = new Audio();
-        audioRef.current.preload = "auto";
-      }
-
-      if (audioRef.current.src !== music.audio) {
-        audioRef.current.src = music.audio;
-        try {
-          await audioRef.current.play(); // Chờ phát nhạc trước khi cập nhật trạng thái
-        } catch (error) {
-          console.error("Lỗi phát nhạc:", error);
+      setCurrentMusic(music);
+      setTimeout(() => {
+        if (audioRef.current) {
+          audioRef.current.currentTime = 0;
+          audioRef.current.play().catch((error) => {
+            console.error("Lỗi phát nhạc:", error);
+          });
         }
-      } else {
-        audioRef.current.currentTime = 0;
-        try {
-          await audioRef.current.play();
-        } catch (error) {
-          console.error("Lỗi phát lại:", error);
-        }
-      }
-
+      }, 100);
       setIsPlaying(true);
       setIsPaused(false);
-      setCurrentMusic(music);
     },
     [currentMusic]
   );
@@ -180,6 +167,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
 
     audioRef.current.addEventListener("ended", handleEnded);
     return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       audioRef.current?.removeEventListener("ended", handleEnded);
     };
   }, [currentMusic, handlePlayAudio]);
@@ -248,6 +236,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       handAudioForward={handAudioForward}
       handleMute={handleMute}
     >
+      <audio ref={audioRef} src={currentMusic?.audio} controls autoPlay />
       {children}
     </Provider>
   );

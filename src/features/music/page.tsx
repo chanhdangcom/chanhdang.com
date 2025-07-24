@@ -23,7 +23,7 @@ export function MusicPage() {
 
       <div className="mx-auto w-full">
         <div className="relative z-10">
-          <div className="fixed top-0 z-50 h-24 w-full bg-gradient-to-b from-white via-white/60 to-transparent dark:from-black/95 dark:via-black/60"></div>
+          <div className="fixed top-0 z-50 h-24 w-full bg-gradient-to-b from-white via-white/50 to-transparent dark:from-black dark:via-black/50" />
 
           <HeaderMusicPage />
 
@@ -33,12 +33,12 @@ export function MusicPage() {
                 <PickForYou />
               </div>
 
-              <div className="mt-4 flex justify-start">
-                <CarouselAudioPlaylist />
-              </div>
-
               <div className="mt-2 flex justify-start">
                 <CarouselAudio />
+              </div>
+
+              <div className="mt-4 flex justify-start">
+                <CarouselAudioPlaylist />
               </div>
 
               <div className="mt-2">

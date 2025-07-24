@@ -2,35 +2,51 @@ export const MUSICSPLAYLIST = [
   
   {
     id: "1",
-    title: "Festival Hits",
+    title: "Viral Top 50 Global",
     singer: "New Playlist",
-    cover: "https://cdn.chanhdang.com/festival_cover.png",
+    cover: "https://cdn.chanhdang.com/viral50_global.jpg",
     
 
   },
 
   {
     id: "2",
-    title: "Retro Hits",
+    title: "Viral Top 50 Viet Nam",
     singer: "Coming Soon",
-    cover: "https://cdn.chanhdang.com/retro_cover.png",
+    cover: "https://cdn.chanhdang.com/viral50_vietnam.jpg",
   
   },
 
   {
     id: "3",
-    title: "Study Music",
+    title: "Top 50 Global",
     singer: "Update Playlist",
-    cover: "https://cdn.chanhdang.com/study_cover.webp",
+    cover: "https://cdn.chanhdang.com/top50_global.jpg",
     
 
   },
 
   {
     id: "4",
-    title: "Vpop Hits 2025",
+    title: "Top 50 Viet Nam",
     singer: "New Album",
-    cover: "https://cdn.chanhdang.com/vpop_cover.jpg",
+    cover: "https://cdn.chanhdang.com/top50_vietnam.jpg",
+  
+  },
+
+  {
+    id: "5",
+    title: "Top Song Global",
+    singer: "New Album",
+    cover: "https://cdn.chanhdang.com/top_song_global.jpg",
+  
+  },
+
+  {
+    id: "6",
+    title: "Top Song Viet Nam",
+    singer: "New Album",
+    cover: "https://cdn.chanhdang.com/top_song_vietnam.jpg",
   
   },
 ];

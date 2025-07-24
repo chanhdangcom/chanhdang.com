@@ -14,15 +14,6 @@ export function AuidoItem({ music, handlePlay }: IProp) {
         onClick={handlePlay}
       >
         {music.cover ? (
-          // <Image
-          //   height={300}
-          //   width={300}
-          //   alt="cover"
-          //   src={music.cover}
-          //   quality={100}
-          //   className="mx-auto h-40 w-40 justify-center rounded-lg object-cover md:size-44"
-          // />
-
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={music.cover}
