@@ -35,7 +35,7 @@ export default function RegisterForm() {
         value={form.username}
         onChange={handleChange}
         required
-        className="w-full border px-2 py-1"
+        className="w-full border px-2 py-1 text-black"
       />
       <input
         name="password"
@@ -44,7 +44,7 @@ export default function RegisterForm() {
         value={form.password}
         onChange={handleChange}
         required
-        className="w-full border px-2 py-1"
+        className="w-full border px-2 py-1 text-black"
       />
       <button
         type="submit"

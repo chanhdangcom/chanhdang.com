@@ -40,7 +40,7 @@ export default function LoginForm() {
     <>
       <Header />
 
-      <div className="container justify-between md:flex">
+      <div className="container md:flex md:justify-between">
         <div className="my-8 hidden w-[90vh] md:block">
           <TableRanking />
           <SingerList />
@@ -49,7 +49,7 @@ export default function LoginForm() {
         <form className="mb-16 space-y-8 font-apple" onSubmit={handleSubmit}>
           <div className="my-8 text-center text-3xl font-bold">Đăng Nhập</div>
 
-          <div className="mx-auto flex w-96 flex-col space-y-4">
+          <div className="mx-auto flex flex-col space-y-4 md:w-96">
             <input
               name="username"
               placeholder="Tên đăng nhập"
