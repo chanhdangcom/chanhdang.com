@@ -54,7 +54,7 @@ export default function AddMusicForm() {
         <HeaderMusicPage />
       </div>
 
-      <div className="container flex md:justify-between">
+      <div className="container md:flex md:justify-between">
         <div className="my-8 hidden w-[90vh] md:block">
           <TableRanking />
           <SingerList />
@@ -66,7 +66,7 @@ export default function AddMusicForm() {
           </div>
 
           <div className="mx-auto flex w-full flex-col space-y-4">
-            <div className="flex justify-between gap-4">
+            <div className="mx-auto flex w-full flex-col justify-between gap-4 md:flex-row">
               <input
                 name="title"
                 placeholder="Tên bài hát"
