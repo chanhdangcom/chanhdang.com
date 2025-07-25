@@ -29,7 +29,7 @@ export function PlaylistItem({ music }: IProp) {
           className="mx-auto h-40 w-40 shrink-0 justify-center rounded-lg object-cover md:size-52"
         />
 
-        <div className="line-clamp-1 w-full text-sm font-semibold text-white">
+        <div className="line-clamp-1 w-full text-sm font-semibold">
           {music.title}.
         </div>
       </div>

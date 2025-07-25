@@ -1,7 +1,7 @@
 import { BookIcon } from "lucide-react";
 import { ExperienceInfoItem } from "../profile/components/experience-info-item";
 import { DrawerBlog } from "../profile/drawer-blog";
-import { getPosts } from "@/apii/blog/get-posts";
+import { getPosts } from "@/api/blog/get-posts";
 
 import { BlogCarousel } from "./blog-carousel";
 

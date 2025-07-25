@@ -1,5 +1,5 @@
 import { BlogList } from "../blog/blog-list";
-import { getPosts } from "@/apii/blog/get-posts";
+import { getPosts } from "@/api/blog/get-posts";
 import {
   HoverCard,
   HoverCardContent,

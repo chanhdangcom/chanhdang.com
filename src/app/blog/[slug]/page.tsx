@@ -1,5 +1,5 @@
 // import { BlogDetailsPageClient } from "@/features/blog/page-details-client";
-import { getPosts } from "@/apii/blog/get-posts";
+import { getPosts } from "@/api/blog/get-posts";
 import { BlogDetailsPageServer } from "@/features/blog/blog-details-page-server";
 
 // Next.js will invalidate the cache when a
