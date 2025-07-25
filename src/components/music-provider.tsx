@@ -236,7 +236,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       handAudioForward={handAudioForward}
       handleMute={handleMute}
     >
-      <audio ref={audioRef} src={currentMusic?.audio} controls autoPlay />
+      <audio ref={audioRef} src={currentMusic?.audio} autoPlay />
       {children}
     </Provider>
   );
