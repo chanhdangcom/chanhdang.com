@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 
-export default async function GET() {
+export async function GET() {
   try {
     const client = await clientPromise;
     const db = client.db('musicdb'); // Nếu bạn muốn chỉ định tên DB: client.db('ten_db')

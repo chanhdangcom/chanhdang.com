@@ -15,12 +15,16 @@ export function CarouselAudio() {
     fetch("/api/musics")
       .then((res) => res.json())
       .then((data) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const mapped = data.map((item: any) => ({
-          ...item,
-          id: item._id?.toString(), // Lấy _id của MongoDB làm id duy nhất
-        }));
-        setMusics(mapped);
+        console.log("API DATA:", data);
+
+        const mapped = Array.isArray(data)
+          ? data.map((item: Record<string, unknown>) => ({
+              ...item,
+              id:
+                typeof item._id === "string" ? item._id : item._id?.toString(),
+            }))
+          : [];
+        setMusics(mapped as IMusic[]);
       });
   }, []);
 
