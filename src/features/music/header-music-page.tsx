@@ -1,13 +1,12 @@
 "use client";
 
-// import { Search } from "./component/search";md:
 import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { MusicType } from "./music-type";
-
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { SwitchTheme } from "@/components/switch-theme";
+
+import { LogoutButton } from "./component/logout-button";
 
 export const HeaderMusicPage = () => {
   return (
@@ -46,14 +45,9 @@ export const HeaderMusicPage = () => {
           </div>
 
           <div className="mr-2">
-            {" "}
-            <SwitchTheme />
+            <LogoutButton />
           </div>
         </div>
-
-        {/* <div className="md:hidden">
-          <MusicType />
-        </div> */}
       </div>
     </div>
   );

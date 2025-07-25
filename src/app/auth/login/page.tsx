@@ -1,3 +1,4 @@
-export default function Login() {
-  return <div>Login Page</div>;
+import LoginForm from "@/features/auth/login-form";
+export default function LoginPage() {
+  return <LoginForm />;
 }

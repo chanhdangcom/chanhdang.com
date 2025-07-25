@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Footer } from "../profile/footer";
 import { TableRanking } from "./table-ranking";
 import { SingerList } from "./singer-list";
-import { Header } from "../profile/header";
+import { HeaderMusicPage } from "./header-music-page";
 
 export default function AddMusicForm() {
   const [form, setForm] = useState({
@@ -50,9 +50,11 @@ export default function AddMusicForm() {
 
   return (
     <div>
-      <Header />
+      <div>
+        <HeaderMusicPage />
+      </div>
 
-      <div className="container flex justify-between">
+      <div className="container flex md:justify-between">
         <div className="my-8 hidden w-[90vh] md:block">
           <TableRanking />
           <SingerList />

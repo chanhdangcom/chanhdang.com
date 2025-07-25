@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
+import { SwitchTheme } from "@/components/switch-theme";
 
 type IIcon = {
   className?: string;
@@ -78,6 +79,7 @@ export const Footer = () => {
       <div className="flex items-center justify-center space-x-2">
         <div className="flex items-center space-x-2">
           <div>Inspired by</div>
+
           <div>
             <img
               src="/img/Dracula-Theme.svg"
@@ -85,6 +87,7 @@ export const Footer = () => {
               className="size-4"
             />
           </div>
+
           <div className="font-semibold text-zinc-950 dark:font-semibold dark:text-white">
             Dracula Theme
           </div>
@@ -107,6 +110,8 @@ export const Footer = () => {
             />
           </svg>
         </a>
+
+        <SwitchTheme />
       </div>
     </div>
   );
