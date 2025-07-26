@@ -53,8 +53,8 @@ export function LogoutButton() {
             </div>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent className="space-y-2 rounded-xl border bg-zinc-50 text-lg dark:border-zinc-800 dark:bg-zinc-950">
-            <div className="text-md rounded-t-md bg-zinc-300 px-1 py-0.5 dark:bg-zinc-900">
+          <DropdownMenuContent className="w-64 space-y-2 rounded-xl border bg-zinc-50 text-lg dark:border-zinc-800 dark:bg-zinc-950">
+            <div className="text-md rounded-t-md bg-zinc-300 px-1 py-0.5 font-bold dark:bg-zinc-900">
               Menu
             </div>
 

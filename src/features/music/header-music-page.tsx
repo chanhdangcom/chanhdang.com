@@ -44,7 +44,7 @@ export const HeaderMusicPage = () => {
             </AnimatePresence>
           </div>
 
-          <div className="mr-2">
+          <div className="mr-4">
             <LogoutButton />
           </div>
         </div>

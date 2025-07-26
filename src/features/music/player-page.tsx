@@ -129,13 +129,13 @@ Thênh thang bước đi giữa trời rực rỡ\n`;
     <AnimatePresence mode="wait">
       <motion.div
         layoutId="audio-bar"
-        className="fixed inset-0 z-50 space-y-4 px-4 md:inset-x-96 md:inset-y-20 md:rounded-3xl"
+        className="fixed inset-0 z-50 space-y-4 px-4 md:inset-x-40 md:inset-y-8 md:rounded-3xl"
       >
-        <div className="absolute inset-0 -z-10 bg-zinc-100 backdrop-blur-3xl dark:bg-zinc-950 md:rounded-3xl">
+        <div className="absolute inset-0 -z-10 flex justify-center bg-zinc-300 backdrop-blur-3xl dark:bg-zinc-950 md:rounded-3xl">
           <img
             src={currentMusic?.cover || ""}
             alt="cover"
-            className="md:3/4 h-1/2 w-full blur-2xl md:hidden"
+            className="md:3/4 mt-8 h-1/2 w-full blur-2xl md:w-[120vh] md:blur-3xl"
           />
         </div>
 
@@ -158,7 +158,7 @@ Thênh thang bước đi giữa trời rực rỡ\n`;
             <motion.div
               layoutId="Cover"
               key={currentMusic?.cover}
-              className="flex justify-between gap-4"
+              className="flex justify-center gap-8"
             >
               <motion.img
                 src={currentMusic?.cover}
