@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.850.0",
+    "@aws-sdk/s3-request-presigner": "^3.850.0",
     "@bprogress/next": "^3.0.10",
     "@developer-hub/liquid-glass": "^1.2.3",
     "@emotion/react": "^11.14.0",

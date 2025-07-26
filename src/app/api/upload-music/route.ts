@@ -31,14 +31,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
     }
 
-    // Kiểm tra kích thước file (50MB limit)
-    const maxSize = 50 * 1024 * 1024; // 50MB
+    // Kiểm tra kích thước file (Cloudflare Pages cho phép 100MB)
+    const maxSize = 50 * 1024 * 1024; // 50MB để an toàn
     if (file.size > maxSize) {
       return NextResponse.json({ 
         error: "File too large", 
         maxSize: "50MB",
         actualSize: `${(file.size / 1024 / 1024).toFixed(2)}MB`
-      }, { status: 400 });
+      }, { status: 413 });
     }
 
     console.log("Uploading file:", {
