@@ -4,6 +4,7 @@ import { Footer } from "../profile/footer";
 import { TableRanking } from "./table-ranking";
 import { SingerList } from "./singer-list";
 import { HeaderMusicPage } from "./header-music-page";
+import { Button } from "@/components/ui/button";
 
 export default function AddMusicForm() {
   const [form, setForm] = useState({
@@ -16,6 +17,7 @@ export default function AddMusicForm() {
     type: "",
   });
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -26,68 +28,77 @@ export default function AddMusicForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage("");
+    setIsLoading(true);
 
-    let audioUrl = form.audio;
-    let coverUrl = form.cover;
+    try {
+      let audioUrl = form.audio;
+      let coverUrl = form.cover;
 
-    // Nếu có file mp3, upload lên R2 trước
-    if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
+      // Nếu có file mp3, upload lên R2 trước
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
 
-      const uploadRes = await fetch("/api/upload-music", {
-        method: "POST",
-        body: formData,
-      });
-      const uploadData = await uploadRes.json();
-      if (uploadData.url) {
-        audioUrl = uploadData.url;
-      } else {
-        setMessage("Upload mp3 thất bại!");
-        return;
+        const uploadRes = await fetch("/api/upload-music", {
+          method: "POST",
+          body: formData,
+        });
+        const uploadData = await uploadRes.json();
+        if (uploadData.url) {
+          audioUrl = uploadData.url;
+        } else {
+          setMessage("Upload mp3 thất bại!");
+          setIsLoading(false);
+          return;
+        }
       }
-    }
 
-    // Nếu có file ảnh, upload lên R2 trước
-    if (imageFile) {
-      const formData = new FormData();
-      formData.append("file", imageFile);
+      // Nếu có file ảnh, upload lên R2 trước
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append("file", imageFile);
 
-      const uploadRes = await fetch("/api/upload-music", {
-        method: "POST",
-        body: formData,
-      });
-      const uploadData = await uploadRes.json();
-      if (uploadData.url) {
-        coverUrl = uploadData.url;
-      } else {
-        setMessage("Upload ảnh thất bại!");
-        return;
+        const uploadRes = await fetch("/api/upload-music", {
+          method: "POST",
+          body: formData,
+        });
+        const uploadData = await uploadRes.json();
+        if (uploadData.url) {
+          coverUrl = uploadData.url;
+        } else {
+          setMessage("Upload ảnh thất bại!");
+          setIsLoading(false);
+          return;
+        }
       }
-    }
 
-    // Gửi thông tin bài hát (audio là link vừa upload hoặc nhập tay)
-    const res = await fetch("/api/musics", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...form, audio: audioUrl, cover: coverUrl }),
-    });
-    const data = await res.json();
-    if (data.success) {
-      setMessage("Thêm bài hát thành công!");
-      setForm({
-        title: "",
-        singer: "",
-        cover: "",
-        audio: "",
-        youtube: "",
-        content: "",
-        type: "",
+      // Gửi thông tin bài hát (audio là link vừa upload hoặc nhập tay)
+      const res = await fetch("/api/musics", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, audio: audioUrl, cover: coverUrl }),
       });
-      setFile(null);
-      setImageFile(null);
-    } else {
-      setMessage("Có lỗi xảy ra!");
+      const data = await res.json();
+      if (data.success) {
+        setMessage("Thêm bài hát thành công!");
+        setForm({
+          title: "",
+          singer: "",
+          cover: "",
+          audio: "",
+          youtube: "",
+          content: "",
+          type: "",
+        });
+        setFile(null);
+        setImageFile(null);
+      } else {
+        setMessage("Có lỗi xảy ra!");
+      }
+    } catch {
+      setMessage("Có lỗi xảy ra khi thêm bài hát!");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -131,7 +142,8 @@ export default function AddMusicForm() {
                 value={form.title}
                 onChange={handleChange}
                 required
-                className="rounded-xl border px-4 py-2 shadow-sm dark:border-zinc-900 dark:bg-zinc-950"
+                disabled={isLoading}
+                className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
               />
 
               <input
@@ -140,7 +152,8 @@ export default function AddMusicForm() {
                 value={form.singer}
                 onChange={handleChange}
                 required
-                className="rounded-xl border px-4 py-2 shadow-sm dark:border-zinc-900 dark:bg-zinc-950"
+                disabled={isLoading}
+                className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
               />
             </div>
 
@@ -155,14 +168,16 @@ export default function AddMusicForm() {
                 value={form.cover}
                 onChange={handleChange}
                 required
-                className="rounded-xl border px-4 py-2 shadow-sm dark:border-zinc-900 dark:bg-zinc-950"
+                disabled={isLoading}
+                className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
               />
             )}
             <input
               type="file"
               accept="image/*"
               onChange={handleImageChange}
-              className="rounded-xl border bg-zinc-100 px-4 py-2 shadow-sm dark:border-zinc-900 dark:bg-zinc-900"
+              disabled={isLoading}
+              className="rounded-xl border bg-zinc-100 px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-900"
             />
 
             {/* Nếu đã chọn file mp3 thì ẩn input nhập link audio */}
@@ -177,7 +192,8 @@ export default function AddMusicForm() {
                 value={form.audio}
                 onChange={handleChange}
                 required
-                className="rounded-xl border bg-zinc-100 px-4 py-2 shadow-sm dark:border-zinc-900 dark:bg-zinc-900"
+                disabled={isLoading}
+                className="rounded-xl border bg-zinc-100 px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-900"
               />
             )}
 
@@ -185,7 +201,8 @@ export default function AddMusicForm() {
               type="file"
               accept=".mp3"
               onChange={handleFileChange}
-              className="rounded-xl border px-4 py-2 shadow-sm dark:border-zinc-900 dark:bg-zinc-950"
+              disabled={isLoading}
+              className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
             />
 
             <input
@@ -193,7 +210,8 @@ export default function AddMusicForm() {
               placeholder="Link Youtube"
               value={form.youtube}
               onChange={handleChange}
-              className="rounded-xl border px-4 py-2 shadow-sm dark:border-zinc-900 dark:bg-zinc-950"
+              disabled={isLoading}
+              className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
             />
 
             <input
@@ -201,7 +219,8 @@ export default function AddMusicForm() {
               placeholder="Thể loại"
               value={form.type}
               onChange={handleChange}
-              className="rounded-xl border px-4 py-2 shadow-sm dark:border-zinc-900 dark:bg-zinc-950"
+              disabled={isLoading}
+              className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
             />
 
             <textarea
@@ -209,16 +228,21 @@ export default function AddMusicForm() {
               placeholder="Nội dung"
               value={form.content}
               onChange={handleChange}
-              className="rounded-xl border px-4 py-2 shadow-sm dark:border-zinc-900 dark:bg-zinc-950"
+              disabled={isLoading}
+              className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
             />
 
             <div className="space-y-2">
-              <button
+              <Button
                 type="submit"
-                className="w-full rounded-xl bg-zinc-900 px-4 py-2 font-semibold text-white"
+                variant="liquid"
+                size="lg"
+                loading={isLoading}
+                loadingText="Đang thêm bài hát..."
+                className="w-full rounded-xl bg-red-400"
               >
                 Thêm bài hát
-              </button>
+              </Button>
 
               <div className="flex justify-between gap-2">
                 <div className="w-full rounded-xl border border-blue-600 px-8 py-2 text-center font-semibold">
@@ -230,7 +254,7 @@ export default function AddMusicForm() {
                 </div>
               </div>
             </div>
-            {message && <p>{message}</p>}
+            {message && <p className="text-center font-semibold">{message}</p>}
           </div>
         </form>
       </div>

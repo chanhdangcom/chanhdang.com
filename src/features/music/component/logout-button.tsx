@@ -9,7 +9,6 @@ import {
 import { Plus, Power, SignIn, UserCircle } from "phosphor-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
 export function LogoutButton() {
   const [userName, setUserName] = React.useState<string | null>(null);
   const router = useRouter();
