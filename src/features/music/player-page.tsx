@@ -164,7 +164,12 @@ Thênh thang bước đi giữa trời rực rỡ\n`;
                 src={currentMusic?.cover}
                 alt="cover"
                 animate={{ scale: isPaused ? 0.8 : 1 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
+                transition={{
+                  duration: 0.2,
+                  ease: "easeInOut",
+                  type: "spring",
+                  damping: 15,
+                }}
                 className="flex h-[45vh] w-full shrink-0 justify-center rounded-2xl object-cover md:w-[40vh]"
               />
 
