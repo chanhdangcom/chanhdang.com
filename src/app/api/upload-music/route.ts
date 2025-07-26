@@ -1,17 +1,10 @@
 import { NextResponse } from "next/server";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const R2_ENDPOINT = "https://41c96e02c6caff9a819147b6dc119332.r2.cloudflarestorage.com";
 const BUCKET = "chanhdangcom";
 const PUBLIC_CDN_URL = "https://cdn.chanhdang.com";
-
-// Kiểm tra environment variables
-if (!process.env.R2_ACCESS_KEY_ID || !process.env.R2_SECRET_ACCESS_KEY) {
-  console.error("Missing R2 credentials:", {
-    hasAccessKey: !!process.env.R2_ACCESS_KEY_ID,
-    hasSecretKey: !!process.env.R2_SECRET_ACCESS_KEY,
-  });
-}
 
 const s3 = new S3Client({
   region: "auto",
@@ -22,56 +15,31 @@ const s3 = new S3Client({
   },
 });
 
-export async function POST(request: Request) {
+// Endpoint GET: trả về presigned URL
+export async function GET(request: Request) {
   try {
-    const formData = await request.formData();
-    const file = formData.get("file") as File;
+    const { searchParams } = new URL(request.url);
+    const fileName = searchParams.get('fileName');
+    const contentType = searchParams.get('contentType');
 
-    if (!file) {
-      return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
+    if (!fileName || !contentType) {
+      return NextResponse.json({ error: "Missing fileName or contentType" }, { status: 400 });
     }
 
-    // Kiểm tra kích thước file (Cloudflare Pages cho phép 100MB)
-    const maxSize = 50 * 1024 * 1024; // 50MB để an toàn
-    if (file.size > maxSize) {
-      return NextResponse.json({ 
-        error: "File too large", 
-        maxSize: "50MB",
-        actualSize: `${(file.size / 1024 / 1024).toFixed(2)}MB`
-      }, { status: 413 });
-    }
-
-    console.log("Uploading file:", {
-      name: file.name,
-      size: file.size,
-      type: file.type
+    const key = `music-files/${Date.now()}-${fileName}`;
+    const command = new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: key,
+      ContentType: contentType,
+      ACL: "public-read",
     });
 
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    const presignedUrl = await getSignedUrl(s3, command, { expiresIn: 3600 }); // 1 hour
+    const publicUrl = `${PUBLIC_CDN_URL}/${key}`;
 
-    const fileName = `${Date.now()}-${file.name}`;
-
-    await s3.send(
-      new PutObjectCommand({
-        Bucket: BUCKET,
-        Key: `music-files/${fileName}`,
-        Body: buffer,
-        ContentType: file.type,
-        ACL: "public-read",
-      })
-    );
-
-    const publicUrl = `${PUBLIC_CDN_URL}/music-files/${fileName}`;
-    console.log("Upload successful:", publicUrl);
-
-    return NextResponse.json({ url: publicUrl });
+    return NextResponse.json({ presignedUrl, publicUrl, key });
   } catch (err) {
-    console.error("Upload error:", err);
-    return NextResponse.json({ 
-      error: "Upload failed", 
-      detail: String(err),
-      message: err instanceof Error ? err.message : "Unknown error"
-    }, { status: 500 });
+    return NextResponse.json({ error: "Failed to generate presigned URL", detail: String(err) }, { status: 500 });
   }
 }
+

@@ -36,16 +36,21 @@ export default function AddMusicForm() {
 
       // Nếu có file mp3, upload lên R2 trước
       if (file) {
-        const formData = new FormData();
-        formData.append("file", file);
+        // 1. Lấy presigned URL
+        const presignedRes = await fetch(
+          `/api/upload-music?fileName=${encodeURIComponent(file.name)}&contentType=${encodeURIComponent(file.type)}`
+        );
+        const { presignedUrl, publicUrl } = await presignedRes.json();
 
-        const uploadRes = await fetch("/api/upload-music", {
-          method: "POST",
-          body: formData,
+        // 2. Upload trực tiếp lên R2
+        const uploadRes = await fetch(presignedUrl, {
+          method: "PUT",
+          headers: { "Content-Type": file.type },
+          body: file,
         });
-        const uploadData = await uploadRes.json();
-        if (uploadData.url) {
-          audioUrl = uploadData.url;
+
+        if (uploadRes.ok) {
+          audioUrl = publicUrl;
         } else {
           setMessage("Upload mp3 thất bại!");
           setIsLoading(false);
@@ -55,16 +60,19 @@ export default function AddMusicForm() {
 
       // Nếu có file ảnh, upload lên R2 trước
       if (imageFile) {
-        const formData = new FormData();
-        formData.append("file", imageFile);
+        const presignedRes = await fetch(
+          `/api/upload-music?fileName=${encodeURIComponent(imageFile.name)}&contentType=${encodeURIComponent(imageFile.type)}`
+        );
+        const { presignedUrl, publicUrl } = await presignedRes.json();
 
-        const uploadRes = await fetch("/api/upload-music", {
-          method: "POST",
-          body: formData,
+        const uploadRes = await fetch(presignedUrl, {
+          method: "PUT",
+          headers: { "Content-Type": imageFile.type },
+          body: imageFile,
         });
-        const uploadData = await uploadRes.json();
-        if (uploadData.url) {
-          coverUrl = uploadData.url;
+
+        if (uploadRes.ok) {
+          coverUrl = publicUrl;
         } else {
           setMessage("Upload ảnh thất bại!");
           setIsLoading(false);
@@ -73,12 +81,17 @@ export default function AddMusicForm() {
       }
 
       // Gửi thông tin bài hát (audio là link vừa upload hoặc nhập tay)
+      const bodyData = { ...form, audio: audioUrl, cover: coverUrl };
+      console.log("Gửi lên API /api/musics:", bodyData);
+
       const res = await fetch("/api/musics", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, audio: audioUrl, cover: coverUrl }),
+        body: JSON.stringify(bodyData),
       });
       const data = await res.json();
+      console.log("Kết quả trả về từ /api/musics:", data);
+
       if (data.success) {
         setMessage("Thêm bài hát thành công!");
         setForm({
@@ -93,7 +106,7 @@ export default function AddMusicForm() {
         setFile(null);
         setImageFile(null);
       } else {
-        setMessage("Có lỗi xảy ra!");
+        setMessage("Có lỗi xảy ra! " + (data.error || ""));
       }
     } catch {
       setMessage("Có lỗi xảy ra khi thêm bài hát!");
