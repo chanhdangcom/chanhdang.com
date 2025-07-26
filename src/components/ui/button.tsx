@@ -66,12 +66,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={loading || props.disabled}
         {...props}
       >
-        {variant === "liquid" && (
-          <>
-            <div className="absolute inset-0 animate-[liquidMove_8s_ease-in-out_infinite] bg-gradient-to-br from-pink-300 via-purple-300 to-pink-400 bg-[length:400%_400%] opacity-70 blur-3xl"></div>
-            <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/10 to-white/5"></div>
-          </>
-        )}
+        {variant === "liquid" && <></>}
 
         <div className="relative z-10 flex items-center gap-2">
           {loading && (

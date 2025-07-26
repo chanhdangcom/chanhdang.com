@@ -239,7 +239,7 @@ export default function AddMusicForm() {
                 size="lg"
                 loading={isLoading}
                 loadingText="Đang thêm bài hát..."
-                className="w-full rounded-xl bg-red-400"
+                className="w-full rounded-xl border border-zinc-800 bg-zinc-800"
               >
                 Thêm bài hát
               </Button>
