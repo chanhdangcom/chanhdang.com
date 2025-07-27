@@ -1,10 +1,14 @@
 "use client";
 
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
-import { BookBookmark, Browsers, House } from "@phosphor-icons/react/dist/ssr";
+import { useUser } from "@/hooks/use-user";
+import { BookBookmark, House } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
+import { Plus } from "phosphor-react";
 
 export function MenuBar() {
+  const { isAuthenticated } = useUser();
+
   return (
     <div className="relative ml-4 mt-4 hidden md:flex">
       <div className="w-60"></div>
@@ -22,29 +26,29 @@ export function MenuBar() {
               <div className="font-semibold">Home</div>
             </div>
 
-            <div className="flex items-center gap-2 rounded-2xl bg-zinc-300 p-2 dark:bg-zinc-800">
-              <Browsers size={20} weight="fill" />
-              <div className="font-semibold">Brower</div>
-            </div>
+            {isAuthenticated ? (
+              <Link
+                href={"/music/add"}
+                className="flex items-center gap-2 rounded-2xl bg-zinc-300 p-2 dark:bg-zinc-800"
+              >
+                <Plus size={20} weight="bold" />
+                <div className="font-semibold">Add New Music</div>
+              </Link>
+            ) : (
+              <div className="pointer-events-none flex items-center gap-2 rounded-2xl bg-zinc-300 p-2 opacity-30 dark:bg-zinc-800">
+                <Plus size={20} weight="bold" />
+                <div className="font-semibold">Add New Music</div>
+              </div>
+            )}
 
-            <div className="flex items-center gap-2 rounded-2xl bg-zinc-300 p-2 dark:bg-zinc-800">
+            <Link
+              href={"/music/favorites"}
+              className="flex items-center gap-2 rounded-2xl bg-zinc-300 p-2 dark:bg-zinc-800"
+            >
               <BookBookmark size={20} weight="fill" />
               <div className="font-semibold">Library</div>
-            </div>
+            </Link>
           </div>
-
-          {/* <div className="fixed h-0.5 w-72 bg-zinc-800"></div> */}
-
-          {/* <div className="mt-16 space-y-4 font-semibold">
-            {MUSICSPLAYLIST.map((music) => (
-              <AudioItemOrder
-                music={music}
-                key={music.id}
-                className="size-16"
-                handlePlay={() => handlePlayAudio}
-              />
-            ))}
-          </div> */}
         </div>
       </div>
     </div>

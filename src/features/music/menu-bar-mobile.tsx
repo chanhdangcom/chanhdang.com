@@ -3,14 +3,16 @@ import Link from "next/link";
 
 import {
   Bookmarks,
-  Broadcast,
   House,
   MagnifyingGlass,
+  Plus,
   SquaresFour,
 } from "phosphor-react";
 import { useEffect, useRef, useState } from "react";
+import { useUser } from "@/hooks/use-user";
 
 export function MenuBarMobile() {
+  const { isAuthenticated } = useUser();
   const [show, setShow] = useState(true);
   const lastScrollY = useRef(0);
   const scrollDir = useRef<"up" | "down" | null>(null);
@@ -62,7 +64,7 @@ export function MenuBarMobile() {
               duration: 1,
             }}
             layoutId="item"
-            className="hite ml-2 flex items-center gap-8 rounded-full border border-transparent bg-gradient-to-tl from-transparent to-black/10 px-8 py-1.5 text-black backdrop-blur-sm dark:border-2 dark:to-white/10 dark:text-white"
+            className="ml-2 flex items-center gap-8 rounded-full border border-transparent bg-gradient-to-tl from-transparent to-black/10 px-8 py-1.5 text-black backdrop-blur-sm dark:border-2 dark:to-white/10 dark:text-white"
           >
             <div className="flex flex-col items-center text-red-500">
               <House size={30} weight="fill" />
@@ -74,15 +76,33 @@ export function MenuBarMobile() {
               <div className="text-sm">New</div>
             </div>
 
-            <div className="flex flex-col items-center">
-              <Broadcast size={30} weight="fill" />
-              <div className="text-sm">Radio</div>
-            </div>
+            {isAuthenticated ? (
+              <Link href={"/music/add"} className="flex flex-col items-center">
+                <Plus size={30} weight="fill" />
+                <div className="text-sm">Add</div>
+              </Link>
+            ) : (
+              <div className="pointer-events-none flex flex-col items-center opacity-30">
+                <Plus size={30} weight="fill" />
+                <div className="text-sm">Add</div>
+              </div>
+            )}
 
-            <div className="flex flex-col items-center">
-              <Bookmarks size={30} weight="fill" />
-              <div className="text-sm"> Library</div>
-            </div>
+            {isAuthenticated ? (
+              <Link href={"/music/add"} className="flex flex-col items-center">
+                <div className="flex flex-col items-center">
+                  <Bookmarks size={30} weight="fill" />
+                  <div className="text-sm"> Library</div>
+                </div>
+              </Link>
+            ) : (
+              <div className="pointer-events-none flex flex-col items-center opacity-30">
+                <div className="flex flex-col items-center">
+                  <Bookmarks size={30} weight="fill" />
+                  <div className="text-sm"> Library</div>
+                </div>
+              </div>
+            )}
           </motion.div>
         ) : (
           <motion.div

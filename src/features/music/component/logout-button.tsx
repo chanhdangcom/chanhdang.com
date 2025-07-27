@@ -8,17 +8,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SignIn, UserCircle } from "phosphor-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+
 import { useUser } from "@/hooks/use-user";
 import { FavoritesCount } from "./favorites-count";
 
 export function LogoutButton() {
   const { user, logout } = useUser();
-  const router = useRouter();
 
   const handleLogout = () => {
     logout();
-    router.push("/music");
+    window.location.href = "/music"; // Vừa logout vừa reload về trang music
   };
 
   return (

@@ -49,8 +49,8 @@ export function AudioBar() {
   const timeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const threshold = 15; // chỉ xử lý nếu chênh lệch đủ lớn
-    const delay = 10; // debounce nhẹ để phản ứng mượt hơn
+    const threshold = 15;
+    const delay = 10;
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -63,10 +63,10 @@ export function AudioBar() {
       }
 
       timeoutRef.current = window.setTimeout(() => {
-        if (delta > 0 && scrollDir.current !== "down") {
+        if (delta > 10 && scrollDir.current !== "down") {
           setScroll(false); // scroll xuống → ẩn
           scrollDir.current = "down";
-        } else if (delta < 0 && scrollDir.current !== "up") {
+        } else if (delta < 10 && scrollDir.current !== "up") {
           setScroll(true); // scroll lên → hiện
           scrollDir.current = "up";
         }
@@ -233,15 +233,6 @@ export function AudioBar() {
             </div>
 
             <div className="ml-4 flex items-center md:hidden md:gap-4">
-              {/* <motion.div layout>
-                {currentMusic?.cover && (
-                  <DynamicIslandWave
-                    isPlay={isPlaying}
-                    coverUrl={currentMusic?.cover}
-                  />
-                )}
-              </motion.div> */}
-
               {isPlaying ? (
                 <motion.div
                   onClick={(e) => {
@@ -366,14 +357,6 @@ export function AudioBar() {
                 </div>
               ) : (
                 <div className="shrink-0">
-                  {/* <Image
-                    alt="cover"
-                    width={192}
-                    height={192}
-                    src={currentMusic?.cover}
-                    className="flex size-10 items-center justify-center rounded-xl object-cover md:rounded-lg"
-                  /> */}
-
                   <img
                     src={currentMusic?.cover}
                     alt="cover"
@@ -415,15 +398,6 @@ export function AudioBar() {
                   <DurationAudio />
                 </div>
               </div>
-
-              {/* <div>
-                {currentMusic?.cover && (
-                  <DynamicIslandWave
-                    isPlay={isPlaying}
-                    coverUrl={currentMusic?.cover}
-                  />
-                )}
-              </div> */}
             </div>
 
             <div className="hidden items-center gap-4 text-black dark:text-white md:flex">
