@@ -6,7 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SignIn, UserCircle } from "phosphor-react";
+import { SignIn, User, UserCircle } from "phosphor-react";
 import Link from "next/link";
 
 import { useUser } from "@/hooks/use-user";
@@ -37,17 +37,14 @@ export function LogoutButton() {
             <div>
               <div className="flex items-center gap-1">
                 <UserCircle size={12} weight="fill" className="size-8" />
-
-                <div className="text-sm font-semibold hover:underline">
-                  {user.username}
-                </div>
               </div>
             </div>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent className="w-64 space-y-2 rounded-xl border bg-zinc-50 text-lg dark:border-zinc-800 dark:bg-zinc-950">
-            <div className="text-md rounded-t-md bg-zinc-300 px-1 py-0.5 font-bold dark:bg-zinc-900">
-              Menu
+          <DropdownMenuContent className="w-52 space-y-2 rounded-xl border bg-zinc-50 text-lg dark:border-zinc-800 dark:bg-zinc-950">
+            <div className="text-md flex items-center gap-1 rounded-t-md bg-zinc-300 px-1 py-0.5 font-bold dark:bg-zinc-900">
+              <User weight="fill" />
+              {user.username}
             </div>
 
             <div className="text-lg">
@@ -62,9 +59,13 @@ export function LogoutButton() {
                   href={"music/favorites"}
                   className="flex items-center gap-1"
                 >
-                  <div>Favorites</div>
+                  <div>Library</div>
                   <FavoritesCount userId={user?.id} />
                 </Link>
+              </div>
+
+              <div className="flex items-center gap-1 rounded-md px-1 py-0.5 hover:bg-zinc-300 dark:hover:bg-zinc-800">
+                <div>Update Profile</div>
               </div>
 
               <div
