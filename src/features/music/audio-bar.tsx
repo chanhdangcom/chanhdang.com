@@ -93,7 +93,7 @@ export function AudioBar() {
           }}
           layout
           layoutId="audio-bar"
-          className="fixed inset-x-2 bottom-[85px] z-20 flex justify-center rounded-[50px] border border-transparent bg-gradient-to-tl from-transparent to-black/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-sm dark:border-2 dark:to-white/10 md:inset-x-96 md:bottom-4 md:rounded-[55px] md:px-4 md:py-2"
+          className="fixed inset-x-2 bottom-[85px] z-20 flex justify-center rounded-[50px] border border-transparent bg-gradient-to-tl from-transparent to-black/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-md dark:border-2 dark:to-white/10 md:inset-x-96 md:bottom-4 md:rounded-[55px] md:px-4 md:py-2"
         >
           <div
             onClick={() => {
@@ -159,13 +159,6 @@ export function AudioBar() {
                 </div>
               ) : (
                 <div className="shrink-0">
-                  {/* <Image
-                    alt="cover"
-                    width={192}
-                    height={192}
-                    src={currentMusic?.cover}
-                    className="flex size-10 items-center justify-center rounded-xl object-cover md:rounded-lg"
-                  /> */}
                   <img
                     src={currentMusic?.cover}
                     alt="cover"
@@ -207,15 +200,6 @@ export function AudioBar() {
                   <DurationAudio />
                 </div>
               </div>
-
-              {/* <div>
-                {currentMusic?.cover && (
-                  <DynamicIslandWave
-                    isPlay={isPlaying}
-                    coverUrl={currentMusic?.cover}
-                  />
-                )}
-              </div> */}
             </div>
 
             <div className="hidden items-center gap-4 text-black dark:text-white md:flex">
@@ -316,7 +300,7 @@ export function AudioBar() {
           }}
           layout
           layoutId="audio-bar"
-          className="fixed inset-x-20 bottom-6 z-20 flex justify-center rounded-[50px] border border-transparent bg-gradient-to-tl from-transparent to-black/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-sm dark:border-2 dark:to-white/10 md:inset-x-96 md:bottom-4 md:rounded-[50px] md:px-4 md:py-2"
+          className="fixed inset-x-20 bottom-6 z-20 flex justify-center rounded-[50px] border border-transparent bg-gradient-to-tl from-transparent to-black/10 px-3 py-1 text-zinc-50 shadow-sm backdrop-blur-md dark:border-2 dark:to-white/10 md:inset-x-96 md:bottom-4 md:rounded-[50px] md:px-4 md:py-2"
         >
           <div
             onClick={() => {

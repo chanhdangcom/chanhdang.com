@@ -66,7 +66,7 @@ export function AuidoItem({ music, handlePlay }: IProp) {
               className="absolute bottom-2 right-2"
             >
               <Play
-                className="size-10 rounded-full bg-zinc-900/60 p-2 text-zinc-50 backdrop-blur-sm"
+                className="size-10 rounded-full bg-zinc-900/60 p-2 text-zinc-50 backdrop-blur-sm hover:text-red-500"
                 weight="fill"
               />
             </motion.div>
