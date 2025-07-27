@@ -106,10 +106,10 @@ export function FavoriteButton({
     <button
       onClick={handleToggleFavorite}
       disabled={isLoading}
-      className={`transition-all duration-200 hover:scale-110 ${
+      className={`rounded-full bg-zinc-900/60 p-2 backdrop-blur-sm transition-all duration-200 hover:scale-110 ${
         isFavorite
           ? "text-red-500 hover:text-red-600"
-          : "text-gray-400 hover:text-red-500"
+          : "text-zinc-50 hover:text-red-500"
       } ${isLoading ? "cursor-not-allowed opacity-50" : ""}`}
       title={isFavorite ? "Bỏ yêu thích" : "Thêm vào yêu thích"}
     >
