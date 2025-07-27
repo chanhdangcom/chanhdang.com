@@ -7,6 +7,7 @@ type IProp = {
   music: IMusic | IPlaylistItem;
   handlePlay?: () => void;
   className?: string;
+  classNameOrder?: string;
   item?: React.ReactNode;
 };
 
