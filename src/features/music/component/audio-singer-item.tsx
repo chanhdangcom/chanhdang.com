@@ -27,7 +27,7 @@ export function AudioSingerItem({ music }: IProp) {
         ))}
       </div>
 
-      <div className="scrollbar-hide hidden w-full overflow-x-auto md:flex">
+      <div className="hidden w-full overflow-x-auto scrollbar-hide md:flex">
         <div className="grid grid-flow-col grid-rows-3 gap-x-4">
           {music.musics?.map((music) => (
             <div key={music.id}>

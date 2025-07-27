@@ -2,21 +2,15 @@
 import { IMusic } from "@/features/profile/types/music";
 import { IPlaylistItem } from "../type/playlist";
 import { cn } from "@/lib/utils";
-import { DotsThree } from "phosphor-react";
 
 type IProp = {
   music: IMusic | IPlaylistItem;
   handlePlay?: () => void;
   className?: string;
-  classNameOrder?: string;
+  item?: React.ReactNode;
 };
 
-export function AudioItemOrder({
-  music,
-  handlePlay,
-  className,
-  // classNameOrder,
-}: IProp) {
+export function AudioItemOrder({ music, handlePlay, className, item }: IProp) {
   if (!music) {
     return <div className="text-red-500">Dữ liệu nhạc chưa sẵn sàng</div>;
   }
@@ -28,17 +22,6 @@ export function AudioItemOrder({
         onClick={handlePlay}
       >
         {music.cover ? (
-          // <Image
-          //   alt="cover"
-          //   src={music.cover}
-          //   width={300}
-          //   height={300}
-          //   className={cn(
-          //     "size-12 shrink-0 rounded-md object-cover shadow-sm md:size-14",
-          //     className
-          //   )}
-          // />
-
           <img
             src={music.cover}
             alt="cover"
@@ -65,7 +48,8 @@ export function AudioItemOrder({
               </div>
             </div>
 
-            <DotsThree size={20} weight="bold" />
+            {/* <DotsThree size={20} weight="bold" /> */}
+            <div>{item}</div>
           </div>
         </div>
       </div>

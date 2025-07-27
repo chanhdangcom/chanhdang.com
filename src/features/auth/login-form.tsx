@@ -6,11 +6,13 @@ import { Footer } from "../profile/footer";
 import { Header } from "../profile/header";
 import { TableRanking } from "../music/table-ranking";
 import { SingerList } from "../music/singer-list";
+import { useUser } from "@/hooks/use-user";
 
 export default function LoginForm() {
   const [form, setForm] = useState({ username: "", password: "" });
   const [message, setMessage] = useState("");
   const router = useRouter();
+  const { login } = useUser();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -27,8 +29,8 @@ export default function LoginForm() {
     const data = await res.json();
     if (data.success) {
       setMessage("Đăng nhập thành công!");
-      // Lưu user vào localStorage (đơn giản)
-      localStorage.setItem("user", JSON.stringify(data.user));
+      // Sử dụng hook useUser để login
+      login(data.user);
       setForm({ username: "", password: "" });
       router.push("/music");
     } else {

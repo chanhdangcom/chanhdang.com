@@ -57,14 +57,6 @@ export function SingerPage({ idSinger }: IProp) {
                 {MUSICSSINGER.filter((item) => item.id === idSinger).map(
                   (item) => (
                     <div key={item.id}>
-                      {/* <Image
-                        alt="cover-singer"
-                        height={300}
-                        width={300}
-                        src={item.cover}
-                        className="mx-auto my-4 size-60 rounded-3xl object-cover shadow-2xl"
-                      /> */}
-
                       <img
                         src={item.cover}
                         alt="cover"
@@ -127,15 +119,6 @@ export function SingerPage({ idSinger }: IProp) {
                   <div key={music.id}>
                     <div className="hidden w-fit shrink-0 cursor-pointer gap-4 space-y-2 rounded-xl p-1.5 text-zinc-50 hover:bg-zinc-100 dark:hover:bg-zinc-900 md:flex">
                       {music.cover ? (
-                        // <Image
-                        //   height={300}
-                        //   width={300}
-                        //   alt="cover"
-                        //   src={music.cover}
-                        //   quality={100}
-                        //   className="mx-auto h-40 w-40 justify-center rounded-lg object-cover md:size-44"
-                        // />
-
                         <img
                           src={music.cover}
                           alt="cover"
@@ -176,21 +159,9 @@ export function SingerPage({ idSinger }: IProp) {
             </div>
           </div>
 
-          {/* <div className="scrollbar-hide mt-8 flex overflow-x-auto md:justify-center">
-            {MUSICSSINGER.filter((item) => item.id === idSinger).map((item) => (
-              <div key={item.id} className="shrink-0">
-                <AudioSingerItemOrder music={item} />
-              </div>
-            ))}
-          </div> */}
-
           <div className="ml-4 mt-8 flex justify-center md:ml-0">
             <CarouselAudio />
           </div>
-
-          {/* <div className="mt-8 flex justify-center md:mx-8">
-            <SingerList />
-          </div> */}
         </motion.div>
       </AnimatePresence>
     </div>
