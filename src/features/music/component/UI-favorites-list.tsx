@@ -1,4 +1,4 @@
-import { Heart, Play, Shuffle } from "phosphor-react";
+import { HeartStraight, Play, Shuffle } from "phosphor-react";
 
 export function UIFavoritesList() {
   return (
@@ -7,7 +7,7 @@ export function UIFavoritesList() {
         {/* Header với icon heart */}
         <div className="flex justify-center">
           <div className="mx-auto my-4 flex size-60 items-center justify-center rounded-3xl bg-gradient-to-br from-red-500 to-pink-500 shadow-2xl">
-            <Heart
+            <HeartStraight
               weight="fill"
               size={80}
               className="text-white"
