@@ -17,6 +17,7 @@ import { CaretLeft, Play } from "phosphor-react";
 import Link from "next/link";
 
 import { CarouselAudio } from "./carousel-audio";
+import { Footer } from "../profile/footer";
 
 type IProp = {
   idSinger: string;
@@ -28,15 +29,15 @@ export function SingerPage({ idSinger }: IProp) {
       <MenuBar />
 
       <AnimatePresence>
-        <motion.div className="mb-48 w-full dark:bg-zinc-950" layoutId="singer">
+        <motion.div className="mb-48 w-full" layoutId="singer">
           <AudioBar />
           <MenuBarMobile />
 
-          <div>
-            <div className="hidden md:flex">
-              <HeaderMusicPage />
-            </div>
+          <div className="hidden md:block">
+            <HeaderMusicPage />
+          </div>
 
+          <div>
             <div className="sticky top-0 z-10 m-4 flex items-center gap-1 md:hidden">
               <Link
                 href={"/music"}
@@ -50,7 +51,7 @@ export function SingerPage({ idSinger }: IProp) {
               </Link>
             </div>
 
-            <div className="mx-4 flex rounded-3xl from-zinc-200 to-zinc-50 dark:from-zinc-900 dark:to-zinc-950 md:ml-[270px] md:bg-gradient-to-b md:p-4">
+            <div className="mx-4 flex rounded-3xl md:ml-[270px] md:p-4">
               <div className="w-full flex-col items-center md:flex-none">
                 {MUSICSSINGER.filter((item) => item.id === idSinger).map(
                   (item) => (
@@ -157,8 +158,11 @@ export function SingerPage({ idSinger }: IProp) {
             </div>
           </div>
 
-          <div className="ml-4 mt-8 flex justify-center md:ml-0">
+          <div className="my-8 space-y-8">
             <CarouselAudio />
+            <div className="md:ml-60">
+              <Footer />
+            </div>
           </div>
         </motion.div>
       </AnimatePresence>
