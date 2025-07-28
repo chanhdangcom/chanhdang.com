@@ -11,7 +11,7 @@ export function MenuBar() {
 
   return (
     <div className="fixed left-4 top-4 z-30 hidden md:flex">
-      <div className="absolute h-[95vh] w-60 rounded-2xl border-r border-t bg-zinc-100/60 p-4 shadow-xl backdrop-blur-xl dark:border-zinc-900 dark:bg-zinc-900/60">
+      <div className="absolute h-[95vh] w-60 rounded-2xl border-r border-t bg-zinc-100/60 p-4 shadow-xl backdrop-blur-xl dark:border-zinc-900 dark:bg-zinc-900/40">
         <>
           <div className="space-y-1 text-base text-black dark:text-white">
             <AnimatePresence>

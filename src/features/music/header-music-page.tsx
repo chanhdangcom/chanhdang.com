@@ -1,9 +1,8 @@
 "use client";
 
-import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { MusicType } from "./music-type";
-import { motion, AnimatePresence } from "framer-motion";
+
 import Link from "next/link";
 
 import { LogoutButton } from "./component/logout-button";
@@ -25,23 +24,6 @@ export const HeaderMusicPage = () => {
             <div className="hidden md:flex">
               <MusicType />
             </div>
-
-            <AnimatePresence>
-              <motion.div
-                transition={{
-                  type: "spring",
-                  stiffness: 250,
-                  damping: 20,
-                  duration: 0.5,
-                }}
-                // layoutId="Search"
-                className="hidden gap-4 text-zinc-500 md:flex"
-              >
-                <Link href="/music/search">
-                  <MagnifyingGlass size={25} />
-                </Link>
-              </motion.div>
-            </AnimatePresence>
           </div>
 
           <div className="mr-4">
