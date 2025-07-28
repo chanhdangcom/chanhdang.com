@@ -49,7 +49,9 @@ export function MusicPage() {
               <SingerList />
             </div>
 
-            <Footer />
+            <div className="md:ml-60">
+              <Footer />
+            </div>
           </div>
         </div>
 

@@ -10,7 +10,7 @@ export function MenuBar() {
 
   return (
     <div className="fixed left-4 top-4 z-30 hidden md:flex">
-      <div className="absolute h-screen w-60 rounded-2xl border-r border-t bg-zinc-50/60 p-4 shadow-sm backdrop-blur-md dark:border-zinc-900 dark:bg-zinc-950/60">
+      <div className="absolute h-screen w-60 rounded-2xl border-r border-t bg-zinc-100/60 p-4 shadow-sm backdrop-blur-xl dark:border-zinc-900 dark:bg-zinc-900/60">
         <>
           <div className="space-y-2 text-base font-medium text-black dark:text-white">
             <div className="flex items-center gap-2 rounded-2xl bg-zinc-300 p-2 dark:bg-zinc-800">

@@ -4,6 +4,8 @@ export const MUSICSSINGER = [
     singer: "Jack - J97",
     cover: "https://cdn.chanhdang.com/singer_jack.jpg",
     musics: [
+
+      
       {
         id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231",
         title: "HỒNG NHAN",
