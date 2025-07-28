@@ -54,6 +54,7 @@ const config: Config = {
   colors: {
     background: 'var(--background)',
     foreground: 'var(--foreground)',
+    'exact-red': '#f3123c',
   },
   fontFamily: {
     body: 'var(--font-body)',
