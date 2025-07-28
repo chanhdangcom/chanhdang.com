@@ -7,6 +7,7 @@ import { MenuBar } from "@/features/music/menu-bar";
 import { MenuBarMobile } from "@/features/music/menu-bar-mobile";
 import { AudioBar } from "@/features/music/audio-bar";
 import { Footer } from "@/features/profile/footer";
+import { UIFavoritesList } from "@/features/music/component/UI-favorites-list";
 
 export default function FavoritesPage() {
   const { user } = useUser();
@@ -23,7 +24,9 @@ export default function FavoritesPage() {
 
           <div className="md:mx-4">
             <div className="rounded-3xl from-zinc-100 to-zinc-50 dark:from-zinc-900 dark:to-zinc-950 md:bg-gradient-to-b md:p-4">
+              <UIFavoritesList />
               <FavoritesList userId={user?.id} />
+
               <Footer />
             </div>
           </div>

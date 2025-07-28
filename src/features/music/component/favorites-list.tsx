@@ -6,10 +6,8 @@ import { FavoriteButton } from "./favorite-button";
 import { useAudio } from "@/components/music-provider";
 
 import { motion } from "framer-motion";
-import { AnimatePresence } from "framer-motion";
-import { Heart, Play, Shuffle } from "phosphor-react";
-import { AudioItemOrder } from "./audio-item-order";
 
+import { AudioItemOrder } from "./audio-item-order";
 interface FavoritesListProps {
   userId?: string;
 }
@@ -76,55 +74,9 @@ export function FavoritesList({ userId }: FavoritesListProps) {
     );
   }
 
-  return (
-    <AnimatePresence>
+  const Data = () => {
+    return (
       <motion.div className="mb-16 w-full font-apple" layoutId="favorites">
-        <div className="w-full flex-col items-center md:flex-none">
-          {/* Header với icon heart */}
-          <div className="flex justify-center">
-            <div className="mx-auto my-4 flex size-60 items-center justify-center rounded-3xl bg-gradient-to-br from-red-500 to-pink-500 shadow-2xl">
-              <Heart
-                weight="fill"
-                size={80}
-                className="text-white"
-                fill="white"
-              />
-            </div>
-          </div>
-
-          {/* Title section */}
-          <div className="space-y-2 text-6xl">
-            <div className="flex items-center justify-center gap-1">
-              <div className="text-2xl font-semibold">Bài hát yêu thích</div>
-            </div>
-
-            <div className="text-center text-lg text-zinc-500">
-              ChanhDang Music
-            </div>
-
-            <div className="mx-4 space-y-4">
-              <div className="flex w-full justify-between gap-4">
-                <div className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 dark:bg-zinc-900">
-                  <Play weight="fill" size={20} />
-                  <div className="text-xl">Play All</div>
-                </div>
-
-                <div className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-2 font-semibold text-red-500 dark:bg-zinc-900">
-                  <Shuffle size={20} />
-                  <div className="text-xl">Mix song</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="text-center text-base text-zinc-500">
-              <div className="text-balance">
-                Tận hưởng bữa tiệc âm nhạc đầy đặc sắc với {favorites.length}{" "}
-                bài hát yêu thích
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div className="mx-8 flex items-center justify-center">
           <div className="md:mx-a mt-8 justify-center px-3 md:mt-0 md:max-w-3xl md:justify-center">
             <div className="space-y-4 md:hidden">
@@ -181,6 +133,12 @@ export function FavoritesList({ userId }: FavoritesListProps) {
           </div>
         </div>
       </motion.div>
-    </AnimatePresence>
+    );
+  };
+
+  return (
+    <>
+      <Data />
+    </>
   );
 }

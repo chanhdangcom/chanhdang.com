@@ -14,7 +14,7 @@ export function TableRanking() {
         Today's Hits
       </div>
 
-      <div className="scrollbar-hide w-full overflow-x-auto">
+      <div className="w-full overflow-x-auto scrollbar-hide">
         <div className="grid grid-flow-col grid-rows-4 gap-x-4">
           {MUSICS.map((music) => (
             <div key={music.id}>
