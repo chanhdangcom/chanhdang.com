@@ -37,8 +37,6 @@ export function SingerPage({ idSinger }: IProp) {
               <HeaderMusicPage />
             </div>
 
-            <div className="z-5 fixed top-0 h-20 w-full rounded-b-xl bg-gradient-to-b from-white to-transparent dark:from-black/95 dark:via-black/60"></div>
-
             <div className="sticky top-0 z-10 m-4 flex items-center gap-1 md:hidden">
               <Link
                 href={"/music"}
@@ -52,7 +50,7 @@ export function SingerPage({ idSinger }: IProp) {
               </Link>
             </div>
 
-            <div className="mx-4 flex rounded-3xl from-zinc-200 to-zinc-50 dark:from-zinc-900 dark:to-zinc-950 md:bg-gradient-to-b md:p-4">
+            <div className="mx-4 flex rounded-3xl from-zinc-200 to-zinc-50 dark:from-zinc-900 dark:to-zinc-950 md:ml-[270px] md:bg-gradient-to-b md:p-4">
               <div className="w-full flex-col items-center md:flex-none">
                 {MUSICSSINGER.filter((item) => item.id === idSinger).map(
                   (item) => (
@@ -112,7 +110,7 @@ export function SingerPage({ idSinger }: IProp) {
             </div>
           </div>
 
-          <div className="mx-8 flex items-center justify-center md:justify-between">
+          <div className="mx-8 flex items-center justify-center md:ml-[270px] md:justify-between">
             {MUSICSSINGER.filter((item) => item.id === idSinger).map((item) => (
               <div key={item.id}>
                 {item.musics?.slice(-1).map((music) => (

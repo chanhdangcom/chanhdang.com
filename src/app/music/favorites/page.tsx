@@ -22,7 +22,7 @@ export default function FavoritesPage() {
 
           <HeaderMusicPage />
 
-          <div className="md:mx-4">
+          <div className="md:mx-4 md:ml-[270px]">
             <div className="rounded-3xl from-zinc-100 to-zinc-50 dark:from-zinc-900 dark:to-zinc-950 md:bg-gradient-to-b md:p-4">
               <UIFavoritesList />
               <FavoritesList userId={user?.id} />

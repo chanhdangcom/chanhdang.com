@@ -7,10 +7,13 @@ import { PlaylistItem } from "./component/playlist-item";
 
 export function CarouselAudioPlaylist() {
   return (
-    <div className="w-full md:max-w-6xl">
-      <div className="scrollbar-hide flex overflow-x-auto md:mx-auto">
-        {MUSICSPLAYLIST.map((music) => (
-          <div key={music.id} className="shrink-0">
+    <div className="w-full md:max-w-full">
+      <div className="flex overflow-x-auto scrollbar-hide md:mx-auto">
+        {MUSICSPLAYLIST.map((music, index) => (
+          <div
+            key={music.id}
+            className={`${index === 0 ? "ml-2 md:ml-[270px]" : ""} shrink-0`}
+          >
             <PlaylistItem music={music} />
           </div>
         ))}

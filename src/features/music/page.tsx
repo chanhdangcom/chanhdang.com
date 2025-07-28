@@ -28,30 +28,28 @@ export function MusicPage() {
 
           <HeaderMusicPage />
 
-          <div className="md:mx-4">
-            <div className="rounded-3xl from-zinc-100 to-zinc-50 dark:from-zinc-900 dark:to-zinc-950 md:bg-gradient-to-b md:p-4">
-              <div className="mt-4">
-                <PickForYou />
-              </div>
-
-              <div className="mt-2 flex justify-start">
-                <CarouselAudio />
-              </div>
-
-              <div className="mt-4 flex justify-start">
-                <CarouselAudioPlaylist />
-              </div>
-
-              <div className="mt-2">
-                <TableRanking />
-              </div>
-
-              <div className="my-2">
-                <SingerList />
-              </div>
-
-              <Footer />
+          <div className="">
+            <div className="mt-4">
+              <PickForYou />
             </div>
+
+            <div className="mt-8 flex justify-start">
+              <CarouselAudio />
+            </div>
+
+            <div className="mt-8 flex justify-start">
+              <CarouselAudioPlaylist />
+            </div>
+
+            <div className="mt-6">
+              <TableRanking />
+            </div>
+
+            <div className="my-8">
+              <SingerList />
+            </div>
+
+            <Footer />
           </div>
         </div>
 

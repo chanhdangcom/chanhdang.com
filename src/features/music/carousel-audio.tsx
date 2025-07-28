@@ -29,10 +29,10 @@ export function CarouselAudio() {
   }, []);
 
   return (
-    <div className="w-full rounded-3xl text-black dark:text-white md:max-w-6xl">
+    <div className="w-full rounded-3xl text-black dark:text-white md:max-h-full">
       <div className="flex justify-between">
         <div className="flex gap-1 text-3xl font-bold">
-          <div className="px-1 text-xl text-black dark:text-white">
+          <div className="ml-2 px-1 text-2xl text-black dark:text-white md:ml-[270px]">
             Trending Now
           </div>
         </div>
@@ -40,10 +40,13 @@ export function CarouselAudio() {
 
       <div
         ref={scrollRef}
-        className="grid grid-flow-col grid-rows-2 gap-y-2 overflow-x-auto scrollbar-hide"
+        className="mt-3 grid grid-flow-col grid-rows-2 gap-y-2 overflow-x-auto scrollbar-hide"
       >
-        {musics.map((music) => (
-          <div key={music.id} className="w-full shrink-0">
+        {musics.map((music, index) => (
+          <div
+            key={music.id}
+            className={`w-full shrink-0 ${index === 0 || index === 1 ? "ml-2 md:ml-[270px]" : ""}`}
+          >
             <AuidoItem
               music={music}
               handlePlay={() => handlePlayAudio(music)}

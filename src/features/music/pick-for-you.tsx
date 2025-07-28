@@ -7,14 +7,14 @@ export function PickForYou() {
   return (
     <div>
       <div className="flex gap-1 text-3xl font-bold">
-        <div className="px-1 text-xl text-black dark:text-white">
+        <div className="ml-2 px-1 text-2xl text-black dark:text-white md:ml-[270px]">
           Top Pick For You
         </div>
       </div>
 
-      <div className="mt-2 flex w-full gap-3 overflow-x-auto px-1.5 text-white scrollbar-hide">
+      <div className="mt-4 flex w-full gap-3 overflow-x-auto px-1.5 text-white scrollbar-hide">
         <div
-          className="relative h-72 w-56 shrink-0 overflow-hidden rounded-3xl"
+          className="relative ml-2 h-72 w-56 shrink-0 overflow-hidden rounded-3xl md:ml-[270px]"
           onClick={() => handlePlayRandomAudio()}
         >
           <img

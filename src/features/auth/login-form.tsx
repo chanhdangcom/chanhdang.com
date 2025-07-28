@@ -43,7 +43,7 @@ export default function LoginForm() {
       <Header />
 
       <div className="container md:flex md:justify-between">
-        <div className="my-8 hidden w-[90vh] md:block">
+        <div className="my-8 hidden w-[90vh]">
           <TableRanking />
           <SingerList />
         </div>
