@@ -21,7 +21,7 @@ export function AuidoItem({ music, handlePlay }: IProp) {
       <div
         onMouseEnter={() => setIsEnter(true)}
         onMouseLeave={() => setIsEnter(false)}
-        className="w-40 shrink-0 space-y-2 rounded-xl p-1.5 text-zinc-50 hover:bg-zinc-200 dark:hover:bg-zinc-800 md:w-52"
+        className="w-40 shrink-0 space-y-2 rounded-xl p-2 text-zinc-50 hover:bg-zinc-200 dark:hover:bg-zinc-900 md:w-52"
       >
         <div className="relative">
           {music.cover ? (

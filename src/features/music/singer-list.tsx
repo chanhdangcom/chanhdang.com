@@ -3,10 +3,11 @@ import { SingerItem } from "./component/singer-item";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { MUSICSSINGER } from "./data/music-page-singer";
+import { useRef } from "react";
 
 export function SingerList() {
   const router = useRouter();
-
+  const ref = useRef<HTMLDivElement>(null);
   return (
     <AnimatePresence>
       <motion.div layoutId="singer" layout>
@@ -17,18 +18,22 @@ export function SingerList() {
             </div>
           </div>
 
-          <div className="mt-4 flex items-center gap-3 overflow-x-auto scrollbar-hide">
+          <div
+            ref={ref}
+            className="mt-4 flex snap-x snap-mandatory items-center gap-1 overflow-x-auto scrollbar-hide"
+          >
             {MUSICSSINGER.map((music, index) => (
-              <div
-                key={music.id}
-                className={`shrink-0 ${index === 0 ? "ml-4 md:ml-[270px]" : ""}`}
-              >
-                <SingerItem
-                  music={music}
-                  onClick={() => {
-                    router.push(`/music/singer/${music.id}`);
-                  }}
-                />
+              <div key={music.id} className="shrink-0 snap-start">
+                <div
+                  className={` ${index === 0 ? "ml-4 md:ml-[270px]" : ""} ml-2`}
+                >
+                  <SingerItem
+                    music={music}
+                    onClick={() => {
+                      router.push(`/music/singer/${music.id}`);
+                    }}
+                  />
+                </div>
               </div>
             ))}
           </div>

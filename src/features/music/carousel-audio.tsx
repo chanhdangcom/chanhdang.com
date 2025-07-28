@@ -40,17 +40,18 @@ export function CarouselAudio() {
 
       <div
         ref={scrollRef}
-        className="mt-3 grid grid-flow-col grid-rows-2 gap-y-2 overflow-x-auto scrollbar-hide"
+        className="mt-2 grid snap-x snap-mandatory grid-flow-col grid-rows-2 overflow-x-auto scroll-smooth scrollbar-hide md:snap-none"
       >
         {musics.map((music, index) => (
-          <div
-            key={music.id}
-            className={`w-full shrink-0 ${index === 0 || index === 1 ? "ml-2 md:ml-[270px]" : ""}`}
-          >
-            <AuidoItem
-              music={music}
-              handlePlay={() => handlePlayAudio(music)}
-            />
+          <div key={music.id} className="snap-start">
+            <div
+              className={`w-full shrink-0 ${index === 0 || index === 1 ? "ml-2 md:ml-[270px]" : ""}`}
+            >
+              <AuidoItem
+                music={music}
+                handlePlay={() => handlePlayAudio(music)}
+              />
+            </div>
           </div>
         ))}
       </div>
