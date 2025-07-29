@@ -9,7 +9,7 @@ import { LogoutButton } from "./component/logout-button";
 
 export const HeaderMusicPage = () => {
   return (
-    <div className="sticky inset-0 top-0 z-50 rounded-b-xl py-4 transition md:ml-[270px]">
+    <div className="sticky inset-0 top-0 z-50 rounded-b-xl py-4 transition">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">

@@ -21,14 +21,14 @@ export function AuidoItem({ music, handlePlay }: IProp) {
       <div
         onMouseEnter={() => setIsEnter(true)}
         onMouseLeave={() => setIsEnter(false)}
-        className="w-40 shrink-0 space-y-2 rounded-xl p-2 text-zinc-50 hover:bg-zinc-200 dark:hover:bg-zinc-900 md:w-52"
+        className="w-44 shrink-0 space-y-1 rounded-xl p-2 text-zinc-50 hover:bg-zinc-200 dark:hover:bg-zinc-900 md:w-52"
       >
         <div className="relative">
           {music.cover ? (
             <img
               src={music.cover}
               alt="cover"
-              className="mx-auto h-40 w-40 shrink-0 cursor-pointer justify-center rounded-lg object-cover md:size-52"
+              className="mx-auto size-44 shrink-0 cursor-pointer justify-center rounded-lg object-cover md:size-52"
               onClick={handlePlay}
             />
           ) : (
@@ -81,7 +81,7 @@ export function AuidoItem({ music, handlePlay }: IProp) {
             {music.title || "TITLE"}
           </div>
 
-          <div className="line-clamp-1 w-32 text-sm text-zinc-500">
+          <div className="line-clamp-1 w-32 text-xs text-zinc-500">
             {music.singer || "SINGER"}
           </div>
         </div>

@@ -132,20 +132,23 @@ export default function AddMusicForm() {
 
   return (
     <div>
-      <div>
+      <div className="container">
         <HeaderMusicPage />
       </div>
 
-      <div className="container md:flex md:justify-between">
-        <div className="my-8 hidden w-[90vh] md:block">
+      <div className="pointer-events-none fixed top-0 z-20 h-24 w-full bg-gradient-to-b from-white via-white/50 to-transparent dark:from-black dark:via-black/50" />
+
+      <div className="mb-12 md:flex">
+        <div className="my-8 ml-60 hidden max-w-full md:block">
           <TableRanking />
           <SingerList />
         </div>
 
-        <form className="mb-16 space-y-8 font-apple" onSubmit={handleSubmit}>
-          <div className="my-8 text-center text-3xl font-bold">
-            Thêm bài hát mới
-          </div>
+        <form
+          className="left-6 z-30 mx-4 space-y-8 rounded-3xl border border-transparent bg-gradient-to-tr from-transparent to-black/10 p-4 font-apple backdrop-blur-xl dark:to-white/10 md:absolute md:mx-0"
+          onSubmit={handleSubmit}
+        >
+          <div className="text-center text-3xl font-bold">Thêm bài hát mới</div>
 
           <div className="mx-auto flex w-full flex-col space-y-4">
             <div className="mx-auto flex w-full flex-col justify-between gap-4 md:flex-row">
@@ -190,7 +193,7 @@ export default function AddMusicForm() {
               accept="image/*"
               onChange={handleImageChange}
               disabled={isLoading}
-              className="rounded-xl border bg-zinc-100 px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-900"
+              className="rounded-xl border bg-zinc-100 px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-800"
             />
 
             {/* Nếu đã chọn file mp3 thì ẩn input nhập link audio */}
@@ -206,7 +209,7 @@ export default function AddMusicForm() {
                 onChange={handleChange}
                 required
                 disabled={isLoading}
-                className="rounded-xl border bg-zinc-100 px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-900"
+                className="rounded-xl border bg-zinc-100 px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
               />
             )}
 
@@ -215,7 +218,7 @@ export default function AddMusicForm() {
               accept=".mp3"
               onChange={handleFileChange}
               disabled={isLoading}
-              className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+              className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-800"
             />
 
             <input
