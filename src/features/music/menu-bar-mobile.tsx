@@ -64,7 +64,7 @@ export function MenuBarMobile() {
               duration: 1,
             }}
             layoutId="item"
-            className="ml-2 flex items-center gap-8 rounded-full border border-transparent bg-gradient-to-tl from-transparent to-black/10 px-8 py-1.5 text-black backdrop-blur-sm dark:border-2 dark:to-white/10 dark:text-white"
+            className="ml-2 flex items-center gap-8 rounded-full border border-zinc-300 bg-gradient-to-tl from-transparent to-black/10 px-8 py-1.5 text-black backdrop-blur-sm dark:border-zinc-700 dark:to-white/10 dark:text-white"
           >
             <div className="flex flex-col items-center text-red-500">
               <House size={30} weight="fill" />
@@ -112,7 +112,7 @@ export function MenuBarMobile() {
               type: "spring",
             }}
             layoutId="item"
-            className="ml-4 rounded-full border-2 border-transparent bg-gradient-to-tl from-transparent to-white/10 backdrop-blur-sm"
+            className="ml-4 rounded-full border border-zinc-300 bg-gradient-to-tl from-transparent to-white/10 backdrop-blur-sm dark:border-zinc-700"
           >
             <div className="rounded-full p-4 text-red-600 backdrop-blur-md">
               <House size={28} weight="fill" />
@@ -131,7 +131,7 @@ export function MenuBarMobile() {
               duration: 1,
               ease: "easeInOut",
             }}
-            className="mr-4 rounded-full border-2 border-transparent bg-gradient-to-bl from-transparent to-zinc-400/10 p-4 backdrop-blur-sm"
+            className="mr-4 rounded-full border border-zinc-300 bg-gradient-to-bl from-transparent to-zinc-400/10 p-4 backdrop-blur-sm dark:border-zinc-700"
           >
             <Link href={"/music/search"}>
               <MagnifyingGlass
@@ -149,7 +149,7 @@ export function MenuBarMobile() {
               duration: 1,
               type: "spring",
             }}
-            className="order mr-4 rounded-full border border-transparent bg-gradient-to-bl from-transparent to-zinc-400/10 p-4 backdrop-blur-sm"
+            className="order mr-2 rounded-full border border-zinc-300 bg-gradient-to-bl from-transparent to-zinc-400/10 p-4 backdrop-blur-sm dark:border-zinc-700"
           >
             <Link href={"/music/search"}>
               <MagnifyingGlass

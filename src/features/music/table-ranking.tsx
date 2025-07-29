@@ -6,7 +6,12 @@ import { TableRankingItem } from "./component/table-ranking-item";
 import { MUSICS } from "./data/music-page";
 import { useRef } from "react";
 
-export function TableRanking() {
+type IProp = {
+  home?: boolean;
+  addPage?: boolean;
+};
+
+export function TableRanking({ home, addPage }: IProp) {
   const { handlePlayAudio } = useAudio();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -18,19 +23,32 @@ export function TableRanking() {
 
       <div
         ref={ref}
-        className="mt-3 w-full snap-x snap-mandatory overflow-x-auto scrollbar-hide"
+        className="mt-3 w-full snap-x snap-mandatory overflow-x-auto scrollbar-hide md:snap-none"
       >
         <div className="grid grid-flow-col grid-rows-4 gap-x-4">
           {MUSICS.map((music, index) => (
-            <div key={music.id} className="snap-start">
-              <div
-                className={`flex items-center gap-6 px-1 py-2 ${index < 4 ? "ml-2 md:ml-[270px]" : ""}`}
-              >
-                <TableRankingItem
-                  music={music}
-                  handlePlay={() => handlePlayAudio(music)}
-                />
-              </div>
+            <div key={music.id}>
+              {home && (
+                <div
+                  className={`snap-start ${index < 4 ? "ml-2 md:ml-[270px]" : ""}`}
+                >
+                  <TableRankingItem
+                    music={music}
+                    handlePlay={() => handlePlayAudio(music)}
+                  />
+                </div>
+              )}
+
+              {addPage && (
+                <div
+                  className={`snap-start ${index < 4 ? "ml-2 md:ml-[510px]" : ""}`}
+                >
+                  <TableRankingItem
+                    music={music}
+                    handlePlay={() => handlePlayAudio(music)}
+                  />
+                </div>
+              )}
             </div>
           ))}
         </div>

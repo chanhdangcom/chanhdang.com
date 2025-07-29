@@ -5,7 +5,12 @@ import { motion, AnimatePresence } from "motion/react";
 import { MUSICSSINGER } from "./data/music-page-singer";
 import { useRef } from "react";
 
-export function SingerList() {
+type IProp = {
+  home?: boolean;
+  addPage?: boolean;
+};
+
+export function SingerList({ home, addPage }: IProp) {
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
   return (
@@ -20,20 +25,39 @@ export function SingerList() {
 
           <div
             ref={ref}
-            className="mt-4 flex snap-x snap-mandatory items-center gap-1 overflow-x-auto scrollbar-hide"
+            className="mt-4 flex snap-x snap-mandatory items-center gap-1 overflow-x-auto scrollbar-hide md:snap-none"
           >
             {MUSICSSINGER.map((music, index) => (
-              <div key={music.id} className="shrink-0 snap-start">
-                <div
-                  className={` ${index === 0 ? "ml-4 md:ml-[270px]" : ""} ml-2`}
-                >
-                  <SingerItem
-                    music={music}
-                    onClick={() => {
-                      router.push(`/music/singer/${music.id}`);
-                    }}
-                  />
-                </div>
+              <div key={music.id} className="max-w-full shrink-0 snap-start">
+                {home && (
+                  <div className="shrink-0 snap-start">
+                    <div
+                      className={` ${index === 0 ? "ml-4 md:ml-[270px]" : ""} ml-2`}
+                    >
+                      <SingerItem
+                        music={music}
+                        onClick={() => {
+                          router.push(`/music/singer/${music.id}`);
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {addPage && (
+                  <div className="shrink-0 snap-start">
+                    <div
+                      className={` ${index === 0 ? "ml-4 md:ml-[510px]" : ""} ml-2`}
+                    >
+                      <SingerItem
+                        music={music}
+                        onClick={() => {
+                          router.push(`/music/singer/${music.id}`);
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>

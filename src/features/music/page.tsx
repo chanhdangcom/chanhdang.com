@@ -44,11 +44,11 @@ export function MusicPage() {
             </div>
 
             <div className="mt-6">
-              <TableRanking />
+              <TableRanking home />
             </div>
 
             <div className="my-8">
-              <SingerList />
+              <SingerList home />
             </div>
 
             <div className="md:ml-60">

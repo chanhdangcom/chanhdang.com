@@ -138,14 +138,14 @@ export default function AddMusicForm() {
 
       <div className="pointer-events-none fixed top-0 z-20 h-24 w-full bg-gradient-to-b from-white via-white/50 to-transparent dark:from-black dark:via-black/50" />
 
-      <div className="mb-12 md:flex">
-        <div className="my-8 ml-60 hidden max-w-full md:block">
-          <TableRanking />
-          <SingerList />
+      <div className="mb-24 md:flex">
+        <div className="my-8 hidden max-w-full md:block">
+          <TableRanking addPage />
+          <SingerList addPage />
         </div>
 
         <form
-          className="left-6 z-30 mx-4 space-y-8 rounded-3xl border border-transparent bg-gradient-to-tr from-transparent to-black/10 p-4 font-apple backdrop-blur-xl dark:to-white/10 md:absolute md:mx-0"
+          className="left-6 z-30 mx-4 space-y-8 rounded-3xl border border-zinc-300 bg-gradient-to-tr from-transparent to-black/10 p-4 font-apple backdrop-blur-2xl dark:border-zinc-700 dark:to-white/10 md:absolute md:mx-0"
           onSubmit={handleSubmit}
         >
           <div className="text-center text-3xl font-bold">Thêm bài hát mới</div>
@@ -218,7 +218,7 @@ export default function AddMusicForm() {
               accept=".mp3"
               onChange={handleFileChange}
               disabled={isLoading}
-              className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-800"
+              className="rounded-xl border bg-zinc-100 px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-800"
             />
 
             <input
@@ -275,7 +275,7 @@ export default function AddMusicForm() {
         </form>
       </div>
 
-      <div className="mb-8">
+      <div className="">
         <Footer />
       </div>
     </div>
