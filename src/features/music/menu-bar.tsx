@@ -1,5 +1,6 @@
 "use client";
 
+import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { useUser } from "@/hooks/use-user";
 import { BookBookmark, House } from "@phosphor-icons/react/dist/ssr";
 import { AnimatePresence, motion } from "framer-motion";
@@ -14,6 +15,14 @@ export function MenuBar() {
       <div className="absolute h-[95vh] w-60 rounded-3xl border border-transparent bg-gradient-to-tr from-transparent to-black/10 px-3 pt-5 text-zinc-50 shadow-xl backdrop-blur-2xl dark:to-white/10">
         <>
           <div className="space-y-1 text-base text-black dark:text-white">
+            <div className="flex items-end gap-1">
+              <Link href={"/music"} className="flex cursor-pointer">
+                <ChanhdangLogotype className="w-40" />
+
+                <div className="my-4 flex text-sm font-semibold">Music</div>
+              </Link>
+            </div>
+
             <AnimatePresence>
               <motion.div
                 transition={{

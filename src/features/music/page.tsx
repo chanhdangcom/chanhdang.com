@@ -15,16 +15,31 @@ import { MenuBarMobile } from "./menu-bar-mobile";
 import { CarouselAudioPlaylist } from "./carousel-audio-playlist";
 
 import { PickForYou } from "./pick-for-you";
+import { useScroll, useTransform, motion, useSpring } from "framer-motion";
 
 export function MusicPage() {
+  const { scrollY } = useScroll();
+  const rawOpacity = useTransform(scrollY, [50, 100], [0, 1]);
+  const smoothOpacity = useSpring(rawOpacity, {
+    stiffness: 300,
+    damping: 20,
+  });
+
   return (
     <div className="flex font-apple">
       <MenuBar />
 
+      <motion.div
+        className="fixed inset-x-0 top-2 z-[1000] flex justify-center text-xl text-black dark:text-white"
+        style={{ opacity: smoothOpacity }}
+      >
+        Home
+      </motion.div>
+
       <div className="mx-auto w-full">
-        <div className="z-10">
-          <div className="pointer-events-none fixed top-0 z-50 h-20 w-full bg-gradient-to-b from-white via-white/50 to-transparent dark:from-black dark:via-black/50" />
-          <div className="pointer-events-none fixed bottom-0 z-50 h-20 w-full bg-gradient-to-t from-white to-transparent dark:from-black dark:via-black/50 md:h-20" />
+        <div className="relative z-10">
+          <div className="pointer-events-none fixed top-0 z-50 h-24 w-full bg-gradient-to-b from-white via-white/50 to-transparent dark:from-black dark:via-black/50" />
+          {/* <div className="pointer-events-none fixed bottom-0 z-50 h-20 w-full bg-gradient-to-t from-white to-transparent dark:from-black dark:via-black/50 md:h-20" /> */}
 
           <div className="md:ml-[270px]">
             <HeaderMusicPage />

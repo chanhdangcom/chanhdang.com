@@ -17,7 +17,7 @@ export function PickForYou() {
 
       <div
         ref={useRefScroll}
-        className="mt-4 flex w-full snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth px-1.5 text-white scrollbar-hide"
+        className="mt-2 flex w-full snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth px-1.5 text-white scrollbar-hide"
       >
         <div className="snap-start">
           <div

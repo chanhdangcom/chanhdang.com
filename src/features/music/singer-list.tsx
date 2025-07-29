@@ -25,7 +25,7 @@ export function SingerList({ home, addPage }: IProp) {
 
           <div
             ref={ref}
-            className="mt-4 flex snap-x snap-mandatory items-center gap-1 overflow-x-auto scrollbar-hide md:snap-none"
+            className="mt-2 flex snap-x snap-mandatory items-center gap-1 overflow-x-auto scrollbar-hide md:snap-none"
           >
             {MUSICSSINGER.map((music, index) => (
               <div key={music.id} className="max-w-full shrink-0 snap-start">

@@ -40,7 +40,7 @@ export function CarouselAudio() {
 
       <div
         ref={scrollRef}
-        className="mt-2 grid snap-x snap-mandatory grid-flow-col grid-rows-2 overflow-x-auto scroll-smooth scrollbar-hide md:snap-none"
+        className="grid snap-x snap-mandatory grid-flow-col grid-rows-2 overflow-x-auto scroll-smooth scrollbar-hide md:snap-none"
       >
         {musics.map((music, index) => (
           <div key={music.id} className="snap-start">

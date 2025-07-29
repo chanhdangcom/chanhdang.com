@@ -23,7 +23,7 @@ export function TableRanking({ home, addPage }: IProp) {
 
       <div
         ref={ref}
-        className="mt-3 w-full snap-x snap-mandatory overflow-x-auto scrollbar-hide md:snap-none"
+        className="mt-1 w-full snap-x snap-mandatory overflow-x-auto scrollbar-hide md:snap-none"
       >
         <div className="grid grid-flow-col grid-rows-4 gap-4">
           {MUSICS.map((music, index) => (
