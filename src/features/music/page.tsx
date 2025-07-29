@@ -22,9 +22,9 @@ export function MusicPage() {
       <MenuBar />
 
       <div className="mx-auto w-full">
-        <div className="relative z-10">
-          <div className="pointer-events-none fixed top-0 z-50 h-24 w-full bg-gradient-to-b from-white via-white/50 to-transparent dark:from-black dark:via-black/50" />
-          <div className="pointer-events-none fixed bottom-0 z-50 h-60 w-full bg-gradient-to-t from-white to-transparent dark:from-black dark:via-black/50 md:h-24" />
+        <div className="z-10">
+          <div className="pointer-events-none fixed top-0 z-50 h-20 w-full bg-gradient-to-b from-white via-white/50 to-transparent dark:from-black dark:via-black/50" />
+          <div className="pointer-events-none fixed bottom-0 z-50 h-20 w-full bg-gradient-to-t from-white to-transparent dark:from-black dark:via-black/50 md:h-20" />
 
           <div className="md:ml-[270px]">
             <HeaderMusicPage />

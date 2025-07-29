@@ -145,7 +145,7 @@ export default function AddMusicForm() {
         </div>
 
         <form
-          className="left-6 z-30 mx-4 space-y-8 rounded-3xl border border-zinc-300 bg-gradient-to-tr from-transparent to-black/10 p-4 font-apple backdrop-blur-2xl dark:border-zinc-700 dark:to-white/10 md:absolute md:mx-0"
+          className="left-6 z-30 mx-4 space-y-4 rounded-3xl border border-zinc-300 bg-gradient-to-tr from-transparent to-black/10 p-4 font-apple backdrop-blur-2xl dark:border-zinc-700 dark:to-white/10 md:absolute md:mx-0"
           onSubmit={handleSubmit}
         >
           <div className="text-center text-3xl font-bold">Thêm bài hát mới</div>

@@ -25,13 +25,11 @@ export function TableRanking({ home, addPage }: IProp) {
         ref={ref}
         className="mt-3 w-full snap-x snap-mandatory overflow-x-auto scrollbar-hide md:snap-none"
       >
-        <div className="grid grid-flow-col grid-rows-4 gap-x-4">
+        <div className="grid grid-flow-col grid-rows-4 gap-4">
           {MUSICS.map((music, index) => (
-            <div key={music.id}>
+            <div key={music.id} className="snap-start p-1">
               {home && (
-                <div
-                  className={`snap-start ${index < 4 ? "ml-2 md:ml-[270px]" : ""}`}
-                >
+                <div className={` ${index < 4 ? "ml-2 md:ml-[270px]" : ""}`}>
                   <TableRankingItem
                     music={music}
                     handlePlay={() => handlePlayAudio(music)}
@@ -40,9 +38,7 @@ export function TableRanking({ home, addPage }: IProp) {
               )}
 
               {addPage && (
-                <div
-                  className={`snap-start ${index < 4 ? "ml-2 md:ml-[510px]" : ""}`}
-                >
+                <div className={` ${index < 4 ? "ml-2 md:ml-[510px]" : ""}`}>
                   <TableRankingItem
                     music={music}
                     handlePlay={() => handlePlayAudio(music)}
