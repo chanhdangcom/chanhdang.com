@@ -10,6 +10,7 @@ import {
 } from "phosphor-react";
 import { useEffect, useRef, useState } from "react";
 import { useUser } from "@/hooks/use-user";
+import LiquidGlassBackground from "@/components/liquid-glass-background";
 
 export function MenuBarMobile() {
   const { isAuthenticated } = useUser();
@@ -57,53 +58,61 @@ export function MenuBarMobile() {
     <div className="fixed bottom-4 z-20 flex w-full items-center justify-between sm:hidden">
       <AnimatePresence>
         {show ? (
-          <motion.div
-            layout
-            transition={{
-              type: "spring",
-              duration: 1,
-            }}
-            layoutId="item"
-            className="ml-2 flex items-center gap-8 rounded-full border border-transparent bg-gradient-to-tl from-transparent to-black/10 px-8 py-1.5 text-black backdrop-blur-sm dark:to-white/10 dark:text-white"
-          >
-            <div className="flex flex-col items-center text-red-500">
-              <House size={30} weight="fill" />
-              <div className="text-sm font-semibold">Home</div>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <SquaresFour size={30} weight="fill" className="" />
-              <div className="text-sm">New</div>
-            </div>
-
-            {isAuthenticated ? (
-              <Link href={"/music/add"} className="flex flex-col items-center">
-                <Plus size={30} weight="fill" />
-                <div className="text-sm">Add</div>
-              </Link>
-            ) : (
-              <div className="pointer-events-none flex flex-col items-center opacity-30">
-                <Plus size={30} weight="fill" />
-                <div className="text-sm">Add</div>
+          <LiquidGlassBackground className="ml-2 bg-zinc-50/70 px-8 py-1.5 dark:bg-zinc-950/70">
+            <motion.div
+              layout
+              transition={{
+                type: "spring",
+                duration: 1,
+              }}
+              layoutId="item"
+              className="flex items-center gap-8 rounded-full border border-transparent dark:text-white"
+            >
+              <div className="flex flex-col items-center text-red-500">
+                <House size={30} weight="fill" />
+                <div className="text-sm font-semibold">Home</div>
               </div>
-            )}
 
-            {isAuthenticated ? (
-              <Link href={"/music/add"} className="flex flex-col items-center">
-                <div className="flex flex-col items-center">
-                  <Bookmarks size={30} weight="fill" />
-                  <div className="text-sm"> Library</div>
-                </div>
-              </Link>
-            ) : (
-              <div className="pointer-events-none flex flex-col items-center opacity-30">
-                <div className="flex flex-col items-center">
-                  <Bookmarks size={30} weight="fill" />
-                  <div className="text-sm"> Library</div>
-                </div>
+              <div className="flex flex-col items-center">
+                <SquaresFour size={30} weight="fill" className="" />
+                <div className="text-sm">New</div>
               </div>
-            )}
-          </motion.div>
+
+              {isAuthenticated ? (
+                <Link
+                  href={"/music/add"}
+                  className="flex flex-col items-center"
+                >
+                  <Plus size={30} weight="fill" />
+                  <div className="text-sm">Add</div>
+                </Link>
+              ) : (
+                <div className="pointer-events-none flex flex-col items-center opacity-30">
+                  <Plus size={30} weight="fill" />
+                  <div className="text-sm">Add</div>
+                </div>
+              )}
+
+              {isAuthenticated ? (
+                <Link
+                  href={"/music/add"}
+                  className="flex flex-col items-center"
+                >
+                  <div className="flex flex-col items-center">
+                    <Bookmarks size={30} weight="fill" />
+                    <div className="text-sm"> Library</div>
+                  </div>
+                </Link>
+              ) : (
+                <div className="pointer-events-none flex flex-col items-center opacity-30">
+                  <div className="flex flex-col items-center">
+                    <Bookmarks size={30} weight="fill" />
+                    <div className="text-sm"> Library</div>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          </LiquidGlassBackground>
         ) : (
           <motion.div
             layout
