@@ -34,10 +34,8 @@ export function LogoutButton() {
       ) : (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <div>
-              <div className="flex items-center gap-1">
-                <UserCircle size={12} weight="fill" className="size-8" />
-              </div>
+            <div className="my-2">
+              <UserCircle size={20} weight="fill" className="size-10" />
             </div>
           </DropdownMenuTrigger>
 
