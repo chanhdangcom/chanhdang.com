@@ -58,7 +58,7 @@ export function MenuBarMobile() {
     <div className="fixed bottom-4 z-20 flex w-full items-center justify-between sm:hidden">
       <AnimatePresence>
         {show ? (
-          <LiquidGlassBackground className="ml-2 bg-zinc-50/70 px-8 py-1.5 dark:bg-zinc-950/70">
+          <LiquidGlassBackground className="ml-2 bg-zinc-200/70 px-8 py-1.5 dark:bg-black/80">
             <motion.div
               layout
               transition={{
