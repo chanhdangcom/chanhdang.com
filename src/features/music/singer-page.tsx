@@ -18,6 +18,7 @@ import Link from "next/link";
 
 import { CarouselAudio } from "./carousel-audio";
 import { Footer } from "../profile/footer";
+import { MotionHeaderMusic } from "./component/motion-header-music";
 
 type IProp = {
   idSinger: string;
@@ -27,27 +28,33 @@ export function SingerPage({ idSinger }: IProp) {
   return (
     <div className="md:flex">
       <MenuBar />
+      <div className="pointer-events-none fixed top-0 z-10 h-24 w-full bg-gradient-to-b from-white via-white/50 to-transparent dark:from-black dark:via-black/50" />
+
+      <MotionHeaderMusic name="Artists" />
 
       <AnimatePresence>
         <motion.div className="mb-48 w-full" layoutId="singer">
           <AudioBar />
           <MenuBarMobile />
 
-          <div className="hidden md:block">
-            <HeaderMusicPage />
+          <div className="hidden md:ml-[270px] md:block">
+            <HeaderMusicPage name="Artists" />
           </div>
 
           <div>
-            <div className="sticky top-0 z-10 m-4 flex items-center gap-1 md:hidden">
-              <Link
-                href={"/music"}
-                className="rounded-full bg-zinc-200 p-2 dark:bg-zinc-900"
-              >
-                <CaretLeft
-                  size={28}
-                  weight="bold"
-                  className="text-black dark:text-white"
-                />
+            <div className="sticky top-0 z-20 m-4 flex items-center gap-1 md:hidden">
+              <Link href={"/music"}>
+                <motion.div
+                  whileTap={{ scale: 0.3 }}
+                  className="rounded-full bg-zinc-200 p-2 dark:bg-zinc-900"
+                  layout
+                >
+                  <CaretLeft
+                    size={28}
+                    weight="regular"
+                    className="text-black dark:text-white"
+                  />
+                </motion.div>
               </Link>
             </div>
 

@@ -6,7 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SignIn, User, UserCircle } from "phosphor-react";
+import { User, UserCircle } from "phosphor-react";
 import Link from "next/link";
 
 import { useUser } from "@/hooks/use-user";
@@ -17,19 +17,16 @@ export function LogoutButton() {
 
   const handleLogout = () => {
     logout();
-    window.location.href = "/music"; // Vừa logout vừa reload về trang music
+    window.location.href = "/music";
   };
 
   return (
     <div>
       {!user ? (
-        <Link
-          href={"auth/login"}
-          className="flex items-center justify-center gap-1 rounded-xl border px-4 py-1 shadow-sm backdrop-blur-sm dark:border-zinc-800"
-        >
-          <div className="font-semibold">Login</div>
-
-          <SignIn size={25} className="size-6" />
+        <Link href={"auth/login"} className="size-10">
+          <div className="my-2">
+            <UserCircle size={20} weight="fill" className="size-10" />
+          </div>
         </Link>
       ) : (
         <DropdownMenu>

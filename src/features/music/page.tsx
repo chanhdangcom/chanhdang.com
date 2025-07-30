@@ -15,26 +15,14 @@ import { MenuBarMobile } from "./menu-bar-mobile";
 import { CarouselAudioPlaylist } from "./carousel-audio-playlist";
 
 import { PickForYou } from "./pick-for-you";
-import { useScroll, useTransform, motion, useSpring } from "framer-motion";
+import { MotionHeaderMusic } from "./component/motion-header-music";
 
 export function MusicPage() {
-  const { scrollY } = useScroll();
-  const rawOpacity = useTransform(scrollY, [50, 100], [0, 1]);
-  const smoothOpacity = useSpring(rawOpacity, {
-    stiffness: 300,
-    damping: 20,
-  });
-
   return (
     <div className="flex font-apple">
       <MenuBar />
 
-      <motion.div
-        className="fixed inset-x-0 top-2 z-50 flex justify-center text-xl text-black dark:text-white"
-        style={{ opacity: smoothOpacity }}
-      >
-        Home
-      </motion.div>
+      <MotionHeaderMusic />
 
       <div className="mx-auto w-full">
         <div className="relative z-10">

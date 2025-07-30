@@ -64,7 +64,7 @@ export function MenuBarMobile() {
               duration: 1,
             }}
             layoutId="item"
-            className="ml-2 flex items-center gap-8 rounded-full border border-zinc-300 bg-gradient-to-tl from-transparent to-black/10 px-8 py-1.5 text-black backdrop-blur-sm dark:border-zinc-700 dark:to-white/10 dark:text-white"
+            className="ml-2 flex items-center gap-8 rounded-full border border-transparent bg-gradient-to-tl from-transparent to-black/10 px-8 py-1.5 text-black backdrop-blur-sm dark:to-white/10 dark:text-white"
           >
             <div className="flex flex-col items-center text-red-500">
               <House size={30} weight="fill" />
