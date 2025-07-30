@@ -30,7 +30,7 @@ export function MusicPage() {
       <MenuBar />
 
       <motion.div
-        className="fixed inset-x-0 top-2 z-[1000] flex justify-center text-xl text-black dark:text-white"
+        className="fixed inset-x-0 top-2 z-50 flex justify-center text-xl text-black dark:text-white"
         style={{ opacity: smoothOpacity }}
       >
         Home
