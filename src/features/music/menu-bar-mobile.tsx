@@ -121,7 +121,7 @@ export function MenuBarMobile() {
               type: "spring",
             }}
             layoutId="item"
-            className="ml-4 rounded-full border border-transparent bg-zinc-200/80 dark:bg-black/80"
+            className="ml-4 rounded-full border border-white/20 bg-zinc-200/80 dark:bg-black/80"
           >
             <div className="rounded-full p-4 text-red-600">
               <House size={28} weight="fill" />
@@ -140,7 +140,7 @@ export function MenuBarMobile() {
               duration: 1,
               ease: "easeInOut",
             }}
-            className="mr-4 rounded-full border border-transparent bg-zinc-200/80 p-4 dark:bg-black/90"
+            className="mr-4 rounded-full border border-white/20 bg-zinc-200/80 p-4 dark:bg-black/90"
           >
             <Link href={"/music/search"}>
               <MagnifyingGlass
@@ -158,7 +158,7 @@ export function MenuBarMobile() {
               duration: 1,
               type: "spring",
             }}
-            className="mr-2 rounded-full border border-transparent bg-zinc-200/80 p-4 dark:bg-black/90"
+            className="mr-2 rounded-full border border-white/20 bg-zinc-200/80 p-4 dark:bg-black/90"
           >
             <Link href={"/music/search"}>
               <MagnifyingGlass
