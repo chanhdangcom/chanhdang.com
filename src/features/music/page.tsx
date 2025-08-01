@@ -16,7 +16,7 @@ import { CarouselAudioPlaylist } from "./carousel-audio-playlist";
 
 import { PickForYou } from "./pick-for-you";
 import { MotionHeaderMusic } from "./component/motion-header-music";
-import { useDisableRightClick } from "../../hooks/use-disable-right-click";
+// import { useDisableRightClick } from "../../hooks/use-disable-right-click";
 
 export function MusicPage() {
   // useDisableRightClick();
