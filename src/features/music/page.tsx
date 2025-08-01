@@ -19,7 +19,7 @@ import { MotionHeaderMusic } from "./component/motion-header-music";
 import { useDisableRightClick } from "../../hooks/use-disable-right-click";
 
 export function MusicPage() {
-  useDisableRightClick();
+  // useDisableRightClick();
 
   return (
     <div className="flex font-apple">
