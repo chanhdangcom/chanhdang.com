@@ -94,7 +94,7 @@ export function AudioBar() {
           }}
           layout
           layoutId="audio-bar"
-          className="fixed inset-x-2 bottom-[85px] z-20 flex justify-center md:inset-x-96 md:bottom-4"
+          className="fixed inset-x-2 bottom-[85px] z-50 flex justify-center md:inset-x-96 md:bottom-4"
         >
           <LiquidGlassBackground className="rounded-[50px] bg-zinc-200/70 px-3 py-1 dark:bg-black/80 md:rounded-[55px]">
             <div
@@ -298,7 +298,7 @@ export function AudioBar() {
           }}
           layout
           layoutId="audio-bar"
-          className="fixed inset-x-20 bottom-6 z-20 flex justify-center md:inset-x-96 md:bottom-4"
+          className="fixed inset-x-20 bottom-6 z-50 flex justify-center md:inset-x-96 md:bottom-4"
         >
           <LiquidGlassBackground className="rounded-[50px] bg-zinc-200/70 px-3 py-1 dark:bg-black/80 md:rounded-[55px]">
             <div
@@ -307,12 +307,15 @@ export function AudioBar() {
                   setIsClick(true);
                 }
               }}
-              className="flex w-full items-center justify-between"
+              className="flex w-full cursor-pointer items-center justify-between"
             >
               <div className="hidden items-center gap-4 text-black dark:text-white md:flex">
                 <motion.div whileTap={{ scale: 0.5 }}>
                   <Shuffle
-                    onClick={() => handlePlayRandomAudio()}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePlayRandomAudio();
+                    }}
                     size={18}
                     weight="bold"
                     className="cursor-pointer text-zinc-500"
@@ -322,7 +325,10 @@ export function AudioBar() {
                 <motion.div whileTap={{ scale: 0.5 }}>
                   <Rewind
                     size={25}
-                    onClick={handAudioForward}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handAudioForward();
+                    }}
                     weight="fill"
                     className="cursor-pointer"
                   />
@@ -330,7 +336,10 @@ export function AudioBar() {
                 {isPlaying ? (
                   <motion.div whileTap={{ scale: 0.5 }}>
                     <Pause
-                      onClick={handlePauseAudio}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePauseAudio();
+                      }}
                       weight="fill"
                       size={30}
                       className="cursor-pointer"
@@ -339,7 +348,10 @@ export function AudioBar() {
                 ) : (
                   <motion.div whileTap={{ scale: 0.5 }}>
                     <Play
-                      onClick={handleResumeAudio}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleResumeAudio();
+                      }}
                       weight="fill"
                       size={25}
                       className="cursor-pointer"
@@ -348,7 +360,10 @@ export function AudioBar() {
                 )}
                 <motion.div whileTap={{ scale: 0.5 }}>
                   <FastForward
-                    onClick={handleAudioSkip}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAudioSkip();
+                    }}
                     weight="fill"
                     size={25}
                     className="cursor-pointer"
@@ -358,7 +373,7 @@ export function AudioBar() {
                 <Repeat size={18} weight="bold" className="text-zinc-500" />
               </div>
 
-              <div className="flex w-[700px] items-center justify-start gap-2 md:ml-6 md:gap-2">
+              <div className="flex w-[700px] items-center gap-2 md:ml-6 md:gap-2">
                 {!currentMusic?.cover ? (
                   <div className="flex size-10 items-center justify-center rounded-xl bg-zinc-900 md:rounded-lg">
                     <MusicNotes
@@ -418,7 +433,10 @@ export function AudioBar() {
                     <SpeakerSlash
                       size={20}
                       weight="fill"
-                      onClick={() => handleMute()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleMute();
+                      }}
                     />
                   </motion.div>
                 ) : (
@@ -426,7 +444,10 @@ export function AudioBar() {
                     <SpeakerHigh
                       size={20}
                       weight="fill"
-                      onClick={() => handleMute()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleMute();
+                      }}
                       className="cursor-pointer"
                     />
                   </motion.div>
@@ -437,7 +458,10 @@ export function AudioBar() {
                     size={20}
                     weight="fill"
                     className="cursor-pointer"
-                    onClick={() => setIsClick(true)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsClick(true);
+                    }}
                   />
                 </motion.div>
               </div>
@@ -482,29 +506,9 @@ export function AudioBar() {
     );
   };
 
-  return (
-    <div>
-      {scroll ? (
-        <>
-          {!isClick ? (
-            <Mini />
-          ) : (
-            <div ref={ref}>
-              <PlayerPage setIsClick={() => setIsClick(false)} />
-            </div>
-          )}
-        </>
-      ) : (
-        <>
-          {!isClick ? (
-            <MiniScroll />
-          ) : (
-            <div ref={ref}>
-              <PlayerPage setIsClick={() => setIsClick(false)} />
-            </div>
-          )}
-        </>
-      )}
-    </div>
-  );
+  if (isClick) return <PlayerPage setIsClick={() => setIsClick(false)} />;
+
+  if (scroll) return <Mini />;
+
+  return <MiniScroll />;
 }
