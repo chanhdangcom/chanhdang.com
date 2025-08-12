@@ -64,7 +64,7 @@ const EXPERIENCE_EDUCATION: IExperienceItem[] = [
 export const ExperienceList = () => {
   return (
     <>
-      <div className="scroll-mt-8 space-y-8">
+      <div className="scroll-mt-8">
         <div className="space-y-0">
           <CodeTag
             tagName="Work"
@@ -74,16 +74,19 @@ export const ExperienceList = () => {
           <div className="ml-2 text-balance border-l border-zinc-200 text-sm dark:border-zinc-800">
             {EXPERIENCE_WORK.map((item, index) => {
               return (
-                <ExperienceItem
-                  key={index}
-                  time={item.time}
-                  jobTitle={item.jobTitle}
-                  company={item.company}
-                  contentMarkdown={item.contentMarkdown}
-                  content={item.content}
-                  skills={item.skills}
-                  isWorking={item.isWorking}
-                />
+                <>
+                  {" "}
+                  <ExperienceItem
+                    key={index}
+                    time={item.time}
+                    jobTitle={item.jobTitle}
+                    company={item.company}
+                    contentMarkdown={item.contentMarkdown}
+                    content={item.content}
+                    skills={item.skills}
+                    isWorking={item.isWorking}
+                  />
+                </>
               );
             })}
           </div>
@@ -95,6 +98,12 @@ export const ExperienceList = () => {
           />
         </div>
 
+        <>
+          <div className="relative top-0 h-[1px] w-full bg-zinc-200 dark:bg-zinc-800"></div>
+          <div className="flex h-8 w-full bg-[image:repeating-linear-gradient(315deg,_var(--pattern-foreground)_0,_var(--pattern-foreground)_1px,_transparent_0,_transparent_50%)] bg-[size:10px_10px] [--pattern-foreground:#e4e4e7] dark:[--pattern-foreground:#27272a]" />
+          <div className="relative bottom-0 h-[1px] w-full bg-zinc-200 dark:bg-zinc-800"></div>
+        </>
+
         <div className="space-y-0">
           <CodeTag
             tagName="Education"
@@ -104,18 +113,20 @@ export const ExperienceList = () => {
           <div className="text-balanc ml-2 border-l border-zinc-200 text-sm dark:border-zinc-800">
             {EXPERIENCE_EDUCATION.map((item, index) => {
               return (
-                <ExperienceItem
-                  key={index}
-                  time={item.time}
-                  company={item.company}
-                  companyIcon={<SchoolIcon size="1em" />}
-                  jobTitle={item.jobTitle}
-                  jobIcon={<GraduationCapIcon size="1em" />}
-                  contentMarkdown={item.contentMarkdown}
-                  content={item.content}
-                  skills={item.skills}
-                  isWorking={item.isWorking}
-                />
+                <>
+                  <ExperienceItem
+                    key={index}
+                    time={item.time}
+                    company={item.company}
+                    companyIcon={<SchoolIcon size="1em" />}
+                    jobTitle={item.jobTitle}
+                    jobIcon={<GraduationCapIcon size="1em" />}
+                    contentMarkdown={item.contentMarkdown}
+                    content={item.content}
+                    skills={item.skills}
+                    isWorking={item.isWorking}
+                  />
+                </>
               );
             })}
           </div>

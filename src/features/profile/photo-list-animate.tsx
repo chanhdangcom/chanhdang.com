@@ -1,6 +1,6 @@
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 import { ExperienceInfoItem } from "./components/experience-info-item";
-import { ImageIcon } from "lucide-react";
+
 import { Ping } from "@/components/ping";
 import { Client } from "@/components/client";
 
@@ -52,9 +52,9 @@ export function PhotoListAnimate() {
     },
   ];
   return (
-    <div className="space-y-8">
-      <div className="my-2 flex items-center space-x-2 font-mono text-sm">
-        <ExperienceInfoItem icon={<ImageIcon />} content="Gallery" />
+    <div className="mt-2">
+      <div className="mx-2 flex items-center space-x-2 font-mono text-sm">
+        <ExperienceInfoItem content="Gallery" />
         <div className="text-gray-400">| 2023 - Present</div> <Ping />
       </div>
 

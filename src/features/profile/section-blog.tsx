@@ -1,4 +1,3 @@
-import { BookIcon } from "lucide-react";
 import { ExperienceInfoItem } from "../profile/components/experience-info-item";
 import { DrawerBlog } from "../profile/drawer-blog";
 import { getPosts } from "@/api/blog/get-posts";
@@ -9,9 +8,9 @@ export async function SectionBlog() {
   const posts = await getPosts();
 
   return (
-    <div className="mt-4">
-      <div className="my-2 flex items-center justify-between space-x-2 font-mono text-sm">
-        <ExperienceInfoItem icon={<BookIcon />} content="Blogs" />
+    <div className="my-2">
+      <div className="mx-2 flex items-center justify-between space-x-2 font-mono text-sm">
+        <ExperienceInfoItem content="Blogs" />
         <DrawerBlog />
       </div>
 

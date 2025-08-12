@@ -5,7 +5,7 @@ import React, { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "./hook/use-outside-click";
 import { ExperienceInfoItem } from "./components/experience-info-item";
-import { ListMusicIcon } from "lucide-react";
+
 import { useAudio } from "@/components/music-provider";
 import { MUSICS } from "./data/music";
 import { IMusic } from "./types/music";
@@ -35,10 +35,10 @@ export function MusicList() {
   console.log("Render Music List");
 
   return (
-    <div className="rounded-3xl border-b p-4 shadow-sm dark:border-zinc-800">
-      <div className="space-y-8">
-        <div className="my-2 flex items-center justify-between space-x-2 font-mono text-sm">
-          <ExperienceInfoItem icon={<ListMusicIcon />} content="Music" />
+    <div>
+      <div className="space-y-4">
+        <div className="mx-2 flex items-center justify-between space-x-2 font-mono text-sm">
+          <ExperienceInfoItem content="ChanhDang Music" />
 
           <Link
             href={"/music"}

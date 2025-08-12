@@ -18,7 +18,7 @@
 
 @layer base {
   body {
-    @apply font-body bg-zinc-50 text-zinc-950 antialiased dark:bg-zinc-950 dark:text-zinc-50;
+    @apply font-body bg-zinc-50 text-zinc-950 antialiased dark:bg-[#030610] dark:text-zinc-50;
   }
   :root {
 

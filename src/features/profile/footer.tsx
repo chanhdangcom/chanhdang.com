@@ -39,7 +39,7 @@ const FacebookIcon = ({ className }: IIcon) => {
 
 export const Footer = () => {
   return (
-    <div className="container space-y-4 border-t border-gray-200 pt-8 dark:border-zinc-800 dark:text-zinc-400">
+    <div className="container space-y-4 border-gray-200 py-8 dark:border-zinc-800 dark:text-zinc-400">
       <div className="flex flex-wrap items-center justify-center gap-4 font-mono text-sm md:gap-6">
         <a className="hover:underline" href="http://chanhdang.com">
           chanhdang.com
