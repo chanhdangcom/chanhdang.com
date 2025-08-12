@@ -88,9 +88,13 @@ export const Overview = () => {
         />
       </div>
 
-      <div className="mb-6 space-x-2 px-8 text-3xl font-bold sm:text-4xl md:text-3xl lg:text-4xl">
+      <div className="mb-6 space-x-2 border-zinc-200 px-8 text-3xl dark:border-zinc-800 sm:text-4xl md:text-3xl lg:text-4xl">
         <span className="flex items-center">
-          <TypewriterEffect words={NAME} />
+          {/* <div className="absolute left-9 top-[337px] hidden w-full font-mono text-xs text-zinc-400 dark:text-zinc-700 md:block">
+            px-8 text-4xl font-bold
+          </div> */}
+
+          <TypewriterEffect words={NAME} className="font-bold" />
 
           <svg
             className="text-blue-600"
@@ -113,7 +117,11 @@ export const Overview = () => {
 
       {/* <div className="flex h-4 w-full bg-[image:repeating-linear-gradient(315deg,_var(--pattern-foreground)_0,_var(--pattern-foreground)_1px,_transparent_0,_transparent_50%)] bg-[size:10px_10px] [--pattern-foreground:#e4e4e7] dark:[--pattern-foreground:#27272a]" /> */}
 
-      <div className="space-y-2 px-8">
+      <div className="space-y-2 border-zinc-200 px-8 dark:border-zinc-800">
+        {/* <div className="absolute left-9 top-[402px] hidden w-full font-mono text-xs text-zinc-400 dark:text-zinc-700 md:block">
+          text-lg font-mono text-zinc-500
+        </div> */}
+
         {INTRO.map((item, index) => {
           return (
             <IntroItem
