@@ -36,7 +36,7 @@ export function MusicList() {
 
   return (
     <div>
-      <div className="space-y-4">
+      <div className="space-y-2">
         <div className="mx-2 flex items-center justify-between space-x-2 font-mono text-sm">
           <ExperienceInfoItem content="ChanhDang Music" />
 
@@ -158,7 +158,7 @@ export function MusicList() {
               key={`card-${music.id}`}
               layoutId={`card-${music.id}`}
               onClick={() => setMusicView(music)}
-              className="flex cursor-pointer flex-row items-center justify-between rounded-3xl p-4 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+              className="flex cursor-pointer flex-row items-center justify-between rounded-3xl p-2 hover:bg-zinc-200 dark:hover:bg-zinc-900"
             >
               <div className="flex flex-row gap-4">
                 <motion.div layoutId={`cover-${music.id}`}>

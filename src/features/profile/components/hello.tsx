@@ -13,10 +13,6 @@ export const Hello = ({ className }: IProps) => {
         Hello
       </div>
 
-      {/* <div className="select-none bg-gradient-to-t from-yellow-400 to-red-600 bg-clip-text p-4 font-handwritten text-7xl text-transparent dark:from-yellow-400 dark:to-red-600 md:text-8xl">
-        Việt Nam
-      </div> */}
-
       <div className="font-mono text-xl dark:text-white lg:text-2xl">
         <CodeTag tagName="p" className="text-pink-500 dark:text-pink-400" />
         I am a Developer
@@ -26,16 +22,6 @@ export const Hello = ({ className }: IProps) => {
           className="text-pink-500 dark:text-pink-400"
         />
       </div>
-
-      {/* <div className="font-mono text-xl dark:text-white lg:text-2xl">
-        <CodeTag tagName="p" className="text-pink-500 dark:text-pink-400" />
-        30 Tháng 4 Năm 1975
-        <CodeTag
-          tagName="p"
-          isCloseTag
-          className="text-pink-500 dark:text-pink-400"
-        />
-      </div> */}
     </div>
   );
 };

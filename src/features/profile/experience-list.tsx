@@ -65,7 +65,7 @@ export const ExperienceList = () => {
   return (
     <>
       <div className="scroll-mt-8">
-        <div className="space-y-0">
+        <div className="p-2">
           <CodeTag
             tagName="Work"
             className="ml-2 text-cyan-500 dark:text-cyan-400"
@@ -75,7 +75,6 @@ export const ExperienceList = () => {
             {EXPERIENCE_WORK.map((item, index) => {
               return (
                 <>
-                  {" "}
                   <ExperienceItem
                     key={index}
                     time={item.time}
@@ -104,7 +103,7 @@ export const ExperienceList = () => {
           <div className="relative bottom-0 h-[1px] w-full bg-zinc-200 dark:bg-zinc-800"></div>
         </>
 
-        <div className="space-y-0">
+        <div className="p-2">
           <CodeTag
             tagName="Education"
             className="ml-2 text-cyan-500 dark:text-cyan-400"

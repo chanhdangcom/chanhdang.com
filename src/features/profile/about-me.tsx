@@ -5,19 +5,10 @@ import { TechStack } from "./tech-stack";
 import { CodeTag } from "@/components/code-tag";
 
 export const AboutMe = () => {
-  // const handleClick = () => {
-  //   window.location.href = "/#work";
-  // };
-
   return (
     <div className="space-y-8 dark:text-slate-50">
-      <Hello className="hidden md:block" />
-      {/* <div className="space-x-4 text-center">
-        <Button type="primary" onClick={handleClick}>
-          Work
-        </Button>
-        <Button type="secondary">Project</Button>
-      </div> */}
+      <Hello className="hidden text-8xl md:block" />
+
       <div className="text-balance text-center font-mono text-sm">
         <CodeTag tagName="About" className="text-cyan-500 dark:text-cyan-400" />
         I am passionate about creating and developing web applications and
@@ -30,11 +21,8 @@ export const AboutMe = () => {
           isCloseTag
         />
       </div>
-      <TechStack />
 
-      {/* <div className="mb-10 flex w-full flex-row items-center justify-center">
-        <AnimatedTooltip items={TECHSTACK} />
-      </div> */}
+      <TechStack />
     </div>
   );
 };

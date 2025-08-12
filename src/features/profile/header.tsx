@@ -6,11 +6,15 @@ import Link from "next/link";
 import React from "react";
 export const Header = () => {
   return (
-    <div className="container">
-      <Progress className="w-[60%]" value={33} />
-      <div className="flex h-14 items-center justify-between">
+    <div>
+      <div className="absolute">
+        <Progress className="w-[60%]" value={33} />
+      </div>
+
+      <div className="flex items-center justify-between">
         <Link href="/">
           <ChanhdangLogotype />
+
           <div className="font-handwritten text-sm">
             &quot;Debuggin life, deployin dreams&quot;
           </div>

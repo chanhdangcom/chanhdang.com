@@ -86,13 +86,7 @@ const ITechStackItem = [
 
 export const TechStack = () => {
   return (
-    <div className="flex justify-center">
-      {/* <div className="flex flex-wrap justify-center gap-4 rounded-2xl border border-zinc-200 bg-zinc-50 p-4 shadow-sm dark:border-zinc-900 dark:bg-zinc-900/50">
-        {TECHSTACK.map((item, index) => {
-          return <TechStackItem key={index} iconUrl={item.iconUrl} />;
-        })}
-      </div> */}
-
+    <div className="flex justify-center p-4">
       <FloatingDock items={ITechStackItem} />
     </div>
   );
