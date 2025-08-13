@@ -41,8 +41,8 @@ export const Profile = () => {
 
           <div className="space-y-8">
             <div className="min-h-[calc(100px-60px)] items-center space-y-8 md:flex md:space-y-0">
-              <div className="justify-between border-r border-zinc-200 dark:border-zinc-800 md:flex">
-                <div className="border-l border-zinc-200 dark:border-zinc-800 md:w-1/3 md:border-none">
+              <div className="justify-between border-r border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 md:flex">
+                <div className="rounded-3xl border-b border-l border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-[#030610] md:w-1/3 md:rounded-none md:border-none">
                   <Overview />
                 </div>
 
@@ -108,6 +108,12 @@ export const Profile = () => {
               <div className="bg-zinc-50 dark:bg-[#030610]">
                 <Footer />
               </div>
+
+              <>
+                <div className="relative top-0 h-[1px] w-full bg-zinc-200 dark:bg-zinc-800"></div>
+                <div className="flex h-4 w-full bg-zinc-50 bg-[image:repeating-linear-gradient(315deg,_var(--pattern-foreground)_0,_var(--pattern-foreground)_1px,_transparent_0,_transparent_50%)] bg-[size:10px_10px] [--pattern-foreground:#e4e4e7] dark:bg-[#030610] dark:[--pattern-foreground:#27272a] md:h-8" />
+                <div className="relative bottom-0 h-[1px] w-full bg-zinc-200 dark:bg-zinc-800"></div>
+              </>
             </div>
           </div>
         </div>

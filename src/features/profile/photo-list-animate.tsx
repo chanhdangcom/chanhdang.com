@@ -1,8 +1,6 @@
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
-import { ExperienceInfoItem } from "./components/experience-info-item";
-
-import { Ping } from "@/components/ping";
 import { Client } from "@/components/client";
+import { CodeTag } from "@/components/code-tag";
 
 export function PhotoListAnimate() {
   const testimonials = [
@@ -54,8 +52,9 @@ export function PhotoListAnimate() {
   return (
     <div className="mt-2">
       <div className="mx-2 flex items-center space-x-2 font-mono text-sm">
-        <ExperienceInfoItem content="Gallery" />
-        <div className="text-gray-400">| 2023 - Present</div> <Ping />
+        <CodeTag tagName="Gallery" />
+        <div className="text-gray-400">2023 - Present</div>
+        <CodeTag tagName="Gallery" isCloseTag />
       </div>
 
       <Client>

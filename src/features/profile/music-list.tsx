@@ -4,7 +4,6 @@ import Image from "next/image";
 import React, { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "./hook/use-outside-click";
-import { ExperienceInfoItem } from "./components/experience-info-item";
 
 import { useAudio } from "@/components/music-provider";
 import { MUSICS } from "./data/music";
@@ -15,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { useEscapePress } from "./hook/use-escape-press";
 import Link from "next/link";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
+import { CodeTag } from "@/components/code-tag";
 
 export function MusicList() {
   const [musicView, setMusicView] = useState<IMusic | null>(null);
@@ -38,7 +38,7 @@ export function MusicList() {
     <div>
       <div className="space-y-2">
         <div className="mx-2 flex items-center justify-between space-x-2 font-mono text-sm">
-          <ExperienceInfoItem content="ChanhDang Music" />
+          <CodeTag tagName="ChanhDangMusic" shortTag />
 
           <Link
             href={"/music"}

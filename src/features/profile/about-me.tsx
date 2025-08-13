@@ -7,7 +7,9 @@ import { CodeTag } from "@/components/code-tag";
 export const AboutMe = () => {
   return (
     <div className="space-y-8 dark:text-slate-50">
-      <Hello className="hidden text-8xl md:block" />
+      <div className="">
+        <Hello className="hidden text-8xl md:block" />
+      </div>
 
       <div className="text-balance text-center font-mono text-sm">
         <CodeTag tagName="About" className="text-cyan-500 dark:text-cyan-400" />
