@@ -52,9 +52,7 @@ export function PhotoListAnimate() {
   return (
     <div className="mt-2">
       <div className="mx-2 flex items-center space-x-2 font-mono text-sm">
-        <CodeTag tagName="Gallery" />
-        <div className="text-gray-400">2023 - Present</div>
-        <CodeTag tagName="Gallery" isCloseTag />
+        <CodeTag tagName="Gallery" shortTag />
       </div>
 
       <Client>

@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "./hook/use-outside-click";
 
 import { useAudio } from "@/components/music-provider";
-import { MUSICS } from "./data/music";
+
 import { IMusic } from "./types/music";
 
 import { Play as PlayIcon, Pause as PauseIcon } from "phosphor-react";
@@ -15,6 +15,7 @@ import { useEscapePress } from "./hook/use-escape-press";
 import Link from "next/link";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { CodeTag } from "@/components/code-tag";
+import { MUSICS } from "../music/data/music-page";
 
 export function MusicList() {
   const [musicView, setMusicView] = useState<IMusic | null>(null);
@@ -37,7 +38,7 @@ export function MusicList() {
   return (
     <div>
       <div className="space-y-2">
-        <div className="mx-2 flex items-center justify-between space-x-2 font-mono text-sm">
+        <div className="m-1 mx-2 flex items-center justify-between space-x-2 font-mono text-sm">
           <CodeTag tagName="ChanhDangMusic" shortTag />
 
           <Link
@@ -149,7 +150,7 @@ export function MusicList() {
         ) : null}
       </AnimatePresence>
 
-      <ul className="mx-auto w-full max-w-2xl gap-4">
+      <ul className="mx-auto flex w-full max-w-2xl snap-x snap-mandatory gap-3 overflow-x-auto scrollbar-hide">
         {MUSICS.map((music) => {
           const isPlayThisMusic = music.id === currentMusic?.id;
 
@@ -158,7 +159,7 @@ export function MusicList() {
               key={`card-${music.id}`}
               layoutId={`card-${music.id}`}
               onClick={() => setMusicView(music)}
-              className="flex cursor-pointer flex-row items-center justify-between rounded-3xl p-2 hover:bg-zinc-200 dark:hover:bg-zinc-900"
+              className="flex shrink-0 cursor-pointer snap-start flex-row items-center justify-between gap-2 rounded-3xl p-2 hover:bg-zinc-200 dark:hover:bg-zinc-900"
             >
               <div className="flex flex-row gap-4">
                 <motion.div layoutId={`cover-${music.id}`}>
