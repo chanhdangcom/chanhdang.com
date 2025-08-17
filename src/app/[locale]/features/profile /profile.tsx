@@ -54,7 +54,9 @@ export const Profile = () => {
             </div>
           </div>
 
-          <TailwindStyle useX />
+          <div className="hidden md:block">
+            <TailwindStyle useX />
+          </div>
 
           <div className="relative justify-between rounded-3xl md:flex">
             <div className="absolute left-1/2 top-0 hidden h-full w-[1px] bg-zinc-200 dark:bg-zinc-800 md:flex" />
