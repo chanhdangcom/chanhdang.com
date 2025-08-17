@@ -1,4 +1,4 @@
-import { BlogList } from "../blog/blog-list";
+import { BlogList } from "@/features/blog/blog-list";
 import { getPosts } from "@/api/blog/get-posts";
 import {
   HoverCard,

@@ -1,9 +1,5 @@
-import { ProfilePage } from "@/features/profile/page";
+import { ProfilePage } from "./[locale]/features/profile /page";
 
 export default function Page() {
-  return (
-    <div>
-      <ProfilePage />
-    </div>
-  );
+  return <ProfilePage />;
 }

@@ -8,24 +8,22 @@ export function DurationAudio() {
   const [currentTime, setCurrentTime] = useState(0);
 
   const handleTimeUpdate = useCallback(() => {
-    if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime);
-      setDuration(audioRef.current.duration);
+    const el = audioRef.current;
+    if (el) {
+      setCurrentTime(el.currentTime);
+      setDuration(el.duration);
     }
   }, [audioRef]);
 
   useEffect(() => {
-    if (!audioRef.current) {
-      return;
-    }
+    const el = audioRef.current;
+    if (!el) return;
 
-    // Chỉ thêm event listener, không quan tâm isPlaying
-    audioRef.current.addEventListener("timeupdate", handleTimeUpdate);
-
+    el.addEventListener("timeupdate", handleTimeUpdate);
     return () => {
-      audioRef.current?.removeEventListener("timeupdate", handleTimeUpdate);
+      el.removeEventListener("timeupdate", handleTimeUpdate);
     };
-  }, [handleTimeUpdate]);
+  }, [audioRef, handleTimeUpdate]);
 
   const formattedTime = useMemo(() => {
     return {

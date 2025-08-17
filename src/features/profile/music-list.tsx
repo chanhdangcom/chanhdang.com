@@ -15,7 +15,7 @@ import { useEscapePress } from "./hook/use-escape-press";
 import Link from "next/link";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { CodeTag } from "@/components/code-tag";
-import { MUSICS } from "../music/data/music-page";
+import { MUSICS } from "@/features/music/data/music-page";
 
 export function MusicList() {
   const [musicView, setMusicView] = useState<IMusic | null>(null);

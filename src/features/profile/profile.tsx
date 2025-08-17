@@ -39,7 +39,7 @@ export const Profile = () => {
           <div className="space-y-8">
             <div className="min-h-[calc(100px-60px)] items-center space-y-8 md:flex md:space-y-0">
               <div className="justify-between border-r border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 md:flex">
-                <div className="rounded-3xl border-b border-l border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-[#030610] md:w-1/3 md:rounded-none md:border-none">
+                <div className="border-b border-l border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-[#030610] md:w-1/3 md:rounded-none md:border-none">
                   <Overview />
                 </div>
 

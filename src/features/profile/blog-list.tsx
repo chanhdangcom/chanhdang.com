@@ -1,6 +1,5 @@
+import { IPost } from "@/app/[locale]/features/blog/types";
 import { BlogListItem } from "@/components/blog-list-item";
-
-import { IPost } from "../blog/types";
 
 export function BlogList({ posts }: { posts: IPost[] }) {
   return (

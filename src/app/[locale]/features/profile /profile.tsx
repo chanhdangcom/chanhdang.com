@@ -4,16 +4,16 @@ import { Header } from "./header";
 import { Overview } from "./overview";
 import { ExperienceList } from "./experience-list";
 import { Confetti } from "./components/confetti";
-import { Footer } from "./footer";
 
 import { SectionBlog } from "./section-blog";
 
 import { ScrollHeaderPage } from "@/components/scroll-header-page";
 import { HeaderMotion } from "./components/header-motion";
 
-import { MusicList } from "./music-list";
 import { PhotoListAnimate } from "./photo-list-animate";
 import { TailwindStyle } from "./components/taiwind-style";
+import { TableRanking } from "@/features/music/table-ranking";
+import { Footer } from "./footer";
 
 export const Profile = () => {
   return (
@@ -27,8 +27,6 @@ export const Profile = () => {
 
         <HeaderMotion />
 
-        {/* <LanguageSwitch /> */}
-
         <div className="relative top-0 hidden h-[1px] w-full bg-zinc-200 dark:bg-zinc-800 md:block"></div>
 
         <div className="w-full">
@@ -41,13 +39,13 @@ export const Profile = () => {
           <div className="space-y-8">
             <div className="min-h-[calc(100px-60px)] items-center space-y-8 md:flex md:space-y-0">
               <div className="justify-between border-r border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 md:flex">
-                <div className="rounded-3xl border-b border-l border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-[#030610] md:w-1/3 md:rounded-none md:border-none">
+                <div className="border-b border-l border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-[#030610] md:w-1/3 md:rounded-none md:border-none">
                   <Overview />
                 </div>
 
-                <div className="bg-zinc-100 dark:bg-zinc-900 md:w-2/3">
+                <div className="bg-zinc-100 p-1 dark:bg-zinc-900 md:w-2/3">
                   <div className="h-full rounded-3xl border border-zinc-200 bg-zinc-50 bg-[radial-gradient(circle,rgba(0,0,0,0.08)_1px,transparent_1px)] bg-[size:12px_12px] dark:border-zinc-800 dark:bg-[#030610] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.08)_1px,transparent_1px)]">
-                    <div className="md:mt-28">
+                    <div className="md:mt-20">
                       <AboutMe />
                     </div>
                   </div>
@@ -76,7 +74,7 @@ export const Profile = () => {
               <TailwindStyle useX />
 
               <div className="m-1 rounded-3xl border border-zinc-200 bg-zinc-50 bg-[radial-gradient(circle,rgba(0,0,0,0.08)_1px,transparent_1px)] bg-[size:12px_12px] dark:border-zinc-800 dark:bg-[#030610] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.08)_1px,transparent_1px)]">
-                <MusicList />
+                <TableRanking none />
               </div>
 
               <TailwindStyle useX />

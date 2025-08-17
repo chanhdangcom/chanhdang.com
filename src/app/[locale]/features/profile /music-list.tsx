@@ -15,7 +15,7 @@ import { useEscapePress } from "./hook/use-escape-press";
 import Link from "next/link";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { CodeTag } from "@/components/code-tag";
-import { MUSICS } from "../music/data/music-page";
+import { MUSICS } from "@/features/music/data/music-page";
 
 export function MusicList() {
   const [musicView, setMusicView] = useState<IMusic | null>(null);
@@ -94,14 +94,16 @@ export function MusicList() {
               ref={ref}
               className="flex h-full w-full max-w-md flex-col overflow-hidden rounded-xl border bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 sm:rounded-3xl md:max-h-[85%]"
             >
-              <motion.div layoutId={`cover-${musicView.id}`}>
+              <motion.div
+                layoutId={`cover-${musicView.id}`}
+                className="relative h-[50vh] w-full md:rounded-3xl lg:h-[50vh]"
+              >
                 <Image
                   priority
-                  width={300}
-                  height={300}
+                  fill
                   src={musicView.cover}
                   alt={musicView.title}
-                  className="h-[50vh] w-full rounded-xl object-cover object-top p-1 md:rounded-3xl lg:h-[50vh]"
+                  className="rounded-xl object-cover object-top p-1 md:rounded-3xl"
                 />
               </motion.div>
 
@@ -150,7 +152,7 @@ export function MusicList() {
         ) : null}
       </AnimatePresence>
 
-      <ul className="mx-auto flex w-full max-w-2xl snap-x snap-mandatory gap-3 overflow-x-auto scrollbar-hide">
+      <ul className="mx-auto grid w-full max-w-2xl snap-x snap-mandatory grid-flow-col grid-rows-2 gap-3 overflow-x-auto scrollbar-hide">
         {MUSICS.map((music) => {
           const isPlayThisMusic = music.id === currentMusic?.id;
 

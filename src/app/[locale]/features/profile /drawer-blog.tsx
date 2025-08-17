@@ -1,4 +1,4 @@
-import { BlogList } from "../blog/blog-list";
+import { BlogList } from "@/features/blog/blog-list";
 import { getPosts } from "@/api/blog/get-posts";
 import {
   HoverCard,
@@ -21,7 +21,7 @@ export async function DrawerBlog() {
     <Drawer>
       <HoverCard>
         <HoverCardTrigger>
-          <DrawerTrigger className="rounded-xl border px-4 py-2 shadow-sm hover:underline dark:border-zinc-800">
+          <DrawerTrigger className="px-4 py-2 hover:underline">
             List
           </DrawerTrigger>
         </HoverCardTrigger>

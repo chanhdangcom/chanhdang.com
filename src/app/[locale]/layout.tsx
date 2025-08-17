@@ -50,6 +50,7 @@ export default async function RootLayout({
   params,
 }: Readonly<{
   children: React.ReactNode;
+  params: { locale: string };
 }>) {
   console.log("Render RootLayout");
 
