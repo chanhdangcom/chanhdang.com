@@ -115,8 +115,8 @@ export const Footer = () => {
         </div>
 
         <div className="flex items-center justify-center gap-4">
-          <SwitchLanguage />
           <SwitchTheme />
+          <SwitchLanguage />
         </div>
       </div>
     </div>
