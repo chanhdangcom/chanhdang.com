@@ -11,9 +11,9 @@ import { SectionBlog } from "./section-blog";
 import { ScrollHeaderPage } from "@/components/scroll-header-page";
 import { HeaderMotion } from "./components/header-motion";
 
+import { MusicList } from "./music-list";
 import { PhotoListAnimate } from "./photo-list-animate";
 import { TailwindStyle } from "./components/taiwind-style";
-import { TableRanking } from "../music/table-ranking";
 
 export const Profile = () => {
   return (
@@ -26,6 +26,8 @@ export const Profile = () => {
         </div>
 
         <HeaderMotion />
+
+        {/* <LanguageSwitch /> */}
 
         <div className="relative top-0 hidden h-[1px] w-full bg-zinc-200 dark:bg-zinc-800 md:block"></div>
 
@@ -43,9 +45,9 @@ export const Profile = () => {
                   <Overview />
                 </div>
 
-                <div className="bg-zinc-100 p-1 dark:bg-zinc-900 md:w-2/3">
+                <div className="bg-zinc-100 dark:bg-zinc-900 md:w-2/3">
                   <div className="h-full rounded-3xl border border-zinc-200 bg-zinc-50 bg-[radial-gradient(circle,rgba(0,0,0,0.08)_1px,transparent_1px)] bg-[size:12px_12px] dark:border-zinc-800 dark:bg-[#030610] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.08)_1px,transparent_1px)]">
-                    <div className="md:mt-20">
+                    <div className="md:mt-28">
                       <AboutMe />
                     </div>
                   </div>
@@ -74,7 +76,7 @@ export const Profile = () => {
               <TailwindStyle useX />
 
               <div className="m-1 rounded-3xl border border-zinc-200 bg-zinc-50 bg-[radial-gradient(circle,rgba(0,0,0,0.08)_1px,transparent_1px)] bg-[size:12px_12px] dark:border-zinc-800 dark:bg-[#030610] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.08)_1px,transparent_1px)]">
-                <TableRanking none />
+                <MusicList />
               </div>
 
               <TailwindStyle useX />

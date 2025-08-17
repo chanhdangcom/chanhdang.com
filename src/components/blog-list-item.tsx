@@ -7,10 +7,10 @@ export function BlogListItem({ post }: { post: IPost }) {
     <>
       <Link key={post.documentId} href={`/blog/${post.slug}`}>
         <div>
-          <div className="space-y-4 rounded-xl border bg-zinc-100/50 p-1 dark:border-zinc-800 dark:bg-zinc-950/30">
+          <div className="space-y-4 rounded-[20px] border bg-zinc-100/50 p-1 dark:border-zinc-800 dark:bg-zinc-950/30">
             <div className="relative mx-auto h-40 w-80">
               <Image
-                className="shrink-0 rounded-lg border dark:border-zinc-900"
+                className="shrink-0 rounded-2xl border dark:border-zinc-900"
                 src={post.cover.formats.medium.url}
                 alt={post.title}
                 fill

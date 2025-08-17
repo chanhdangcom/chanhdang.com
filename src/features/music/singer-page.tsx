@@ -167,6 +167,7 @@ export function SingerPage({ idSinger }: IProp) {
 
           <div className="my-8 space-y-8">
             <CarouselAudio />
+
             <div className="md:ml-60">
               <Footer />
             </div>

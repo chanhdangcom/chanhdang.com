@@ -9,7 +9,7 @@ export async function SectionBlog() {
   const posts = await getPosts();
 
   return (
-    <div className="px-1 pb-1">
+    <div className="px-1 py-2">
       <div className="right-[40vh] h-1/2 w-5 bg-red-400"></div>
       <div className="flex items-center justify-between space-x-2 font-mono text-sm">
         <CodeTag tagName="BLogs" shortTag />
@@ -17,7 +17,9 @@ export async function SectionBlog() {
         <DrawerBlog />
       </div>
 
-      <div className="relative left-0 top-8 z-50 h-1/2 w-5 bg-red-400" />
+      <div className="relative left-0 top-8 z-50 h-1/2 w-5 bg-red-400"></div>
+
+      {/* <BlogCarousel posts={posts} /> */}
       <BlogList posts={posts} />
     </div>
   );

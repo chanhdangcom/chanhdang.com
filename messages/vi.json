@@ -1,6 +1,35 @@
 {
   "hello": {
     "Hello": "Xin Chào",
-    "description": "Tôi là một Developer"
+    "Description": "Tôi là một Developer"
+  },
+
+  "about": {
+    "Content": "Tôi đam mê sáng tạo và phát triển ứng dụng web và phần mềm, luôn tìm kiếm những giải pháp tối ưu và hiệu quả nhất. Tôi có kinh nghiệm sử dụng các công nghệ hiện đại như TypeScript, React và Tailwind CSS. Tôi thích tìm hiểu và áp dụng các công nghệ mới."
+  },
+
+  "experience": {
+    "work": {
+      "intern": "Thực tập | 2023 - Hiện tại",
+      "company": "Công ty TNHH Quaric",
+      "content": "- Tôi có cơ hội thực tập tại một công ty công nghệ, nơi tôi được tham gia vào các dự án phát triển phần mềm thực tế. Trong thời gian thực tập, tôi đã học được cách làm việc nhóm, quản lý thời gian và áp dụng kiến thức vào giải quyết các vấn đề thực tế.\n\n - Đây là bước đệm quan trọng giúp tôi hiểu rõ hơn về môi trường làm việc chuyên nghiệp và củng cố kỹ năng của mình."
+    },
+    "education": {
+      "university": {
+        "time": "Toàn thời gian | 2022 - Hiện tại",
+        "company": "Đại học An Giang",
+        "content": "- Tôi có cơ hội thực tập tại một công ty công nghệ, nơi tôi được tham gia vào các dự án phát triển phần mềm thực tế. Trong thời gian thực tập, tôi đã học được cách làm việc nhóm, quản lý thời gian và áp dụng kiến thức vào giải quyết các vấn đề thực tế.\n\n- Những trải nghiệm này nuôi dưỡng niềm đam mê công nghệ và sự sẵn sàng thích ứng với thay đổi.\n\n"
+      },
+      "highSchool": {
+        "time": "Toàn thời gian | 2019 - 2022",
+        "company": "Trường THPT Thuận Hưng",
+        "content": "- Ở trường trung học, nơi tôi không chỉ xây dựng nền tảng kiến thức vững chắc mà còn rèn luyện kỹ năng tư duy và học tập chủ động.\n\n- Trong quá trình học tập, tôi tích cực tham gia các hoạt động ngoại khóa và cuộc thi, điều này giúp phát triển kỹ năng giao tiếp và làm việc nhóm, chuẩn bị tốt hơn cho việc học tập trong tương lai."
+      },
+      "secondarySchool": {
+        "time": "Toàn thời gian | 2015 - 2019",
+        "company": "Trường THCS Thuận Hưng",
+        "content": "- Ở trường trung học, tôi bắt đầu mở rộng kiến thức và rèn luyện kỹ năng tư duy phản biện. Tôi thách thức bản thân với các môn học nâng cao và khám phá các lĩnh vực học tập khác nhau, điều này giúp tôi hiểu sâu hơn về các khái niệm khác nhau.\n\n- Ngoài học tập, tôi tích cực tham gia các dự án nhóm và hoạt động ngoại khóa, đảm nhận vai trò lãnh đạo khi có thể. Những trải nghiệm này cải thiện khả năng giải quyết vấn đề, làm việc nhóm và kỹ năng giao tiếp, tất cả đều chuẩn bị cho sự phát triển học tập và cá nhân trong tương lai."
+      }
+    }
   }
 }

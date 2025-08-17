@@ -3,6 +3,8 @@ import { Pacifico, Roboto_Condensed, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/utils/cn";
 import { Providers } from "./Providers";
+import { NextIntlClientProvider } from "next-intl";
+// i18n provider is set in app/[locale]/layout.tsx
 
 const fontBody = Roboto_Condensed({
   variable: "--font-body",
@@ -55,7 +57,9 @@ export default async function RootLayout({
           fontMono.variable
         )}
       >
-        <Providers>{children}</Providers>
+        <NextIntlClientProvider>
+          <Providers>{children}</Providers>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

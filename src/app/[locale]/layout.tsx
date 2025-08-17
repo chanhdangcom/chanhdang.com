@@ -1,16 +1,58 @@
-import { NextIntlClientProvider, hasLocale } from "next-intl";
+import type { Metadata } from "next";
+import { Pacifico, Roboto_Condensed, JetBrains_Mono } from "next/font/google";
+import "./globals.css";
+import { cn } from "@/utils/cn";
+
+import { hasLocale, NextIntlClientProvider } from "next-intl";
+import { Providers } from "../Providers";
+import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
-import { setRequestLocale } from "next-intl/server";
+// i18n provider is set in app/[locale]/layout.tsx
 
-export default async function LocaleLayout({
+const fontBody = Roboto_Condensed({
+  variable: "--font-body",
+  subsets: ["vietnamese"],
+  weight: ["400", "600", "700"],
+});
+
+const fontHandWritten = Pacifico({
+  variable: "--font-handwritten",
+  subsets: ["vietnamese"],
+  weight: ["400"],
+});
+
+const fontMono = JetBrains_Mono({
+  variable: "--font-mono",
+  subsets: ["vietnamese"],
+  weight: ["400", "700"],
+});
+
+export const metadata: Metadata = {
+  title: "Chánh Đang - I am a Developer",
+  description: "I am a developer.",
+  manifest: "/manifest.webmanifest",
+  themeColor: "#000000",
+  icons: {
+    icon: "/img/Logomark.png",
+    apple: "/img/Logomark.png",
+    shortcut: "/img/Logomark.png",
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Chánh Đang",
+  },
+};
+
+export default async function RootLayout({
   children,
   params,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-  params: { locale: string };
-}) {
-  // Ensure that the incoming `locale` is valid
+}>) {
+  console.log("Render RootLayout");
+
   const { locale } = params;
   if (!hasLocale(routing.locales, locale)) {
     notFound();
@@ -19,9 +61,21 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   return (
-    <html lang={locale}>
-      <body>
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+    <html
+      lang={locale}
+      className="light scroll-smooth"
+      suppressHydrationWarning
+    >
+      <body
+        className={cn(
+          fontBody.variable,
+          fontHandWritten.variable,
+          fontMono.variable
+        )}
+      >
+        <NextIntlClientProvider>
+          <Providers>{children}</Providers>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

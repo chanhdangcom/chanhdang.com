@@ -1,13 +1,10 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { Hello } from "./components/hello";
 import { TechStack } from "./tech-stack";
 import { CodeTag } from "@/components/code-tag";
 
 export const AboutMe = () => {
-  const t = useTranslations("about");
-
   return (
     <div className="space-y-8 dark:text-slate-50">
       <div className="">
@@ -16,8 +13,10 @@ export const AboutMe = () => {
 
       <div className="text-balance text-center font-mono text-sm">
         <CodeTag tagName="About" className="text-cyan-500 dark:text-cyan-400" />
-        {t("Content")}
-
+        I am passionate about creating and developing web applications and
+        software, always looking for the most optimal and efficient solutions.
+        With experience in using modern technologies such as TypeScript, React
+        and Tailwind CSS. I love learning and applying new technologies.
         <CodeTag
           tagName="About"
           className="text-cyan-500 dark:text-cyan-400"

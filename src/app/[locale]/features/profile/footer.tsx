@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { SwitchTheme } from "@/components/switch-theme";
-import { SwitchLanguage } from "./components/swtich-language";
 
 type IIcon = {
   className?: string;
@@ -113,7 +112,6 @@ export const Footer = () => {
         </a>
 
         <SwitchTheme />
-        <SwitchLanguage />
       </div>
     </div>
   );

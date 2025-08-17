@@ -5,21 +5,31 @@ import { TableRankingItem } from "./component/table-ranking-item";
 
 import { MUSICS } from "./data/music-page";
 import { useRef } from "react";
+import { CodeTag } from "@/components/code-tag";
 
 type IProp = {
   home?: boolean;
   addPage?: boolean;
+  none?: boolean;
 };
 
-export function TableRanking({ home, addPage }: IProp) {
+export function TableRanking({ home, addPage, none }: IProp) {
   const { handlePlayAudio } = useAudio();
   const ref = useRef<HTMLDivElement>(null);
 
   return (
     <div className="z-[1] rounded-3xl p-1 md:max-w-full">
-      <div className="ml-2 px-1 text-2xl font-semibold text-black dark:text-white md:ml-[270px]">
-        Today's Hits
-      </div>
+      {home && (
+        <div className="ml-2 px-1 text-2xl font-semibold text-black dark:text-white md:ml-[270px]">
+          Today's Hits
+        </div>
+      )}
+
+      {none && (
+        <div className="px-1 text-black dark:text-white">
+          <CodeTag tagName="ChanhDangMusic" shortTag />
+        </div>
+      )}
 
       <div
         ref={ref}
@@ -39,6 +49,15 @@ export function TableRanking({ home, addPage }: IProp) {
 
               {addPage && (
                 <div className={` ${index < 4 ? "ml-2 md:ml-[510px]" : ""}`}>
+                  <TableRankingItem
+                    music={music}
+                    handlePlay={() => handlePlayAudio(music)}
+                  />
+                </div>
+              )}
+
+              {none && (
+                <div className={` ${index < 4 ? "" : ""}`}>
                   <TableRankingItem
                     music={music}
                     handlePlay={() => handlePlayAudio(music)}

@@ -4,7 +4,6 @@ import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
 
 import React from "react";
-import { SwitchLanguage } from "./components/swtich-language";
 export const Header = () => {
   return (
     <div>
@@ -21,11 +20,7 @@ export const Header = () => {
           </div>
         </Link>
 
-        <div className="flex items-center gap-2">
-          <SwitchLanguage />
-
-          <SwitchTheme />
-        </div>
+        <SwitchTheme />
       </div>
     </div>
   );
