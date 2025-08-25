@@ -16,7 +16,7 @@ export const Header = () => {
         <Link href="/">
           <ChanhdangLogotype />
 
-          <div className="font-handwritten text-xs md:text-sm">
+          <div className="font-mono text-xs font-bold">
             &quot;Debuggin life, deployin dreams&quot;
           </div>
         </Link>

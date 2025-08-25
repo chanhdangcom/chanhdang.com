@@ -1,8 +1,11 @@
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 import { Client } from "@/components/client";
 import { CodeTag } from "@/components/code-tag";
+import { useTranslations } from "next-intl";
 
 export function PhotoListAnimate() {
+  const t = useTranslations();
+
   const testimonials = [
     {
       quote:
