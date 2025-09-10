@@ -4,7 +4,6 @@ import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
 
 import React from "react";
-import { SwitchLanguage } from "./components/swtich-language";
 export const Header = () => {
   return (
     <div>
@@ -16,16 +15,12 @@ export const Header = () => {
         <Link href="/">
           <ChanhdangLogotype />
 
-          {/* <div className="hidden font-mono text-xs md:flex">
-            &quot;Debugging life, deploying dreams&quot;
-          </div> */}
+          <div className="font-handwritten text-sm">
+            &quot;Debuggin life, deployin dreams&quot;
+          </div>
         </Link>
 
-        <div className="flex items-center gap-2">
-          <SwitchLanguage />
-
-          <SwitchTheme />
-        </div>
+        <SwitchTheme />
       </div>
     </div>
   );
