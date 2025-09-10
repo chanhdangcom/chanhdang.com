@@ -8,7 +8,6 @@ import { MenuBar } from "./menu-bar";
 import { TableRanking } from "./table-ranking";
 
 import { SingerList } from "./singer-list";
-import { Footer } from "../profile/footer";
 
 import { MenuBarMobile } from "./menu-bar-mobile";
 
@@ -16,6 +15,7 @@ import { CarouselAudioPlaylist } from "./carousel-audio-playlist";
 
 import { PickForYou } from "./pick-for-you";
 import { MotionHeaderMusic } from "./component/motion-header-music";
+import { Footer } from "@/app/[locale]/features/profile /footer";
 // import { useDisableRightClick } from "../../hooks/use-disable-right-click";
 
 export function MusicPage() {

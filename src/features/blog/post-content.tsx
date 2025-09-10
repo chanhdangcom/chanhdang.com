@@ -2,12 +2,11 @@
 import React from "react";
 import { IPost } from "./types";
 
-import { Footer } from "../profile/footer";
-
 import { StrapiBlocksRenderer } from "@/components/strapi-blocks-renderer";
-import { Header } from "../profile/header";
+import { Header } from "@/app/[locale]/features/profile /header";
+import { HeaderMotion } from "@/app/[locale]/features/profile /components/header-motion";
 import { ScrollHeaderPage } from "@/components/scroll-header-page";
-import { HeaderMotion } from "../profile/components/header-motion";
+import { Footer } from "@/app/[locale]/features/profile /footer";
 
 type IProps = {
   post: IPost;

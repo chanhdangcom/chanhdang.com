@@ -1,8 +1,9 @@
 "use client";
 import { useAudio } from "@/components/music-provider";
 import { AudioItemOrder } from "./audio-item-order";
-import { IMusic } from "@/features/profile/types/music";
+
 import { DotsThreeVertical } from "phosphor-react";
+import { IMusic } from "@/app/[locale]/features/profile /types/music";
 
 type Iprop = {
   music: IMusic;

@@ -5,7 +5,7 @@ import { AuidoItem } from "./audio-item";
 import { useAudio } from "@/components/music-provider";
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { useOutsideClick } from "@/features/profile/hook/use-outside-click";
+import { useOutsideClick } from "@/app/[locale]/features/profile /hook/use-outside-click";
 
 export function Search() {
   const { handlePlayAudio } = useAudio();

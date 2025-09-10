@@ -1,10 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
-import { IMusic } from "@/features/profile/types/music";
+
 import { FavoriteButton } from "./favorite-button";
 import { useUser } from "@/hooks/use-user";
 import { useState } from "react";
 import { Play } from "phosphor-react";
 import { motion } from "framer-motion";
+import { IMusic } from "@/app/[locale]/features/profile /types/music";
 
 type IProp = {
   music: IMusic;

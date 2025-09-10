@@ -17,8 +17,9 @@ import { CaretLeft, Play } from "phosphor-react";
 import Link from "next/link";
 
 import { CarouselAudio } from "./carousel-audio";
-import { Footer } from "../profile/footer";
+
 import { MotionHeaderMusic } from "./component/motion-header-music";
+import { Footer } from "@/app/[locale]/features/profile /footer";
 
 type IProp = {
   idSinger: string;

@@ -7,7 +7,7 @@ import { MUSICS } from "./data/music-page";
 import { useAudio } from "@/components/music-provider";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useOutsideClick } from "../profile/hook/use-outside-click";
+import { useOutsideClick } from "@/app/[locale]/features/profile /hook/use-outside-click";
 
 export function MusicType() {
   const { handlePlayAudio } = useAudio();

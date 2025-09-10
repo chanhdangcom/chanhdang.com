@@ -1,4 +1,5 @@
-import { IMusic } from "@/features/profile/types/music";
+import { IMusic } from "@/app/[locale]/features/profile /types/music";
+
 
 export type ISingerItem = {
   id: string;

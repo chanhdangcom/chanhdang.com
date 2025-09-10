@@ -23,8 +23,9 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { useEffect, useRef, useState } from "react";
 import { PlayerPage } from "./player-page";
-import { useOutsideClick } from "../profile/hook/use-outside-click";
+
 import LiquidGlassBackground from "@/components/liquid-glass-background";
+import { useOutsideClick } from "@/app/[locale]/features/profile /hook/use-outside-click";
 
 export function AudioBar() {
   const {

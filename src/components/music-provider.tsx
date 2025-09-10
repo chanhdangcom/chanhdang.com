@@ -1,5 +1,6 @@
+import { IMusic } from "@/app/[locale]/features/profile /types/music";
 import { MUSICS } from "@/features/music/data/music-page";
-import { IMusic } from "@/features/profile/types/music";
+
 import React, {
   useCallback,
   useContext,

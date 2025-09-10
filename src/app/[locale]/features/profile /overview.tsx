@@ -9,7 +9,7 @@ import dynamic from "next/dynamic";
 
 const RatingButton = dynamic(
   () =>
-    import("@/features/profile/components/rating-button").then(
+    import("@/app/[locale]/features/profile /components/rating-button").then(
       (res) => res.RatingButton
     ),
   {

@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { IMusic } from "@/features/profile/types/music";
+
 import { FavoriteButton } from "./favorite-button";
 import { useAudio } from "@/components/music-provider";
 
 import { motion } from "framer-motion";
 
 import { AudioItemOrder } from "./audio-item-order";
+import { IMusic } from "@/app/[locale]/features/profile /types/music";
 interface FavoritesListProps {
   userId?: string;
 }

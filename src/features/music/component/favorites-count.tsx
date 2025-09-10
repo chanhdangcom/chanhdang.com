@@ -1,7 +1,7 @@
 "use client";
 
+import { IMusic } from "@/app/[locale]/features/profile /types/music";
 import { useState, useEffect } from "react";
-import { IMusic } from "@/features/profile/types/music";
 
 interface FavoritesCountProps {
   userId?: string;

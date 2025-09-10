@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
-import { Footer } from "../profile/footer";
+
 import { TableRanking } from "./table-ranking";
 import { SingerList } from "./singer-list";
 import { HeaderMusicPage } from "./header-music-page";
 import { Button } from "@/components/ui/button";
 import { MotionHeaderMusic } from "./component/motion-header-music";
+import { Footer } from "@/app/[locale]/features/profile /footer";
 
 export default function AddMusicForm() {
   const [form, setForm] = useState({

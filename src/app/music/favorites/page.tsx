@@ -6,9 +6,10 @@ import { HeaderMusicPage } from "@/features/music/header-music-page";
 import { MenuBar } from "@/features/music/menu-bar";
 import { MenuBarMobile } from "@/features/music/menu-bar-mobile";
 import { AudioBar } from "@/features/music/audio-bar";
-import { Footer } from "@/features/profile/footer";
+
 import { UIFavoritesList } from "@/features/music/component/UI-favorites-list";
 import { MotionHeaderMusic } from "@/features/music/component/motion-header-music";
+import { Footer } from "@/app/[locale]/features/profile /footer";
 
 export default function FavoritesPage() {
   const { user } = useUser();

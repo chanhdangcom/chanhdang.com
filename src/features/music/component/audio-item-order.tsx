@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import { IMusic } from "@/features/profile/types/music";
+
+import { IMusic } from "@/app/[locale]/features/profile /types/music";
 import { IPlaylistItem } from "../type/playlist";
 import { cn } from "@/lib/utils";
 

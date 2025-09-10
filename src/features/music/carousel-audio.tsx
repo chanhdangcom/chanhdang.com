@@ -4,7 +4,7 @@ import * as React from "react";
 import { AuidoItem } from "./component/audio-item";
 import { useAudio } from "@/components/music-provider";
 import { useEffect, useState } from "react";
-import { IMusic } from "../profile/types/music";
+import { IMusic } from "@/app/[locale]/features/profile /types/music";
 
 export function CarouselAudio() {
   const { handlePlayAudio } = useAudio();
