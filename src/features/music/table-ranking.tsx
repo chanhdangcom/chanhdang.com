@@ -5,7 +5,8 @@ import { TableRankingItem } from "./component/table-ranking-item";
 
 import { MUSICS } from "./data/music-page";
 import { useRef } from "react";
-import { CodeTag } from "@/components/code-tag";
+
+import Link from "next/link";
 
 type IProp = {
   home?: boolean;
@@ -26,9 +27,22 @@ export function TableRanking({ home, addPage, none }: IProp) {
       )}
 
       {none && (
-        <div className="px-1 text-black dark:text-white">
-          <CodeTag tagName="ChanhDangMusic" shortTag />
-        </div>
+        <Link href={"/music"} className="">
+          <div className="relative m-4 inline-block font-mono text-xl font-semibold hover:underline">
+            ChanhDang Music
+            {/* 4 lines */}
+            <div className="pointer-events-none absolute inset-0">
+              {/* Top line */}
+              <div className="absolute left-[-10px] right-[-10px] top-0 h-px bg-zinc-400 dark:bg-zinc-700/90"></div>
+              {/* Bottom line */}
+              <div className="absolute bottom-0 left-[-10px] right-[-10px] h-px bg-zinc-400 dark:bg-zinc-700/90"></div>
+              {/* Left line */}
+              <div className="absolute bottom-[-10px] left-0 top-[-10px] w-px bg-zinc-400 dark:bg-zinc-700/90"></div>
+              {/* Right line */}
+              <div className="absolute bottom-[-10px] right-0 top-[-10px] w-px bg-zinc-400 dark:bg-zinc-700/90"></div>
+            </div>
+          </div>
+        </Link>
       )}
 
       <div

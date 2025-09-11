@@ -6,25 +6,28 @@ export function BlogListItem({ post }: { post: IPost }) {
   return (
     <>
       <Link key={post.documentId} href={`/blog/${post.slug}`}>
-        <div>
-          <div className="space-y-4 rounded-[20px] border bg-zinc-100/50 p-1 dark:border-zinc-800 dark:bg-zinc-950/30">
-            <div className="relative mx-auto h-40 w-80">
+        <>
+          <div className="space-y-2 p-1">
+            <div className="relative mx-auto h-44 w-80">
               <Image
-                className="shrink-0 rounded-2xl border dark:border-zinc-900"
+                className="shrink-0 rounded-2xl border border-zinc-200 dark:border-zinc-800"
                 src={post.cover.formats.medium.url}
                 alt={post.title}
                 fill
               />
             </div>
 
-            <div className="line-clamp-2 h-24 rounded-xl p-1 font-medium dark:text-white">
-              <div className="text-sm font-light text-zinc-400">
+            <div className="h-24 space-y-2 dark:text-white">
+              <div className="text-xs text-zinc-400">
                 {new Date(post.createdAt).toLocaleDateString("vi-VN")}
               </div>
-              {post.title}
+
+              <div className="line-clamp-2 text-base font-semibold hover:underline">
+                {post.title}
+              </div>
             </div>
           </div>
-        </div>
+        </>
       </Link>
     </>
   );

@@ -1,6 +1,5 @@
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 import { Client } from "@/components/client";
-import { CodeTag } from "@/components/code-tag";
 
 export function PhotoListAnimate() {
   const testimonials = [
@@ -51,10 +50,6 @@ export function PhotoListAnimate() {
   ];
   return (
     <div className="mt-2">
-      <div className="mx-2 flex items-center space-x-2 font-mono text-sm">
-        <CodeTag tagName="Gallery" shortTag />
-      </div>
-
       <Client>
         <AnimatedTestimonials testimonials={testimonials} />
       </Client>
