@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "hello-world",
+  "type": "registry:component",
+  "title": "Hello World",
+  "description": "A simple hello world component.",
+  "files": [
+    {
+      "path": "src/registry/hello-word/hello-word.tsx",
+      "content": "export function HelloWorld() {\n  return <div>Hello World</div>;\n}\n",
+      "type": "registry:component"
+    }
+  ]
+}

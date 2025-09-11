@@ -15,10 +15,6 @@ export const Header = () => {
       <div className="flex items-center justify-between">
         <Link href="/">
           <ChanhdangLogotype />
-
-          {/* <div className="hidden font-mono text-xs md:flex">
-            &quot;Debugging life, deploying dreams&quot;
-          </div> */}
         </Link>
 
         <div className="flex items-center gap-2">

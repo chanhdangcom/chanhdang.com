@@ -1,11 +1,12 @@
 "use client";
 
-import React, { JSX } from "react";
+import React, { JSX, useRef } from "react";
 import { IntroItem } from "./components/intro-item";
 import Image from "next/image";
 import { Building, Call, Location, Sms } from "iconsax-react";
 import { TypewriterEffect } from "./components/typewriter-effect";
 import dynamic from "next/dynamic";
+import { SpeakerHigh } from "@phosphor-icons/react/dist/ssr";
 
 const RatingButton = dynamic(
   () =>
@@ -68,6 +69,14 @@ const INTRO: IIntroItem[] = [
 ];
 
 export const Overview = () => {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const HandelPlayAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.play();
+    }
+  };
+
   return (
     <div className="relative overflow-hidden border-zinc-200 font-medium shadow-sm dark:border-zinc-800 dark:text-zinc-50 md:border-x">
       <div className="relative aspect-3/1 overflow-hidden before:absolute before:inset-0 before:bg-[image:url(/img/cover.jpg)] before:bg-cover before:bg-center after:absolute after:bottom-0 after:left-0 after:z-[1] after:h-px after:w-full after:bg-white/20">
@@ -90,28 +99,28 @@ export const Overview = () => {
 
       <div className="mb-6 space-x-2 border-zinc-200 px-8 text-3xl dark:border-zinc-800 sm:text-4xl md:text-3xl lg:text-4xl">
         <span className="flex items-center">
-          {/* <div className="absolute left-9 top-[337px] hidden w-full font-mono text-xs text-zinc-400 dark:text-zinc-700 md:block">
-            px-8 text-4xl font-bold
-          </div> */}
-
           <TypewriterEffect words={NAME} className="font-bold" />
 
-          <svg
-            className="text-blue-600"
-            width="0.6em"
-            height="0.6em"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            role="img"
-          >
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M13.3393 0.582135C12.6142 -0.194045 11.3836 -0.194045 10.6584 0.582135L8.88012 2.48429C8.51756 2.8711 8.00564 3.0843 7.47584 3.06515L4.87538 2.97706C3.81324 2.94132 2.94259 3.81197 2.97834 4.87411L3.06642 7.47712C3.0843 8.00691 2.87238 8.51884 2.48429 8.88139L0.582135 10.6584C-0.194045 11.3836 -0.194045 12.6155 0.582135 13.3406L2.48429 15.1189C2.87238 15.4815 3.0843 15.9921 3.06642 16.5232L2.97706 19.1249C2.94259 20.1871 3.81324 21.0577 4.87538 21.022L7.47712 20.9339C8.00691 20.916 8.51884 21.1279 8.88139 21.5148L10.6584 23.4169C11.3848 24.1944 12.6155 24.1944 13.3419 23.4169L15.1202 21.5148C15.4815 21.1279 15.9934 20.9147 16.5232 20.9339L19.1249 21.022C20.1871 21.0577 21.059 20.1871 21.022 19.1249L20.9352 16.5219C20.916 15.9921 21.1292 15.4815 21.516 15.1189L23.4182 13.3406C24.1944 12.6155 24.1944 11.3836 23.4182 10.6584L21.516 8.88012C21.1292 8.51884 20.916 8.00691 20.9352 7.47584L21.022 4.87411C21.059 3.81197 20.1871 2.94132 19.1249 2.97706L16.5232 3.06642C15.9934 3.08302 15.4815 2.8711 15.1189 2.48429L13.3393 0.582135ZM5.91327 12.5402L10.2908 16.9164L17.5458 8.99374L15.8262 7.4018L10.2091 13.5232L7.56393 10.878L5.91327 12.5402Z"
-              fill="currentColor"
-            ></path>
-          </svg>
+          <div className="flex items-center gap-1">
+            <Image
+              src={"/img/Verified-icon.png"}
+              alt="icon"
+              width={300}
+              height={300}
+              className="size-8"
+            />
+
+            <audio ref={audioRef}>
+              <source src="https://cdn.chanhdang.com/ChanhDang-voice.mp3" />
+            </audio>
+
+            <SpeakerHigh
+              size={18}
+              weight="fill"
+              className="cursor-pointer"
+              onClick={() => HandelPlayAudio()}
+            />
+          </div>
         </span>
       </div>
 

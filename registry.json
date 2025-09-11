@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "ncdang",
+  "homepage": "https://chanhdang.com",
+  "items": [
+    {
+      "name": "hello-world",
+      "type": "registry:component",          
+      "title": "Hello World",
+      "description": "A simple hello world component.",
+      "files": [
+        {
+          "path": "src/registry/hello-word/hello-word.tsx",
+          "type": "registry:component"
+        }
+      ]
+    }
+  ]
+}
