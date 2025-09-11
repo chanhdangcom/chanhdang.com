@@ -95,10 +95,10 @@ export const Profile = () => {
         <TailwindStyle useX />
       </div>
 
-      <div className="mx-4 bg-zinc-900 p-1 md:mx-8">
-        <div className="rounded-3xl bg-[#030610] py-4">
+      <div className="mx-4 bg-zinc-100 p-1 dark:bg-zinc-900 md:mx-8">
+        <div className="rounded-3xl border border-zinc-200 bg-zinc-50 bg-[radial-gradient(circle,rgba(0,0,0,0.08)_1px,transparent_1px)] bg-[size:12px_12px] dark:border-zinc-800 dark:bg-[#030610] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.08)_1px,transparent_1px)]">
           <div className="p-2">
-            <div className="relative mx-2 inline-block font-mono text-xl font-semibold hover:underline">
+            <div className="relative m-4 inline-block font-mono text-xl font-semibold hover:underline">
               Components
               {/* 4 lines */}
               <div className="pointer-events-none absolute inset-0">
@@ -114,7 +114,7 @@ export const Profile = () => {
             </div>
           </div>
 
-          <div className="mx-2 mt-2 font-mono text-sm">
+          <div className="mx-2 font-mono text-sm">
             <div className="flex items-center gap-2">
               <PenNib size={20} weight="fill" className="shrink-0" />
               <div className="text-balance">

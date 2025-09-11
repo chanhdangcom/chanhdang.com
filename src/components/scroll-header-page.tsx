@@ -21,7 +21,7 @@ export const ScrollHeaderPage = () => {
     >
       <ChevronsUpIcon
         onClick={scrollToTop}
-        className="size-10 cursor-pointer rounded-full border bg-zinc-900 p-2 text-zinc-50 shadow-sm hover:bg-zinc-700 dark:border-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
+        className="size-10 cursor-pointer rounded-full border border-white/10 bg-zinc-900 p-2 text-zinc-50 shadow-sm hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
       />
     </motion.header>
   );
