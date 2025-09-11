@@ -8,7 +8,7 @@ export function BlogList({ posts }: { posts: IPost[] }) {
         {posts.map((post, key) => {
           return (
             <div key={key} className="snap-start">
-              <BlogListItem post={post} />
+              {key < 4 && <BlogListItem post={post} />}
             </div>
           );
         })}
