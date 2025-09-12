@@ -20,13 +20,10 @@ export const ThemeItem = ({
 
   return (
     <button
-      className={cn(
-        "flex size-8 items-center justify-center rounded-full text-zinc-400 dark:text-zinc-500",
-        {
-          "bg-zinc-200/50 text-zinc-950 dark:bg-zinc-800 dark:text-zinc-50":
-            isActive,
-        }
-      )}
+      className={cn("flex size-8 items-center justify-center rounded-full", {
+        "bg-zinc-200/50 text-zinc-950 dark:bg-zinc-800 dark:text-zinc-50":
+          isActive,
+      })}
       onClick={handleClick}
     >
       {themeIcon}
