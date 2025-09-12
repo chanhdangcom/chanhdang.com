@@ -11,8 +11,9 @@ export function ComponentList() {
       </div>
 
       <div className="mt-2 rounded-[16px] border border-zinc-200 bg-zinc-50 bg-[radial-gradient(circle,rgba(0,0,0,0.08)_1px,transparent_1px)] bg-[size:12px_12px] p-2 font-mono text-sm dark:border-zinc-800 dark:bg-[#030610] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.08)_1px,transparent_1px)]">
-        <div className="flex items-center gap-2">
-          <PenNib size={20} weight="fill" className="shrink-0" />
+        <div className="flex items-start gap-2">
+          <PenNib size={20} weight="fill" className="mt-1 shrink-0" />
+
           <div className="text-balance">
             Here you’ll find a growing set of UI components that I’ve created to
             share with the community. Each component can be installed directly
