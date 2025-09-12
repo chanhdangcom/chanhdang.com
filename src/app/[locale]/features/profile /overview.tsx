@@ -93,7 +93,7 @@ export const Overview = () => {
         />
       </div>
 
-      <div className="mb-6 space-x-2 border-zinc-200 pl-8 pr-6 text-3xl dark:border-zinc-800 sm:text-4xl md:text-3xl lg:text-4xl">
+      <div className="mb-6 space-x-2 border-zinc-200 pl-8 text-3xl dark:border-zinc-800 sm:text-4xl md:text-3xl lg:text-4xl">
         <span className="flex items-center">
           <TypewriterEffect words={NAME} className="font-bold" />
 
