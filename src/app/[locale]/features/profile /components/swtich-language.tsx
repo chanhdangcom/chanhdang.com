@@ -6,7 +6,7 @@ export function SwitchLanguage() {
   const locale = useLocale();
 
   return (
-    <div className="rounded-3xl border p-1 pr-2 font-mono dark:border-zinc-700">
+    <div className="rounded-3xl border p-1 pr-2 font-mono dark:border-zinc-800">
       {locale == "en" ? (
         <Link href={"/vi"} className="flex items-center gap-1">
           <Image
