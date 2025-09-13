@@ -1,144 +1,126 @@
-import { Hello } from "./components/hello";
-import { AboutMe } from "./about-me";
+import { TeckLish } from "@/components/teck-lish";
+import { HeaderMotion } from "./components/header-motion";
+import { FinalBlog } from "./final-blog";
+import { Footer } from "./footer";
 import { Header } from "./header";
 import { Overview } from "./overview";
-import { ExperienceList } from "./experience-list";
-import { Confetti } from "./components/confetti";
-
-import { SectionBlog } from "./section-blog";
-
 import { ScrollHeaderPage } from "@/components/scroll-header-page";
-import { HeaderMotion } from "./components/header-motion";
-
-import { PhotoListAnimate } from "./photo-list-animate";
-import { TailwindStyle } from "./components/taiwind-style";
-import { TableRanking } from "@/features/music/table-ranking";
-import { Footer } from "./footer";
+import { TextHoverEffect } from "@/components/ui/text-hover-effect";
+import { SocialItem } from "./components/social-item";
 import { ComponentList } from "./component-list";
-import { DrawerBlog } from "./drawer-blog";
-import Link from "next/link";
+import { WorkExperience } from "./work-experience";
+import { ChanhdangMusicList } from "./chanhdang-music-list";
 
 export const Profile = () => {
   return (
     <div>
-      <TailwindStyle />
-
-      <div className="mx-4 md:mx-8">
-        <div className="border-x border-zinc-200 py-2 dark:border-zinc-800">
-          <Header />
-        </div>
+      <div>
+        <div className="fixed left-0 h-screen w-px bg-zinc-200 dark:bg-zinc-800 md:left-48" />
+        <div className="fixed right-0 h-screen w-px bg-zinc-200 dark:bg-zinc-800 md:right-48" />
 
         <HeaderMotion />
 
-        <div className="relative top-0 hidden h-[1px] w-full bg-zinc-200 dark:bg-zinc-800 md:block"></div>
+        <ScrollHeaderPage />
 
-        <div className="w-full">
-          <>
-            <div className="h-full border border-zinc-200 bg-zinc-50 bg-[radial-gradient(circle,rgba(0,0,0,0.08)_1px,transparent_1px)] bg-[size:12px_12px] dark:border-zinc-800 dark:bg-[#030610] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.08)_1px,transparent_1px)] md:hidden">
-              <Hello className="my-8" />
+        <div className="mx-0 border border-zinc-300 p-2 dark:border-zinc-800 md:mx-48">
+          <Header />
+        </div>
+
+        <div className="hidden h-80 items-center justify-center pt-12 md:flex">
+          <TextHoverEffect text="DANG" />
+        </div>
+
+        <div className="space-y-8 md:my-0">
+          <div>
+            <div className="pointer-events-none top-0 mx-4 font-mono text-xs text-zinc-500 md:mx-48">
+              text-5xl text-balance tracking-tight
             </div>
-          </>
 
-          <div className="space-y-8">
-            <div className="min-h-[calc(100px-60px)] items-center space-y-8 md:flex md:space-y-0">
-              <div className="justify-between border-r border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 md:flex">
-                <div className="border-b border-l border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-[#030610] md:w-1/3 md:rounded-none md:border-none">
-                  <Overview />
-                </div>
+            <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
 
-                <div className="bg-zinc-100 p-2 dark:bg-zinc-900 md:w-2/3">
-                  <div className="h-full rounded-3xl border border-zinc-200 bg-zinc-50 bg-[radial-gradient(circle,rgba(0,0,0,0.08)_1px,transparent_1px)] bg-[size:12px_12px] dark:border-zinc-800 dark:bg-[#030610] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.08)_1px,transparent_1px)]">
-                    <div className="md:mt-20">
-                      <AboutMe />
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div className="mx-4 text-balance font-mono text-4xl font-semibold leading-tight tracking-tight md:mx-48">
+              <>Turning bold ideas into cutting edge web experiences.</>
             </div>
+
+            <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
           </div>
 
-          <div className="hidden md:block">
-            <TailwindStyle useX />
+          <div>
+            <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
+
+            <div className="mx-0 md:mx-48">
+              <TeckLish />
+            </div>
+
+            <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
           </div>
 
-          <div className="relative justify-between rounded-3xl md:flex">
-            <div className="absolute left-1/2 top-0 hidden h-full w-[1px] bg-zinc-200 dark:bg-zinc-800 md:flex" />
-            <div className="absolute left-1/2 top-0 hidden h-full w-[1px] bg-zinc-200 dark:bg-zinc-800 md:flex" />
+          <div className="">
+            <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
 
-            <TailwindStyle useX />
-
-            <div className="bg-[radial-gradient(circle,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:12px_12px] md:w-1/2">
-              <ExperienceList />
+            <div className="mx-4 text-balance font-mono text-xl md:mx-48">
+              I don’t just code, I craft.
             </div>
 
-            <div className="bg-zinc-100 dark:bg-zinc-900 md:w-1/2">
-              <div className="m-2 rounded-3xl border border-zinc-200 bg-zinc-50 bg-[radial-gradient(circle,rgba(0,0,0,0.08)_1px,transparent_1px)] bg-[size:12px_12px] dark:border-zinc-800 dark:bg-[#030610] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.08)_1px,transparent_1px)]">
-                <PhotoListAnimate />
-              </div>
-
-              <TailwindStyle useX />
-
-              <div className="m-2 rounded-[28px] border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-[#030610]">
-                <div className="text-3xl font-semibold">
-                  <Link href={"/music"} className="">
-                    <div className="m-2 rounded-[40px] border border-zinc-200 px-4 py-2 text-2xl font-semibold dark:border-zinc-800">
-                      ChanhDang Music
-                    </div>
-                  </Link>
-                </div>
-
-                <div className="m-2 rounded-3xl border border-zinc-200 bg-zinc-50 bg-[radial-gradient(circle,rgba(0,0,0,0.08)_1px,transparent_1px)] bg-[size:12px_12px] dark:border-zinc-800 dark:bg-[#030610] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.08)_1px,transparent_1px)]">
-                  <TableRanking none />
-                </div>
-              </div>
-
-              <TailwindStyle useX />
-
-              <div className="m-2 rounded-[32px] border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-[#030610]">
-                <div className="m-2 rounded-[40px] border border-zinc-200 px-4 py-2 text-2xl font-semibold dark:border-zinc-800">
-                  <div className="flex items-center justify-between">
-                    <div>Blogs</div>
-
-                    <div className="text-base font-normal underline">
-                      <DrawerBlog />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="m-2">
-                  <SectionBlog />
-                </div>
-              </div>
-            </div>
+            <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
           </div>
         </div>
-      </div>
 
-      <div className="mx-4 md:mx-8">
-        <TailwindStyle useX />
-      </div>
+        <div className="mt-8">
+          <div className="h-px w-full bg-zinc-200 dark:bg-zinc-800 md:top-0" />
 
-      <div className="mx-4 bg-zinc-100 p-2 dark:bg-zinc-900 md:mx-8">
-        <div className="rounded-3xl border border-zinc-200 bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-[#030610]">
+          <div className="mx-0 items-center justify-center md:mx-48 md:flex">
+            <div className="w-full max-w-xl">
+              <Overview />
+            </div>
+
+            <div className="w-full space-y-4">
+              <SocialItem
+                scrImg="img/tech-stack/github.webp"
+                title="Github"
+                accountName="chanhdangcom"
+                link="https://github.com/chanhdangcom"
+              />
+              <SocialItem
+                scrImg="img/tech-stack/youtube.webp"
+                title="Youtube"
+                accountName="@nguyenchanhdang"
+                link="https://www.youtube.com/@angnguyenchanh5942"
+              />
+              <SocialItem
+                scrImg="img/tech-stack/zalo.webp"
+                title="Zalo"
+                accountName="0799.979.382"
+              />
+              <SocialItem
+                scrImg="img/tech-stack/linkedin.webp"
+                title="LinkedIn"
+                accountName="@ncdang"
+              />
+            </div>
+          </div>
+
+          <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
+        </div>
+
+        <div className="my-8">
+          <WorkExperience />
+        </div>
+
+        <div className="my-8">
+          <ChanhdangMusicList />
+        </div>
+
+        <div className="my-8">
+          <FinalBlog />
+        </div>
+
+        <div className="">
           <ComponentList />
         </div>
-      </div>
 
-      <div className="mx-4 md:mx-8">
-        <TailwindStyle useX />
-      </div>
-
-      <div className="bg-zinc-50 dark:bg-[#030610]">
         <Footer />
       </div>
-
-      <div className="relative bottom-0 h-[1px] w-full bg-zinc-200 dark:bg-zinc-800"></div>
-
-      <div className="m-8">
-        <ScrollHeaderPage />
-      </div>
-
-      <Confetti />
     </div>
   );
 };

@@ -86,7 +86,7 @@ const ITechStackItem = [
 
 export const TechStack = () => {
   return (
-    <div className="flex justify-center p-4">
+    <div className="w-fit">
       <FloatingDock items={ITechStackItem} />
     </div>
   );

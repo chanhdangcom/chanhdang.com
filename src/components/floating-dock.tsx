@@ -46,7 +46,7 @@ const FloatingDockMobile = ({
       <motion.div
         layoutId="nav"
         className={cn(
-          "flex flex-wrap justify-center gap-4 rounded-2xl border border-zinc-200 bg-zinc-50 p-4 shadow-sm dark:border-zinc-900 dark:bg-zinc-900/50",
+          "flex flex-wrap justify-center gap-4 p-4 shadow-sm",
           className
         )}
         style={{ maxWidth: "100%" }}
@@ -74,7 +74,7 @@ const FloatingDockDesktop = ({
       onMouseMove={(e) => mouseX.set(e.pageX)}
       onMouseLeave={() => mouseX.set(Infinity)}
       className={cn(
-        "sm:text-bl mx-auto hidden h-16 items-end gap-4 text-balance rounded-2xl border-zinc-400 bg-zinc-50 px-4 pb-3 shadow-sm dark:bg-zinc-900/50 xl:flex",
+        "sm:text-bl mx-auto hidden h-16 items-end gap-4 text-balance border-zinc-400 bg-zinc-50 px-4 pb-3 shadow-sm dark:bg-zinc-950 xl:flex",
         className
       )}
     >
@@ -157,7 +157,7 @@ function IconContainer({
               initial={{ opacity: 0, y: 10, x: "-50%" }}
               animate={{ opacity: 1, y: 0, x: "-50%" }}
               exit={{ opacity: 0, y: 2, x: "-50%" }}
-              className="absolute -top-8 left-1/2 w-fit -translate-x-1/2 whitespace-pre rounded-md border border-gray-200 bg-gray-100 px-2 py-0.5 text-xs text-neutral-700 dark:border-neutral-900 dark:bg-neutral-800 dark:text-white"
+              className="absolute -top-8 left-1/2 w-fit -translate-x-1/2 whitespace-pre rounded-md border border-gray-200 bg-gray-100 px-2 py-0.5 text-xs text-neutral-700 dark:border-neutral-800 dark:bg-neutral-800 dark:text-white"
             >
               {title}
             </motion.div>

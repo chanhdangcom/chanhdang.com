@@ -1,10 +1,11 @@
 import React, { JSX } from "react";
 import { ExperienceInfoItem } from "./experience-info-item";
-import { BriefcaseBusinessIcon } from "lucide-react";
+
 import { Ping } from "@/components/ping";
 import { TechStudiesItem } from "@/components/tech-studies-item";
 
 import ReactMarkdown from "react-markdown";
+import { Bag } from "@phosphor-icons/react/dist/ssr";
 
 type IProps = {
   time: string;
@@ -43,7 +44,7 @@ export const ExperienceItem = ({
 
       <div className="relative z-[2] mb-2 text-lg font-semibold">
         <ExperienceInfoItem
-          icon={jobIcon || <BriefcaseBusinessIcon size="1em" />}
+          icon={jobIcon || <Bag size={32} weight="fill" className="" />}
           content={company}
           extra={isWorking && <Ping />}
         />

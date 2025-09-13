@@ -15,7 +15,12 @@ export const CodeTag = ({
   shortTag = false,
 }: IProps) => {
   return (
-    <span className={cn("inline-flex font-mono text-cyan-400", className)}>
+    <span
+      className={cn(
+        "inline-flex font-mono font-semibold text-cyan-400",
+        className
+      )}
+    >
       <span className="dark:text-zinc-50">{isCloseTag ? "</" : "<"}</span>
       <span>{tagName}</span>
       <span className="dark:text-zinc-50">{shortTag ? "/>" : ">"}</span>

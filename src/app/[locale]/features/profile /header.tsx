@@ -37,7 +37,15 @@ export const Header = () => {
           <ChanhdangLogotype />
         </Link>
 
+        <div className="hidden items-center gap-6 font-mono text-sm font-semibold md:flex">
+          <div>Daifolio</div>
+          <div>Blogs</div>
+          <div>Components</div>
+        </div>
+
         <div className="flex items-center gap-2">
+          <SwitchTheme />
+
           <SwitchLanguage />
 
           <Link
@@ -55,8 +63,6 @@ export const Header = () => {
               className="size-6"
             />
           </Link>
-
-          <SwitchTheme />
         </div>
       </div>
     </>

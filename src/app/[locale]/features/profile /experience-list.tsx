@@ -2,8 +2,9 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { ExperienceItem } from "./components/experience-item";
-import { GraduationCapIcon, SchoolIcon } from "lucide-react";
+import { SchoolIcon } from "lucide-react";
 import { CodeTag } from "@/components/code-tag";
+import { Student } from "phosphor-react";
 
 type IExperienceItem = {
   time: string;
@@ -92,12 +93,6 @@ export const ExperienceList = () => {
           />
         </div>
 
-        <>
-          <div className="relative top-0 h-[1px] w-full bg-zinc-200 dark:bg-zinc-800"></div>
-          <div className="flex h-4 w-full bg-[image:repeating-linear-gradient(315deg,_var(--pattern-foreground)_0,_var(--pattern-foreground)_1px,_transparent_0,_transparent_50%)] bg-[size:10px_10px] [--pattern-foreground:#e4e4e7] dark:[--pattern-foreground:#27272a] md:h-8" />
-          <div className="relative bottom-0 h-[1px] w-full bg-zinc-200 dark:bg-zinc-800"></div>
-        </>
-
         <div className="p-2">
           <CodeTag
             tagName="Education"
@@ -113,7 +108,7 @@ export const ExperienceList = () => {
                   company={item.company}
                   companyIcon={<SchoolIcon size="1em" />}
                   jobTitle={item.jobTitle}
-                  jobIcon={<GraduationCapIcon size="1em" />}
+                  jobIcon={<Student size={32} weight="fill" className="" />}
                   contentMarkdown={item.contentMarkdown}
                   content={item.content}
                   skills={item.skills}

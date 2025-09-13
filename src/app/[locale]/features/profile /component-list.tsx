@@ -1,65 +1,39 @@
-/* eslint-disable @next/next/no-img-element */
-import { ArrowRight, PenNib } from "@phosphor-icons/react/dist/ssr";
+import { ComponentListItem } from "./components/component-list-item";
 
 export function ComponentList() {
   return (
     <>
-      <div className="">
-        <div className="rounded-[16px] border border-zinc-200 px-4 py-2 text-2xl font-semibold dark:border-zinc-800">
-          Components
+      <div className="mb-8">
+        <div className="top-0 mx-4 font-mono text-xs text-zinc-500 md:mx-48">
+          text-4xl pb-8 pt-12
+        </div>
+
+        <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
+
+        <div className="mx-4 flex text-balance font-mono text-4xl font-semibold leading-tight tracking-tight md:mx-48">
+          <div>Component.</div>
+        </div>
+
+        <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
+      </div>
+
+      <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
+
+      <div className="mx-0 md:mx-48">
+        <div className="mx-4 mt-4 text-balance font-mono">
+          A collection of reusable components.
+        </div>
+
+        <div className="mb-8 mt-4">
+          <ComponentListItem title="Hello-world" />
+
+          <ComponentListItem title="Dynamic-island" />
+
+          <ComponentListItem title="Switch-theme" />
         </div>
       </div>
 
-      <div className="mt-2 rounded-[16px] border border-zinc-200 bg-zinc-50 bg-[radial-gradient(circle,rgba(0,0,0,0.08)_1px,transparent_1px)] bg-[size:12px_12px] p-2 font-mono text-sm dark:border-zinc-800 dark:bg-[#030610] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.08)_1px,transparent_1px)]">
-        <div className="flex items-start gap-2">
-          <PenNib size={20} weight="fill" className="mt-1 shrink-0" />
-
-          <div className="text-balance">
-            Here you’ll find a growing set of UI components that I’ve created to
-            share with the community. Each component can be installed directly
-            into your project with one simple command, giving you ready-to-use
-            building blocks that save time and keep your UI consistent.
-          </div>
-        </div>
-
-        <div className="my-4 space-y-4">
-          <div className="flex items-center gap-2">
-            <ArrowRight size={20} />
-
-            <img
-              src="/img/tech-stack/react.svg"
-              alt="icon"
-              className="size-6"
-            />
-
-            <div className="hover:underline">Hello-Word</div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <ArrowRight size={20} />
-
-            <img
-              src="/img/tech-stack/react.svg"
-              alt="icon"
-              className="size-6"
-            />
-
-            <div className="hover:underline">Dynamic-Island</div>
-          </div>
-
-          <div className="mb-2 flex items-center gap-2">
-            <ArrowRight size={20} />
-
-            <img
-              src="/img/tech-stack/react.svg"
-              alt="icon"
-              className="size-6"
-            />
-
-            <div className="hover:underline">Switch-Theme</div>
-          </div>
-        </div>
-      </div>
+      <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
     </>
   );
 }
