@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/[locale]/features/profile /components/pixelated-canvas.jsx", "src/app/[locale]/features/profile /components/pixelated-canvas.js"],
   "exclude": ["node_modules"]
 }

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useAudio } from "@/components/music-provider";
 import { MUSICS } from "@/features/music/data/music-page";
 import { CardSpotlight } from "@/components/ui/card-spotlight";
+import { cn } from "@/lib/utils";
 
 export function ChanhdangMusicList() {
   const { handlePlayAudio } = useAudio();
@@ -32,13 +33,22 @@ export function ChanhdangMusicList() {
                 {index < 8 && (
                   <CardSpotlight onClick={() => handlePlayAudio(music)}>
                     <div className="w-full gap-4 space-y-2 p-4">
-                      <Image
-                        width={100}
-                        height={100}
-                        src={music.cover}
-                        alt={music.title}
-                        className="mt-1 h-auto w-full rounded-lg border border-dashed object-cover object-top shadow-sm dark:border-zinc-800"
-                      />
+                      <div className="relative">
+                        <Image
+                          width={100}
+                          height={100}
+                          src={music.cover}
+                          alt={music.title}
+                          className="d mt-1 h-auto w-full rounded-xl object-cover object-top"
+                        />
+
+                        <div
+                          className={cn(
+                            "pointer-events-none absolute inset-0 rounded-xl",
+                            "ring-1 ring-inset ring-black/10 dark:ring-white/10"
+                          )}
+                        />
+                      </div>
 
                       <div className="leading-6">
                         <h3 className="text-left text-lg font-semibold text-zinc-800 dark:text-zinc-200">
