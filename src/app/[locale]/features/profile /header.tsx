@@ -37,10 +37,13 @@ export const Header = () => {
           <ChanhdangLogotype />
         </Link>
 
-        <div className="hidden items-center gap-6 font-mono text-sm font-semibold md:flex">
-          <div>Daifolio</div>
-          <div>Blogs</div>
-          <div>Components</div>
+        <div className="hidden items-center gap-6 font-mono text-sm md:flex">
+          <div className="hover:underline">Daifolio</div>
+          <Link href="/music" className="hover:underline">
+            Musics
+          </Link>
+          <div className="hover:underline">Blogs</div>
+          <div className="hover:underline">Components</div>
         </div>
 
         <div className="flex items-center gap-2">

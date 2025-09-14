@@ -7,11 +7,9 @@ import { Moon, Sun } from "phosphor-react";
 
 export const SwitchTheme = () => {
   const [isMounted, setIsMounted] = useState(false);
-
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, systemTheme } = useTheme();
 
   const [isDark, setIsDark] = useState<boolean>();
-
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const handlePlayAudio = () => {
@@ -20,9 +18,18 @@ export const SwitchTheme = () => {
     }
   };
 
+  // Mount xong mới render (fix hydration issue của next-themes)
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  // Khi theme thay đổi (hoặc mount), cập nhật isDark
+  useEffect(() => {
+    if (!isMounted) return;
+
+    const current = theme === "system" ? systemTheme : theme;
+    setIsDark(current === "dark");
+  }, [theme, systemTheme, isMounted]);
 
   if (!isMounted) {
     return null;
@@ -37,7 +44,8 @@ export const SwitchTheme = () => {
       {isDark ? (
         <div
           onClick={() => {
-            setIsDark(!isDark);
+            setIsDark(false);
+            setTheme("light");
             handlePlayAudio();
           }}
         >
@@ -51,7 +59,8 @@ export const SwitchTheme = () => {
       ) : (
         <div
           onClick={() => {
-            setIsDark(!isDark);
+            setIsDark(true);
+            setTheme("dark");
             handlePlayAudio();
           }}
         >
