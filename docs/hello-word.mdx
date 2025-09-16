@@ -1,0 +1,68 @@
+---
+title: Hello World
+description: A theme switcher component for Next.js apps with next-themes and Tailwind CSS, supporting system, light, and dark modes.
+image: https://assets.chanhdai.com/images/blog/theme-switcher-component.webp
+category: components
+createdAt: 2025-04-11
+updatedAt: 2025-04-11
+---
+
+<TabPreView
+  preview={<Hello />}
+  code={`import { ThemeSwitcher } from "@/components/theme-switcher";
+
+    export function ThemeSwitcherDemo() {
+      return <ThemeSwitcher />;
+    } `}
+language="tsx"
+/>
+
+## Installation
+
+<TabGroup>
+  <TabPanel value="preview">
+      <TabInstall
+        pnpmCode="pnpm install next-themes lucide-react motion clsx tailwind-merge"
+        yarnCode="yarn install next-themes lucide-react motion clsx tailwind-merge"
+        npmCode="npm install next-themes lucide-react motion clsx tailwind-merge"
+        bunCode="bun install next-themes lucide-react motion clsx tailwind-merge"
+        language="bash"
+      />
+  </TabPanel>
+
+  <TabPanel value="code">
+    ### 1. Install the following dependencies 
+    <CodeBlock code={`import type { ClassValue } from "clsx";
+
+            import { clsx } from "clsx";
+            import { twMerge } from "tailwind-merge";
+
+            export const cn = (...inputs: ClassValue[]) => {
+              return twMerge(clsx(inputs));
+            };`}/>
+
+    ### 2. Add a cn helper
+   <CodeBlock code={`import type { ClassValue } from "clsx";
+
+            import { clsx } from "clsx";
+            import { twMerge } from "tailwind-merge";
+
+            export const cn = (...inputs: ClassValue[]) => {
+              return twMerge(clsx(inputs));
+            };`}/>
+  </TabPanel>
+</TabGroup>
+
+## Usage
+
+<CodeBlock
+  code={`import { ThemeSwitcher } from "@/components/theme-switcher";`}
+/>
+<CodeBlock code={`<ThemeSwitcher />`} />
+
+## References
+
+- https://ui.shadcn.com/docs/registry
+- https://ui.shadcn.com/docs/dark-mode/next
+- https://github.com/pacocoursey/next-themes
+- https://motion.dev/docs/react-motion-component

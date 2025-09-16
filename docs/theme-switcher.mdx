@@ -14,8 +14,7 @@ updatedAt: 2025-04-11
     export function ThemeSwitcherDemo() {
       return <ThemeSwitcher />;
     } `}
-
-  language="tsx"
+language="tsx"
 />
 
 ## Installation
@@ -31,7 +30,6 @@ updatedAt: 2025-04-11
       />
   </TabPanel>
 
-
   <TabPanel value="code">
     ### 1. Install the following dependencies 
     <CodeBlock code={`import type { ClassValue } from "clsx";
@@ -42,8 +40,8 @@ updatedAt: 2025-04-11
             export const cn = (...inputs: ClassValue[]) => {
               return twMerge(clsx(inputs));
             };`}/>
-  
-  ### 2. Add a cn helper
+
+    ### 2. Add a cn helper
    <CodeBlock code={`import type { ClassValue } from "clsx";
 
             import { clsx } from "clsx";
@@ -57,16 +55,14 @@ updatedAt: 2025-04-11
 
 ## Usage
 
-  <CodeBlock code={`import { ThemeSwitcher } from "@/components/theme-switcher";`}/>
-
-
- <CodeBlock code={`<ThemeSwitcher />`}/>
-
-       
+<CodeBlock
+  code={`import { ThemeSwitcher } from "@/components/theme-switcher";`}
+/>
+<CodeBlock code={`<ThemeSwitcher />`} />
 
 ## References
+
 - https://ui.shadcn.com/docs/registry
 - https://ui.shadcn.com/docs/dark-mode/next
 - https://github.com/pacocoursey/next-themes
 - https://motion.dev/docs/react-motion-component
-

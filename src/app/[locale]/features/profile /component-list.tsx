@@ -24,12 +24,18 @@ export function ComponentList() {
           A collection of reusable components.
         </div>
 
-        <div className="mb-8 mt-4">
-          <ComponentListItem title="Hello-world" />
+        <div className="mb-8 mt-4 border-t border-dashed border-zinc-200 dark:border-zinc-800">
+          <ComponentListItem
+            title="Hello-world"
+            slug="/components/hello-word.mdx"
+          />
 
           <ComponentListItem title="Dynamic-island" />
 
-          <ComponentListItem title="Switch-theme" />
+          <ComponentListItem
+            title="Switch-theme"
+            slug="/components/theme-switcher.mdx"
+          />
         </div>
       </div>
 

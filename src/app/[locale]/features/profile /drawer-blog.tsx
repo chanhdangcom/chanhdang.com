@@ -34,7 +34,6 @@ export async function DrawerBlog() {
                 <div className="absolute bottom-[-10px] right-0 top-[-10px] w-px bg-zinc-300 dark:bg-zinc-800"></div>
               </div>
             </div> */}
-
             <div className="">All Posts</div>
           </DrawerTrigger>
         </HoverCardTrigger>

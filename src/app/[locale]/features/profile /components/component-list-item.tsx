@@ -1,14 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 import { CardSpotlight } from "@/components/ui/card-spotlight";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
 
 type IProp = {
   title: string;
+  slug?: string;
 };
 
-export function ComponentListItem({ title }: IProp) {
+export function ComponentListItem({ title, slug }: IProp) {
   return (
-    <>
+    <Link href={slug || ""}>
       <CardSpotlight>
         <div className="flex items-center gap-2 p-4">
           <ArrowRight size={20} />
@@ -18,6 +20,6 @@ export function ComponentListItem({ title }: IProp) {
           <div className="font-mono text-sm hover:underline">{title}</div>
         </div>
       </CardSpotlight>
-    </>
+    </Link>
   );
 }

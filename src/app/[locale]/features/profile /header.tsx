@@ -16,7 +16,6 @@ export const Header = () => {
   useEffect(() => setMounted(true), []);
 
   if (!mounted) {
-    // tránh mismatch: render placeholder hoặc hình mặc định
     return (
       <img
         src="/img/tech-stack/github-mark.svg"
@@ -38,12 +37,21 @@ export const Header = () => {
         </Link>
 
         <div className="hidden items-center gap-6 font-mono text-sm md:flex">
-          <div className="hover:underline">Daifolio</div>
+          <Link href="/" className="hover:underline">
+            Daifolio
+          </Link>
+
           <Link href="/music" className="hover:underline">
             Musics
           </Link>
-          <div className="hover:underline">Blogs</div>
-          <div className="hover:underline">Components</div>
+
+          <Link href="/blog" className="hover:underline">
+            Blogs
+          </Link>
+
+          <Link href="/components" className="hover:underline">
+            Components
+          </Link>
         </div>
 
         <div className="flex items-center gap-2">
