@@ -17,7 +17,7 @@ export function SwitchLanguage() {
             className="size-6 shrink-0 rounded-full bg-cover"
           />
 
-          <div className="text-sm">VIE</div>
+          <div className="text-xs">VIE</div>
         </Link>
       ) : (
         <Link href={"/en"} className="flex items-center gap-1">
