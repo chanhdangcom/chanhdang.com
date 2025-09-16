@@ -29,7 +29,7 @@ export function BlogListItem({ post }: { post: IPost }) {
             {new Date(post.createdAt).toLocaleDateString("vi-VN")}
           </div>
 
-          <div className="z-20 font-apple text-base font-semibold hover:underline">
+          <div className="z-20 font-sans text-base font-semibold hover:underline">
             {post.title}
           </div>
         </div>

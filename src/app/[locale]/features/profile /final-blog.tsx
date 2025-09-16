@@ -11,7 +11,7 @@ export function FinalBlog() {
       <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
 
       <div className="mx-4 flex items-center justify-between text-balance font-mono text-4xl font-semibold leading-tight tracking-tight md:mx-48">
-        <div>Blogs.</div>
+        <div>Blogs</div>
 
         <div className="text-base font-normal hover:underline">
           <DrawerBlog />

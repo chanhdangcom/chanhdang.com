@@ -53,11 +53,11 @@ export function ComponentPage({ slug }: { slug: string }) {
       </div>
 
       <div className="prose prose-base prose-zinc mx-2 max-w-none font-sans text-foreground dark:prose-invert prose-h2:my-4 prose-h2:border-b prose-h2:border-zinc-300 prose-h2:pb-2 prose-h3:my-2 prose-a:font-mono prose-ul:font-mono prose-ul:text-sm prose-ul:text-zinc-500 dark:prose-h2:border-zinc-800 md:mx-48">
-        <div className="mx-2 text-balance p-4 font-mono text-base text-zinc-400 md:mx-40">
+        <div className="m-4 text-balance font-mono text-base text-zinc-400 md:mx-40">
           {data.description ?? "Untitled"}
         </div>
 
-        <div className="px-4 md:px-40">
+        <div className="px-2 md:px-40">
           <MDXRemote source={content} components={components} />
         </div>
       </div>

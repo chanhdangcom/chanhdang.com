@@ -54,7 +54,7 @@ export function TabInstall({
         </div>
 
         {/* Tabs content */}
-        <TabsContent value="pnpm ">
+        <TabsContent value="pnpm">
           <CodeBlock code={pnpmCode || ""} language={language} />
         </TabsContent>
 
