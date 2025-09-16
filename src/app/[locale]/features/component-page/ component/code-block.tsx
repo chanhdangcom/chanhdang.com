@@ -31,8 +31,8 @@ export default function CodeBlock({ code, language = "tsx" }: CodeBlockProps) {
   const style = theme === "light" ? oneLight : atomDark;
 
   return (
-    <div className="not-prose mt-2 rounded-2xl border bg-[#F5F2F0] dark:border-zinc-700 dark:bg-[#1e1e1e]">
-      <div className="flex h-auto items-center">
+    <div className="mt-2 rounded-2xl border bg-[#F5F2F0] dark:border-zinc-700 dark:bg-[#1e1e1e]">
+      <div className="flex items-center">
         <div
           className={`relative w-full overflow-hidden rounded-2xl ${bg} flex items-start justify-between`}
         >
@@ -40,12 +40,7 @@ export default function CodeBlock({ code, language = "tsx" }: CodeBlockProps) {
             {code}
           </SyntaxHighlighter>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleCopy}
-            className="mt-3"
-          >
+          <Button variant="ghost" size="sm" onClick={handleCopy} className="">
             {copied ? (
               <Check className="size-3" />
             ) : (

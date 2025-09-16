@@ -26,7 +26,6 @@ const components = {
 };
 
 export function ComponentPage({ slug }: { slug: string }) {
-  // dùng slug để map tới file mdx
   const filePath = join(process.cwd(), "docs", `${slug}`);
 
   const fileContent = readFileSync(filePath, "utf8");
@@ -57,6 +56,7 @@ export function ComponentPage({ slug }: { slug: string }) {
         <div className="mx-2 text-balance p-4 font-mono text-base text-zinc-400 md:mx-40">
           {data.description ?? "Untitled"}
         </div>
+
         <div className="px-4 md:px-40">
           <MDXRemote source={content} components={components} />
         </div>

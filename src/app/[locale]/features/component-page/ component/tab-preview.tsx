@@ -4,9 +4,9 @@ import CodeBlock from "@/app/[locale]/features/component-page/ component/code-bl
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type TabPreViewProps = {
-  preview: React.ReactNode; // component hiển thị ở tab Preview
-  code: string; // code string cho tab Code
-  language?: string; // ngôn ngữ code (mặc định "tsx")
+  preview: React.ReactNode;
+  code: string;
+  language?: string;
 };
 
 export function TabPreView({
@@ -42,11 +42,6 @@ export function TabPreView({
         </TabsContent>
 
         <TabsContent value="code">
-          {/* <div className="mt-2 rounded-2xl border dark:border-zinc-800 dark:dark:bg-[#1D1F21]">
-            <div className="flex h-auto items-center">
-              <CodeBlock code={code} language={language} />
-            </div>
-          </div> */}
           <CodeBlock code={code} language={language} />
         </TabsContent>
       </Tabs>

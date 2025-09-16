@@ -1,9 +1,10 @@
 import { ComponentPage } from "@/app/[locale]/features/component-page/component-page";
 
 type Props = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
-export default function ComponentSlugPage({ params }: Props) {
-  return <ComponentPage slug={params.slug} />;
+export default async function ComponentSlugPage({ params }: Props) {
+  const resolvedParams = await params;
+  return <ComponentPage slug={resolvedParams.slug} />;
 }
