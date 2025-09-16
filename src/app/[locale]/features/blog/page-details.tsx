@@ -35,7 +35,9 @@ export const PageDetails = ({ slug }: IProps) => {
 
   return (
     <div>
-      <div className="container">{post !== null && <PostContent post={post} />}</div>
+      <div className="container">
+        {post !== null && <PostContent post={post} />}
+      </div>
     </div>
   );
 };

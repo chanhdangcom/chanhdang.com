@@ -65,6 +65,7 @@
     "react": "^19.0.0",
     "react-confetti": "^6.2.2",
     "react-dom": "^19.0.0",
+    "react-element-to-jsx-string": "^17.0.1",
     "react-howler": "^5.2.0",
     "react-i18next": "^15.6.1",
     "react-live-island": "^0.10.0",

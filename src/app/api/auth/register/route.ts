@@ -12,7 +12,10 @@ export async function POST(request: Request) {
     const db = client.db("musicdb");
     const existing = await db.collection("users").findOne({ username });
     if (existing) {
-      return NextResponse.json({ error: "Tài khoản đã tồn tại" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Tài khoản đã tồn tại" },
+        { status: 400 }
+      );
     }
     const hash = await bcrypt.hash(password, 10);
     await db.collection("users").insertOne({

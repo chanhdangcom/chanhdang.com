@@ -1,16 +1,14 @@
 "use client";
 
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CodeBlock from "./code-block";
-
 
 type TabPreViewProps = {
   pnpmCode?: string;
   yarnCode?: string;
   npmCode?: string;
   bunCode?: string;
-  language?: string; // ngôn ngữ code (mặc định "tsx")
+  language?: string;
 };
 
 export function TabInstall({
@@ -20,12 +18,11 @@ export function TabInstall({
   bunCode,
   language = "tsx",
 }: TabPreViewProps) {
-
   return (
     <div className="grid grid-cols-1 justify-center font-apple">
-      <div className="flex items-center justify-between">
-        {/* Tabs */}
-        <Tabs defaultValue="pnpm" >
+      <Tabs defaultValue="pnpm">
+        <div className="flex items-center justify-between">
+          {/* Tabs trigger */}
           <TabsList className="gap-1 rounded-2xl bg-zinc-200 dark:bg-zinc-900">
             <TabsTrigger
               value="pnpm"
@@ -52,35 +49,25 @@ export function TabInstall({
               bun
             </TabsTrigger>
           </TabsList>
-        </Tabs>
 
-        {/* Copy button */}
+          {/* Copy button (sẽ thêm ở đây sau) */}
+        </div>
 
-      </div>
-
-      <Tabs defaultValue="pnpm">
+        {/* Tabs content */}
         <TabsContent value="pnpm">
-          <div className="mt-2 rounded-2xl border bg-[#F5F2F0] dark:border-zinc-700 dark:bg-[#1e1e1e]">
-            <CodeBlock code={pnpmCode || ""} language={language} />
-          </div>
+          <CodeBlock code={pnpmCode || ""} language={language} />
         </TabsContent>
 
         <TabsContent value="yarn">
-          <div className="mt-2 rounded-2xl border bg-[#F5F2F0] dark:border-zinc-700 dark:bg-[#1e1e1e]">
-            <CodeBlock code={yarnCode || ""} language={language} />
-          </div>
+          <CodeBlock code={yarnCode || ""} language={language} />
         </TabsContent>
 
         <TabsContent value="npm">
-          <div className="mt-2 rounded-2xl border bg-[#F5F2F0] dark:border-zinc-700 dark:bg-[#1e1e1e]">
-            <CodeBlock code={npmCode || ""} language={language} />
-          </div>
+          <CodeBlock code={npmCode || ""} language={language} />
         </TabsContent>
 
         <TabsContent value="bun">
-          <div className="mt-2 rounded-2xl border bg-[#F5F2F0] dark:border-zinc-700 dark:bg-[#1e1e1e]">
-            <CodeBlock code={bunCode || ""} language={language} />
-          </div>
+          <CodeBlock code={bunCode || ""} language={language} />
         </TabsContent>
       </Tabs>
     </div>

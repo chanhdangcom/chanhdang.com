@@ -1,5 +1,4 @@
 export const MUSICS = [
-
   // {
   //   id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231221",
   //   title: "ANH CHƯA MỘT LẦN NÓI",
@@ -24,7 +23,7 @@ export const MUSICS = [
 “Hồng Nhan” – Jack là bản nhạc mang hơi thở miền Tây pha trộn chất tự sự hiện đại, kể về nỗi lòng của một chàng trai trẻ, lỡ yêu một người con gái đẹp – hồng nhan, nhưng lại bạc mệnh. Ca khúc là tiếng thở dài cho những mối tình dang dở, nơi tình yêu chân thành không thắng nổi số phận và thời cuộc.
 
     `,
-    type: "Jack"
+    type: "Jack",
   },
 
   {
@@ -37,7 +36,7 @@ export const MUSICS = [
     content: `
 “Bạc Phận” tiếp nối mạch cảm xúc từ “Hồng Nhan”, là bản ballad pha EDM dân gian hiện đại, vẽ nên bức tranh tình yêu thấm đẫm nước mắt. Ở đó, một người con trai vẫn mãi hướng về bóng hình cũ – người con gái từng thề hẹn, nay đã theo chồng bỏ cuộc chơi.
     `,
-    type: "Jack"
+    type: "Jack",
   },
 
   {
@@ -51,8 +50,6 @@ export const MUSICS = [
 “Sóng Gió” là chương kết đầy bi tráng trong bộ ba ca khúc “Hồng Nhan – Bạc Phận – Sóng Gió”, nơi tình yêu không còn nằm trong tay hai người, mà bị cuốn xoáy giữa đời, giữa toan tính và những điều ngoài ý muốn.
 
     `,
-    type: "Jack"
+    type: "Jack",
   },
-
-
 ];

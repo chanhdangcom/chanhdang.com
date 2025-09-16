@@ -13,6 +13,7 @@ import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { TabInstall } from "./ component/tab-install";
 
 import { TabGroup, TabPanel } from "./ component/tab-group";
+import { Button } from "@/components/button-new";
 
 const components = {
   TabPreView,
@@ -21,6 +22,7 @@ const components = {
   TabInstall,
   TabGroup,
   TabPanel,
+  Button,
 };
 
 export function ComponentPage() {
@@ -58,7 +60,7 @@ export function ComponentPage() {
         <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
       </div>
 
-      <div className="prose prose-base prose-h3:my-2 prose-h2:border-b prose-h2:pb-2 prose-ul:text-zinc-500 prose-ul:font-mono prose-ul:text-sm prose-h2:border-zinc-300 dark:prose-h2:border-zinc-800 max-w-none prose-a:font-mono font-sans text-foreground prose-zinc dark:prose-invert mx-2 prose-h2:my-4 md:mx-48">
+      <div className="prose prose-base prose-zinc mx-2 max-w-none font-sans text-foreground dark:prose-invert prose-h2:my-4 prose-h2:border-b prose-h2:border-zinc-300 prose-h2:pb-2 prose-h3:my-2 prose-a:font-mono prose-ul:font-mono prose-ul:text-sm prose-ul:text-zinc-500 dark:prose-h2:border-zinc-800 md:mx-48">
         <div className="mx-2 text-balance p-4 font-mono text-base text-zinc-400 md:mx-40">
           {data.description ?? "Untitled"}
         </div>

@@ -39,7 +39,10 @@ export function PointerHighlight({
   }, []);
 
   return (
-    <div className={cn("relative w-fit", containerClassName)} ref={containerRef}>
+    <div
+      className={cn("relative w-fit", containerClassName)}
+      ref={containerRef}
+    >
       {children}
       {dimensions.width > 0 && dimensions.height > 0 && (
         <motion.div
@@ -83,7 +86,7 @@ export function PointerHighlight({
               ease: "easeInOut",
             }}
           >
-            <Pointer className={cn("text-white h-5 w-5", pointerClassName)} />
+            <Pointer className={cn("h-5 w-5 text-white", pointerClassName)} />
           </motion.div>
         </motion.div>
       )}

@@ -1,5 +1,4 @@
 export const MUSICS = [
-
   {
     id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231",
     title: "Hồng Nhan",
@@ -10,7 +9,7 @@ export const MUSICS = [
     content: `
 
     `,
-    type: "Jack"
+    type: "Jack",
   },
 
   {
@@ -23,7 +22,7 @@ export const MUSICS = [
     content: `
 
     `,
-    type: "Jack"
+    type: "Jack",
   },
 
   {
@@ -36,7 +35,7 @@ export const MUSICS = [
     content: `
 
     `,
-    type: "Jack"
+    type: "Jack",
   },
 
   {
@@ -49,7 +48,7 @@ export const MUSICS = [
     content: `
 
     `,
-    type: "Jack"
+    type: "Jack",
   },
 
   {
@@ -62,7 +61,7 @@ export const MUSICS = [
     content: `
 
     `,
-    type: "Jack"
+    type: "Jack",
   },
 
   {
@@ -75,7 +74,7 @@ export const MUSICS = [
     content: `
 
     `,
-    type: "Jack"
+    type: "Jack",
   },
 
   {
@@ -88,7 +87,7 @@ export const MUSICS = [
     content: `
 
     `,
-    type: "Jack"
+    type: "Jack",
   },
 
   {
@@ -101,7 +100,7 @@ export const MUSICS = [
     content: `
 
     `,
-    type: "RAP"
+    type: "RAP",
   },
   {
     id: "9aa4e51d-a7fc-44a0-88ba-b6981eca64b7123",
@@ -113,7 +112,7 @@ export const MUSICS = [
     content: `
 
     `,
-    type: "RAP"
+    type: "RAP",
   },
 
   {
@@ -126,10 +125,8 @@ export const MUSICS = [
     content: `
 
     `,
-    type: "RAP"
+    type: "RAP",
   },
-  
-  
 
   {
     id: "e4a0b19c-4e31-41ff-b846-1d39aa2e3cef",
@@ -141,7 +138,7 @@ export const MUSICS = [
     content: `
 “
     `,
-    type: "RAP"
+    type: "RAP",
   },
   {
     id: "36b896d2-d27b-4fc6-b71b-7babaa44c9c2",
@@ -160,7 +157,7 @@ biết thầm nhủ “giá như” có thể thay đổi một điều gì đó
 đầy cảm xúc khiến người nghe dễ dàng đồng cảm, đặc biệt là những ai đã
 từng trải qua một cuộc tình dang dở.
 `,
-type: "RAP"
+    type: "RAP",
   },
 
   {
@@ -173,7 +170,7 @@ type: "RAP"
     content: `
 “
 `,
-    type: "Sad"
+    type: "Sad",
   },
 
   {
@@ -191,7 +188,7 @@ Giai điệu của bài hát có phần nhẹ nhàng, bay bổng hơn so với n
 khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
 mang phong cách đáng yêu, trẻ trung.
 `,
-    type: "Sad"
+    type: "Sad",
   },
 
   {
@@ -209,7 +206,7 @@ Giai điệu của bài hát có phần nhẹ nhàng, bay bổng hơn so với n
 khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
 mang phong cách đáng yêu, trẻ trung.
 `,
-    type: "Relax"
+    type: "Relax",
   },
 
   {
@@ -227,7 +224,7 @@ Giai điệu của bài hát có phần nhẹ nhàng, bay bổng hơn so với n
 khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
 mang phong cách đáng yêu, trẻ trung.
 `,
-    type: "Relax"
+    type: "Relax",
   },
 
   {
@@ -245,7 +242,7 @@ Giai điệu của bài hát có phần nhẹ nhàng, bay bổng hơn so với n
 khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
 mang phong cách đáng yêu, trẻ trung.
 `,
-    type: "Relax"    
+    type: "Relax",
   },
 
   {
@@ -263,7 +260,7 @@ Giai điệu của bài hát có phần nhẹ nhàng, bay bổng hơn so với n
 khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
 mang phong cách đáng yêu, trẻ trung.
 `,
-    type: "Feel good"
+    type: "Feel good",
   },
 
   {
@@ -281,7 +278,7 @@ Giai điệu của bài hát có phần nhẹ nhàng, bay bổng hơn so với n
 khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
 mang phong cách đáng yêu, trẻ trung.
 `,
-    type: "Sleep"
+    type: "Sleep",
   },
 
   {
@@ -294,7 +291,7 @@ mang phong cách đáng yêu, trẻ trung.
     content: `
 
     `,
-    type: "Tân Cổ"
+    type: "Tân Cổ",
   },
 
   {
@@ -307,7 +304,7 @@ mang phong cách đáng yêu, trẻ trung.
     content: `
 
     `,
-    type: "Tân Cổ"
+    type: "Tân Cổ",
   },
 
   {
@@ -320,7 +317,7 @@ mang phong cách đáng yêu, trẻ trung.
     content: `
 
     `,
-    type: "Tân Cổ"
+    type: "Tân Cổ",
   },
 
   {
@@ -333,9 +330,8 @@ mang phong cách đáng yêu, trẻ trung.
     content: `
 
     `,
-    type: "Tân Cổ"
+    type: "Tân Cổ",
   },
-  
 
   {
     id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231221",
@@ -347,7 +343,7 @@ mang phong cách đáng yêu, trẻ trung.
     content: `
 
     `,
-    type: "Jack"
+    type: "Jack",
   },
 
   {
@@ -360,7 +356,7 @@ mang phong cách đáng yêu, trẻ trung.
     content: `
 
     `,
-    type: "Jack"
+    type: "Jack",
   },
 
   {
@@ -373,7 +369,7 @@ mang phong cách đáng yêu, trẻ trung.
     content: `
 
     `,
-    type: "Jack"
+    type: "Jack",
   },
 
   {
@@ -386,7 +382,7 @@ mang phong cách đáng yêu, trẻ trung.
     content: `
 
     `,
-    type: "Jack"
+    type: "Jack",
   },
 
   {
@@ -399,7 +395,7 @@ mang phong cách đáng yêu, trẻ trung.
     content: `
 
     `,
-    type: "Tân Cổ"
+    type: "Tân Cổ",
   },
 
   {
@@ -412,6 +408,6 @@ mang phong cách đáng yêu, trẻ trung.
     content: `
 
     `,
-    type: "Tân Cổ"
+    type: "Tân Cổ",
   },
 ];

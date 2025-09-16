@@ -42,11 +42,12 @@ export function TabPreView({
         </TabsContent>
 
         <TabsContent value="code">
-          <div className="mt-2 rounded-2xl border dark:border-zinc-800 dark:dark:bg-[#1D1F21]">
+          {/* <div className="mt-2 rounded-2xl border dark:border-zinc-800 dark:dark:bg-[#1D1F21]">
             <div className="flex h-auto items-center">
               <CodeBlock code={code} language={language} />
             </div>
-          </div>
+          </div> */}
+          <CodeBlock code={code} language={language} />
         </TabsContent>
       </Tabs>
     </div>

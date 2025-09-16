@@ -4,8 +4,6 @@ export const MUSICSSINGER = [
     singer: "Jack - J97",
     cover: "https://cdn.chanhdang.com/singer_jack.jpg",
     musics: [
-
-      
       {
         id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231",
         title: "HỒNG NHAN",
@@ -16,9 +14,9 @@ export const MUSICSSINGER = [
         content: `
     
         `,
-        type: "Jack"
+        type: "Jack",
       },
-    
+
       {
         id: "7ff65b56-3fd3-4814-9fea-9f722b4250d724",
         title: "BẠC PHẬN",
@@ -29,9 +27,9 @@ export const MUSICSSINGER = [
         content: `
     
         `,
-        type: "Jack"
+        type: "Jack",
       },
-    
+
       {
         id: "7ff65b56-3fd3-4814-9fea-9f722b4250d725",
         title: "SÓNG GIÓ",
@@ -42,9 +40,9 @@ export const MUSICSSINGER = [
         content: `
     
         `,
-        type: "Jack"
+        type: "Jack",
       },
-    
+
       {
         id: "7ff65b56-3fd3-4814-9fea-9f722b4250d726",
         title: "EM GÌ ƠI",
@@ -55,9 +53,9 @@ export const MUSICSSINGER = [
         content: `
     
         `,
-        type: "Jack"
+        type: "Jack",
       },
-    
+
       {
         id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7267",
         title: "SAO EM VÔ TÌNH",
@@ -68,13 +66,12 @@ export const MUSICSSINGER = [
         content: `
     
         `,
-        type: "Jack"
+        type: "Jack",
       },
-    
-    ]
+    ],
   },
 
-  { 
+  {
     id: "1",
     singer: "Hustlang Robber",
     cover: "https://cdn.chanhdang.com/singer_robber.jpg",
@@ -89,7 +86,7 @@ export const MUSICSSINGER = [
         content: `
     
         `,
-        type: "RAP"
+        type: "RAP",
       },
       {
         id: "9aa4e51d-a7fc-44a0-88ba-b6981eca64b7",
@@ -101,7 +98,7 @@ export const MUSICSSINGER = [
         content: `
     
         `,
-        type: "RAP"
+        type: "RAP",
       },
       {
         id: "e4a0b19c-4e31-41ff-b846-1d39aa2e3cef",
@@ -113,7 +110,7 @@ export const MUSICSSINGER = [
         content: `
     “
         `,
-        type: "RAP"
+        type: "RAP",
       },
       {
         id: "36b896d2-d27b-4fc6-b71b-7babaa44c9c2",
@@ -132,16 +129,16 @@ export const MUSICSSINGER = [
     đầy cảm xúc khiến người nghe dễ dàng đồng cảm, đặc biệt là những ai đã
     từng trải qua một cuộc tình dang dở.
     `,
-    type: "RAP"
+        type: "RAP",
       },
-    ]
+    ],
   },
 
   {
     id: "2",
     singer: "Sơn Tùng M-TP",
     cover: "https://cdn.chanhdang.com/singer_son_tung_mtp.jpg",
-    musics:[
+    musics: [
       {
         id: "1f027516-868d-4749-a7a0-8e55f8b5faf0",
         title: "CÓ CHẮC YÊU LÀ ĐÂY",
@@ -157,9 +154,9 @@ export const MUSICSSINGER = [
     khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
     mang phong cách đáng yêu, trẻ trung.
     `,
-        type: "Relax"
+        type: "Relax",
       },
-    
+
       {
         id: "1f027516-868d-4749-a7a0-8e55f8b5faf0002",
         title: "CHÚNG TA CỦA HIỆN TẠI",
@@ -175,9 +172,9 @@ export const MUSICSSINGER = [
     khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
     mang phong cách đáng yêu, trẻ trung.
     `,
-        type: "Relax"
+        type: "Relax",
       },
-    
+
       {
         id: "1f027516-868d-4749-a7a0-8e55f8b5faf03",
         title: "CHÚNG TA CỦA TƯƠNG LAI",
@@ -193,9 +190,9 @@ export const MUSICSSINGER = [
     khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
     mang phong cách đáng yêu, trẻ trung.
     `,
-        type: "Relax"    
+        type: "Relax",
       },
-    
+
       {
         id: "1f027516-868d-4749-a7a0-8e55f8b5faf0003",
         title: "ĐỪNG LÀM TRÁI TIM ANH ĐAU",
@@ -211,9 +208,9 @@ export const MUSICSSINGER = [
     khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
     mang phong cách đáng yêu, trẻ trung.
     `,
-        type: "Feel good"
+        type: "Feel good",
       },
-    
+
       {
         id: "1f027516-868d-4749-a7a0-8e55f8b5faf00032",
         title: "MUỘN RỒI MÀ SAO CÒN",
@@ -229,27 +226,22 @@ export const MUSICSSINGER = [
     khúc trước đó của Sơn Tùng M-TP, kết hợp cùng hình ảnh MV đầy màu sắc,
     mang phong cách đáng yêu, trẻ trung.
     `,
-        type: "Sleep"
+        type: "Sleep",
       },
- 
-  ]
+    ],
   },
 
   {
     id: "3",
     singer: "Quốc Thiên",
     cover: "https://cdn.chanhdang.com/singer_quoc_thien.jpg",
-    musics:[
-      
-    ]
-
+    musics: [],
   },
 
   {
     id: "4",
     singer: "Vũ",
     cover: "https://cdn.chanhdang.com/singer_vu.jpg",
-  
   },
 
   {
@@ -267,7 +259,7 @@ export const MUSICSSINGER = [
         content: `
 
         `,
-        type: "Jack"
+        type: "Jack",
       },
 
       {
@@ -280,9 +272,9 @@ export const MUSICSSINGER = [
         content: `
 
         `,
-        type: "Jack"
+        type: "Jack",
       },
-    ]
+    ],
   },
 
   {
@@ -291,65 +283,63 @@ export const MUSICSSINGER = [
     cover: "https://cdn.chanhdang.com/singer_khanh_vin.jpg",
     musics: [
       {
-      id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231221",
-      title: "ANH CHƯA MỘT LẦN NÓI",
-      singer: "Ê Kê Vin",
-      cover: "https://cdn.chanhdang.com/cover_rap_with_tran_nha.jpg",
-      audio: "https://cdn.chanhdang.com/music_rap_with_tran_nha.mp3",
-      youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
-      content: `
+        id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231221",
+        title: "ANH CHƯA MỘT LẦN NÓI",
+        singer: "Ê Kê Vin",
+        cover: "https://cdn.chanhdang.com/cover_rap_with_tran_nha.jpg",
+        audio: "https://cdn.chanhdang.com/music_rap_with_tran_nha.mp3",
+        youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+        content: `
   
       `,
-      type: "Jack"
-    },
+        type: "Jack",
+      },
 
-    {
-      id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231223r3221",
-      title: "Tháp Drill Tự Do",
-      singer: "Ê Kê Vin",
-      cover: "https://cdn.chanhdang.com/cover_thap_drill_tu_do.jpg",
-      audio: "https://cdn.chanhdang.com/music_thap_drill_tu_do.mp3",
-      youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
-      content: `
+      {
+        id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231223r3221",
+        title: "Tháp Drill Tự Do",
+        singer: "Ê Kê Vin",
+        cover: "https://cdn.chanhdang.com/cover_thap_drill_tu_do.jpg",
+        audio: "https://cdn.chanhdang.com/music_thap_drill_tu_do.mp3",
+        youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+        content: `
   
       `,
-      type: "Jack"
-    },
-    
-{
-      id: "7ff65b56-3fd3-4814-9fea-9f722b4223450d7231223r3221",
-      title: "Tháp Drill Dừng Chân",
-      singer: "Ê Kê Vin ft. Jack-J97",
-      cover: "https://cdn.chanhdang.com/cover_thap_drill_dung_chan.JPG",
-      audio: "https://cdn.chanhdang.com/music_thap_drill_dung_chan.mp3",
-      youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
-      content: `
-  
-      `,
-      type: "Jack"
-    },
+        type: "Jack",
+      },
 
-    ]
+      {
+        id: "7ff65b56-3fd3-4814-9fea-9f722b4223450d7231223r3221",
+        title: "Tháp Drill Dừng Chân",
+        singer: "Ê Kê Vin ft. Jack-J97",
+        cover: "https://cdn.chanhdang.com/cover_thap_drill_dung_chan.JPG",
+        audio: "https://cdn.chanhdang.com/music_thap_drill_dung_chan.mp3",
+        youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+        content: `
   
+      `,
+        type: "Jack",
+      },
+    ],
   },
 
   {
     id: "6",
     singer: "Hà Lê Quốc Thiên",
     cover: "https://cdn.chanhdang.com/singer_ha_le_quoc_thien.png",
-    musics:[
-       {
-      id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231223r322131",
-      title: "LỜI BÁC SÁNG MÃI MUÔN ĐỜI",
-      singer: "Hà Lê Quốc Thiên",
-      cover: "https://cdn.chanhdang.com/cover_loi_bac_sang_mai_muon_doi.webp",
-      audio: "https://cdn.chanhdang.com/loi_bac_sang_mai_muon_doi.mp3",
-      youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
-      content: `
+    musics: [
+      {
+        id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231223r322131",
+        title: "LỜI BÁC SÁNG MÃI MUÔN ĐỜI",
+        singer: "Hà Lê Quốc Thiên",
+        cover: "https://cdn.chanhdang.com/cover_loi_bac_sang_mai_muon_doi.webp",
+        audio: "https://cdn.chanhdang.com/loi_bac_sang_mai_muon_doi.mp3",
+        youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
+        content: `
   
       `,
-      type: "Jack"
-    },
-    ]
+        type: "Jack",
+      },
+    ],
   },
 ];

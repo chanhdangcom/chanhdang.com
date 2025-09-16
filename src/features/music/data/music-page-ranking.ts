@@ -9,7 +9,7 @@ export const MUSICSRANKING = [
     content: `
 
     `,
-    type: "Jack"
+    type: "Jack",
   },
 
   {
@@ -22,7 +22,7 @@ export const MUSICSRANKING = [
     content: `
 
     `,
-    type: "Jack"
+    type: "Jack",
   },
 
   {
@@ -35,6 +35,6 @@ export const MUSICSRANKING = [
     content: `
 
     `,
-    type: "Jack"
+    type: "Jack",
   },
 ];

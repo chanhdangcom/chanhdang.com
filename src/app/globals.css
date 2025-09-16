@@ -18,12 +18,10 @@
 
 @layer base {
   body {
-    @apply font-body bg-zinc-50 text-zinc-950 antialiased dark:bg-[#030610] dark:text-zinc-50;
-    
+    @apply bg-zinc-50 font-body text-zinc-950 antialiased dark:bg-[#030610] dark:text-zinc-50;
   }
   :root {
-
-    --radius: 0.5rem
+    --radius: 0.5rem;
   }
 }
 
@@ -31,29 +29,29 @@
 @layer utilities {
   /* Webkit browsers (Chrome, Safari, Edge) */
   .scrollbar-hide {
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
   }
-  
+
   .scrollbar-hide::-webkit-scrollbar {
-    display: none;  /* Safari and Chrome */
+    display: none; /* Safari and Chrome */
   }
-  
+
   /* Ẩn scrollbar cho toàn bộ trang */
   html {
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* Internet Explorer 10+ */
   }
-  
+
   html::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Edge */
   }
-  
+
   body {
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* Internet Explorer 10+ */
   }
-  
+
   body::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Edge */
   }
@@ -72,9 +70,15 @@
 }
 
 @keyframes liquidMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .animate-liquid-gradient {

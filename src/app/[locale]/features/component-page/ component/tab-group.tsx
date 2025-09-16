@@ -41,7 +41,11 @@ export function TabGroup({ children }: TabGroupProps) {
 
       {/* contents */}
       {panels.map((panel) => (
-        <TabsContent key={panel.props.value} value={panel.props.value} className="mt-4">
+        <TabsContent
+          key={panel.props.value}
+          value={panel.props.value}
+          className="mt-4"
+        >
           {panel.props.children}
         </TabsContent>
       ))}

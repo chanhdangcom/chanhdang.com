@@ -72,7 +72,7 @@ export const Lens: React.FC<LensProps> = ({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="pointer-events-none absolute top-0 left-0"
+            className="pointer-events-none absolute left-0 top-0"
             style={{
               width: containerSize.width,
               height: containerSize.height,
@@ -84,7 +84,7 @@ export const Lens: React.FC<LensProps> = ({
             }}
           >
             <div
-              className="absolute top-0 left-0 w-full h-full"
+              className="absolute left-0 top-0 h-full w-full"
               style={{
                 // Corrected template literal for transform
                 transform: `scale(${zoomFactor})`,

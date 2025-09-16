@@ -16,7 +16,7 @@ export function AudioSingerItemOrder({ music }: IProp) {
 
   return (
     <div>
-      <div className="scrollbar-hide flex overflow-x-auto">
+      <div className="flex overflow-x-auto scrollbar-hide">
         {music.musics?.map((music) => (
           <div key={music.id} className="">
             <AuidoItem

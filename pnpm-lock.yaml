@@ -167,6 +167,9 @@ importers:
       react-dom:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
+      react-element-to-jsx-string:
+        specifier: ^17.0.1
+        version: 17.0.1(react-dom@19.0.0(react@19.0.0))(react-is@19.0.0)(react@19.0.0)
       react-howler:
         specifier: ^5.2.0
         version: 5.2.0
@@ -584,6 +587,9 @@ packages:
   '@babel/types@7.28.4':
     resolution: {integrity: sha512-bkFqkLhh3pMBUQQkpVgWDWq/lqzc2678eUyDlTBhRqhCHFguYYGM0Efga7tYk4TogG/3x0EEl66/OQ+WGbWB/Q==}
     engines: {node: '>=6.9.0'}
+
+  '@base2/pretty-print-object@1.0.2':
+    resolution: {integrity: sha512-rBha0UDfV7EmBRjWrGG7Cpwxg8WomPlo0q+R2so47ZFf9wy4YKJzLuHcVa0UGFjdcLZj/4F/1FNC46GIQhe7sA==}
 
   '@bprogress/core@1.3.3':
     resolution: {integrity: sha512-Vz9vzZE8xvfkgY09e0S6kzNz/ev/2lUw7A/z0TW7N0ZBG9xmVXrzSsFe3uvypxDa5ltn+xLBtfDtxBc8KsrvBQ==}
@@ -4625,6 +4631,10 @@ packages:
     resolution: {integrity: sha512-+Pgi+vMuUNkJyExiMBt5IlFoMyKnr5zhJ4Uspz58WOhBF5QoIZkFyNHIbBAtHwzVAgk5RtndVNsDRN61/mmDqg==}
     engines: {node: '>=12'}
 
+  is-plain-object@5.0.0:
+    resolution: {integrity: sha512-VRSzKkbMm5jMDoKLbltAkFQ5Qr7VDiTFGXxYFXXowVj387GeGNOCsOH6Msy00SGZ3Fp84b1Naa1psqgcCIEP5Q==}
+    engines: {node: '>=0.10.0'}
+
   is-promise@4.0.0:
     resolution: {integrity: sha512-hvpoI6korhJMnej285dSg6nu1+e6uxs7zG3BYAm5byqDsgJNWwxzM6z6iZiAgQR4TJ30JmBTOwqZUw3WlyH3AQ==}
 
@@ -5562,6 +5572,13 @@ packages:
     peerDependencies:
       react: '>= 16.3.0'
       react-dom: '>= 16.3.0'
+
+  react-element-to-jsx-string@17.0.1:
+    resolution: {integrity: sha512-GMX16Yo+nuqDq4GlrHGaK/coQKEuiXaKEg8tCfKnOC34F2LiUYE6JeQKyirh0YgjhTXUxxONcj1gZa86OW1R6A==}
+    peerDependencies:
+      react: ^19.0.0
+      react-dom: ^19.0.0
+      react-is: ^19.0.0
 
   react-howler@5.2.0:
     resolution: {integrity: sha512-oDK+zML0MHf3nVNM4lMxh+re87NDa7fHowea2WK8197yqnMiZfPVHoMXtfb/PtuoOsWLO06vmEAtovwTRWpTFg==}
@@ -7212,6 +7229,8 @@ snapshots:
     dependencies:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
+
+  '@base2/pretty-print-object@1.0.2': {}
 
   '@bprogress/core@1.3.3': {}
 
@@ -12518,6 +12537,8 @@ snapshots:
 
   is-plain-obj@4.1.0: {}
 
+  is-plain-object@5.0.0: {}
+
   is-promise@4.0.0: {}
 
   is-regex@1.2.1:
@@ -13644,6 +13665,14 @@ snapshots:
       prop-types: 15.8.1
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
+
+  react-element-to-jsx-string@17.0.1(react-dom@19.0.0(react@19.0.0))(react-is@19.0.0)(react@19.0.0):
+    dependencies:
+      '@base2/pretty-print-object': 1.0.2
+      is-plain-object: 5.0.0
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+      react-is: 19.0.0
 
   react-howler@5.2.0:
     dependencies:
