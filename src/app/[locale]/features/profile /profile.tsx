@@ -97,6 +97,12 @@ export const Profile = () => {
                 title="LinkedIn"
                 accountName="@ncdang"
               />
+              <SocialItem
+                scrImg="img/tech-stack/ncdangmusic.png"
+                title="ChanhDangMusic"
+                accountName=""
+                link="https://chanhdang.com/music"
+              />
             </div>
           </div>
 

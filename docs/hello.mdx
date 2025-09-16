@@ -7,8 +7,80 @@ createdAt: 2025-04-11
 updatedAt: 2025-04-11
 ---
 
-<TabPreView/>
+<TabPreView
+  preview={<ThemeSwitcher />}
+  code={`import { ThemeSwitcher } from "@/components/theme-switcher";
+
+    export function ThemeSwitcherDemo() {
+      return <ThemeSwitcher />;
+    } `}
+
+  language="tsx"
+/>
+
+## Installation
+
+<TabGroup>
+  <TabPanel value="preview">
+      <TabInstall
+            preview={<ThemeSwitcher />}
+            pnpmCode="pnpm install next-themes lucide-react motion clsx tailwind-merge"
+            yarnCode="yarn install next-themes lucide-react motion clsx tailwind-merge"
+            npmCode="npm install next-themes lucide-react motion clsx tailwind-merge"
+            bunCode="bun install next-themes lucide-react motion clsx tailwind-merge"
+            language="bash"/>
+  </TabPanel>
 
 
+  <TabPanel value="code">
+    ### 1. Install the following dependencies 
+    <div className="mt-2 rounded-2xl border bg-[#F5F2F0] dark:border-zinc-700 dark:bg-[#1e1e1e]">
+      <div className="flex h-auto items-center">
+        <CodeBlock code={`import type { ClassValue } from "clsx";
 
+            import { clsx } from "clsx";
+            import { twMerge } from "tailwind-merge";
+
+            export const cn = (...inputs: ClassValue[]) => {
+              return twMerge(clsx(inputs));
+            };`}/>
+      </div>
+    </div>
+
+  
+  ### 2. Add a cn helper
+   <div className="mt-2 rounded-2xl border bg-[#F5F2F0] dark:border-zinc-700 dark:bg-[#1e1e1e]">
+      <div className="flex h-auto items-center">
+        <CodeBlock code={`import type { ClassValue } from "clsx";
+
+            import { clsx } from "clsx";
+            import { twMerge } from "tailwind-merge";
+
+            export const cn = (...inputs: ClassValue[]) => {
+              return twMerge(clsx(inputs));
+            };`}/>
+      </div>
+    </div>
+  </TabPanel>
+</TabGroup>
+
+## Usage
+
+  <div className="mt-2 rounded-2xl border bg-[#F5F2F0] dark:border-zinc-700 dark:bg-[#1e1e1e]">
+    <div className="flex h-auto items-center">
+        <CodeBlock code={`import { ThemeSwitcher } from "@/components/theme-switcher";`}/>
+    </div>
+  </div>
+
+  <div className="mt-2 rounded-2xl border bg-[#F5F2F0] dark:border-zinc-700 dark:bg-[#1e1e1e]">
+    <div className="flex h-auto items-center">
+        <CodeBlock code={`<ThemeSwitcher />`}/>
+    </div>
+  </div>
+
+## References
+- https://ui.shadcn.com/docs/registry
+- https://ui.shadcn.com/docs/dark-mode/next
+- https://github.com/pacocoursey/next-themes
+- https://motion.dev/docs/react-motion-component
 
