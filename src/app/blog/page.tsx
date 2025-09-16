@@ -28,7 +28,7 @@ export default function Page() {
       <div className="mt-8">
         <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
 
-        <div className="mx-48">
+        <div className="md:mx-48">
           <BlogListPage />
         </div>
       </div>
