@@ -10,7 +10,6 @@ import { SocialItem } from "./components/social-item";
 import { ComponentList } from "./component-list";
 import { WorkExperience } from "./work-experience";
 import { ChanhdangMusicList } from "./chanhdang-music-list";
-import { CodeTag } from "@/components/code-tag";
 
 export const Profile = () => {
   return (
@@ -60,9 +59,7 @@ export const Profile = () => {
             <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
 
             <div className="mx-4 text-balance font-mono text-xl md:mx-48">
-              <CodeTag tagName="" />
               I don’t just code, I craft
-              <CodeTag tagName="" isCloseTag />
             </div>
 
             <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />

@@ -5,15 +5,19 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Copy, Check } from "lucide-react";
 
 type CodeBlockProps = {
   code: string;
+  fileName?: string;
   language?: string;
 };
 
-export default function CodeBlock({ code, language = "tsx" }: CodeBlockProps) {
+export default function CodeBlock({
+  code,
+  language = "tsx",
+  fileName,
+}: CodeBlockProps) {
   const { theme } = useTheme();
   const [copied, setCopied] = useState(false);
 
@@ -31,25 +35,30 @@ export default function CodeBlock({ code, language = "tsx" }: CodeBlockProps) {
   const style = theme === "light" ? oneLight : atomDark;
 
   return (
-    <div className="mt-2 rounded-2xl border bg-[#F5F2F0] dark:border-zinc-700 dark:bg-[#1e1e1e]">
-      <div className="flex items-center">
-        <div
-          className={`relative w-full overflow-hidden rounded-2xl ${bg} flex items-start justify-between`}
-        >
+    <div className="mt-3 rounded-2xl border bg-[#F5F2F0] dark:border-zinc-700 dark:bg-[#1e1e1e]">
+      <>
+        <div className={`relative w-full overflow-hidden rounded-2xl ${bg} `}>
+          <div className="mx-4 flex items-center justify-between border-b py-2 dark:border-zinc-700">
+            <div className="font-mono text-sm text-zinc-500">{fileName}</div>
+
+            <div
+              onClick={handleCopy}
+              className="flex items-center gap-1 text-sm"
+            >
+              {copied ? (
+                <Check className="size-3" />
+              ) : (
+                <Copy className="size-3" />
+              )}
+              {copied ? "Copied" : "Copy"}
+            </div>
+          </div>
+
           <SyntaxHighlighter language={language} style={style} showLineNumbers>
             {code}
           </SyntaxHighlighter>
-
-          <Button variant="ghost" size="sm" onClick={handleCopy} className="">
-            {copied ? (
-              <Check className="size-3" />
-            ) : (
-              <Copy className="size-3" />
-            )}
-            {copied ? "Copied" : "Copy"}
-          </Button>
         </div>
-      </div>
+      </>
     </div>
   );
 }
