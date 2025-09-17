@@ -17,7 +17,7 @@ export function ChanhdangMusicList() {
 
       <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
 
-      <div className="mx-4 flex text-balance font-mono text-4xl font-semibold leading-tight tracking-tight md:mx-48">
+      <div className="mx-4 flex text-balance font-mono text-3xl font-semibold leading-tight tracking-tight md:mx-48 md:text-4xl">
         <div>ChanhDang Music</div>
       </div>
 
@@ -26,11 +26,11 @@ export function ChanhdangMusicList() {
       <div className="my-8">
         <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
 
-        <div className="mx-0 grid grid-cols-2 md:mx-48 md:grid-cols-4">
+        <div className="mx-0 grid grid-cols-3 md:mx-48 md:grid-cols-5">
           {MUSICS.map((music, index) => {
             return (
               <div key={index} className="shrink-0 cursor-pointer">
-                {index < 8 && (
+                {index < 10 && (
                   <CardSpotlight onClick={() => handlePlayAudio(music)}>
                     <div className="w-full gap-4 space-y-2 p-4">
                       <div className="relative">
@@ -39,7 +39,7 @@ export function ChanhdangMusicList() {
                           height={100}
                           src={music.cover}
                           alt={music.title}
-                          className="d mt-1 h-auto w-full rounded-xl object-cover object-top"
+                          className="mt-1 h-auto w-full rounded-xl object-cover object-top"
                         />
 
                         <div

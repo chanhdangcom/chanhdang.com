@@ -9,7 +9,7 @@ export function WorkExperience() {
 
       <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
 
-      <div className="mx-4 flex text-balance font-mono text-4xl font-semibold leading-tight tracking-tight md:mx-48">
+      <div className="mx-4 flex text-balance font-mono text-3xl font-semibold leading-tight tracking-tight md:mx-48 md:text-4xl">
         Work Experience
       </div>
 

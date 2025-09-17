@@ -8,7 +8,7 @@ export function BlogListItem({ post }: { post: IPost }) {
   return (
     <Link key={post.documentId} href={`/blog/${post.slug}`}>
       <CardSpotlight className="z-0 h-full w-auto rounded-none p-4">
-        <div className="relative mx-auto mb-4 h-56 w-auto">
+        <div className="relative mx-auto mb-4 h-56 md:h-40">
           <Image
             className="shrink-0 rounded-xl"
             src={post.cover.formats.medium.url}

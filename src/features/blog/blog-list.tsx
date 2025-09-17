@@ -5,7 +5,7 @@ import { BlogListItem } from "@/components/blog-list-item";
 
 export function BlogList({ posts }: { posts: IPost[] }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3">
+    <div className="grid grid-cols-1 md:grid-cols-4">
       {posts.map((post) => (
         <div key={post.documentId} className="">
           <Link key={post.documentId} href={`/blog/${post.slug}`}>

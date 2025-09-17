@@ -38,7 +38,7 @@ export const Profile = () => {
 
             <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
 
-            <div className="mx-4 text-balance font-mono text-4xl font-semibold leading-tight tracking-tight md:mx-48">
+            <div className="mx-4 text-balance font-mono text-4xl font-semibold leading-tight tracking-tight md:mx-48 md:text-4xl">
               <>Turning bold ideas into cutting edge web experiences.</>
             </div>
 
@@ -55,10 +55,10 @@ export const Profile = () => {
             <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
           </div>
 
-          <div className="">
+          <div>
             <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
 
-            <div className="mx-4 text-balance font-mono text-xl md:mx-48">
+            <div className="mx-4 text-balance font-mono text-lg md:mx-48">
               I don’t just code, I craft
             </div>
 
@@ -121,7 +121,7 @@ export const Profile = () => {
           <FinalBlog />
         </div>
 
-        <div className="">
+        <div>
           <ComponentList />
         </div>
 
