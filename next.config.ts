@@ -1,15 +1,9 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 
-
-import createNextIntlPlugin from 'next-intl/plugin';
- 
-
- 
 const withNextIntl = createNextIntlPlugin();
 
-
 const nextConfig: NextConfig = {
-  /* config options here */
   reactStrictMode: false,
   images: {
     domains: ["cdn.chanhdang.com"],
@@ -21,7 +15,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  webpack(config) {
+    // Cho phép import file .tsx kèm ?raw giống Vite
+    config.module.rules.push({
+    resourceQuery: /raw/, // chỉ khi import có ?raw
+    type: "asset/source", // cách mới thay raw-loader
+});
+    return config;
+  },
 };
 
 export default withNextIntl(nextConfig);
-

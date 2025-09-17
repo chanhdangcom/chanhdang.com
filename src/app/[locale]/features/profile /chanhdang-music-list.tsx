@@ -26,7 +26,7 @@ export function ChanhdangMusicList() {
       <div className="my-8">
         <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
 
-        <div className="mx-0 grid grid-cols-3 md:mx-48 md:grid-cols-5">
+        <div className="mx-0 grid grid-cols-2 md:mx-48 md:grid-cols-5">
           {MUSICS.map((music, index) => {
             return (
               <div key={index} className="shrink-0 cursor-pointer">
@@ -51,7 +51,7 @@ export function ChanhdangMusicList() {
                       </div>
 
                       <div className="leading-6">
-                        <h3 className="text-left text-lg font-semibold text-zinc-800 dark:text-zinc-200">
+                        <h3 className="line-clamp-2 text-left text-lg font-semibold text-zinc-800 dark:text-zinc-200">
                           {music.title}
                         </h3>
 

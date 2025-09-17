@@ -1,6 +1,6 @@
 "use client";
 
-import CodeBlock from "@/app/[locale]/features/component-page/ component/code-block";
+import CodeBlock from "@/app/[locale]/features/component-page/component/code-block";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type TabPreViewProps = {

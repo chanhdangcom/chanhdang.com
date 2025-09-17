@@ -4,11 +4,11 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import matter from "gray-matter";
 
 import { ScrollHeaderPage } from "@/components/scroll-header-page";
-import { TabPreView } from "./ component/tab-preview";
-import CodeBlock from "./ component/code-block";
+import { TabPreView } from "./component/tab-preview";
+import CodeBlock from "./component/code-block";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
-import { TabInstall } from "./ component/tab-install";
-import { TabGroup, TabPanel } from "./ component/tab-group";
+import { TabInstall } from "./component/tab-install";
+import { TabGroup, TabPanel } from "./component/tab-group";
 import { Button } from "@/components/button-new";
 import { Header } from "../profile /header";
 import { Footer } from "../profile /footer";
@@ -52,7 +52,7 @@ export function ComponentPage({ slug }: { slug: string }) {
         </div>
       </div>
 
-      <div className="prose prose-base prose-zinc mx-2 max-w-none font-sans text-foreground dark:prose-invert prose-h2:my-4 prose-h2:border-b prose-h2:border-zinc-300 prose-h2:pb-2 prose-h3:my-2 prose-a:font-mono prose-ul:font-mono prose-ul:text-sm prose-ul:text-zinc-500 dark:prose-h2:border-zinc-800 md:mx-48">
+      <div className="prose prose-base prose-zinc mx-2 max-w-none font-sans text-foreground dark:prose-invert prose-h2:my-4 prose-h2:border-b prose-h2:border-zinc-300 prose-h2:pb-2 prose-h3:my-4 prose-a:font-mono prose-ul:font-mono prose-ul:text-sm prose-ul:text-zinc-500 dark:prose-h2:border-zinc-800 md:mx-48">
         <div className="m-4 text-balance font-mono text-base text-zinc-400 md:mx-40">
           {data.description ?? "Untitled"}
         </div>
