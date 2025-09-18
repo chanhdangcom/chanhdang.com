@@ -91,6 +91,13 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   const [currentLyrics, setCurrentLyrics] = useState<string | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const currentMusicRef = useRef<IMusic | null>(null);
+  useEffect(() => {
+    currentMusicRef.current = currentMusic;
+  }, [currentMusic]);
+
+  // crossfade audio instance (tạo mới mỗi lần)
+  const crossfadeAudioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     if (!currentMusic) return;
@@ -126,9 +133,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     };
 
     audioRef.current.addEventListener("timeupdate", syncLyrics);
-
     return () => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       audioRef.current?.removeEventListener("timeupdate", syncLyrics);
     };
   }, [subtitles]);
@@ -140,9 +145,10 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       setTimeout(() => {
         if (audioRef.current) {
           audioRef.current.currentTime = 0;
-          audioRef.current.play().catch((error) => {
-            console.error("Lỗi phát nhạc:", error);
-          });
+          audioRef.current.volume = 1;
+          audioRef.current
+            .play()
+            .catch((error) => console.error("Lỗi phát nhạc:", error));
         }
       }, 100);
       setIsPlaying(true);
@@ -151,32 +157,71 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     [currentMusic]
   );
 
-  // Random nhạc khi bài hát kết thúc
+  // Random nhạc khi bài hát kết thúc (crossfade thay cho end)
   useEffect(() => {
     if (!audioRef.current) return;
+    const mainAudio = audioRef.current;
 
-    const handleEnded = () => {
-      let randomIndex;
-      do {
-        randomIndex = Math.floor(Math.random() * MUSICS.length);
-      } while (MUSICS[randomIndex].id === currentMusic?.id);
+    const handleTimeUpdate = () => {
+      if (!currentMusicRef.current) return;
 
-      const nextMusic = MUSICS[randomIndex];
-      setCurrentMusic(nextMusic);
-      handlePlayAudio(nextMusic);
+      // Khi còn <= 5 giây thì chuẩn bị crossfade
+      if (
+        mainAudio.duration - mainAudio.currentTime <= 5 &&
+        !crossfadeAudioRef.current
+      ) {
+        let randomIndex;
+        do {
+          randomIndex = Math.floor(Math.random() * MUSICS.length);
+        } while (MUSICS[randomIndex].id === currentMusicRef.current?.id);
+
+        const nextMusic = MUSICS[randomIndex];
+
+        // tạo mới crossfade audio
+        const nextCrossfade = new Audio(nextMusic.audio);
+        nextCrossfade.volume = 0;
+        nextCrossfade.play();
+        crossfadeAudioRef.current = nextCrossfade;
+
+        const fadeDuration = 5000; // 5s crossfade
+        const stepTime = 50; // mỗi 50ms
+        const mainStep = mainAudio.volume / (fadeDuration / stepTime);
+        const crossStep = 1 / (fadeDuration / stepTime);
+
+        let elapsed = 0;
+        const interval = setInterval(() => {
+          elapsed += stepTime;
+
+          mainAudio.volume = Math.max(0, mainAudio.volume - mainStep);
+          nextCrossfade.volume = Math.min(1, nextCrossfade.volume + crossStep);
+
+          if (elapsed >= fadeDuration) {
+            clearInterval(interval);
+
+            // xong crossfade thì đổi sang nhạc mới
+            mainAudio.pause();
+            mainAudio.src = nextMusic.audio;
+            mainAudio.currentTime = nextCrossfade.currentTime;
+            mainAudio.volume = 1;
+            nextCrossfade.pause();
+            crossfadeAudioRef.current = null;
+
+            mainAudio.play();
+            setCurrentMusic(nextMusic); // đổi UI sau khi crossfade hoàn tất
+          }
+        }, stepTime);
+      }
     };
 
-    audioRef.current.addEventListener("ended", handleEnded);
+    mainAudio.addEventListener("timeupdate", handleTimeUpdate);
     return () => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      audioRef.current?.removeEventListener("ended", handleEnded);
+      mainAudio.removeEventListener("timeupdate", handleTimeUpdate);
     };
-  }, [currentMusic, handlePlayAudio]);
+  }, []);
 
   const handlePlayRandomAudio = useCallback(() => {
     const randomIndex = Math.floor(Math.random() * MUSICS.length);
     const music = MUSICS[randomIndex];
-
     handlePlayAudio(music);
   }, [handlePlayAudio]);
 

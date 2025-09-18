@@ -1,8 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useAudio } from "@/components/music-provider";
-
 import {
   FastForward,
   MusicNotes,
@@ -26,6 +24,7 @@ import { PlayerPage } from "./player-page";
 
 import LiquidGlassBackground from "@/components/liquid-glass-background";
 import { useOutsideClick } from "@/app/[locale]/features/profile /hook/use-outside-click";
+import { useAudio } from "@/components/music-provider";
 
 export function AudioBar() {
   const {
