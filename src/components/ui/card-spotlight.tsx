@@ -2,7 +2,6 @@
 
 import { useMotionValue, motion, useMotionTemplate } from "motion/react";
 import React, { MouseEvent as ReactMouseEvent, useState } from "react";
-
 import { cn } from "@/lib/utils";
 import { CanvasRevealEffect } from "./canvas-reveal-effect";
 
@@ -19,31 +18,37 @@ export const CardSpotlight = ({
 } & React.HTMLAttributes<HTMLDivElement>) => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+
   function handleMouseMove({
     currentTarget,
     clientX,
     clientY,
   }: ReactMouseEvent<HTMLDivElement>) {
     const { left, top } = currentTarget.getBoundingClientRect();
-
     mouseX.set(clientX - left);
     mouseY.set(clientY - top);
   }
 
   const [isHovering, setIsHovering] = useState(false);
-  const handleMouseEnter = () => setIsHovering(true);
-  const handleMouseLeave = () => setIsHovering(false);
+
   return (
     <div
       className={cn(
-        "group/spotlight relative border-x border-b border-dashed border-zinc-300 dark:border-zinc-800",
+        "group/spotlight relative overflow-hidden border-x border-b border-dashed border-zinc-300 dark:border-zinc-800",
         className
       )}
       onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      {...props}
+      onMouseEnter={(e) => {
+        setIsHovering(true);
+        props.onMouseEnter?.(e);
+      }}
+      onMouseLeave={(e) => {
+        setIsHovering(false);
+        props.onMouseLeave?.(e);
+      }}
+      onClick={props.onClick}
     >
+      {/* Spotlight layer */}
       <motion.div
         className="pointer-events-none absolute -inset-px z-0 opacity-0 transition duration-300 group-hover/spotlight:opacity-100"
         style={{
@@ -69,7 +74,9 @@ export const CardSpotlight = ({
           />
         )}
       </motion.div>
-      {children}
+
+      {/* Nội dung */}
+      <div className="relative z-10">{children}</div>
     </div>
   );
 };

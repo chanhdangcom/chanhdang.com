@@ -22,18 +22,6 @@ export async function DrawerBlog() {
       <HoverCard>
         <HoverCardTrigger>
           <DrawerTrigger className="hover:underline">
-            {/* <div className="relative flex-1 hover:underline">
-              Technology Insights
-              <div className="pointer-events-none absolute inset-0">
-                <div className="absolute left-[-10px] right-[-10px] top-0 h-px bg-zinc-300 dark:bg-zinc-800"></div>
-
-                <div className="absolute bottom-0 left-[-10px] right-[-10px] h-px bg-zinc-300 dark:bg-zinc-800"></div>
-
-                <div className="absolute bottom-[-10px] left-0 top-[-10px] w-px bg-zinc-300 dark:bg-zinc-800"></div>
-
-                <div className="absolute bottom-[-10px] right-0 top-[-10px] w-px bg-zinc-300 dark:bg-zinc-800"></div>
-              </div>
-            </div> */}
             <div className="">All Posts</div>
           </DrawerTrigger>
         </HoverCardTrigger>
