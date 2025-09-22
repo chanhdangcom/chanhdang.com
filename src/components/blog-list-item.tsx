@@ -16,11 +16,11 @@ export function BlogListItem({ post }: { post: IPost }) {
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
-      <CardSpotlight className="z-0 h-full w-auto rounded-none p-4">
+      <CardSpotlight className="z-0 h-full w-full rounded-none p-4">
         <div className="relative mx-auto mb-4">
           {isHover ? (
             <motion.img
-              className="h-56 shrink-0 rounded-xl md:h-40"
+              className="h-56 w-full shrink-0 rounded-xl md:h-40"
               src={post.cover.formats.medium.url}
               alt={post.title}
               animate={{ x: 10, y: -10 }}
@@ -28,7 +28,7 @@ export function BlogListItem({ post }: { post: IPost }) {
             />
           ) : (
             <motion.img
-              className="h-56 shrink-0 rounded-xl md:h-40"
+              className="h-56 w-full shrink-0 rounded-xl md:h-40"
               src={post.cover.formats.medium.url}
               alt={post.title}
             />
