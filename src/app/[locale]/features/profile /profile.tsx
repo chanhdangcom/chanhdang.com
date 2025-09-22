@@ -74,7 +74,7 @@ export const Profile = () => {
               <Overview />
             </div>
 
-            <div className="w-full space-y-4">
+            <div className="flex-1">
               <SocialItem
                 scrImg="img/tech-stack/github.webp"
                 title="Github"
