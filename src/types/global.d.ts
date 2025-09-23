@@ -12,3 +12,15 @@ declare module "react-syntax-highlighter" {
   export const Prism: React.FC<SyntaxHighlighterProps>;
 }
 declare module "react-syntax-highlighter/*";
+
+// src/global.d.ts
+interface Document {
+  startViewTransition?: (callback: () => void) => void;
+}
+
+interface ViewTransition {
+  ready: Promise<void>;
+  finished: Promise<void>;
+  updateCallbackDone: Promise<void>;
+  skipTransition: () => void;
+}

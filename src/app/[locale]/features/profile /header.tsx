@@ -1,12 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
-import { SwitchTheme } from "@/components/switch-theme";
 import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { SwitchLanguage } from "./components/swtich-language";
 import { useTheme } from "next-themes";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export const Header = () => {
   const { theme } = useTheme();
@@ -55,17 +55,7 @@ export const Header = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          {/* <div className="flex w-32 items-center justify-between rounded-2xl border border-zinc-300 bg-transparent px-3 py-0.5 dark:border-zinc-800">
-            <Search className="size-5 text-zinc-500" />
-
-            <div className="flex items-center gap-1 rounded-lg border border-zinc-800 p-0.5">
-              <Command size={32} className="size-4 text-zinc-500" />
-
-              <div className="text-zinc-500">K</div>
-            </div>
-          </div> */}
-
-          <SwitchTheme />
+          <ThemeToggle />
 
           <SwitchLanguage />
 

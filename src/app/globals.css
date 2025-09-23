@@ -2,85 +2,94 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
-
-/* body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-} */
-
+/* ---------------- Base styles ---------------- */
 @layer base {
   body {
     @apply bg-zinc-50 font-body text-zinc-950 antialiased dark:bg-[#030610] dark:text-zinc-50;
   }
+
   :root {
     --radius: 0.5rem;
+    --expo-out: cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
 
-/* Ẩn scrollbar cho tất cả các trình duyệt */
+/* ---------------- Scrollbar hidden ---------------- */
 @layer utilities {
-  /* Webkit browsers (Chrome, Safari, Edge) */
   .scrollbar-hide {
-    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    -ms-overflow-style: none; /* IE 10+ */
     scrollbar-width: none; /* Firefox */
   }
-
   .scrollbar-hide::-webkit-scrollbar {
-    display: none; /* Safari and Chrome */
-  }
-
-  /* Ẩn scrollbar cho toàn bộ trang */
-  html {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer 10+ */
-  }
-
-  html::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Edge */
+  }
+
+  html {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  html::-webkit-scrollbar {
+    display: none;
   }
 
   body {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
-
   body::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Edge */
+    display: none;
   }
 }
 
-@keyframes moveGradient {
-  0% {
-    background-position: 0% 50%;
+/* ---------------- Theme Toggle View Transition (theo doc) ---------------- */
+html {
+  view-transition-name: root;
+}
+
+::view-transition-group(root) {
+  animation-duration: 0.7s;
+  animation-timing-function: var(--expo-out);
+}
+
+::view-transition-new(root) {
+  animation-name: reveal-light;
+}
+
+::view-transition-old(root),
+.dark::view-transition-old(root) {
+  animation: none;
+  z-index: -1;
+}
+
+.dark::view-transition-new(root) {
+  animation-name: reveal-dark;
+}
+
+@keyframes reveal-dark {
+  from {
+    clip-path: polygon(50% -71%, -50% 71%, -50% 71%, 50% -71%);
   }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
+  to {
+    clip-path: polygon(50% -71%, -50% 71%, 50% 171%, 171% 50%);
   }
 }
 
-@keyframes liquidMove {
-  0% {
-    background-position: 0% 50%;
+@keyframes reveal-light {
+  from {
+    clip-path: polygon(171% 50%, 50% 171%, 50% 171%, 171% 50%);
   }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
+  to {
+    clip-path: polygon(171% 50%, 50% 171%, -50% 71%, 50% -71%);
   }
 }
 
-.animate-liquid-gradient {
-  animation: moveGradient 12s ease-in-out infinite;
+/* ---------------- Accessibility: disable animation nếu user tắt motion ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(root),
+  ::view-transition-new(root),
+  ::view-transition-old(root),
+  .dark::view-transition-new(root),
+  .dark::view-transition-old(root) {
+    animation: none !important;
+  }
 }
