@@ -42,9 +42,9 @@ export const Footer = () => {
   return (
     <div className="relative font-mono text-sm md:text-base">
       {/* Vết sáng */}
-      <div className="pointer-events-none absolute inset-0 bottom-0">
+      {/* <div className="pointer-events-none absolute inset-0 bottom-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(34,211,238,0.2)_0%,transparent_70%)] blur-3xl" />
-      </div>
+      </div> */}
 
       <>
         <div className="container space-y-4 border-gray-200 py-8 dark:border-zinc-800 dark:text-zinc-400">

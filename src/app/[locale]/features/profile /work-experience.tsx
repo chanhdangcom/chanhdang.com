@@ -7,13 +7,13 @@ export function WorkExperience() {
         text-4xl pb-8 pt-12
       </div>
 
-      <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
+      <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
 
       <div className="mx-4 flex text-balance font-mono text-3xl font-semibold leading-tight tracking-tight md:mx-48 md:text-4xl">
         Work Experience
       </div>
 
-      <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
+      <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
 
       <div className="my-8">
         <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />

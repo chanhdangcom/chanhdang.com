@@ -26,7 +26,7 @@ export const Profile = () => {
           <Header />
         </div>
 
-        <div className="hidden h-80 items-center justify-center pt-12 md:flex">
+        <div className="hidden h-80 items-center justify-center pt-12 lg:flex">
           <TextHoverEffect text="DANG" />
         </div>
 
@@ -36,13 +36,13 @@ export const Profile = () => {
               text-5xl text-balance tracking-tight
             </div>
 
-            <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
+            <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
 
             <div className="mx-4 text-balance font-mono text-4xl font-semibold leading-tight tracking-tight md:mx-48 md:text-4xl">
               <>Turning bold ideas into cutting edge web experiences.</>
             </div>
 
-            <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
+            <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
           </div>
 
           <div>
@@ -56,20 +56,20 @@ export const Profile = () => {
           </div>
 
           <div>
-            <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
+            <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
 
             <div className="mx-4 text-balance font-mono text-lg md:mx-48">
               I don’t just code, I craft
             </div>
 
-            <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
+            <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
           </div>
         </div>
 
         <div className="mt-8">
           <div className="h-px w-full bg-zinc-200 dark:bg-zinc-800 md:top-0" />
 
-          <div className="mx-0 items-center justify-center md:mx-48 md:flex">
+          <div className="mx-0 items-center justify-center md:mx-48 lg:flex">
             <div className="w-full max-w-xl">
               <Overview />
             </div>
@@ -112,34 +112,6 @@ export const Profile = () => {
         <div className="my-8">
           <WorkExperience />
         </div>
-
-        {/* sss */}
-
-        {/* <div className="">
-          <div className="top-0 mx-4 font-mono text-xs text-zinc-500 md:mx-48">
-            text-4xl pb-8 pt-12
-          </div>
-
-          <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
-
-          <div className="mx-4 flex text-balance font-mono text-3xl font-semibold leading-tight tracking-tight md:mx-48 md:text-4xl">
-            My Photos
-          </div>
-
-          <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
-
-          <div className="my-8">
-            <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
-
-            <div className="mx-0 md:mx-48">
-              <PhotoList />
-            </div>
-
-            <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
-          </div>
-        </div> */}
-
-        {/* sss */}
 
         <div className="my-8">
           <ChanhdangMusicList />

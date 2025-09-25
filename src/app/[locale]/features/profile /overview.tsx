@@ -112,8 +112,8 @@ export const Overview = () => {
 
             <SpeakerHigh
               size={18}
-              weight="fill"
-              className="cursor-pointer"
+              weight="regular"
+              className="cursor-pointer text-zinc-500"
               onClick={() => HandelPlayAudio()}
             />
           </div>
