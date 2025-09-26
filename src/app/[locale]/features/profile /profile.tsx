@@ -38,8 +38,8 @@ export const Profile = () => {
 
             <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
 
-            <div className="mx-4 text-balance font-mono text-4xl font-semibold leading-tight tracking-tight md:mx-48 md:text-4xl">
-              <>Turning bold ideas into cutting edge web experiences.</>
+            <div className="mx-4 text-balance font-mono text-3xl font-semibold leading-tight tracking-tight md:mx-48 md:text-4xl">
+              Power is not in the tools, but in the mind that codes.
             </div>
 
             <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
@@ -55,15 +55,15 @@ export const Profile = () => {
             <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
           </div>
 
-          <div>
+          {/* <div>
             <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
 
-            <div className="mx-4 text-balance font-mono text-lg md:mx-48">
-              I don’t just code, I craft
+            <div className="mx-4 text-balance font-mono text-base md:mx-48">
+              From logic to life.
             </div>
 
             <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
-          </div>
+          </div> */}
         </div>
 
         <div className="mt-8">
