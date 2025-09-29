@@ -315,7 +315,7 @@ export function SingerManagement() {
         )}
       </div>
 
-      <div className="md:mt-40">
+      <div className="mt-20 md:mt-40">
         <Footer />
       </div>
     </div>
