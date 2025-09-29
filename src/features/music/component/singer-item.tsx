@@ -8,8 +8,14 @@ type IProp = {
 };
 
 export function SingerItem({ music, onClick }: IProp) {
+  const handleClick = () => {
+    const id = music.id ?? music._id;
+    if (id) {
+      onClick(id);
+    }
+  };
   return (
-    <div onClick={() => onClick(music.id)}>
+    <div onClick={handleClick}>
       {music.cover ? (
         <Image
           alt="singer cover"

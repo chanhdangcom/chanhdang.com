@@ -1,9 +1,7 @@
 "use client";
 import { useAudio } from "@/components/music-provider";
 import { CardSpotlight } from "@/components/ui";
-
 import { MUSICS } from "@/features/music/data/music-page";
-
 import { motion } from "motion/react";
 import { useState } from "react";
 

@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-
 import {
   FastForward,
   MusicNotes,
@@ -12,16 +11,15 @@ import {
 } from "phosphor-react";
 
 import { AnimatePresence, motion } from "motion/react";
-
 import { DurationAudio } from "./component/duration-audio";
 import {
   Control,
   SpeakerHigh,
   SpeakerSlash,
 } from "@phosphor-icons/react/dist/ssr";
+
 import { useEffect, useRef, useState } from "react";
 import { PlayerPage } from "./player-page";
-
 import LiquidGlassBackground from "@/components/liquid-glass-background";
 import { useOutsideClick } from "@/app/[locale]/features/profile /hook/use-outside-click";
 import { useAudio } from "@/components/music-provider";

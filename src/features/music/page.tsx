@@ -16,6 +16,7 @@ import { CarouselAudioPlaylist } from "./carousel-audio-playlist";
 import { PickForYou } from "./pick-for-you";
 import { MotionHeaderMusic } from "./component/motion-header-music";
 import { Footer } from "@/app/[locale]/features/profile /footer";
+
 // import { useDisableRightClick } from "../../hooks/use-disable-right-click";
 
 export function MusicPage() {
@@ -23,9 +24,8 @@ export function MusicPage() {
 
   return (
     <div className="flex font-apple">
-      <MenuBar />
-
       <MotionHeaderMusic />
+      <MenuBar />
 
       <div className="mx-auto w-full">
         <div className="relative z-10">

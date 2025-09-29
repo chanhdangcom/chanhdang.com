@@ -92,8 +92,6 @@ const config: Config = {
     '200': '200% 200%',
   },
 
-  
-
   container: {
   		center: true,
   		padding: {
@@ -112,4 +110,11 @@ const config: Config = {
   ],
 };
 
+
+
+
+
 export default config;
+
+
+ 

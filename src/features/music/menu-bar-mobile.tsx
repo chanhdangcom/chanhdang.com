@@ -1,16 +1,14 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
-import {
-  Bookmarks,
-  House,
-  MagnifyingGlass,
-  Plus,
-  SquaresFour,
-} from "phosphor-react";
+import { Bookmarks, House, MagnifyingGlass } from "phosphor-react";
 import { useEffect, useRef, useState } from "react";
 import { useUser } from "@/hooks/use-user";
 import LiquidGlassBackground from "@/components/liquid-glass-background";
+import {
+  MicrophoneStage,
+  MusicNotesSimple,
+} from "@phosphor-icons/react/dist/ssr";
 
 export function MenuBarMobile() {
   const { isAuthenticated } = useUser();
@@ -73,22 +71,32 @@ export function MenuBarMobile() {
                 <div className="text-sm font-semibold">Home</div>
               </div>
 
-              <div className="flex flex-col items-center">
-                <SquaresFour size={30} weight="fill" className="" />
-                <div className="text-sm">New</div>
-              </div>
-
               {isAuthenticated ? (
                 <Link
-                  href={"/music/add"}
+                  href={"/music/add-music"}
                   className="flex flex-col items-center"
                 >
-                  <Plus size={30} weight="fill" />
+                  <MusicNotesSimple size={30} weight="fill" />
                   <div className="text-sm">Add</div>
                 </Link>
               ) : (
                 <div className="pointer-events-none flex flex-col items-center opacity-30">
-                  <Plus size={30} weight="fill" />
+                  <MusicNotesSimple size={30} weight="fill" />
+                  <div className="text-sm">Add</div>
+                </div>
+              )}
+
+              {isAuthenticated ? (
+                <Link
+                  href={"/music/add-singer"}
+                  className="flex flex-col items-center"
+                >
+                  <MicrophoneStage size={30} weight="fill" />
+                  <div className="text-sm">Add</div>
+                </Link>
+              ) : (
+                <div className="pointer-events-none flex flex-col items-center opacity-30">
+                  <MicrophoneStage size={30} weight="fill" />
                   <div className="text-sm">Add</div>
                 </div>
               )}

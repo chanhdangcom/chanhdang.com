@@ -2,10 +2,15 @@
 
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { useUser } from "@/hooks/use-user";
-import { BookBookmark, House } from "@phosphor-icons/react/dist/ssr";
+import {
+  BookBookmark,
+  House,
+  MicrophoneStage,
+  MusicNotesSimple,
+} from "@phosphor-icons/react/dist/ssr";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { MagnifyingGlass, Plus } from "phosphor-react";
+import { MagnifyingGlass } from "phosphor-react";
 
 export function MenuBar() {
   const { isAuthenticated } = useUser();
@@ -50,16 +55,32 @@ export function MenuBar() {
 
             {isAuthenticated ? (
               <Link
-                href={"/music/add"}
+                href={"/music/add-music"}
                 className="flex items-center gap-2 rounded-2xl p-2"
               >
-                <Plus size={20} weight="bold" />
+                <MusicNotesSimple size={20} weight="bold" />
+
                 <div className="">Add New Music</div>
               </Link>
             ) : (
               <div className="pointer-events-none flex items-center gap-2 p-2 opacity-30">
-                <Plus size={20} weight="bold" />
+                <MusicNotesSimple size={20} weight="bold" />
                 <div className="">Add New Music</div>
+              </div>
+            )}
+
+            {isAuthenticated ? (
+              <Link
+                href={"/music/add-singer"}
+                className="flex items-center gap-2 rounded-2xl p-2"
+              >
+                <MicrophoneStage size={20} weight="fill" />
+                <div className="">Add Artists</div>
+              </Link>
+            ) : (
+              <div className="pointer-events-none flex items-center gap-2 p-2 opacity-30">
+                <MicrophoneStage size={20} weight="fill" />
+                <div className="">Add Artists</div>
               </div>
             )}
 

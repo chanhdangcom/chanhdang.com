@@ -8,7 +8,6 @@ import { AudioSingerItem } from "./component/audio-singer-item";
 import { AudioBar } from "./audio-bar";
 import { motion } from "motion/react";
 import { AnimatePresence } from "framer-motion";
-import { MUSICSSINGER } from "./data/music-page-singer";
 import { MenuBar } from "./menu-bar";
 import { HeaderMusicPage } from "./header-music-page";
 
@@ -20,12 +19,56 @@ import { CarouselAudio } from "./carousel-audio";
 
 import { MotionHeaderMusic } from "./component/motion-header-music";
 import { Footer } from "@/app/[locale]/features/profile /footer";
+import { useEffect, useState } from "react";
+import { ISingerItem } from "./type/singer";
 
 type IProp = {
   idSinger: string;
 };
 
 export function SingerPage({ idSinger }: IProp) {
+  const [singer, setSinger] = useState<ISingerItem | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`/api/singers/${idSinger}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("SINGER API DATA:", data);
+        setSinger(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching singer:", error);
+        setLoading(false);
+      });
+  }, [idSinger]);
+
+  if (loading) {
+    return (
+      <div className="md:flex">
+        <MenuBar />
+        <div className="pointer-events-none fixed top-0 z-10 h-24 w-full bg-gradient-to-b from-white via-white/50 to-transparent dark:from-black dark:via-black/50" />
+        <MotionHeaderMusic name="Artists" />
+        <div className="flex items-center justify-center py-8">
+          <div className="text-zinc-500">Loading singer...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!singer) {
+    return (
+      <div className="md:flex">
+        <MenuBar />
+        <div className="pointer-events-none fixed top-0 z-10 h-24 w-full bg-gradient-to-b from-white via-white/50 to-transparent dark:from-black dark:via-black/50" />
+        <MotionHeaderMusic name="Artists" />
+        <div className="flex items-center justify-center py-8">
+          <div className="text-zinc-500">Singer not found</div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="md:flex">
       <MenuBar />
@@ -61,68 +104,59 @@ export function SingerPage({ idSinger }: IProp) {
 
             <div className="mx-4 flex rounded-3xl md:ml-[270px] md:p-4">
               <div className="w-full flex-col items-center md:flex-none">
-                {MUSICSSINGER.filter((item) => item.id === idSinger).map(
-                  (item) => (
-                    <div key={item.id}>
-                      <img
-                        src={item.cover}
-                        alt="cover"
-                        className="mx-auto my-4 size-60 rounded-3xl object-cover shadow-2xl"
-                      />
+                <div>
+                  <img
+                    src={singer.cover}
+                    alt="cover"
+                    className="mx-auto my-4 size-60 rounded-3xl object-cover shadow-2xl"
+                  />
+                </div>
+
+                <div className="space-y-2 text-6xl">
+                  <div className="flex items-center justify-center gap-1">
+                    <div className="text-2xl font-semibold">
+                      Các bài hát của
                     </div>
-                  )
-                )}
 
-                {MUSICSSINGER.filter((item) => item.id === idSinger).map(
-                  (item) => (
-                    <div className="space-y-2 text-6xl" key={item.id}>
-                      <div className="flex items-center justify-center gap-1">
-                        <div className="text-2xl font-semibold">
-                          Các bài hát của
-                        </div>
+                    <div className="text-2xl font-semibold">
+                      {singer.singer}
+                    </div>
+                  </div>
 
-                        <div className="text-2xl font-semibold">
-                          {item.singer}
-                        </div>
+                  <div className="text-center text-lg text-zinc-500">
+                    ChanhDang Music
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex w-full justify-between gap-4">
+                      <div className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 dark:bg-zinc-900">
+                        <Play size={20} weight="fill" />
+
+                        <div className="text-xl">Play</div>
                       </div>
 
-                      <div className="text-center text-lg text-zinc-500">
-                        ChanhDang Music
-                      </div>
+                      <div className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-2 font-semibold text-red-500 dark:bg-zinc-900">
+                        <Shuffle size={20} weight="fill" />
 
-                      <div className="space-y-4">
-                        <div className="flex w-full justify-between gap-4">
-                          <div className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 dark:bg-zinc-900">
-                            <Play size={20} weight="fill" />
-
-                            <div className="text-xl">Play</div>
-                          </div>
-
-                          <div className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-2 font-semibold text-red-500 dark:bg-zinc-900">
-                            <Shuffle size={20} weight="fill" />
-
-                            <div className="text-xl">Mix song</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="text-center text-base text-zinc-500">
-                        <div>
-                          Tận hưởng bữa tiệc âm nhạc đầy đặc sắc với{" "}
-                          {item.singer}
-                        </div>
+                        <div className="text-xl">Mix song</div>
                       </div>
                     </div>
-                  )
-                )}
+                  </div>
+
+                  <div className="text-center text-base text-zinc-500">
+                    <div>
+                      Tận hưởng bữa tiệc âm nhạc đầy đặc sắc với {singer.singer}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
           <div className="mx-8 flex items-center justify-center md:ml-[270px] md:justify-between">
-            {MUSICSSINGER.filter((item) => item.id === idSinger).map((item) => (
-              <div key={item.id}>
-                {item.musics?.slice(-1).map((music) => (
+            {singer.musics && singer.musics.length > 0 && (
+              <div>
+                {singer.musics.slice(-1).map((music) => (
                   <div key={music.id}>
                     <div className="hidden w-fit shrink-0 cursor-pointer gap-4 space-y-2 rounded-xl p-1.5 text-zinc-50 hover:bg-zinc-100 dark:hover:bg-zinc-900 md:flex">
                       {music.cover ? (
@@ -153,16 +187,10 @@ export function SingerPage({ idSinger }: IProp) {
                   </div>
                 ))}
               </div>
-            ))}
+            )}
 
             <div className="md:mx-a mt-8 justify-center px-3 md:mt-0 md:max-w-3xl md:justify-center">
-              {MUSICSSINGER.filter((item) => item.id === idSinger).map(
-                (item) => (
-                  <div key={item.id}>
-                    <AudioSingerItem music={item} />
-                  </div>
-                )
-              )}
+              <AudioSingerItem music={singer} />
             </div>
           </div>
 

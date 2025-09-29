@@ -13,7 +13,7 @@ import { ChanhdangMusicList } from "./chanhdang-music-list";
 
 export const Profile = () => {
   return (
-    <div>
+    <>
       <div>
         <div className="fixed left-0 h-screen w-px bg-zinc-200 dark:bg-zinc-800 md:left-48" />
         <div className="fixed right-0 h-screen w-px bg-zinc-200 dark:bg-zinc-800 md:right-48" />
@@ -54,16 +54,6 @@ export const Profile = () => {
 
             <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
           </div>
-
-          {/* <div>
-            <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
-
-            <div className="mx-4 text-balance font-mono text-base md:mx-48">
-              From logic to life.
-            </div>
-
-            <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
-          </div> */}
         </div>
 
         <div className="mt-8">
@@ -127,6 +117,6 @@ export const Profile = () => {
 
         <Footer />
       </div>
-    </div>
+    </>
   );
 };

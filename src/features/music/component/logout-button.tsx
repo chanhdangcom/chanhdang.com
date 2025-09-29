@@ -44,14 +44,17 @@ export function LogoutButton() {
 
             <div className="text-lg">
               <div className="rounded-md px-1 py-0.5 hover:bg-zinc-300 dark:hover:bg-zinc-800">
-                <Link href={"music/add"} className="flex items-center gap-1">
+                <Link
+                  href={"/music/add-music"}
+                  className="flex items-center gap-1"
+                >
                   <div>Add Music</div>
                 </Link>
               </div>
 
               <div className="rounded-md px-1 py-0.5 hover:bg-zinc-300 dark:hover:bg-zinc-800">
                 <Link
-                  href={"music/favorites"}
+                  href={"/music/favorites"}
                   className="flex items-center gap-1"
                 >
                   <div>Library</div>
@@ -60,7 +63,7 @@ export function LogoutButton() {
               </div>
 
               <div className="flex items-center gap-1 rounded-md px-1 py-0.5 hover:bg-zinc-300 dark:hover:bg-zinc-800">
-                <div>Update Profile</div>
+                <Link href={"/music/add-singer"}>Add Artists</Link>
               </div>
 
               <div

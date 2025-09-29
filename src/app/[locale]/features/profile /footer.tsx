@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { SwitchLanguage } from "./components/swtich-language";
-import { ThemeSwitcher } from "@/components/ui/theme-switcher";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 type IIcon = {
   className?: string;
@@ -149,10 +149,10 @@ export const Footer = () => {
               </a>
             </div>
 
-            <div className="flex items-center justify-center gap-4">
-              <SwitchLanguage />
+            <div className="flex items-center justify-center gap-2">
+              <ThemeToggle />
 
-              <ThemeSwitcher />
+              <SwitchLanguage />
             </div>
           </div>
         </div>
