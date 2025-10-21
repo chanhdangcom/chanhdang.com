@@ -9,6 +9,14 @@
     
   },
 
+  "titleintro":{
+    "Title":"Power is not in the tools, but in the mind that codes."
+  },
+
+  "descomponent":{
+    "Descriptio":"A collection of reusable components."
+  },
+
   "experience": {
     "work": {
       "intern": "Intern | 2023 - Present",

@@ -8,6 +8,14 @@
     "Content": "Tôi đam mê sáng tạo và phát triển ứng dụng web và phần mềm, luôn tìm kiếm những giải pháp tối ưu và hiệu quả nhất. Tôi có kinh nghiệm sử dụng các công nghệ hiện đại như TypeScript, React và Tailwind CSS. Tôi thích tìm hiểu và áp dụng các công nghệ mới."
   },
 
+  "titleintro": {
+    "Title":"Sức mạnh không nằm ở công cụ, mà nằm ở trí óc lập trình."
+  },
+
+  "descomponent": {
+    "Descriptio":"Một bộ sưu tập các thành phần có thể tái sử dụng."
+  },
+
   "experience": {
     "work": {
       "intern": "Thực tập | 2023 - Hiện tại",

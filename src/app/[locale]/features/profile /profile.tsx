@@ -1,4 +1,3 @@
-import { TeckLish } from "@/components/teck-lish";
 import { HeaderMotion } from "./components/header-motion";
 import { FinalBlog } from "./final-blog";
 import { Footer } from "./footer";
@@ -10,6 +9,7 @@ import { SocialItem } from "./components/social-item";
 import { ComponentList } from "./component-list";
 import { WorkExperience } from "./work-experience";
 import { ChanhdangMusicList } from "./chanhdang-music-list";
+import { TitleIntro } from "./components/title-intro";
 
 export const Profile = () => {
   return (
@@ -30,31 +30,7 @@ export const Profile = () => {
           <TextHoverEffect text="DANG" />
         </div>
 
-        <div className="space-y-8 md:my-0">
-          <div>
-            <div className="pointer-events-none top-0 mx-4 font-mono text-xs text-zinc-500 md:mx-48">
-              text-5xl text-balance tracking-tight
-            </div>
-
-            <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
-
-            <div className="mx-4 text-balance font-mono text-3xl font-semibold leading-tight tracking-tight md:mx-48 md:text-4xl">
-              Power is not in the tools, but in the mind that codes.
-            </div>
-
-            <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
-          </div>
-
-          <div>
-            <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
-
-            <div className="mx-0 md:mx-48">
-              <TeckLish />
-            </div>
-
-            <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
-          </div>
-        </div>
+        <TitleIntro />
 
         <div className="mt-8">
           <div className="h-px w-full bg-zinc-200 dark:bg-zinc-800 md:top-0" />

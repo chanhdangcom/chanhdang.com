@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, useCallback } from "react";
 import * as THREE from "three";
 
 export const CanvasRevealEffect = ({
@@ -12,10 +12,6 @@ export const CanvasRevealEffect = ({
   dotSize,
   showGradient = true,
 }: {
-  /**
-   * 0.1 - slower
-   * 1.0 - faster
-   */
   animationSpeed?: number;
   opacities?: number[];
   colors?: number[][];
@@ -65,7 +61,7 @@ const DotMatrix: React.FC<DotMatrixProps> = ({
   shader = "",
   center = ["x", "y"],
 }) => {
-  const uniforms = React.useMemo(() => {
+  const uniforms = useMemo(() => {
     let colorsArray: number[][] = [
       colors[0],
       colors[0],
@@ -213,7 +209,8 @@ const ShaderMaterial = ({
     material.uniforms.u_time.value = timestamp;
   });
 
-  const getUniforms = () => {
+  // ✅ useCallback để không bị cảnh báo missing dependency
+  const getUniforms = useCallback(() => {
     const preparedUniforms: PreparedUniforms = {};
 
     for (const uniformName in uniforms) {
@@ -254,7 +251,7 @@ const ShaderMaterial = ({
       value: new THREE.Vector2(size.width * 2, size.height * 2),
     };
     return preparedUniforms;
-  };
+  }, [uniforms, size.width, size.height]);
 
   const material = useMemo(() => {
     return new THREE.ShaderMaterial({
@@ -278,7 +275,7 @@ const ShaderMaterial = ({
       blendSrc: THREE.SrcAlphaFactor,
       blendDst: THREE.OneFactor,
     });
-  }, [size.width, size.height, source]);
+  }, [getUniforms, source]);
 
   return (
     <mesh ref={ref}>

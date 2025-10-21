@@ -108,11 +108,11 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   }, [currentMusic]);
 
   useEffect(() => {
-    if (!audioRef.current) return;
+    const audioEl = audioRef.current;
+    if (!audioEl) return;
 
     const syncLyrics = () => {
-      if (!audioRef.current) return;
-      const currentTime = audioRef.current.currentTime;
+      const currentTime = audioEl.currentTime;
       const activeSubtitle = subtitles.find(
         (sub) => currentTime >= sub.start && currentTime <= sub.end
       );
@@ -123,7 +123,6 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
           : prevLyrics
       );
 
-      // 🔥 Tự động cuộn đến dòng hiện tại
       const activeElement = document.getElementById(
         `subtitle-${activeSubtitle?.id}`
       );
@@ -132,9 +131,9 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
-    audioRef.current.addEventListener("timeupdate", syncLyrics);
+    audioEl.addEventListener("timeupdate", syncLyrics);
     return () => {
-      audioRef.current?.removeEventListener("timeupdate", syncLyrics);
+      audioEl.removeEventListener("timeupdate", syncLyrics);
     };
   }, [subtitles]);
 

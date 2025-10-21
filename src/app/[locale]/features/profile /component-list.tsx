@@ -1,6 +1,9 @@
+import { useTranslations } from "next-intl";
 import { ComponentListItem } from "./components/component-list-item";
 
 export function ComponentList() {
+  const t = useTranslations();
+
   return (
     <>
       <div className="mb-8">
@@ -21,7 +24,7 @@ export function ComponentList() {
 
       <div className="mx-0 md:mx-48">
         <div className="mx-4 mt-4 text-balance font-mono">
-          A collection of reusable components.
+          {t("descomponent.Descriptio")}
         </div>
 
         <div className="mb-8 mt-4 border-t border-dashed border-zinc-200 dark:border-zinc-800">

@@ -125,199 +125,210 @@ export function SingerManagement() {
   }
 
   return (
-    <div className="font-apple">
-      <div className="md:ml-6">
-        <HeaderMusicPage name="Add Artists" />
-      </div>
-
-      <div className="container space-y-6">
-        <div className="flex items-center justify-between rounded-full border border-zinc-300 bg-gradient-to-bl from-transparent to-black/10 p-4 py-2 pl-4 pr-2 font-apple backdrop-blur-2xl dark:border-zinc-700 dark:to-white/10">
-          <h2 className="text-2xl font-bold">Quản lý Ca sĩ</h2>
-
-          <div
-            onClick={() => setShowAddForm(true)}
-            className="flex items-center rounded-full bg-blue-400 p-2"
-          >
-            <Plus size={20} weight="bold" className="text-white" />
-          </div>
+    <div>
+      <div
+        className={
+          showAddForm ? "z-10 bg-zinc-950 font-apple blur-2xl" : "font-apple"
+        }
+      >
+        <div className="md:ml-6">
+          <HeaderMusicPage name="Add Artists" />
         </div>
 
-        {/* Add Singer Form */}
-        {showAddForm ? (
-          <motion.div
-            transition={{
-              type: "spring",
-              ease: "easeIn",
-              stiffness: 200,
-            }}
-            layoutId="form"
-            className="z-30 space-y-4 rounded-3xl border border-zinc-300 bg-gradient-to-tr from-transparent to-black/10 p-4 font-apple backdrop-blur-2xl dark:border-zinc-700 dark:to-white/10"
-          >
-            <div>
-              <div className="text-xl font-bold">Thêm Ca sĩ Mới</div>
+        <div className="container space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold">Quản lý Ca sĩ</h2>
+
+            <div
+              onClick={() => setShowAddForm(true)}
+              className="flex items-center rounded-full bg-blue-400 p-2"
+            >
+              <Plus size={20} weight="bold" className="text-white" />
             </div>
+          </div>
 
-            <div className="rounded-lg">
-              <form onSubmit={handleAddSinger} className="space-y-4">
-                <div>
-                  <label htmlFor="singer" className="text-sm font-medium">
-                    Tên Ca sĩ
-                  </label>
+          {/* Add Singer Form */}
 
-                  <Input
-                    id="singer"
-                    value={formData.singer}
-                    onChange={(e) =>
-                      setFormData({ ...formData, singer: e.target.value })
-                    }
-                    placeholder="Nhập tên ca sĩ"
-                    required
-                    className="rounded-xl border bg-white px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
-                  />
-                </div>
+          {/* Singers List */}
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
+            {singers.map((singer) => (
+              <div key={singer._id || singer.id}>
+                <div className="rounded-3xl border border-zinc-300 bg-gradient-to-tl from-transparent to-black/10 p-4 font-apple backdrop-blur-2xl dark:border-zinc-700 dark:to-white/10">
+                  <div className="flex items-center gap-4">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={singer.cover}
+                      alt={singer.singer}
+                      className="size-16 rounded-full object-cover"
+                    />
 
-                <div>
-                  <label htmlFor="cover" className="text-sm font-medium">
-                    URL Ảnh Bìa
-                  </label>
+                    <div className="flex-1">
+                      {editingId === (singer._id || singer.id) ? (
+                        <div className="space-y-2">
+                          <Input
+                            value={formData.singer}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                singer: e.target.value,
+                              })
+                            }
+                            placeholder="Tên ca sĩ"
+                            className="rounded-xl border bg-white px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+                          />
 
-                  <Input
-                    id="cover"
-                    value={formData.cover}
-                    onChange={(e) =>
-                      setFormData({ ...formData, cover: e.target.value })
-                    }
-                    placeholder="https://example.com/avatar.jpg"
-                    required
-                    className="rounded-xl border bg-white px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
-                  />
-                </div>
+                          <Input
+                            value={formData.cover}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                cover: e.target.value,
+                              })
+                            }
+                            placeholder="URL ảnh bìa"
+                            className="rounded-xl border bg-white px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+                          />
+                        </div>
+                      ) : (
+                        <div>
+                          <h3 className="font-semibold">{singer.singer}</h3>
+                          <p className="text-sm text-zinc-500">
+                            {singer.musics?.length || 0} bài hát
+                          </p>
+                        </div>
+                      )}
+                    </div>
 
-                <div className="flex gap-2">
-                  <Button
-                    type="submit"
-                    className="flex items-center gap-1 rounded-xl border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
-                  >
-                    <Save size={20} className="text-blue-400" />
-                    Lưu
-                  </Button>
+                    <div className="flex gap-2">
+                      {editingId === (singer._id || singer.id) ? (
+                        <>
+                          <Button
+                            onClick={() =>
+                              handleUpdateSinger(singer._id || singer.id || "")
+                            }
+                            className="flex items-center gap-1 rounded-full border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
+                          >
+                            <Save size={20} className="text-blue-400" />
+                          </Button>
 
-                  <Button
-                    onClick={() => setShowAddForm(false)}
-                    className="flex items-center gap-1 rounded-xl border bg-zinc-50 p-2 text-red-400 dark:border-zinc-800 dark:bg-zinc-950"
-                  >
-                    Hủy
-                  </Button>
-                </div>
-              </form>
-            </div>
-          </motion.div>
-        ) : (
-          <motion.div layoutId="form" />
-        )}
+                          <Button
+                            variant="outline"
+                            onClick={cancelEdit}
+                            className="flex items-center gap-1 rounded-full border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
+                          >
+                            <X size={20} className="text-red-400" />
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button
+                            onClick={() => startEdit(singer)}
+                            variant="destructive"
+                            className="flex items-center gap-1 rounded-full border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
+                          >
+                            <Edit size={20} className="text-blue-400" />
+                          </Button>
 
-        {/* Singers List */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
-          {singers.map((singer) => (
-            <div key={singer._id || singer.id}>
-              <div className="rounded-3xl border border-zinc-300 bg-gradient-to-tl from-transparent to-black/10 p-4 font-apple backdrop-blur-2xl dark:border-zinc-700 dark:to-white/10">
-                <div className="flex items-center gap-4">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={singer.cover}
-                    alt={singer.singer}
-                    className="size-16 rounded-full object-cover"
-                  />
-
-                  <div className="flex-1">
-                    {editingId === (singer._id || singer.id) ? (
-                      <div className="space-y-2">
-                        <Input
-                          value={formData.singer}
-                          onChange={(e) =>
-                            setFormData({ ...formData, singer: e.target.value })
-                          }
-                          placeholder="Tên ca sĩ"
-                          className="rounded-xl border bg-white px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
-                        />
-
-                        <Input
-                          value={formData.cover}
-                          onChange={(e) =>
-                            setFormData({ ...formData, cover: e.target.value })
-                          }
-                          placeholder="URL ảnh bìa"
-                          className="rounded-xl border bg-white px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
-                        />
-                      </div>
-                    ) : (
-                      <div>
-                        <h3 className="font-semibold">{singer.singer}</h3>
-                        <p className="text-sm text-zinc-500">
-                          {singer.musics?.length || 0} bài hát
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex gap-2">
-                    {editingId === (singer._id || singer.id) ? (
-                      <>
-                        <Button
-                          onClick={() =>
-                            handleUpdateSinger(singer._id || singer.id || "")
-                          }
-                          className="flex items-center gap-1 rounded-full border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
-                        >
-                          <Save size={20} className="text-blue-400" />
-                        </Button>
-
-                        <Button
-                          variant="outline"
-                          onClick={cancelEdit}
-                          className="flex items-center gap-1 rounded-full border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
-                        >
-                          <X size={20} className="text-red-400" />
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <Button
-                          onClick={() => startEdit(singer)}
-                          variant="destructive"
-                          className="flex items-center gap-1 rounded-full border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
-                        >
-                          <Edit size={20} className="text-blue-400" />
-                        </Button>
-
-                        <Button
-                          variant="destructive"
-                          onClick={() =>
-                            handleDeleteSinger(singer._id || singer.id || "")
-                          }
-                          className="flex items-center gap-1 rounded-full border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
-                        >
-                          <Trash2 size={20} className="text-red-400" />
-                        </Button>
-                      </>
-                    )}
+                          <Button
+                            variant="destructive"
+                            onClick={() =>
+                              handleDeleteSinger(singer._id || singer.id || "")
+                            }
+                            className="flex items-center gap-1 rounded-full border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
+                          >
+                            <Trash2 size={20} className="text-red-400" />
+                          </Button>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
+            ))}
+          </div>
+
+          {singers.length === 0 && (
+            <div className="py-8 text-center text-zinc-500">
+              Chưa có ca sĩ nào. Hãy thêm ca sĩ đầu tiên!
             </div>
-          ))}
+          )}
         </div>
 
-        {singers.length === 0 && (
-          <div className="py-8 text-center text-zinc-500">
-            Chưa có ca sĩ nào. Hãy thêm ca sĩ đầu tiên!
+        <div className="mt-20 md:mt-40">
+          <Footer />
+        </div>
+      </div>
+      {/* showAddForm */}
+      {showAddForm ? (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          className="absolute inset-x-8 top-8 z-30 space-y-4 rounded-3xl border border-zinc-300 bg-gradient-to-tr from-transparent to-black/10 p-4 font-apple backdrop-blur-2xl dark:border-zinc-700 dark:to-white/10 md:inset-x-40 md:top-40"
+        >
+          <div>
+            <div className="text-xl font-bold">Thêm Ca sĩ Mới</div>
           </div>
-        )}
-      </div>
 
-      <div className="mt-20 md:mt-40">
-        <Footer />
-      </div>
+          <div className="rounded-lg">
+            <form onSubmit={handleAddSinger} className="space-y-4">
+              <div>
+                <label htmlFor="singer" className="text-sm font-medium">
+                  Tên Ca sĩ
+                </label>
+
+                <Input
+                  id="singer"
+                  value={formData.singer}
+                  onChange={(e) =>
+                    setFormData({ ...formData, singer: e.target.value })
+                  }
+                  placeholder="Nhập tên ca sĩ"
+                  required
+                  className="rounded-xl border bg-white px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="cover" className="text-sm font-medium">
+                  URL Ảnh Bìa
+                </label>
+
+                <Input
+                  id="cover"
+                  value={formData.cover}
+                  onChange={(e) =>
+                    setFormData({ ...formData, cover: e.target.value })
+                  }
+                  placeholder="https://example.com/avatar.jpg"
+                  required
+                  className="rounded-xl border bg-white px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+                />
+              </div>
+
+              <div className="flex gap-2">
+                <Button
+                  type="submit"
+                  className="flex items-center gap-1 rounded-xl border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
+                >
+                  <Save size={20} className="text-blue-400" />
+                  Lưu
+                </Button>
+
+                <Button
+                  onClick={() => setShowAddForm(false)}
+                  className="flex items-center gap-1 rounded-xl border bg-zinc-50 p-2 text-red-400 dark:border-zinc-800 dark:bg-zinc-950"
+                >
+                  Hủy
+                </Button>
+              </div>
+            </form>
+          </div>
+        </motion.div>
+      ) : (
+        <motion.div layoutId="form" />
+      )}
     </div>
   );
 }
