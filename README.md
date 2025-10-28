@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌐 ChanhDang — Developer Portfolio & Music Platform
 
-## Getting Started
+> “Power is not in the tools, but in the mind that codes.”  
+> — Nguyễn Chánh Đăng
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🧠 About Me
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Hi, I'm **Chánh Đăng** — a developer passionate about building **modern web applications** and **creative tools** using  
+**Next.js**, **React**, **Tailwind CSS**, and **ShadCN UI**.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+I love designing clean interfaces, writing elegant code, and turning ideas into polished digital products.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> Visit my portfolio: [https://chanhdang.com](https://chanhdang.com)
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🎧 ChanhDang Music
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+> A personal music web app inspired by Spotify, built with modern web technologies.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+🌟 **Live:** [https://chanhdang.com/music](https://chanhdang.com/music)
 
-## Deploy on Vercel
+### ✨ Features
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- 🎶 Personalized playlists (Relax, Chill, Feel Good, RAP…)
+- 💿 “Top Picks” and “Trending Now” sections
+- 📀 Smooth music player with lyric sync & animation
+- 🎨 Built with **Next.js 15**, **Tailwind CSS**, **ShadCN UI**
+- 💾 Data handled by **MongoDB**
+- 🌓 Full **Dark/Light mode** theme system
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) 2 for more details
+---
+
+## 🖼️ Screenshots
+
+|                                               |                                             |                                                  |
+| :-------------------------------------------: | :-----------------------------------------: | :----------------------------------------------: |
+|      ![Home](public/previews/1-home.png)      | ![Playlist](public/previews/2-playlist.png) | ![Now Playing](public/previews/3-nowplaying.png) |
+| ![Favorites](public/previews/4-favorites.png) |   ![Albums](public/previews/5-albums.png)   |     ![Search](public/previews/6-search.png)      |
+| ![Dark Mode](public/previews/7-darkmode.png)  |                                             |                                                  |
+
+> _Modern, minimalist interface with smooth transitions and responsive layouts._
+
+---
+
+## 🛠️ Tech Stack
+
+| Frontend   | UI & Design   | Backend     | Other      |
+| ---------- | ------------- | ----------- | ---------- |
+| Next.js 15 | Tailwind CSS  | MongoDB     | ShadCN UI  |
+| React      | Framer Motion | Next Themes | TypeScript |
+
+---
+
+## 🧩 Components Library
+
+A growing collection of reusable UI components built with React + Tailwind CSS:
+
+- ⚡ **Hello-world**
+- 🌙 **Switch-theme**
+- 🌀 **Dynamic-island**
+
+Explore: [https://chanhdang.com/components](https://chanhdang.com/components)
+
+---
+
+## 📰 Blog Highlights
+
+I write about:
+
+- Web development & design
+- Modern JavaScript/React techniques
+- AI & creative coding insights
+- Apple ecosystem updates
+
+Read more: [https://chanhdang.com/blogs](https://chanhdang.com/blogs)
+
+---
+
+## 🌎 Connect with me
+
+- 💻 **GitHub:** [chanhdangcom](https://github.com/chanhdangcom)
+- 🎥 **YouTube:** [@nguyenchanhdang](https://youtube.com/@nguyenchanhdang)
+- 🪶 **Website:** [chanhdang.com](https://chanhdang.com)
+- 🪩 **Music:** [chanhdang.com/music](https://chanhdang.com/music)
+
+---
+
+## 🖤 Credits
+
+Inspired by:
+
+- [Nativewind](https://www.nativewind.dev/)
+- [ShadCN UI](https://ui.shadcn.com/)
+
+© 2025 **Chánh Đăng** — All rights reserved.
