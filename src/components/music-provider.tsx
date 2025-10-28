@@ -1,6 +1,5 @@
 import { IMusic } from "@/app/[locale]/features/profile /types/music";
 import { MUSICS } from "@/features/music/data/music-page";
-
 import React, {
   useCallback,
   useContext,
@@ -23,6 +22,7 @@ type IMusicContext = {
   isPaused: boolean;
   isMuted: boolean;
   currentLyrics: string | null;
+  subtitles: Subtitle[]; // 🆕 Thêm phần này để render full lời ở UI
 
   handlePlayAudio: (music: IMusic) => void;
   handlePlayRandomAudio: () => void;
@@ -51,8 +51,8 @@ const parseSRT = (srt: string): Subtitle[] => {
 };
 
 const timeToSeconds = (time: string): number => {
-  const parts = time.split(":"),
-    seconds = parts[2].split(",");
+  const parts = time.split(":");
+  const seconds = parts[2].split(",");
   return (
     parseInt(parts[0], 10) * 3600 +
     parseInt(parts[1], 10) * 60 +
@@ -92,21 +92,20 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const currentMusicRef = useRef<IMusic | null>(null);
+
   useEffect(() => {
     currentMusicRef.current = currentMusic;
   }, [currentMusic]);
 
-  // crossfade audio instance (tạo mới mỗi lần)
-  const crossfadeAudioRef = useRef<HTMLAudioElement | null>(null);
-
+  // 🆕 Demo 1 bài — load file srt cố định
   useEffect(() => {
-    if (!currentMusic) return;
-
-    fetch(`/audio/MuonRoiMaSaoCons.mp3.srt`)
+    fetch("/srt/MuonRoiMaSaoCon.srt")
       .then((res) => res.text())
-      .then((text) => setSubtitles(parseSRT(text)));
-  }, [currentMusic]);
+      .then((text) => setSubtitles(parseSRT(text)))
+      .catch((err) => console.error("Lỗi load SRT:", err));
+  }, []);
 
+  // 🆕 Đồng bộ thời gian audio với lyric
   useEffect(() => {
     const audioEl = audioRef.current;
     if (!audioEl) return;
@@ -141,6 +140,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     async (music: IMusic) => {
       if (currentMusic?.id === music.id) return;
       setCurrentMusic(music);
+
       setTimeout(() => {
         if (audioRef.current) {
           audioRef.current.currentTime = 0;
@@ -150,73 +150,12 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
             .catch((error) => console.error("Lỗi phát nhạc:", error));
         }
       }, 100);
+
       setIsPlaying(true);
       setIsPaused(false);
     },
     [currentMusic]
   );
-
-  // Random nhạc khi bài hát kết thúc (crossfade thay cho end)
-  useEffect(() => {
-    if (!audioRef.current) return;
-    const mainAudio = audioRef.current;
-
-    const handleTimeUpdate = () => {
-      if (!currentMusicRef.current) return;
-
-      // Khi còn <= 5 giây thì chuẩn bị crossfade
-      if (
-        mainAudio.duration - mainAudio.currentTime <= 5 &&
-        !crossfadeAudioRef.current
-      ) {
-        let randomIndex;
-        do {
-          randomIndex = Math.floor(Math.random() * MUSICS.length);
-        } while (MUSICS[randomIndex].id === currentMusicRef.current?.id);
-
-        const nextMusic = MUSICS[randomIndex];
-
-        // tạo mới crossfade audio
-        const nextCrossfade = new Audio(nextMusic.audio);
-        nextCrossfade.volume = 0;
-        nextCrossfade.play();
-        crossfadeAudioRef.current = nextCrossfade;
-
-        const fadeDuration = 5000; // 5s crossfade
-        const stepTime = 50; // mỗi 50ms
-        const mainStep = mainAudio.volume / (fadeDuration / stepTime);
-        const crossStep = 1 / (fadeDuration / stepTime);
-
-        let elapsed = 0;
-        const interval = setInterval(() => {
-          elapsed += stepTime;
-
-          mainAudio.volume = Math.max(0, mainAudio.volume - mainStep);
-          nextCrossfade.volume = Math.min(1, nextCrossfade.volume + crossStep);
-
-          if (elapsed >= fadeDuration) {
-            clearInterval(interval);
-
-            // xong crossfade thì đổi sang nhạc mới
-            mainAudio.pause();
-            mainAudio.src = nextMusic.audio;
-            mainAudio.currentTime = nextCrossfade.currentTime;
-            mainAudio.volume = 1;
-            nextCrossfade.pause();
-            crossfadeAudioRef.current = null;
-
-            mainAudio.play();
-            setCurrentMusic(nextMusic); // đổi UI sau khi crossfade hoàn tất
-          }
-        }, stepTime);
-      }
-    };
-
-    mainAudio.addEventListener("timeupdate", handleTimeUpdate);
-    return () => {
-      mainAudio.removeEventListener("timeupdate", handleTimeUpdate);
-    };
-  }, []);
 
   const handlePlayRandomAudio = useCallback(() => {
     const randomIndex = Math.floor(Math.random() * MUSICS.length);
@@ -273,6 +212,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       isPaused={isPaused}
       isMuted={isMuted}
       currentLyrics={currentLyrics}
+      subtitles={subtitles} // 🆕 xuất lyrics cho UI
       handlePlayAudio={handlePlayAudio}
       handlePlayRandomAudio={handlePlayRandomAudio}
       handlePauseAudio={handlePauseAudio}

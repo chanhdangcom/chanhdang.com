@@ -24,8 +24,6 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect } from "react";
 import { AudioTimeLine } from "./component/audio-time-line";
 import DynamicIslandWave from "@/components/ui/dynamic-island";
-
-import Markdown from "react-markdown";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 
 type IProp = {
@@ -43,6 +41,8 @@ export function PlayerPage({ setIsClick }: IProp) {
     handleResumeAudio,
     handleAudioSkip,
     handAudioForward,
+    currentLyrics,
+    subtitles,
   } = useAudio();
 
   useEffect(() => {
@@ -52,226 +52,191 @@ export function PlayerPage({ setIsClick }: IProp) {
     };
   }, []);
 
-  const lyrics = `Mát lành như dòng suối\n
-Tâm hồn mới chớm đôi mươi vô tư nơi rừng núi\n
-Chưa từng ghé chốn xa xôi vào một ngày nắng xanh\n
-
-Lảng tránh nhân duyên sắp đặt\n
-Để rồi mình đi về phía chân đồi\n
-Phía bên kia đồi có bầu trời mênh mông\n
-
-Không ai biết trước chuyện chi\n
-Có phải như mình ngóng trông\n
-Lắng nghe tim này vững niềm tin ta mang\n
-Tuổi trẻ này thênh thang có ngại chi ta sẵn sàng\n
-
-Và ta đi đi vượt hết núi đồi\n
-Giai điệu của mây trời đưa về nơi ngập tràn ánh nắng\n
-Và ta đi đi vượt hết núi đồi\n
-Phiêu lưu với cuộc đời mang hành trang kiêu hãnh ngút ngàn\n
-
-Còn chần chừ chi\n
-Hãy sống hết mình sống trọn phút giây chân tình\n
-Thanh xuân đang chờ bình minh\n
-Cuộc đời thật đẹp như mơ\n
-
-Và sống hết mình\n
-Dẫu trái tim còn đầy bỡ ngỡ\n
-Thênh thang bước đi giữa trời rực rỡ\n
-
-Phía bên kia đồi có dòng người xoay xoay\n
-Gian nan khó khăn về tay đôi lần cam go lắm thay\n
-
-Lắng nghe tim này vững niềm tin ta mang\n
-Tuổi trẻ mình thênh thang có ngại chi ta sẵn sàng\n
-
-Và ta đi đi vượt hết núi đồi\n
-Giai điệu của mây trời đưa về nơi ngập tràn ánh nắng\n
-Và ta đi đi vượt hết núi đồi\n
-Phiêu lưu với cuộc đời mang hành trang kiêu hãnh ngút ngàn\n
-
-Còn chần chừ chi\n
-Hãy sống hết mình sống trọn phút giây chân tình\n
-Thanh xuân đang chờ bình minh\n
-Cuộc đời thật đẹp như mơ\n
-
-Và sống hết mình\n
-Dẫu trái tim còn đầy bỡ ngỡ\n
-Thênh thang bước đi giữa trời rực rỡ\n
-
-Như một vì tinh tú\n
-Em lấp lánh trên bầu trời rộng lớn\n
-Em chưa bao giờ quên đi mất rằng mình là ai\n
-Vô tư và kiêu hãnh em biết hiện tại này mình đang sống\n
-Hoạ một bức tranh cuộc đời em mong\n
-
-Sống hết mình\n
-Sống trọn phút giây chân tình\n
-Thanh xuân đang chờ bình minh\n
-Cuộc đời thật đẹp như mơ\n
-
-Và sống hết mình\n
-Dẫu trái tim còn đầy bỡ ngỡ\n
-Thênh thang bước đi giữa trời rực rỡ\n
-
-Sống hết mình\n
-Sống trọn bước ta đi\n
-Thanh xuân đang chờ bình minh\n
-Cuộc đời thật đẹp như mơ\n
-
-Và sống hết mình\n
-Dẫu trái tim còn đầy bỡ ngỡ\n
-Thênh thang bước đi giữa trời rực rỡ\n
-Thênh thang bước đi giữa trời rực rỡ\n
-Thênh thang bước đi giữa trời rực rỡ\n`;
-
   return (
     <AnimatePresence mode="wait">
       <motion.div
         layoutId="audio-bar"
-        className="fixed inset-0 z-50 space-y-4 px-4 md:inset-x-40 md:inset-y-8 md:rounded-3xl md:border md:border-white/10"
+        className="fixed inset-0 z-50 flex justify-between space-y-4 px-4 md:rounded-3xl md:border md:border-white/10"
       >
-        <div className="d absolute inset-0 -z-10 flex justify-center bg-zinc-300 backdrop-blur-3xl dark:bg-zinc-950 md:rounded-3xl">
-          <img
-            src={currentMusic?.cover || ""}
-            alt="cover"
-            className="md:3/4 mt-8 h-1/2 w-full blur-2xl md:mt-24 md:w-[100vh] md:blur-3xl"
-          />
-        </div>
-
-        <header className="flex items-center justify-between p-1 text-black dark:text-white">
-          <CaretDown
-            size={20}
-            className="cursor-pointer"
-            onClick={() => setIsClick()}
-          />
-
-          <div className="flex justify-center gap-4 rounded-full p-1 font-semibold">
-            <ChanhdangLogotype className="w-28" />
-          </div>
-
-          <DotsThreeVertical size={20} weight="bold" />
-        </header>
-
-        <div className="mx-3 space-y-4">
-          {currentMusic?.cover ? (
-            <motion.div
-              layoutId="Cover"
-              key={currentMusic?.cover}
-              className="flex justify-center gap-8"
-            >
-              <motion.img
-                src={currentMusic?.cover}
-                alt="cover"
-                animate={{ scale: isPaused ? 0.8 : 1 }}
-                transition={{
-                  duration: 0.2,
-                  ease: "easeInOut",
-                  type: "spring",
-                  damping: 15,
-                }}
-                className="flex h-[45vh] w-full shrink-0 justify-center rounded-2xl object-cover md:w-[40vh]"
-              />
-
-              <div className="hidden h-[45vh] overflow-y-auto md:block">
-                <div className="text-xl font-bold">LYRIC</div>
-                <div className="text-sm">
-                  <Markdown>{lyrics}</Markdown>
-                </div>
-              </div>
-            </motion.div>
-          ) : (
-            <div className="flex h-[45vh] w-full shrink-0 justify-center rounded-2xl bg-zinc-700"></div>
-          )}
-
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="line-clamp-1 text-xl font-semibold">
-                {currentMusic?.title || "TITLE SONG"}
-              </div>
-
-              <div className="text-lg text-zinc-500">
-                {currentMusic?.singer || "SINGER"}
-              </div>
-            </div>
-
-            <DynamicIslandWave
-              isPlay={isPlaying}
-              coverUrl={currentMusic?.cover}
+        <div className="w-full">
+          <div className="absolute inset-0 -z-10 flex justify-center gap-8 bg-zinc-300 backdrop-blur-sm dark:bg-zinc-950">
+            <img
+              src={currentMusic?.cover || ""}
+              alt="cover"
+              className="md:3/4 0 mt-8 h-1/2 w-full blur-2xl md:mt-24 md:h-screen md:w-full md:blur-3xl"
             />
           </div>
 
-          <div className="flex items-center justify-center">
-            <AudioTimeLine />
-          </div>
+          <header className="flex items-center justify-between p-1 text-black dark:text-white md:py-4">
+            <CaretDown
+              size={20}
+              className="cursor-pointer"
+              onClick={() => setIsClick()}
+            />
 
-          <div className="flex items-center justify-between">
-            <motion.div whileTap={{ scale: 0.5 }}>
-              <Shuffle
-                onClick={() => handlePlayRandomAudio()}
-                size={25}
-                className="cursor-pointer"
-              />
-            </motion.div>
-
-            <div className="flex gap-8 text-black dark:text-white">
-              <motion.button
-                onClick={handAudioForward}
-                whileTap={{ scale: 0.5 }}
-                className="flex cursor-pointer items-center justify-center"
-              >
-                <Rewind size={30} weight="fill" />
-              </motion.button>
-
-              <motion.button
-                whileTap={{ scale: 0.5 }}
-                onClick={
-                  isPlaying
-                    ? handlePauseAudio
-                    : isPaused
-                      ? handleResumeAudio
-                      : handlePlayRandomAudio
-                }
-                className="flex cursor-pointer items-center justify-center"
-              >
-                {isPlaying ? (
-                  <Pause size={36} weight="fill" />
-                ) : (
-                  <Play size={36} weight="fill" />
-                )}
-              </motion.button>
-
-              <motion.button
-                onClick={handleAudioSkip}
-                whileTap={{ scale: 0.5 }}
-                className="flex cursor-pointer items-center justify-center"
-              >
-                <FastForward size={32} weight="fill" />
-              </motion.button>
+            <div className="flex justify-center gap-4 rounded-full p-1 font-semibold">
+              <ChanhdangLogotype className="w-28" />
             </div>
 
-            <Repeat size={25} className="" />
-          </div>
+            <DotsThreeVertical size={20} weight="bold" className="" />
+          </header>
 
-          <div className="flex justify-between px-4 text-base text-zinc-500">
-            <div>UP NEXT</div>
-            <Drawer>
-              <DrawerTrigger className="">LYRIC</DrawerTrigger>
+          <div className="relative mx-3 space-y-4 md:space-y-10">
+            {currentMusic?.cover ? (
+              <motion.div
+                layoutId="Cover"
+                key={currentMusic?.cover}
+                className="flex justify-center gap-8"
+              >
+                <div className="relative">
+                  <motion.img
+                    src={currentMusic?.cover}
+                    alt="cover"
+                    animate={{ scale: isPaused ? 0.8 : 1 }}
+                    transition={{
+                      duration: 0.2,
+                      ease: "easeInOut",
+                      type: "spring",
+                      damping: 15,
+                    }}
+                    className="flex h-[50vh] w-full shrink-0 justify-center rounded-2xl object-cover md:h-[70vh] md:w-[80vh]"
+                  />
 
-              <DrawerContent className="h-[80vh] border border-zinc-800 bg-zinc-950 shadow-sm">
-                <DrawerHeader className="border-b border-zinc-900 shadow-sm">
-                  <div className="absolute inset-0 top-4 mx-auto h-1.5 w-32 rounded-full bg-zinc-800"></div>
-                  <DrawerTitle className="mx-auto font-mono text-xl"></DrawerTitle>
-                  <DrawerDescription className="mx-auto font-mono"></DrawerDescription>
-                </DrawerHeader>
-
-                <div className="h-full overflow-x-auto p-4">
-                  <div className="text-xl font-bold">Lyric:</div>
-                  <Markdown>{lyrics}</Markdown>
+                  <div
+                    className={
+                      isPaused
+                        ? ""
+                        : "pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-black/10 duration-300 dark:ring-white/10"
+                    }
+                  />
                 </div>
-              </DrawerContent>
-            </Drawer>
-            <div>RELATED</div>
+              </motion.div>
+            ) : (
+              <div className="flex h-[45vh] w-full shrink-0 justify-center rounded-2xl bg-zinc-700" />
+            )}
+
+            <div className="space-y-4 rounded-3xl md:absolute md:inset-x-8 md:-bottom-20 md:border md:border-white/10 md:bg-zinc-950/40 md:px-4 md:py-3 md:backdrop-blur-xl">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="line-clamp-1 text-xl font-semibold">
+                    {currentMusic?.title || "TITLE SONG"}
+                  </div>
+
+                  <div className="line-clamp-1 text-lg text-zinc-400">
+                    {currentMusic?.singer || "SINGER"}
+                  </div>
+                </div>
+
+                <DynamicIslandWave
+                  isPlay={isPlaying}
+                  coverUrl={currentMusic?.cover}
+                />
+              </div>
+
+              <div className="flex items-center justify-center">
+                <AudioTimeLine />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <motion.div whileTap={{ scale: 0.5 }}>
+                  <Shuffle
+                    onClick={() => handlePlayRandomAudio()}
+                    size={25}
+                    className="cursor-pointer"
+                  />
+                </motion.div>
+
+                <div className="flex space-x-8 text-black dark:text-white">
+                  <motion.button
+                    onClick={handAudioForward}
+                    whileTap={{ scale: 0.5 }}
+                    className="flex cursor-pointer items-center justify-center"
+                  >
+                    <Rewind size={30} weight="fill" />
+                  </motion.button>
+
+                  <motion.button
+                    whileTap={{ scale: 0.5 }}
+                    onClick={
+                      isPlaying
+                        ? handlePauseAudio
+                        : isPaused
+                          ? handleResumeAudio
+                          : handlePlayRandomAudio
+                    }
+                    className="flex cursor-pointer items-center justify-center"
+                  >
+                    {isPlaying ? (
+                      <Pause size={36} weight="fill" />
+                    ) : (
+                      <Play size={36} weight="fill" />
+                    )}
+                  </motion.button>
+
+                  <motion.button
+                    onClick={handleAudioSkip}
+                    whileTap={{ scale: 0.5 }}
+                    className="flex cursor-pointer items-center justify-center"
+                  >
+                    <FastForward size={32} weight="fill" />
+                  </motion.button>
+                </div>
+
+                <Repeat size={25} className="" />
+              </div>
+            </div>
+
+            <div className="flex justify-between px-4 text-base text-zinc-500 md:hidden">
+              <div>UP NEXT</div>
+              <Drawer>
+                <DrawerTrigger className="">LYRIC</DrawerTrigger>
+
+                <DrawerContent className="h-[80vh] border border-zinc-800 bg-zinc-950 shadow-sm">
+                  <DrawerHeader className="border-b border-zinc-900 shadow-sm">
+                    <div className="absolute inset-0 top-4 mx-auto h-1.5 w-32 rounded-full bg-zinc-800"></div>
+                    <DrawerTitle className="mx-auto font-mono text-xl"></DrawerTitle>
+                    <DrawerDescription className="mx-auto font-mono"></DrawerDescription>
+                  </DrawerHeader>
+
+                  <div className="h-full overflow-x-auto p-4">
+                    <div className="text-balance px-4 font-apple text-4xl font-bold leading-loose text-zinc-300">
+                      {subtitles.map((line) => (
+                        <p
+                          key={line.id}
+                          id={`subtitle-${line.id}`}
+                          className={`transition-all duration-300 ${
+                            currentLyrics === line.text
+                              ? "font-semibold leading-snug text-white"
+                              : "text-zinc-500 [filter:blur(2px)]"
+                          }`}
+                        >
+                          {line.text}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                </DrawerContent>
+              </Drawer>
+              <div>RELATED</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block">
+          <div className="text-balance px-4 pt-12 font-apple text-4xl font-bold leading-loose text-zinc-300">
+            {subtitles.map((line) => (
+              <p
+                key={line.id}
+                id={`subtitle-${line.id}`}
+                className={`transition-all duration-300 ${
+                  currentLyrics === line.text
+                    ? "font-semibold leading-snug text-white"
+                    : "text-zinc-500 [filter:blur(2px)]"
+                }`}
+              >
+                {line.text}
+              </p>
+            ))}
           </div>
         </div>
       </motion.div>
