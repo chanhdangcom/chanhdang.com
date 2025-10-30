@@ -2,6 +2,7 @@
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { useAudio } from "@/components/music-provider";
 import { useRef } from "react";
+import { BorderPro } from "./component/border-pro";
 
 export function PickForYou() {
   const { handlePlayRandomAudio } = useAudio();
@@ -24,11 +25,13 @@ export function PickForYou() {
             className="relative ml-4 h-72 w-56 shrink-0 overflow-hidden rounded-3xl md:ml-[270px]"
             onClick={() => handlePlayRandomAudio()}
           >
-            <img
-              src="/img/image-3.PNG"
-              alt=""
-              className="h-72 w-56 rounded-3xl object-cover"
-            />
+            <BorderPro roundedSize="rounded-3x">
+              <img
+                src="/img/image-3.PNG"
+                alt=""
+                className="h-72 w-56 rounded-3xl object-cover"
+              />
+            </BorderPro>
 
             <div className="absolute inset-0 flex h-full flex-col justify-between">
               <div className="p-4">
@@ -55,6 +58,7 @@ export function PickForYou() {
             onClick={() => handlePlayRandomAudio()}
           >
             <img src="/img/image-1.PNG" alt="" className="h-72 w-56" />
+
             <div className="absolute inset-0 flex h-full flex-col justify-between">
               <div className="p-4">
                 <ChanhdangLogotype className="mb-1 w-24 text-white" />

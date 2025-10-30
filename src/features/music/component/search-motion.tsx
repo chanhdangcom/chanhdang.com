@@ -43,10 +43,10 @@ export function SearchMotion() {
             damping: 20,
             duration: 0.1,
           }}
-          className="fixed inset-0 z-50 flex"
+          className="fixed inset-x-0 inset-y-0 z-50 flex md:inset-x-60"
         >
           <div className="w-full">
-            <motion.div className="container border-zinc-800 bg-zinc-50 p-2 dark:bg-zinc-950">
+            <motion.div className="container border-zinc-800 p-2">
               <motion.div
                 layoutId="Search"
                 layout
@@ -160,7 +160,7 @@ export function SearchMotion() {
   };
 
   return (
-    <div className="justify-centeri flex items-center">
+    <div className="flex items-center justify-center">
       <LargerSearch />
     </div>
   );

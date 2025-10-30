@@ -3,6 +3,7 @@
 import { IMusic } from "@/app/[locale]/features/profile /types/music";
 import { IPlaylistItem } from "../type/playlist";
 import { cn } from "@/lib/utils";
+import { BorderPro } from "./border-pro";
 
 type IProp = {
   music: IMusic | IPlaylistItem;
@@ -24,14 +25,16 @@ export function AudioItemOrder({ music, handlePlay, className, item }: IProp) {
         onClick={handlePlay}
       >
         {music.cover ? (
-          <img
-            src={music.cover}
-            alt="cover"
-            className={cn(
-              "size-12 shrink-0 rounded-md object-cover shadow-sm md:size-14",
-              className
-            )}
-          />
+          <BorderPro roundedSize="rounded-md">
+            <img
+              src={music.cover}
+              alt="cover"
+              className={cn(
+                "size-12 shrink-0 rounded-md object-cover shadow-sm md:size-14",
+                className
+              )}
+            />
+          </BorderPro>
         ) : (
           <div className="size-12 rounded-2xl bg-zinc-800"></div>
         )}

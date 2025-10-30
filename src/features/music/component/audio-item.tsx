@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Play } from "phosphor-react";
 import { motion } from "framer-motion";
 import { IMusic } from "@/app/[locale]/features/profile /types/music";
+import { BorderPro } from "./border-pro";
 
 type IProp = {
   music: IMusic;
@@ -26,12 +27,14 @@ export function AuidoItem({ music, handlePlay }: IProp) {
       >
         <div className="relative">
           {music.cover ? (
-            <img
-              src={music.cover}
-              alt="cover"
-              className="mx-auto size-44 shrink-0 cursor-pointer justify-center rounded-lg object-cover md:size-52"
-              onClick={handlePlay}
-            />
+            <BorderPro roundedSize="rounded-lg">
+              <img
+                src={music.cover}
+                alt="cover"
+                className="mx-auto size-44 shrink-0 cursor-pointer justify-center rounded-lg object-cover md:size-52"
+                onClick={handlePlay}
+              />
+            </BorderPro>
           ) : (
             <div
               className="size-40 cursor-pointer rounded-2xl bg-zinc-800"

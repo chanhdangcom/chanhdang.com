@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { ISingerItem } from "../type/singer";
+import { BorderPro } from "./border-pro";
 
 type IProp = {
   music: ISingerItem;
@@ -17,13 +18,15 @@ export function SingerItem({ music, onClick }: IProp) {
   return (
     <div onClick={handleClick}>
       {music.cover ? (
-        <Image
-          alt="singer cover"
-          width={128}
-          height={128}
-          src={music.cover}
-          className="size-44 rounded-full object-cover md:size-52"
-        />
+        <BorderPro roundedSize="rounded-full">
+          <Image
+            alt="singer cover"
+            width={128}
+            height={128}
+            src={music.cover}
+            className="size-44 rounded-full object-cover md:size-52"
+          />
+        </BorderPro>
       ) : (
         <div className="size-44 rounded-full bg-zinc-600 md:size-44"></div>
       )}
