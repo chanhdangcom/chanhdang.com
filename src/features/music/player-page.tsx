@@ -11,17 +11,9 @@ import {
   Rewind,
   Shuffle,
 } from "@phosphor-icons/react/dist/ssr";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
 
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AudioTimeLine } from "./component/audio-time-line";
 import DynamicIslandWave from "@/components/ui/dynamic-island";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
@@ -51,6 +43,151 @@ export function PlayerPage({ setIsClick }: IProp) {
       document.body.style.overflow = "auto";
     };
   }, []);
+
+  const [isClickLyric, setIsClickLyric] = useState(false);
+
+  if (isClickLyric)
+    return (
+      <AnimatePresence mode="wait">
+        <motion.div
+          layoutId="audio-bar"
+          className="fixed inset-0 z-50 flex justify-between space-y-4 px-4 md:rounded-3xl md:border md:border-white/10"
+        >
+          <div className="w-full">
+            <div className="absolute inset-0 -z-10 flex justify-center gap-8 bg-zinc-300 backdrop-blur-sm dark:bg-zinc-950">
+              <img
+                src={currentMusic?.cover || ""}
+                alt="cover"
+                className="md:3/4 0 mt-8 h-1/2 w-full blur-2xl md:mt-24 md:h-screen md:w-full md:blur-3xl"
+              />
+            </div>
+
+            <header className="flex items-center justify-between p-1 text-black dark:text-white md:py-4">
+              <CaretDown
+                size={20}
+                className="cursor-pointer"
+                onClick={() => setIsClick()}
+              />
+
+              <div className="flex justify-center gap-4 rounded-full p-1 font-semibold">
+                <ChanhdangLogotype className="w-28" />
+              </div>
+
+              <DotsThreeVertical size={20} weight="bold" className="" />
+            </header>
+
+            <div className="rounded-2xl p-1">
+              <div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    {currentMusic?.cover ? (
+                      <motion.div
+                        layoutId="Cover"
+                        key={currentMusic?.cover}
+                        className="flex justify-center gap-8"
+                      >
+                        <motion.img
+                          src={currentMusic?.cover}
+                          alt="cover"
+                          animate={{ scale: isPaused ? 0.8 : 1 }}
+                          transition={{
+                            duration: 0.2,
+                            ease: "easeInOut",
+                            type: "spring",
+                            damping: 15,
+                          }}
+                          className="flex size-16 shrink-0 justify-center rounded-xl object-cover"
+                        />
+                      </motion.div>
+                    ) : (
+                      <div className="flex h-[45vh] w-full shrink-0 justify-center rounded-xl bg-zinc-700" />
+                    )}
+
+                    <div>
+                      <div className="line-clamp-1 font-semibold">
+                        {currentMusic?.title || "TITLE SONG"}
+                      </div>
+
+                      <div className="line-clamp-1">
+                        {currentMusic?.singer || "SINGER"}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center">
+                    <div className="flex space-x-8 text-black dark:text-white">
+                      <motion.button
+                        whileTap={{ scale: 0.5 }}
+                        onClick={
+                          isPlaying
+                            ? handlePauseAudio
+                            : isPaused
+                              ? handleResumeAudio
+                              : handlePlayRandomAudio
+                        }
+                        className="flex cursor-pointer items-center justify-center"
+                      >
+                        {isPlaying ? (
+                          <Pause size={36} weight="fill" />
+                        ) : (
+                          <Play size={36} weight="fill" />
+                        )}
+                      </motion.button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="absolute inset-x-4 z-10 mx-1 mt-1 flex justify-between rounded-full text-sm md:hidden">
+              <div>UP NEXT</div>
+
+              <div onClick={() => setIsClickLyric(!isClickLyric)}>
+                HIDDEN LYRIC
+              </div>
+
+              <div>RELATED</div>
+            </div>
+
+            <div className="ml-8 mr-20 h-full w-full overflow-y-auto scrollbar-hide">
+              <div className="text-balance px-4 pt-12 font-apple text-4xl font-bold leading-loose text-zinc-300">
+                {subtitles.map((line) => (
+                  <p
+                    key={line.id}
+                    id={`subtitle-${line.id}`}
+                    className={`transition-all duration-300 ${
+                      currentLyrics === line.text
+                        ? "font-semibold leading-snug text-white"
+                        : "text-zinc-500 [filter:blur(2px)]"
+                    }`}
+                  >
+                    {line.text}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block">
+            <div className="text-balance px-4 pt-12 font-apple text-4xl font-bold leading-loose text-zinc-300">
+              {subtitles.map((line) => (
+                <p
+                  key={line.id}
+                  id={`subtitle-${line.id}`}
+                  className={`transition-all duration-300 ${
+                    currentLyrics === line.text
+                      ? "font-semibold leading-snug text-white"
+                      : "text-zinc-500 [filter:blur(2px)]"
+                  }`}
+                >
+                  {line.text}
+                </p>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    );
 
   return (
     <AnimatePresence mode="wait">
@@ -188,7 +325,7 @@ export function PlayerPage({ setIsClick }: IProp) {
 
             <div className="flex justify-between px-4 text-base text-zinc-500 md:hidden">
               <div>UP NEXT</div>
-              <Drawer>
+              {/* <Drawer>
                 <DrawerTrigger className="">LYRIC</DrawerTrigger>
 
                 <DrawerContent className="h-[80vh] border border-zinc-800 bg-zinc-950 shadow-sm">
@@ -216,7 +353,10 @@ export function PlayerPage({ setIsClick }: IProp) {
                     </div>
                   </div>
                 </DrawerContent>
-              </Drawer>
+              </Drawer> */}
+
+              <div onClick={() => setIsClickLyric(!isClickLyric)}>LYRIC</div>
+
               <div>RELATED</div>
             </div>
           </div>
