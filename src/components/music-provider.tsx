@@ -97,15 +97,13 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     currentMusicRef.current = currentMusic;
   }, [currentMusic]);
 
-  // 🆕 Demo 1 bài — load file srt cố định
   useEffect(() => {
-    fetch("/srt/MuonRoiMaSaoCon.srt")
+    fetch("/srt/ChayNgayDi.srt")
       .then((res) => res.text())
       .then((text) => setSubtitles(parseSRT(text)))
       .catch((err) => console.error("Lỗi load SRT:", err));
   }, []);
 
-  // 🆕 Đồng bộ thời gian audio với lyric
   useEffect(() => {
     const audioEl = audioRef.current;
     if (!audioEl) return;

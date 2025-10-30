@@ -150,7 +150,7 @@ export function PlayerPage({ setIsClick }: IProp) {
             </div>
 
             <div className="ml-4 h-full w-full overflow-y-auto scrollbar-hide">
-              <div className="text-balance px-4 pt-24 font-apple text-3xl font-bold leading-loose text-zinc-300">
+              <div className="text-balance px-4 pt-32 font-apple text-3xl font-bold leading-loose text-zinc-300">
                 {subtitles.map((line) => (
                   <p
                     key={line.id}
@@ -165,24 +165,6 @@ export function PlayerPage({ setIsClick }: IProp) {
                   </p>
                 ))}
               </div>
-            </div>
-          </div>
-
-          <div className="ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block">
-            <div className="text-balance px-4 pt-12 font-apple text-4xl font-bold leading-loose text-zinc-300">
-              {subtitles.map((line) => (
-                <p
-                  key={line.id}
-                  id={`subtitle-${line.id}`}
-                  className={`transition-all duration-300 ${
-                    currentLyrics === line.text
-                      ? "font-semibold leading-snug text-white"
-                      : "text-zinc-500 [filter:blur(2px)]"
-                  }`}
-                >
-                  {line.text}
-                </p>
-              ))}
             </div>
           </div>
         </motion.div>
