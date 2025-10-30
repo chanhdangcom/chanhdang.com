@@ -62,7 +62,7 @@ export function PlayerPage({ setIsClick }: IProp) {
               />
             </div>
 
-            <header className="flex items-center justify-between p-1 text-black dark:text-white md:py-4">
+            <header className="flex items-center justify-between border-b border-white/10 p-1 text-black dark:text-white md:py-4">
               <CaretDown
                 size={20}
                 className="cursor-pointer"
@@ -76,7 +76,7 @@ export function PlayerPage({ setIsClick }: IProp) {
               <DotsThreeVertical size={20} weight="bold" className="" />
             </header>
 
-            <div className="rounded-2xl p-1">
+            <div className="absolute inset-x-4 z-10 mt-2 rounded-2xl p-1">
               <div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -136,21 +136,21 @@ export function PlayerPage({ setIsClick }: IProp) {
                     </div>
                   </div>
                 </div>
+
+                <div className="absolute inset-x-0 mx-1 mt-2 flex justify-between rounded-full text-sm font-semibold md:hidden">
+                  <div>UP NEXT</div>
+
+                  <div onClick={() => setIsClickLyric(!isClickLyric)}>
+                    HIDDEN LYRIC
+                  </div>
+
+                  <div>RELATED</div>
+                </div>
               </div>
             </div>
 
-            <div className="absolute inset-x-4 z-10 mx-1 mt-1 flex justify-between rounded-full text-sm md:hidden">
-              <div>UP NEXT</div>
-
-              <div onClick={() => setIsClickLyric(!isClickLyric)}>
-                HIDDEN LYRIC
-              </div>
-
-              <div>RELATED</div>
-            </div>
-
-            <div className="ml-8 mr-20 h-full w-full overflow-y-auto scrollbar-hide">
-              <div className="text-balance px-4 pt-12 font-apple text-4xl font-bold leading-loose text-zinc-300">
+            <div className="ml-4 h-full w-full overflow-y-auto scrollbar-hide">
+              <div className="text-balance px-4 pt-24 font-apple text-3xl font-bold leading-loose text-zinc-300">
                 {subtitles.map((line) => (
                   <p
                     key={line.id}
