@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+"use client";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { useAudio } from "@/components/music-provider";
 import { useRef } from "react";

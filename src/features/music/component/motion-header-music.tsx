@@ -1,3 +1,4 @@
+"use client";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 
 type IProp = {

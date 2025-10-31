@@ -1,7 +1,4 @@
-"use client";
 import { AudioBar } from "./audio-bar";
-
-import { CarouselAudio } from "./carousel-audio";
 import { HeaderMusicPage } from "./header-music-page";
 import { MenuBar } from "./menu-bar";
 import { TableRanking } from "./table-ranking";
@@ -10,6 +7,8 @@ import { MenuBarMobile } from "./menu-bar-mobile";
 import { PickForYou } from "./pick-for-you";
 import { MotionHeaderMusic } from "./component/motion-header-music";
 import { Footer } from "@/app/[locale]/features/profile /footer";
+import { CarouselAudioPlaylist } from "./carousel-audio-playlist";
+import CarouselAudio from "./carousel-audio";
 
 // import { useDisableRightClick } from "../../hooks/use-disable-right-click";
 
@@ -36,6 +35,10 @@ export function MusicPage() {
 
             <div className="mt-6 flex justify-start">
               <CarouselAudio />
+            </div>
+
+            <div className="mt-6 flex justify-start">
+              <CarouselAudioPlaylist />
             </div>
 
             <div className="mt-6">

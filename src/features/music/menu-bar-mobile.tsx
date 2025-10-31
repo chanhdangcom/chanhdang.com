@@ -1,3 +1,4 @@
+"use client";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Bookmarks, House, MagnifyingGlass } from "phosphor-react";

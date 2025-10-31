@@ -15,8 +15,6 @@ import { MenuBarMobile } from "./menu-bar-mobile";
 import { CaretLeft, Play } from "phosphor-react";
 import Link from "next/link";
 
-import { CarouselAudio } from "./carousel-audio";
-
 import { MotionHeaderMusic } from "./component/motion-header-music";
 import { Footer } from "@/app/[locale]/features/profile /footer";
 import { useEffect, useState } from "react";
@@ -194,8 +192,8 @@ export function SingerPage({ idSinger }: IProp) {
             </div>
           </div>
 
-          <div className="my-8 space-y-8">
-            <CarouselAudio />
+          <div className="z-10 my-8 space-y-8">
+            {/* <CarsouelAudioPage /> */}
 
             <div className="md:ml-60">
               <Footer />
