@@ -119,8 +119,6 @@ export function PlayerPage({ setIsClick }: IProp) {
                   </div>
 
                   <div className="flex items-center">
-                    <DynamicIslandWave isPlay={isPlaying} />
-
                     <div className="flex space-x-8 text-black dark:text-white">
                       <motion.button
                         whileTap={{ scale: 0.5 }}
