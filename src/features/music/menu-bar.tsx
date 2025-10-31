@@ -17,7 +17,7 @@ export function MenuBar() {
 
   return (
     <div className="fixed left-4 top-4 z-30 hidden md:flex">
-      <div className="absolute h-[96vh] w-60 space-y-4 rounded-3xl border border-transparent bg-gradient-to-tr from-transparent to-black/10 px-3 pt-5 text-zinc-50 shadow-xl backdrop-blur-2xl dark:to-white/10">
+      <div className="absolute h-[96vh] w-60 space-y-4 rounded-3xl bg-gradient-to-tr from-transparent to-black/10 px-3 pt-5 text-zinc-50 shadow-xl backdrop-blur-2xl dark:to-white/10">
         <>
           <div className="space-y-1 text-base text-black dark:text-white">
             <div className="flex items-end gap-1">

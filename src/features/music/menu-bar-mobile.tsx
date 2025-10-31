@@ -1,10 +1,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-
 import { Bookmarks, House, MagnifyingGlass } from "phosphor-react";
 import { useEffect, useRef, useState } from "react";
 import { useUser } from "@/hooks/use-user";
-import LiquidGlassBackground from "@/components/liquid-glass-background";
 import {
   MicrophoneStage,
   MusicNotesSimple,
@@ -56,7 +54,7 @@ export function MenuBarMobile() {
     <div className="fixed bottom-4 z-20 flex w-full items-center justify-between sm:hidden">
       <AnimatePresence>
         {show ? (
-          <LiquidGlassBackground className="ml-2 bg-zinc-200/70 px-8 py-1.5 dark:bg-black/80">
+          <div className="relative ml-2 overflow-hidden rounded-[50px] border border-white/20 bg-zinc-200/70 px-8 py-1.5 backdrop-blur-xl dark:bg-black/80">
             <motion.div
               layout
               transition={{
@@ -120,7 +118,7 @@ export function MenuBarMobile() {
                 </div>
               )}
             </motion.div>
-          </LiquidGlassBackground>
+          </div>
         ) : (
           <motion.div
             layout

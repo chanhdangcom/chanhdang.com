@@ -1,5 +1,5 @@
-import { IMusic } from "@/app/[locale]/features/profile /types/music";
-import { MUSICS } from "@/features/music/data/music-page";
+"use client";
+
 import React, {
   useCallback,
   useContext,
@@ -8,6 +8,11 @@ import React, {
   useEffect,
 } from "react";
 
+import { IMusic } from "@/app/[locale]/features/profile /types/music";
+
+// ----------------------------
+// Types
+// ----------------------------
 type Subtitle = {
   id: number;
   start: number;
@@ -22,7 +27,7 @@ type IMusicContext = {
   isPaused: boolean;
   isMuted: boolean;
   currentLyrics: string | null;
-  subtitles: Subtitle[]; // 🆕 Thêm phần này để render full lời ở UI
+  subtitles: Subtitle[];
 
   handlePlayAudio: (music: IMusic) => void;
   handlePlayRandomAudio: () => void;
@@ -31,6 +36,22 @@ type IMusicContext = {
   handleAudioSkip: () => void;
   handAudioForward: () => void;
   handleMute: () => void;
+  isRepeat: boolean | null;
+  handleToggleRepeat: () => void;
+};
+
+// ----------------------------
+// Helper functions
+// ----------------------------
+const timeToSeconds = (time: string): number => {
+  const parts = time.split(":");
+  const seconds = parts[2].split(",");
+  return (
+    parseInt(parts[0], 10) * 3600 +
+    parseInt(parts[1], 10) * 60 +
+    parseInt(seconds[0], 10) +
+    parseInt(seconds[1], 10) / 1000
+  );
 };
 
 const parseSRT = (srt: string): Subtitle[] => {
@@ -50,17 +71,9 @@ const parseSRT = (srt: string): Subtitle[] => {
   return subtitles;
 };
 
-const timeToSeconds = (time: string): number => {
-  const parts = time.split(":");
-  const seconds = parts[2].split(",");
-  return (
-    parseInt(parts[0], 10) * 3600 +
-    parseInt(parts[1], 10) * 60 +
-    parseInt(seconds[0], 10) +
-    parseInt(seconds[1], 10) / 1000
-  );
-};
-
+// ----------------------------
+// Context setup
+// ----------------------------
 const MusicContext = React.createContext<IMusicContext | null>(null);
 
 export function useAudio() {
@@ -82,21 +95,23 @@ function Provider({
   );
 }
 
+// ----------------------------
+// Main Provider Component
+// ----------------------------
 export function MusicProvider({ children }: { children: React.ReactNode }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [currentMusic, setCurrentMusic] = useState<IMusic | null>(null);
   const [isMuted, setIsMuted] = useState(false);
+  const [isRepeat, setIsRepeat] = useState(false);
+  const [currentMusic, setCurrentMusic] = useState<IMusic | null>(null);
   const [subtitles, setSubtitles] = useState<Subtitle[]>([]);
   const [currentLyrics, setCurrentLyrics] = useState<string | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const currentMusicRef = useRef<IMusic | null>(null);
 
-  useEffect(() => {
-    currentMusicRef.current = currentMusic;
-  }, [currentMusic]);
-
+  // ----------------------------
+  // Load subtitles (.srt)
+  // ----------------------------
   useEffect(() => {
     fetch("/srt/ChayNgayDi.srt")
       .then((res) => res.text())
@@ -104,6 +119,100 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       .catch((err) => console.error("Lỗi load SRT:", err));
   }, []);
 
+  // ----------------------------
+  // Audio control functions
+  // ----------------------------
+  const handlePlayAudio = useCallback(
+    async (music: IMusic) => {
+      if (currentMusic?.id === music.id) return;
+      setCurrentMusic(music);
+
+      setTimeout(() => {
+        if (audioRef.current) {
+          audioRef.current.currentTime = 0;
+          audioRef.current.volume = 1;
+          audioRef.current
+            .play()
+            .catch((error) => console.error("Lỗi phát nhạc:", error));
+        }
+      }, 100);
+
+      setIsPlaying(true);
+      setIsPaused(false);
+    },
+    [currentMusic]
+  );
+
+  const handleToggleRepeat = useCallback(() => {
+    setIsRepeat((prev) => !prev);
+  }, []);
+
+  const handlePlayRandomAudio = useCallback(async () => {
+    try {
+      const res = await fetch("/api/musics?random=1&limit=1", {
+        cache: "no-store",
+      });
+      if (!res.ok) throw new Error("Failed to fetch random music");
+      const data = (await res.json()) as IMusic[];
+      const randomMusic = data?.[0];
+      if (!randomMusic) return;
+      if (randomMusic.id === currentMusic?.id) {
+        // nếu trùng bài hiện tại, gọi lại để lấy bài khác
+        const res2 = await fetch("/api/musics?random=1&limit=1", {
+          cache: "no-store",
+        });
+        if (res2.ok) {
+          const data2 = (await res2.json()) as IMusic[];
+          if (data2?.[0]) await handlePlayAudio(data2[0]);
+          return;
+        }
+      }
+      await handlePlayAudio(randomMusic);
+    } catch (e) {
+      console.error("Lỗi random nhạc:", e);
+    }
+  }, [handlePlayAudio, currentMusic]);
+
+  const handlePauseAudio = useCallback(() => {
+    if (!audioRef.current || audioRef.current.paused) return;
+    audioRef.current.pause();
+    setIsPlaying(false);
+    setIsPaused(true);
+  }, []);
+
+  const handleResumeAudio = useCallback(() => {
+    if (audioRef.current && isPaused) {
+      audioRef.current.play();
+      setIsPlaying(true);
+      setIsPaused(false);
+    }
+  }, [isPaused]);
+
+  const handleAudioSkip = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Math.min(
+        audioRef.current.currentTime + 10,
+        audioRef.current.duration
+      );
+    }
+  }, []);
+
+  const handAudioForward = useCallback(() => {
+    if (audioRef.current && audioRef.current.currentTime > 10) {
+      audioRef.current.currentTime -= 10;
+    }
+  }, []);
+
+  const handleMute = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.muted = !audioRef.current.muted;
+      setIsMuted(audioRef.current.muted);
+    }
+  }, []);
+
+  // ----------------------------
+  // Sync lyrics + auto-next
+  // ----------------------------
   useEffect(() => {
     const audioEl = audioRef.current;
     if (!audioEl) return;
@@ -128,80 +237,27 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
+    const handleEnded = () => {
+      if (isRepeat && audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play();
+      } else {
+        handlePlayRandomAudio();
+      }
+    };
+
     audioEl.addEventListener("timeupdate", syncLyrics);
+    audioEl.addEventListener("ended", handleEnded);
+
     return () => {
       audioEl.removeEventListener("timeupdate", syncLyrics);
+      audioEl.removeEventListener("ended", handleEnded);
     };
-  }, [subtitles]);
+  }, [subtitles, handlePlayRandomAudio, isRepeat]);
 
-  const handlePlayAudio = useCallback(
-    async (music: IMusic) => {
-      if (currentMusic?.id === music.id) return;
-      setCurrentMusic(music);
-
-      setTimeout(() => {
-        if (audioRef.current) {
-          audioRef.current.currentTime = 0;
-          audioRef.current.volume = 1;
-          audioRef.current
-            .play()
-            .catch((error) => console.error("Lỗi phát nhạc:", error));
-        }
-      }, 100);
-
-      setIsPlaying(true);
-      setIsPaused(false);
-    },
-    [currentMusic]
-  );
-
-  const handlePlayRandomAudio = useCallback(() => {
-    const randomIndex = Math.floor(Math.random() * MUSICS.length);
-    const music = MUSICS[randomIndex];
-    handlePlayAudio(music);
-  }, [handlePlayAudio]);
-
-  const handlePauseAudio = useCallback(() => {
-    if (!audioRef.current) return;
-    if (audioRef.current.paused) return;
-
-    audioRef.current.pause();
-    setIsPlaying(false);
-    setIsPaused(true);
-  }, []);
-
-  const handleResumeAudio = useCallback(() => {
-    if (audioRef.current && isPaused) {
-      audioRef.current.play();
-      setIsPlaying(true);
-      setIsPaused(false);
-    }
-  }, [isPaused]);
-
-  const handleAudioSkip = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = Math.min(
-        audioRef.current.currentTime + 10,
-        audioRef.current.duration
-      );
-    }
-  }, []);
-
-  const handAudioForward = useCallback(() => {
-    if (audioRef.current) {
-      if (audioRef.current.currentTime > 10) {
-        audioRef.current.currentTime = audioRef.current.currentTime - 10;
-      }
-    }
-  }, []);
-
-  const handleMute = () => {
-    if (audioRef.current) {
-      audioRef.current.muted = !audioRef.current.muted;
-      setIsMuted(audioRef.current.muted);
-    }
-  };
-
+  // ----------------------------
+  // Return context provider
+  // ----------------------------
   return (
     <Provider
       audioRef={audioRef}
@@ -210,7 +266,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       isPaused={isPaused}
       isMuted={isMuted}
       currentLyrics={currentLyrics}
-      subtitles={subtitles} // 🆕 xuất lyrics cho UI
+      subtitles={subtitles}
       handlePlayAudio={handlePlayAudio}
       handlePlayRandomAudio={handlePlayRandomAudio}
       handlePauseAudio={handlePauseAudio}
@@ -218,6 +274,8 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       handleAudioSkip={handleAudioSkip}
       handAudioForward={handAudioForward}
       handleMute={handleMute}
+      isRepeat={isRepeat}
+      handleToggleRepeat={handleToggleRepeat}
     >
       <audio ref={audioRef} src={currentMusic?.audio} autoPlay />
       {children}

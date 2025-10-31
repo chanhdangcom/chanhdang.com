@@ -8,6 +8,7 @@ import {
   Pause,
   Play,
   Repeat,
+  RepeatOnce,
   Rewind,
   Shuffle,
 } from "@phosphor-icons/react/dist/ssr";
@@ -17,6 +18,7 @@ import { useEffect, useState } from "react";
 import { AudioTimeLine } from "./component/audio-time-line";
 import DynamicIslandWave from "@/components/ui/dynamic-island";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
+import { BorderPro } from "./component/border-pro";
 
 type IProp = {
   setIsClick: () => void;
@@ -27,14 +29,15 @@ export function PlayerPage({ setIsClick }: IProp) {
     currentMusic,
     isPlaying,
     isPaused,
-
     handlePlayRandomAudio,
     handlePauseAudio,
     handleResumeAudio,
     handleAudioSkip,
     handAudioForward,
+    handleToggleRepeat,
     currentLyrics,
     subtitles,
+    isRepeat,
   } = useAudio();
 
   useEffect(() => {
@@ -86,18 +89,19 @@ export function PlayerPage({ setIsClick }: IProp) {
                         key={currentMusic?.cover}
                         className="flex justify-center gap-8"
                       >
-                        <motion.img
-                          src={currentMusic?.cover}
-                          alt="cover"
-                          animate={{ scale: isPaused ? 0.8 : 1 }}
-                          transition={{
-                            duration: 0.2,
-                            ease: "easeInOut",
-                            type: "spring",
-                            damping: 15,
-                          }}
-                          className="flex size-16 shrink-0 justify-center rounded-xl object-cover"
-                        />
+                        <BorderPro roundedSize="rounded-xl">
+                          <motion.img
+                            src={currentMusic?.cover}
+                            alt="cover"
+                            transition={{
+                              duration: 0.2,
+                              ease: "easeInOut",
+                              type: "spring",
+                              damping: 15,
+                            }}
+                            className="flex size-16 shrink-0 justify-center rounded-xl object-cover"
+                          />
+                        </BorderPro>
                       </motion.div>
                     ) : (
                       <div className="flex h-[45vh] w-full shrink-0 justify-center rounded-xl bg-zinc-700" />
@@ -115,6 +119,8 @@ export function PlayerPage({ setIsClick }: IProp) {
                   </div>
 
                   <div className="flex items-center">
+                    <DynamicIslandWave isPlay={isPlaying} />
+
                     <div className="flex space-x-8 text-black dark:text-white">
                       <motion.button
                         whileTap={{ scale: 0.5 }}
@@ -301,41 +307,14 @@ export function PlayerPage({ setIsClick }: IProp) {
                   </motion.button>
                 </div>
 
-                <Repeat size={25} className="" />
+                <div onClick={handleToggleRepeat}>
+                  {isRepeat ? <RepeatOnce size={25} /> : <Repeat size={25} />}
+                </div>
               </div>
             </div>
 
             <div className="flex justify-between px-4 text-base text-zinc-500 md:hidden">
               <div>UP NEXT</div>
-              {/* <Drawer>
-                <DrawerTrigger className="">LYRIC</DrawerTrigger>
-
-                <DrawerContent className="h-[80vh] border border-zinc-800 bg-zinc-950 shadow-sm">
-                  <DrawerHeader className="border-b border-zinc-900 shadow-sm">
-                    <div className="absolute inset-0 top-4 mx-auto h-1.5 w-32 rounded-full bg-zinc-800"></div>
-                    <DrawerTitle className="mx-auto font-mono text-xl"></DrawerTitle>
-                    <DrawerDescription className="mx-auto font-mono"></DrawerDescription>
-                  </DrawerHeader>
-
-                  <div className="h-full overflow-x-auto p-4">
-                    <div className="text-balance px-4 font-apple text-4xl font-bold leading-loose text-zinc-300">
-                      {subtitles.map((line) => (
-                        <p
-                          key={line.id}
-                          id={`subtitle-${line.id}`}
-                          className={`transition-all duration-300 ${
-                            currentLyrics === line.text
-                              ? "font-semibold leading-snug text-white"
-                              : "text-zinc-500 [filter:blur(2px)]"
-                          }`}
-                        >
-                          {line.text}
-                        </p>
-                      ))}
-                    </div>
-                  </div>
-                </DrawerContent>
-              </Drawer> */}
 
               <div onClick={() => setIsClickLyric(!isClickLyric)}>LYRIC</div>
 

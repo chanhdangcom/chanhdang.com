@@ -14,13 +14,13 @@ import { AnimatePresence, motion } from "motion/react";
 import { DurationAudio } from "./component/duration-audio";
 import {
   Control,
+  RepeatOnce,
   SpeakerHigh,
   SpeakerSlash,
 } from "@phosphor-icons/react/dist/ssr";
 
 import { useEffect, useRef, useState } from "react";
 import { PlayerPage } from "./player-page";
-import LiquidGlassBackground from "@/components/liquid-glass-background";
 import { useOutsideClick } from "@/app/[locale]/features/profile /hook/use-outside-click";
 import { useAudio } from "@/components/music-provider";
 
@@ -35,6 +35,8 @@ export function AudioBar() {
     handleAudioSkip,
     handAudioForward,
     handleMute,
+    handleToggleRepeat,
+    isRepeat,
   } = useAudio();
 
   const [isClick, setIsClick] = useState(false);
@@ -94,7 +96,7 @@ export function AudioBar() {
           layoutId="audio-bar"
           className="fixed inset-x-2 bottom-[85px] z-50 flex justify-center md:inset-x-96 md:bottom-4"
         >
-          <LiquidGlassBackground className="rounded-[50px] bg-zinc-200/70 px-3 py-1 dark:bg-black/80 md:rounded-[55px]">
+          <div className="relative overflow-hidden rounded-[50px] border border-white/20 bg-zinc-200/70 px-3 py-1 backdrop-blur-xl dark:bg-black/80 md:rounded-[55px]">
             <div
               onClick={() => {
                 if (window.innerWidth < 768) {
@@ -149,7 +151,9 @@ export function AudioBar() {
                   />
                 </motion.div>
 
-                <Repeat size={18} weight="bold" className="text-zinc-500" />
+                <div onClick={handleToggleRepeat}>
+                  {isRepeat ? <RepeatOnce size={18} /> : <Repeat size={18} />}
+                </div>
               </div>
 
               <div className="flex w-[700px] items-center justify-start gap-2 md:ml-6 md:gap-2">
@@ -279,7 +283,7 @@ export function AudioBar() {
                 </motion.div>
               </div>
             </div>
-          </LiquidGlassBackground>
+          </div>
         </motion.div>
       </AnimatePresence>
     );
@@ -298,7 +302,7 @@ export function AudioBar() {
           layoutId="audio-bar"
           className="fixed inset-x-20 bottom-6 z-50 flex justify-center md:inset-x-96 md:bottom-4"
         >
-          <LiquidGlassBackground className="rounded-[50px] bg-zinc-200/70 px-3 py-1 dark:bg-black/80 md:rounded-[55px]">
+          <div className="relative overflow-hidden rounded-[50px] border border-white/20 bg-zinc-200/70 px-3 py-1 backdrop-blur-xl dark:bg-black/80 md:rounded-[55px]">
             <div
               onClick={() => {
                 if (window.innerWidth < 768) {
@@ -368,7 +372,9 @@ export function AudioBar() {
                   />
                 </motion.div>
 
-                <Repeat size={18} weight="bold" className="text-zinc-500" />
+                <div onClick={handleToggleRepeat}>
+                  {isRepeat ? <RepeatOnce size={18} /> : <Repeat size={18} />}
+                </div>
               </div>
 
               <div className="flex w-[700px] items-center gap-2 md:ml-6 md:gap-2">
@@ -498,7 +504,7 @@ export function AudioBar() {
                 )}
               </div>
             </div>
-          </LiquidGlassBackground>
+          </div>
         </motion.div>
       </AnimatePresence>
     );
