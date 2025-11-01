@@ -4,48 +4,42 @@ import clientPromise from "@/lib/mongodb";
 
 export default async function CarouselAudio() {
   try {
-    // ✅ Query DB trực tiếp trong Server Component (không cần fetch API)
+    // ✅ Kết nối MongoDB
     const client = await clientPromise;
     const db = client.db("musicdb");
+
+    // ✅ Lấy toàn bộ dữ liệu
     const data = await db.collection("musics").find({}).toArray();
 
-    // ✅ Kiểm tra và chuyển đổi dữ liệu hợp lệ
+    // ✅ Chuyển đổi dữ liệu an toàn
     const musics: IMusic[] = Array.isArray(data)
       ? data
-          .map(
-            (
-              item: Record<string, unknown> & {
-                _id?: { toString(): string } | string;
-              }
-            ) => ({
-              id:
-                typeof item._id === "string"
-                  ? item._id
-                  : item._id?.toString() || "",
-              title: String(item.title || ""),
-              singer: String(item.singer || ""),
-              cover: String(item.cover || ""),
-              audio: String(item.audio || ""),
-              youtube: String(item.youtube || ""),
-              content: String(item.content || ""),
-              type: item.type ? String(item.type) : undefined,
-            })
-          )
-          .filter((m: IMusic) => m.title && m.audio) // Chỉ lấy những bài có đủ thông tin
+          .map((item) => ({
+            id:
+              typeof item._id === "string"
+                ? item._id
+                : (item._id?.toString() ?? ""),
+            title: String(item.title ?? ""),
+            singer: String(item.singer ?? ""),
+            cover: String(item.cover ?? ""),
+            audio: String(item.audio ?? ""),
+            youtube: String(item.youtube ?? ""),
+            content: String(item.content ?? ""),
+            type: item.type ? String(item.type) : undefined,
+          }))
+          .filter((m) => m.title && m.audio)
       : [];
 
-    // ✅ Render phần UI
+    // ✅ Render UI
     return (
       <div className="w-full rounded-3xl text-black dark:text-white md:max-h-full">
         <div className="flex justify-between">
-          <div className="flex gap-1 text-3xl font-bold">
-            <div className="ml-2 px-1 text-2xl text-black dark:text-white md:ml-[270px]">
-              Trending Now
-            </div>
-          </div>
+          <h2 className="ml-2 px-1 text-2xl font-bold text-black dark:text-white md:ml-[270px]">
+            Trending Now
+          </h2>
         </div>
 
-        {/* ✅ Client Component: render danh sách audio */}
+        {/* ✅ Client Component */}
         <AuidoListClient musics={musics} />
       </div>
     );
