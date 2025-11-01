@@ -123,25 +123,25 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   // Audio control functions
   // ----------------------------
   const handlePlayAudio = useCallback(
-    async (music: IMusic) => {
+    (music: IMusic) => {
       if (currentMusic?.id === music.id) return;
       setCurrentMusic(music);
-
-      setTimeout(() => {
-        if (audioRef.current) {
-          audioRef.current.currentTime = 0;
-          audioRef.current.volume = 1;
-          audioRef.current
-            .play()
-            .catch((error) => console.error("Lỗi phát nhạc:", error));
-        }
-      }, 100);
-
       setIsPlaying(true);
       setIsPaused(false);
     },
     [currentMusic]
   );
+
+  useEffect(() => {
+    if (audioRef.current && currentMusic) {
+      audioRef.current.src = currentMusic.audio;
+      audioRef.current.currentTime = 0;
+      audioRef.current.volume = 1;
+      audioRef.current
+        .play()
+        .catch((error) => console.error("Lỗi phát nhạc:", error));
+    }
+  }, [currentMusic]);
 
   const handleToggleRepeat = useCallback(() => {
     setIsRepeat((prev) => !prev);
@@ -152,6 +152,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       const res = await fetch("/api/musics?random=1&limit=1", {
         cache: "no-store",
       });
+
       if (!res.ok) throw new Error("Failed to fetch random music");
       const data = (await res.json()) as IMusic[];
       const randomMusic = data?.[0];

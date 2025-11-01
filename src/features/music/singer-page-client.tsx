@@ -18,12 +18,32 @@ import Link from "next/link";
 import { MotionHeaderMusic } from "./component/motion-header-music";
 import { Footer } from "@/app/[locale]/features/profile /footer";
 import { ISingerItem } from "./type/singer";
+import { useAudio } from "@/components/music-provider";
 
 type IProp = {
   singer: ISingerItem;
 };
 
 export function SingerPageClient({ singer }: IProp) {
+  const { handlePlayAudio } = useAudio();
+
+  const handlePlayFirstAudio = () => {
+    const musics = singer.musics;
+    if (!musics?.length) return;
+
+    handlePlayAudio(musics[0]);
+  };
+
+  const handleRandomAudio = () => {
+    const musics = singer.musics;
+    if (!musics?.length) return;
+
+    const randomIndex = Math.floor(Math.random() * musics.length);
+    const randomMusic = musics[randomIndex];
+
+    handlePlayAudio(randomMusic);
+  };
+
   return (
     <div className="md:flex">
       <MenuBar />
@@ -84,17 +104,25 @@ export function SingerPageClient({ singer }: IProp) {
 
                   <div className="space-y-4">
                     <div className="flex w-full justify-between gap-4">
-                      <div className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 dark:bg-zinc-900">
+                      <motion.div
+                        whileTap={{ scale: 0.9 }}
+                        className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 dark:bg-zinc-900"
+                        onClick={() => handlePlayFirstAudio()}
+                      >
                         <Play size={20} weight="fill" />
 
                         <div className="text-xl">Play</div>
-                      </div>
+                      </motion.div>
 
-                      <div className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-2 font-semibold text-red-500 dark:bg-zinc-900">
+                      <motion.div
+                        whileTap={{ scale: 0.9 }}
+                        className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-2 font-semibold text-red-500 dark:bg-zinc-900"
+                        onClick={() => handleRandomAudio()}
+                      >
                         <Shuffle size={20} weight="fill" />
 
                         <div className="text-xl">Mix song</div>
-                      </div>
+                      </motion.div>
                     </div>
                   </div>
 
