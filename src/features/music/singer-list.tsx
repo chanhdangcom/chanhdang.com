@@ -20,9 +20,23 @@ async function getSingers(): Promise<ISingerItem[]> {
         typeof item._id === "string" ? item._id : (item._id?.toString() ?? ""),
       singer: String(item.singer ?? ""),
       cover: String(item.cover ?? ""),
-      musics: Array.isArray(item.musics) ? item.musics : undefined,
-      createdAt: item.createdAt instanceof Date ? item.createdAt : undefined,
-      updatedAt: item.updatedAt instanceof Date ? item.updatedAt : undefined,
+      musics: Array.isArray(item.musics)
+        ? item.musics.map((music: Record<string, unknown>) => ({
+            id:
+              typeof music.id === "string"
+                ? music.id
+                : typeof music._id === "string"
+                  ? music._id
+                  : (music._id?.toString() ?? ""),
+            title: String(music.title ?? ""),
+            singer: String(music.singer ?? ""),
+            cover: String(music.cover ?? ""),
+            audio: String(music.audio ?? ""),
+            youtube: String(music.youtube ?? ""),
+            content: String(music.content ?? ""),
+            type: music.type ? String(music.type) : undefined,
+          }))
+        : undefined,
     }));
   } catch (error) {
     console.error("Error fetching singers:", error);

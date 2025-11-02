@@ -51,10 +51,6 @@ async function getSinger(id: string): Promise<ISingerItem | null> {
       singer: String(singer.singer ?? ""),
       cover: String(singer.cover ?? ""),
       musics: musics.length > 0 ? musics : undefined,
-      createdAt:
-        singer.createdAt instanceof Date ? singer.createdAt : undefined,
-      updatedAt:
-        singer.updatedAt instanceof Date ? singer.updatedAt : undefined,
     };
   } catch (error) {
     console.error("Error fetching singer:", error);

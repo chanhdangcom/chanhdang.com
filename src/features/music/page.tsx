@@ -20,7 +20,7 @@ export function MusicPage() {
       <MotionHeaderMusic />
       <MenuBar />
 
-      <div className="absolute top-0 h-40 w-full bg-gradient-to-r from-red-500 via-blue-500 to-orange-400 opacity-30 blur-xl md:hidden md:h-60 md:to-transparent" />
+      <div className="absolute top-0 h-80 w-full bg-gradient-to-r from-red-500 via-blue-500 to-orange-400 opacity-30 blur-xl md:hidden md:h-60 md:to-transparent" />
 
       <div className="mx-auto w-full">
         <div className="relative z-10">

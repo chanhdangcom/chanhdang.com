@@ -61,7 +61,7 @@ export function PlayerPage({ setIsClick }: IProp) {
               <img
                 src={currentMusic?.cover || ""}
                 alt="cover"
-                className="md:3/4 0 mt-8 h-1/2 w-full blur-2xl md:mt-24 md:h-screen md:w-full md:blur-3xl"
+                className="md:3/4 0 mt-8 h-screen w-full opacity-80 blur-2xl md:mt-24 md:h-screen md:w-full md:blur-3xl"
               />
             </div>
 
