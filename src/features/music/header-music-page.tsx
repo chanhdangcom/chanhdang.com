@@ -15,7 +15,6 @@ export const HeaderMusicPage = ({ name }: IProp) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="ml-3 text-4xl font-bold md:ml-0">
-              {" "}
               {name || "Home"}
             </div>
 
