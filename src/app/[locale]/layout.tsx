@@ -30,7 +30,8 @@ const fontMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "Chánh Đang - I am a Developer",
-  description: "I am a developer.",
+  description:
+    "Passionate IT Developer specialized in building efficient, scalable, and user-focused digital solutions.",
   manifest: "/manifest.webmanifest",
   themeColor: "#000000",
   icons: {
