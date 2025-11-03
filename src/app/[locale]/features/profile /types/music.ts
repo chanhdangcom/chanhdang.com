@@ -7,4 +7,5 @@ export type IMusic = {
   youtube: string;
   content: string;
   type?: string;
+  srt?: string
 };

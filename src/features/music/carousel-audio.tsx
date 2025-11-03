@@ -26,6 +26,7 @@ export default async function CarouselAudio() {
             youtube: String(item.youtube ?? ""),
             content: String(item.content ?? ""),
             type: item.type ? String(item.type) : undefined,
+            srt: item.srt ? String(item.srt) : undefined,
           }))
           .filter((m) => m.title && m.audio)
       : [];

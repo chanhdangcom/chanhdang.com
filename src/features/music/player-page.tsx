@@ -35,7 +35,7 @@ export function PlayerPage({ setIsClick }: IProp) {
     handleAudioSkip,
     handAudioForward,
     handleToggleRepeat,
-    currentLyrics,
+    currentSubtitleId,
     subtitles,
     isRepeat,
   } = useAudio();
@@ -160,7 +160,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                     key={line.id}
                     id={`subtitle-${line.id}`}
                     className={`transition-all duration-300 ${
-                      currentLyrics === line.text
+                      currentSubtitleId === line.id
                         ? "font-semibold leading-snug text-white"
                         : "text-zinc-500 [filter:blur(2px)]"
                     }`}
@@ -328,7 +328,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                 key={line.id}
                 id={`subtitle-${line.id}`}
                 className={`transition-all duration-300 ${
-                  currentLyrics === line.text
+                  currentSubtitleId === line.id
                     ? "font-semibold leading-snug text-white"
                     : "text-zinc-500 [filter:blur(2px)]"
                 }`}
