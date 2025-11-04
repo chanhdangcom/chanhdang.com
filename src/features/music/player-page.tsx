@@ -344,7 +344,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                   </motion.button>
                 </div>
 
-                <div className="flex items-center gap-1">
+                <div className="items-center gap-1">
                   <motion.div
                     whileTap={{ scale: 0.85 }}
                     transition={{ duration: 0.15 }}
