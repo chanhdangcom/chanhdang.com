@@ -49,7 +49,7 @@ export function SingerPageClient({ singer }: IProp) {
       <MenuBar />
       <div className="pointer-events-none fixed top-0 z-10 h-24 w-full bg-gradient-to-b from-white via-white/50 to-transparent dark:from-black dark:via-black/50" />
 
-      <MotionHeaderMusic name="Artists" />
+      <MotionHeaderMusic name={singer.singer} />
 
       <AnimatePresence>
         <motion.div className="mb-48 w-full" layoutId="singer">

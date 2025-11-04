@@ -1,4 +1,4 @@
-import { AudioBar } from "./audio-bar";
+// import { AudioBar } from "./audio-bar";
 import { HeaderMusicPage } from "./header-music-page";
 import { MenuBar } from "./menu-bar";
 import { TableRanking } from "./table-ranking";
@@ -7,8 +7,8 @@ import { MenuBarMobile } from "./menu-bar-mobile";
 import { PickForYou } from "./pick-for-you";
 import { MotionHeaderMusic } from "./component/motion-header-music";
 import { Footer } from "@/app/[locale]/features/profile /footer";
-import { CarouselAudioPlaylist } from "./carousel-audio-playlist";
 import CarouselAudio from "./carousel-audio";
+import { AudioBar } from "./audio-bar";
 
 // import { useDisableRightClick } from "../../hooks/use-disable-right-click";
 
@@ -39,9 +39,9 @@ export function MusicPage() {
               <CarouselAudio />
             </div>
 
-            <div className="mt-6 flex justify-start">
+            {/* <div className="mt-6 flex justify-start">
               <CarouselAudioPlaylist />
-            </div>
+            </div> */}
 
             <div className="mt-6">
               <TableRanking home />

@@ -91,7 +91,7 @@ export function PlayerPage({ setIsClick }: IProp) {
           className="fixed inset-0 z-50 flex justify-between space-y-4 px-4 md:rounded-3xl md:border md:border-white/10"
         >
           <div className="w-full">
-            <div className="absolute inset-0 -z-10 flex justify-center gap-8 bg-zinc-300 backdrop-blur-sm dark:bg-zinc-950">
+            <div className="absolute inset-0 -z-10 flex justify-center gap-8 bg-zinc-200 backdrop-blur-sm dark:bg-zinc-950">
               <img
                 src={currentMusic?.cover || ""}
                 alt="cover"
@@ -99,7 +99,7 @@ export function PlayerPage({ setIsClick }: IProp) {
               />
             </div>
 
-            <header className="flex items-center justify-between border-b border-white/10 p-1 text-black dark:text-white md:py-4">
+            <header className="flex items-center justify-between border-b border-black/10 p-1 text-black dark:border-white/10 dark:text-white md:py-4">
               <CaretDown
                 size={20}
                 className="cursor-pointer"
@@ -153,9 +153,10 @@ export function PlayerPage({ setIsClick }: IProp) {
                   </div>
 
                   <div className="flex items-center">
-                    <div className="flex space-x-8 text-black dark:text-white">
+                    <div className="flex items-center gap-6 text-black dark:text-white">
                       <motion.button
-                        whileTap={{ scale: 0.5 }}
+                        whileTap={{ scale: 0.85 }}
+                        transition={{ duration: 0.15 }}
                         onClick={
                           isPlaying
                             ? handlePauseAudio
@@ -163,7 +164,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                               ? handleResumeAudio
                               : handlePlayRandomAudio
                         }
-                        className="flex cursor-pointer items-center justify-center"
+                        className="flex h-12 w-12 cursor-pointer items-center justify-center"
                       >
                         {isPlaying ? (
                           <Pause size={36} weight="fill" />
@@ -175,7 +176,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                   </div>
                 </div>
 
-                <div className="absolute inset-x-0 mx-1 mt-2 flex justify-between rounded-full text-sm font-semibold md:hidden">
+                <div className="absolute inset-x-0 mx-1 mt-2 flex justify-between rounded-full text-sm font-semibold text-zinc-600 dark:text-zinc-400 md:hidden">
                   <div>UP NEXT</div>
 
                   <div onClick={() => setIsClickLyric(!isClickLyric)}>
@@ -188,7 +189,7 @@ export function PlayerPage({ setIsClick }: IProp) {
             </div>
 
             <div className="pointer-events-none ml-4 h-full w-full overflow-y-auto scrollbar-hide">
-              <div className="text-balance px-4 pt-32 font-apple text-3xl font-bold leading-loose text-zinc-300">
+              <div className="text-balance px-4 pt-32 font-apple text-3xl font-bold leading-loose text-zinc-700 dark:text-zinc-300">
                 {subtitles.map((line) => (
                   <SubtitleItem
                     key={line.id}
@@ -211,7 +212,7 @@ export function PlayerPage({ setIsClick }: IProp) {
         className="fixed inset-0 z-50 flex justify-between space-y-4 px-4 md:rounded-3xl md:border md:border-white/10"
       >
         <div className="w-full">
-          <div className="absolute inset-0 -z-10 flex justify-center gap-8 bg-zinc-300 backdrop-blur-sm dark:bg-zinc-950">
+          <div className="absolute inset-0 -z-10 flex justify-center gap-8 bg-zinc-200 backdrop-blur-sm dark:bg-zinc-950">
             <img
               src={currentMusic?.cover || ""}
               alt="cover"
@@ -267,7 +268,7 @@ export function PlayerPage({ setIsClick }: IProp) {
               <div className="flex h-[45vh] w-full shrink-0 justify-center rounded-2xl bg-zinc-700" />
             )}
 
-            <div className="space-y-4 rounded-3xl md:absolute md:inset-x-8 md:-bottom-20 md:border md:border-white/10 md:bg-zinc-950/40 md:px-4 md:py-3 md:backdrop-blur-xl">
+            <div className="space-y-4 rounded-3xl md:absolute md:inset-x-8 md:-bottom-20 md:border md:border-black/10 md:bg-white/70 md:px-4 md:py-3 md:backdrop-blur-xl dark:md:border-white/10 dark:md:bg-zinc-950/40">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="line-clamp-1 text-xl font-semibold">
@@ -290,25 +291,33 @@ export function PlayerPage({ setIsClick }: IProp) {
               </div>
 
               <div className="flex items-center justify-between">
-                <motion.div whileTap={{ scale: 0.5 }}>
-                  <Shuffle
-                    onClick={() => handlePlayRandomAudio()}
-                    size={25}
-                    className="cursor-pointer"
-                  />
-                </motion.div>
+                <div className="flex items-center gap-2">
+                  <motion.div
+                    whileTap={{ scale: 0.85 }}
+                    transition={{ duration: 0.15 }}
+                    className="flex h-10 w-10 cursor-pointer items-center justify-center"
+                  >
+                    <Shuffle
+                      onClick={() => handlePlayRandomAudio()}
+                      size={25}
+                      className="cursor-pointer"
+                    />
+                  </motion.div>
+                </div>
 
-                <div className="flex space-x-8 text-black dark:text-white">
+                <div className="flex items-center gap-6 text-black dark:text-white">
                   <motion.button
                     onClick={handAudioForward}
-                    whileTap={{ scale: 0.5 }}
-                    className="flex cursor-pointer items-center justify-center"
+                    whileTap={{ scale: 0.85 }}
+                    transition={{ duration: 0.15 }}
+                    className="flex h-12 w-12 cursor-pointer items-center justify-center"
                   >
                     <Rewind size={30} weight="fill" />
                   </motion.button>
 
                   <motion.button
-                    whileTap={{ scale: 0.5 }}
+                    whileTap={{ scale: 0.85 }}
+                    transition={{ duration: 0.15 }}
                     onClick={
                       isPlaying
                         ? handlePauseAudio
@@ -316,7 +325,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                           ? handleResumeAudio
                           : handlePlayRandomAudio
                     }
-                    className="flex cursor-pointer items-center justify-center"
+                    className="flex h-14 w-14 cursor-pointer items-center justify-center"
                   >
                     {isPlaying ? (
                       <Pause size={36} weight="fill" />
@@ -327,18 +336,20 @@ export function PlayerPage({ setIsClick }: IProp) {
 
                   <motion.button
                     onClick={handleAudioSkip}
-                    whileTap={{ scale: 0.5 }}
-                    className="flex cursor-pointer items-center justify-center"
+                    whileTap={{ scale: 0.85 }}
+                    transition={{ duration: 0.15 }}
+                    className="flex h-12 w-12 cursor-pointer items-center justify-center"
                   >
-                    <FastForward size={32} weight="fill" />
+                    <FastForward size={30} weight="fill" />
                   </motion.button>
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1">
                   <motion.div
-                    whileTap={{ scale: 0.5 }}
+                    whileTap={{ scale: 0.85 }}
+                    transition={{ duration: 0.15 }}
                     onClick={handleToggleKaraoke}
-                    className={`cursor-pointer ${
+                    className={`flex h-10 w-10 cursor-pointer items-center justify-center ${
                       currentMusic?.beat ? "" : "cursor-not-allowed opacity-20"
                     }`}
                   >
@@ -350,9 +361,10 @@ export function PlayerPage({ setIsClick }: IProp) {
                   </motion.div>
 
                   <motion.div
-                    whileTap={{ scale: 0.5 }}
+                    whileTap={{ scale: 0.85 }}
+                    transition={{ duration: 0.15 }}
                     onClick={handleToggleRepeat}
-                    className="cursor-pointer"
+                    className="flex h-10 w-10 cursor-pointer items-center justify-center"
                   >
                     {isRepeat ? <RepeatOnce size={25} /> : <Repeat size={25} />}
                   </motion.div>

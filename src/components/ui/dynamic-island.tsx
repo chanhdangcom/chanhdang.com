@@ -20,11 +20,46 @@ export function DynamicIslandWave({ isPlay, coverUrl }: IPlay) {
       return;
     }
 
+    let cancelled = false;
     const fac = new FastAverageColor();
-    fac
-      .getColorAsync(coverUrl)
-      .then((color) => setWaveColor(color.hex))
-      .catch(() => setWaveColor("#FFFFFF"));
+
+    // Fallback: deterministic color from URL when CORS blocks pixel access
+    const fallbackFromUrl = (url: string) => {
+      let hash = 0;
+      for (let i = 0; i < url.length; i++) {
+        hash = (hash << 5) - hash + url.charCodeAt(i);
+        hash |= 0;
+      }
+      const hue = Math.abs(hash) % 360;
+      const sat = 65;
+      const light = 55;
+      return `hsl(${hue} ${sat}% ${light}%)`;
+    };
+
+    // Try with crossOrigin image to avoid canvas tainting
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    // Cache buster to avoid cached responses without CORS headers
+    const sep = coverUrl.includes("?") ? "&" : "?";
+    img.src = `${coverUrl}${sep}avg_color=1`;
+
+    img.onload = () => {
+      fac
+        .getColorAsync(img)
+        .then((color) => {
+          if (!cancelled) setWaveColor(color.hex);
+        })
+        .catch(() => {
+          if (!cancelled) setWaveColor(fallbackFromUrl(coverUrl));
+        });
+    };
+    img.onerror = () => {
+      if (!cancelled) setWaveColor(fallbackFromUrl(coverUrl));
+    };
+
+    return () => {
+      cancelled = true;
+    };
   }, [coverUrl]);
 
   const getRandomHeight = () =>

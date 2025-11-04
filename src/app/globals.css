@@ -83,6 +83,16 @@ html {
   }
 }
 
+/* ---------------- Marquee animation for long text ---------------- */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 /* ---------------- Accessibility: disable animation nếu user tắt motion ---------------- */
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(root),

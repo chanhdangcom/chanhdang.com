@@ -15,7 +15,7 @@ export function MotionHeaderMusic({ name }: IProp) {
 
   return (
     <motion.div
-      className="fixed inset-x-0 top-2 z-50 flex justify-center text-xl text-black dark:text-white"
+      className="pointer-events-none fixed inset-x-0 top-2 z-50 flex justify-center text-xl text-black dark:text-white"
       style={{ opacity: smoothOpacity }}
     >
       {name || "Home"}
