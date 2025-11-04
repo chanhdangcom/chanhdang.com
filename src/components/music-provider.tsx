@@ -29,6 +29,7 @@ type IMusicContext = {
   currentLyrics: string | null;
   subtitles: Subtitle[];
   currentSubtitleId: number | null;
+  isKaraokeMode: boolean;
 
   handlePlayAudio: (music: IMusic) => void;
   handlePlayRandomAudio: () => void;
@@ -39,11 +40,71 @@ type IMusicContext = {
   handleMute: () => void;
   isRepeat: boolean | null;
   handleToggleRepeat: () => void;
+  handleToggleKaraoke: () => void;
+  setIsPlayerPageOpen: (isOpen: boolean) => void;
 };
 
 // ----------------------------
 // Helper functions
 // ----------------------------
+
+// Fade out audio
+const fadeOut = (
+  audio: HTMLAudioElement,
+  duration: number = 300
+): Promise<void> => {
+  return new Promise((resolve) => {
+    const startVolume = audio.volume;
+    const startTime = Date.now();
+    const fadeInterval = 16; // ~60fps
+
+    const fade = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      audio.volume = startVolume * (1 - progress);
+
+      if (progress < 1) {
+        setTimeout(fade, fadeInterval);
+      } else {
+        audio.volume = 0;
+        resolve();
+      }
+    };
+
+    fade();
+  });
+};
+
+// Fade in audio
+const fadeIn = (
+  audio: HTMLAudioElement,
+  duration: number = 300
+): Promise<void> => {
+  return new Promise((resolve) => {
+    const targetVolume = 1;
+    const startTime = Date.now();
+    const fadeInterval = 16; // ~60fps
+
+    audio.volume = 0;
+
+    const fade = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      audio.volume = targetVolume * progress;
+
+      if (progress < 1) {
+        setTimeout(fade, fadeInterval);
+      } else {
+        audio.volume = targetVolume;
+        resolve();
+      }
+    };
+
+    fade();
+  });
+};
 
 // Decode ArrayBuffer with BOM detection (UTF-8/UTF-16LE/UTF-16BE)
 const decodeWithBom = (buffer: ArrayBuffer): string => {
@@ -168,6 +229,8 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   const [currentSubtitleId, setCurrentSubtitleId] = useState<number | null>(
     null
   );
+  const [isKaraokeMode, setIsKaraokeMode] = useState<boolean>(false);
+  const [isPlayerPageOpen, setIsPlayerPageOpen] = useState<boolean>(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -265,24 +328,141 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       setIsPaused(false);
       setCurrentLyrics(null);
       setCurrentSubtitleId(null);
+      setIsKaraokeMode(false); // Reset karaoke mode khi đổi bài
     },
     [currentMusic]
   );
 
+  // Effect để load audio khi đổi bài mới hoặc toggle karaoke
+  const previousMusicIdRef = useRef<string | null>(null);
+  const previousKaraokeModeRef = useRef<boolean>(false);
+  const timeUpdateIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
-    if (audioRef.current && currentMusic) {
-      audioRef.current.src = currentMusic.audio;
-      audioRef.current.currentTime = 0;
-      audioRef.current.volume = 1;
-      audioRef.current
-        .play()
-        .catch((error) => console.error("Lỗi phát nhạc:", error));
+    if (!audioRef.current || !currentMusic) return;
+
+    const isNewTrack = previousMusicIdRef.current !== currentMusic.id;
+    const isKaraokeModeChanged =
+      previousKaraokeModeRef.current !== isKaraokeMode;
+
+    // Cập nhật refs
+    if (isNewTrack) {
+      previousMusicIdRef.current = currentMusic.id;
+      previousKaraokeModeRef.current = false; // Reset khi đổi bài
     }
-  }, [currentMusic]);
+    if (isKaraokeModeChanged) {
+      previousKaraokeModeRef.current = isKaraokeMode;
+    }
+
+    // Chọn source dựa trên karaoke mode
+    const audioSource =
+      isKaraokeMode && currentMusic.beat
+        ? currentMusic.beat
+        : currentMusic.audio;
+
+    // Đổi bài mới: reset time và play với fade in
+    if (isNewTrack) {
+      const audioEl = audioRef.current;
+      audioEl.src = audioSource;
+      audioEl.currentTime = 0;
+      audioEl.volume = 0;
+
+      const handleCanPlay = async () => {
+        if (!audioEl) return;
+        try {
+          await audioEl.play();
+          // Fade in audio mới
+          await fadeIn(audioEl, 300);
+        } catch (error) {
+          console.error("Lỗi phát nhạc:", error);
+        }
+        audioEl.removeEventListener("canplay", handleCanPlay);
+      };
+
+      audioEl.addEventListener("canplay", handleCanPlay);
+      return;
+    }
+
+    // Toggle karaoke: fade out/in mượt mà, giữ nguyên thời gian, timeline tiếp tục chạy
+    if (isKaraokeModeChanged && currentMusic.beat) {
+      // Clear interval cũ nếu có
+      if (timeUpdateIntervalRef.current) {
+        clearInterval(timeUpdateIntervalRef.current);
+        timeUpdateIntervalRef.current = null;
+      }
+
+      const wasPlaying = !audioRef.current.paused;
+      const audioEl = audioRef.current;
+
+      // Theo dõi currentTime liên tục trong lúc fade out
+      let currentTime = audioEl.currentTime;
+      timeUpdateIntervalRef.current = setInterval(() => {
+        if (audioEl && !audioEl.paused) {
+          currentTime = audioEl.currentTime;
+        }
+      }, 50); // Update mỗi 50ms để timeline mượt
+
+      // Fade out audio hiện tại (vẫn để chạy, chỉ giảm volume)
+      fadeOut(audioEl, 300).then(() => {
+        if (timeUpdateIntervalRef.current) {
+          clearInterval(timeUpdateIntervalRef.current);
+          timeUpdateIntervalRef.current = null;
+        }
+
+        if (!audioEl) return;
+
+        // Lấy thời gian cuối cùng từ biến đã theo dõi
+        const finalTime = currentTime;
+
+        // Đổi source
+        audioEl.src = audioSource;
+
+        // Dùng loadedmetadata để set currentTime sớm nhất có thể
+        const handleLoadedMetadata = async () => {
+          if (!audioEl) return;
+
+          // Set currentTime ngay khi có metadata (trước khi play)
+          audioEl.currentTime = finalTime;
+
+          if (wasPlaying) {
+            try {
+              // Play ngay và fade in
+              await audioEl.play();
+              // Fade in audio mới
+              await fadeIn(audioEl, 300);
+            } catch (error) {
+              console.error("Lỗi phát nhạc:", error);
+            }
+          } else {
+            // Nếu không phát, vẫn set volume về 1 để sẵn sàng
+            audioEl.volume = 1;
+          }
+
+          audioEl.removeEventListener("loadedmetadata", handleLoadedMetadata);
+        };
+
+        audioEl.addEventListener("loadedmetadata", handleLoadedMetadata);
+      });
+    }
+
+    // Cleanup: clear interval nếu effect re-run hoặc unmount
+    return () => {
+      if (timeUpdateIntervalRef.current) {
+        clearInterval(timeUpdateIntervalRef.current);
+        timeUpdateIntervalRef.current = null;
+      }
+    };
+  }, [currentMusic, isKaraokeMode]);
 
   const handleToggleRepeat = useCallback(() => {
     setIsRepeat((prev) => !prev);
   }, []);
+
+  const handleToggleKaraoke = useCallback(() => {
+    if (currentMusic?.beat) {
+      setIsKaraokeMode((prev) => !prev);
+    }
+  }, [currentMusic]);
 
   const handlePlayRandomAudio = useCallback(async () => {
     try {
@@ -355,29 +535,61 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     const audioEl = audioRef.current;
     if (!audioEl) return;
 
+    // Throttle để giảm số lần update state
+    let lastUpdateTime = 0;
+    const throttleInterval = 100; // Update tối đa mỗi 100ms
+    let lastActiveId: number | null = null;
+
     const syncLyrics = () => {
+      // Chỉ sync khi PlayerPage đang mở (tránh re-render không cần thiết ở audio-bar)
+      if (!isPlayerPageOpen) {
+        return;
+      }
+
+      const now = Date.now();
+      // Throttle: chỉ update nếu đã qua 100ms
+      if (now - lastUpdateTime < throttleInterval) {
+        return;
+      }
+      lastUpdateTime = now;
+
       const currentTime = audioEl.currentTime;
 
       const activeSubtitle = subtitles.find(
         (sub) =>
-          currentTime >= (sub.start ?? 0) && currentTime <= (sub.end ?? 0)
+          sub.start !== undefined &&
+          sub.end !== undefined &&
+          currentTime >= sub.start &&
+          currentTime <= sub.end
       );
 
-      setCurrentLyrics((prevLyrics) =>
-        activeSubtitle?.text !== prevLyrics
-          ? activeSubtitle?.text || null
-          : prevLyrics
-      );
+      // Chỉ update state nếu subtitle thực sự thay đổi
+      const newActiveId = activeSubtitle?.id ?? null;
+      if (newActiveId !== lastActiveId) {
+        lastActiveId = newActiveId;
 
-      setCurrentSubtitleId((prevId) =>
-        activeSubtitle?.id !== prevId ? (activeSubtitle?.id ?? null) : prevId
-      );
+        setCurrentLyrics((prevLyrics) =>
+          activeSubtitle?.text !== prevLyrics
+            ? activeSubtitle?.text || null
+            : prevLyrics
+        );
 
-      const activeElement = document.getElementById(
-        `subtitle-${activeSubtitle?.id}`
-      );
-      if (activeElement) {
-        activeElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        setCurrentSubtitleId((prevId) =>
+          activeSubtitle?.id !== prevId ? (activeSubtitle?.id ?? null) : prevId
+        );
+
+        // Scroll chỉ khi subtitle thay đổi
+        if (activeSubtitle?.id) {
+          const activeElement = document.getElementById(
+            `subtitle-${activeSubtitle.id}`
+          );
+          if (activeElement) {
+            activeElement.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          }
+        }
       }
     };
 
@@ -397,7 +609,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       audioEl.removeEventListener("timeupdate", syncLyrics);
       audioEl.removeEventListener("ended", handleEnded);
     };
-  }, [subtitles, handlePlayRandomAudio, isRepeat]);
+  }, [subtitles, handlePlayRandomAudio, isRepeat, isPlayerPageOpen]);
 
   // ----------------------------
   // Return context provider
@@ -412,6 +624,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       currentLyrics={currentLyrics}
       subtitles={subtitles}
       currentSubtitleId={currentSubtitleId}
+      isKaraokeMode={isKaraokeMode}
       handlePlayAudio={handlePlayAudio}
       handlePlayRandomAudio={handlePlayRandomAudio}
       handlePauseAudio={handlePauseAudio}
@@ -421,8 +634,10 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       handleMute={handleMute}
       isRepeat={isRepeat}
       handleToggleRepeat={handleToggleRepeat}
+      handleToggleKaraoke={handleToggleKaraoke}
+      setIsPlayerPageOpen={setIsPlayerPageOpen}
     >
-      <audio ref={audioRef} src={currentMusic?.audio} autoPlay />
+      <audio ref={audioRef} />
       {children}
     </Provider>
   );

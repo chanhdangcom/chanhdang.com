@@ -87,12 +87,6 @@ export function AudioBar() {
     return (
       <AnimatePresence mode="wait">
         <motion.div
-          transition={{
-            type: "spring",
-            duration: 1,
-            ease: "easeInOut",
-          }}
-          layout
           layoutId="audio-bar"
           className="fixed inset-x-2 bottom-[85px] z-50 flex justify-center md:inset-x-96 md:bottom-4"
         >

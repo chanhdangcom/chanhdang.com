@@ -5,6 +5,7 @@ import {
   CaretDown,
   DotsThreeVertical,
   FastForward,
+  MagicWand,
   Pause,
   Play,
   Repeat,
@@ -14,7 +15,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import { AudioTimeLine } from "./component/audio-time-line";
 import DynamicIslandWave from "@/components/ui/dynamic-island";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
@@ -23,6 +24,34 @@ import { BorderPro } from "./component/border-pro";
 type IProp = {
   setIsClick: () => void;
 };
+
+// Memoized SubtitleItem để tránh re-render không cần thiết
+const SubtitleItem = memo(
+  ({ id, text, isActive }: { id: number; text: string; isActive: boolean }) => {
+    return (
+      <p
+        id={`subtitle-${id}`}
+        className={`transition-all duration-300 ${
+          isActive
+            ? "font-semibold leading-snug text-white"
+            : "text-zinc-500 [filter:blur(2px)]"
+        }`}
+      >
+        {text}
+      </p>
+    );
+  },
+  (prevProps, nextProps) => {
+    // Chỉ re-render nếu isActive thay đổi hoặc text thay đổi
+    return (
+      prevProps.isActive === nextProps.isActive &&
+      prevProps.text === nextProps.text &&
+      prevProps.id === nextProps.id
+    );
+  }
+);
+
+SubtitleItem.displayName = "SubtitleItem";
 
 export function PlayerPage({ setIsClick }: IProp) {
   const {
@@ -35,17 +64,22 @@ export function PlayerPage({ setIsClick }: IProp) {
     handleAudioSkip,
     handAudioForward,
     handleToggleRepeat,
+    handleToggleKaraoke,
     currentSubtitleId,
     subtitles,
     isRepeat,
+    isKaraokeMode,
+    setIsPlayerPageOpen,
   } = useAudio();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
+    setIsPlayerPageOpen(true); // Báo PlayerPage đang mở để sync subtitle
     return () => {
       document.body.style.overflow = "auto";
+      setIsPlayerPageOpen(false); // Báo PlayerPage đóng để tắt sync
     };
-  }, []);
+  }, [setIsPlayerPageOpen]);
 
   const [isClickLyric, setIsClickLyric] = useState(false);
 
@@ -153,20 +187,15 @@ export function PlayerPage({ setIsClick }: IProp) {
               </div>
             </div>
 
-            <div className="ml-4 h-full w-full overflow-y-auto scrollbar-hide">
+            <div className="pointer-events-none ml-4 h-full w-full overflow-y-auto scrollbar-hide">
               <div className="text-balance px-4 pt-32 font-apple text-3xl font-bold leading-loose text-zinc-300">
                 {subtitles.map((line) => (
-                  <p
+                  <SubtitleItem
                     key={line.id}
-                    id={`subtitle-${line.id}`}
-                    className={`transition-all duration-300 ${
-                      currentSubtitleId === line.id
-                        ? "font-semibold leading-snug text-white"
-                        : "text-zinc-500 [filter:blur(2px)]"
-                    }`}
-                  >
-                    {line.text}
-                  </p>
+                    id={line.id}
+                    text={line.text}
+                    isActive={currentSubtitleId === line.id}
+                  />
                 ))}
               </div>
             </div>
@@ -305,8 +334,28 @@ export function PlayerPage({ setIsClick }: IProp) {
                   </motion.button>
                 </div>
 
-                <div onClick={handleToggleRepeat}>
-                  {isRepeat ? <RepeatOnce size={25} /> : <Repeat size={25} />}
+                <div className="flex items-center gap-4">
+                  <motion.div
+                    whileTap={{ scale: 0.5 }}
+                    onClick={handleToggleKaraoke}
+                    className={`cursor-pointer ${
+                      currentMusic?.beat ? "" : "cursor-not-allowed opacity-20"
+                    }`}
+                  >
+                    {isKaraokeMode ? (
+                      <MagicWand size={25} weight="fill" />
+                    ) : (
+                      <MagicWand size={25} />
+                    )}
+                  </motion.div>
+
+                  <motion.div
+                    whileTap={{ scale: 0.5 }}
+                    onClick={handleToggleRepeat}
+                    className="cursor-pointer"
+                  >
+                    {isRepeat ? <RepeatOnce size={25} /> : <Repeat size={25} />}
+                  </motion.div>
                 </div>
               </div>
             </div>
@@ -321,20 +370,15 @@ export function PlayerPage({ setIsClick }: IProp) {
           </div>
         </div>
 
-        <div className="ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block">
+        <div className="pointer-events-none ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block">
           <div className="text-balance px-4 pt-12 font-apple text-4xl font-bold leading-loose text-zinc-300">
             {subtitles.map((line) => (
-              <p
+              <SubtitleItem
                 key={line.id}
-                id={`subtitle-${line.id}`}
-                className={`transition-all duration-300 ${
-                  currentSubtitleId === line.id
-                    ? "font-semibold leading-snug text-white"
-                    : "text-zinc-500 [filter:blur(2px)]"
-                }`}
-              >
-                {line.text}
-              </p>
+                id={line.id}
+                text={line.text}
+                isActive={currentSubtitleId === line.id}
+              />
             ))}
           </div>
         </div>
