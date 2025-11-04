@@ -224,7 +224,7 @@ export function AudioBar() {
                   </motion.div>
                 )}
 
-                <motion.div whileTap={{ scale: 0.5 }}>
+                <motion.div whileTap={{ scale: 0.5 }} className="mt-1.5">
                   <Control
                     size={20}
                     weight="fill"
@@ -451,7 +451,7 @@ export function AudioBar() {
                   </motion.div>
                 )}
 
-                <motion.div whileTap={{ scale: 0.5 }}>
+                <motion.div whileTap={{ scale: 0.5 }} className="mt-1.5">
                   <Control
                     size={20}
                     weight="fill"

@@ -19,7 +19,7 @@ export function AuidoItem({ music, handlePlay }: IProp) {
   const [isEnter, setIsEnter] = useState<boolean>(false);
 
   return (
-    <>
+    <motion.div whileTap={{ scale: 0.8 }}>
       <div
         onMouseEnter={() => setIsEnter(true)}
         onMouseLeave={() => setIsEnter(false)}
@@ -90,6 +90,6 @@ export function AuidoItem({ music, handlePlay }: IProp) {
           </div>
         </div>
       </div>
-    </>
+    </motion.div>
   );
 }

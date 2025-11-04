@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { ISingerItem } from "../type/singer";
 import { BorderPro } from "./border-pro";
+import { motion } from "framer-motion";
 
 type IProp = {
   music: ISingerItem;
@@ -16,7 +17,7 @@ export function SingerItem({ music, onClick }: IProp) {
     }
   };
   return (
-    <div onClick={handleClick}>
+    <motion.div whileTap={{ scale: 0.8 }} onClick={handleClick}>
       {music.cover ? (
         <BorderPro roundedSize="rounded-full">
           <Image
@@ -34,6 +35,6 @@ export function SingerItem({ music, onClick }: IProp) {
       <div className="mt-2 line-clamp-1 flex justify-center font-semibold text-black dark:text-white">
         {music.singer}
       </div>
-    </div>
+    </motion.div>
   );
 }
