@@ -24,12 +24,13 @@ export function MusicPage() {
 
       <div className="mx-auto w-full">
         <div className="relative z-10">
-          {/* <div className="pointer-events-none fixed top-0 z-50 h-24 w-full bg-gradient-to-b from-white via-white/50 to-transparent dark:from-black dark:via-black/50" /> */}
+          <div className="pointer-events-none fixed left-0 top-0 z-50 h-10 w-full bg-gradient-to-b from-zinc-50/60 to-transparent dark:from-zinc-950/60">
+            <div className="h-10 w-full backdrop-blur-[1px]" />
+          </div>
 
           <div className="md:ml-[270px]">
             <HeaderMusicPage />
           </div>
-
           <div>
             <div>
               <PickForYou />

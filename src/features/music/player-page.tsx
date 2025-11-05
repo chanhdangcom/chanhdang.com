@@ -34,7 +34,7 @@ const SubtitleItem = memo(
         className={`transition-all duration-300 ${
           isActive
             ? "font-semibold leading-snug text-white"
-            : "text-zinc-500 [filter:blur(2px)]"
+            : "text-zinc-500 [filter:blur(1px)]"
         }`}
       >
         {text}
@@ -133,6 +133,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                               type: "spring",
                               damping: 15,
                             }}
+                            onClick={() => setIsClickLyric(false)}
                             className="flex size-16 shrink-0 justify-center rounded-xl object-cover"
                           />
                         </BorderPro>

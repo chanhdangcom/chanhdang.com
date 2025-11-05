@@ -26,6 +26,29 @@ export function PickForYou() {
             className="relative ml-4 h-72 w-56 shrink-0 overflow-hidden rounded-3xl md:ml-[270px]"
             onClick={() => handlePlayRandomAudio()}
           >
+            <img src="/img/image-1.PNG" alt="" className="h-72 w-56" />
+
+            <div className="absolute inset-0 flex h-full flex-col justify-between">
+              <div className="p-4">
+                <ChanhdangLogotype className="mb-1 w-24 text-white" />
+                <div className="text-4xl font-bold">New Music</div>
+                <div className="text-3xl">Mix</div>
+              </div>
+
+              <div className="rounded-b-xl bg-zinc-700/50 px-4 py-2">
+                <div className="line-clamp-2 text-center">
+                  Ê Kê Vin, Khầy, Jack - J97, Son Tung M-TP and more
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="snap-start">
+          <div
+            className="relative ml-2 h-72 w-56 shrink-0 overflow-hidden rounded-3xl"
+            onClick={() => handlePlayRandomAudio()}
+          >
             <BorderPro roundedSize="rounded-3x">
               <img
                 src="/img/image-3.PNG"
@@ -46,30 +69,7 @@ export function PickForYou() {
 
               <div className="rounded-b-xl bg-zinc-700/50 px-4 py-2">
                 <div className="line-clamp-2 text-center">
-                  Ê Kê Vin, Khầy, Jack - J97, Vũ , Son Tung M-TP and more
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="snap-start">
-          <div
-            className="relative ml-2 h-72 w-56 shrink-0 overflow-hidden rounded-3xl"
-            onClick={() => handlePlayRandomAudio()}
-          >
-            <img src="/img/image-1.PNG" alt="" className="h-72 w-56" />
-
-            <div className="absolute inset-0 flex h-full flex-col justify-between">
-              <div className="p-4">
-                <ChanhdangLogotype className="mb-1 w-24 text-white" />
-                <div className="text-4xl font-bold">New Music</div>
-                <div className="text-3xl">Mix</div>
-              </div>
-
-              <div className="rounded-b-xl bg-zinc-700/50 px-4 py-2">
-                <div className="line-clamp-2 text-center">
-                  Ê Kê Vin, Khầy, Jack - J97, Vũ , Son Tung M-TP and more
+                  Ê Kê Vin, Khầy, Jack - J97, Son Tung M-TP and more
                 </div>
               </div>
             </div>
@@ -90,7 +90,7 @@ export function PickForYou() {
               </div>
               <div className="rounded-b-xl bg-zinc-700/50 px-4 py-2">
                 <div className="line-clamp-2 text-center">
-                  Ê Kê Vin, Khầy, Jack - J97, Vũ , Son Tung M-TP and more
+                  Ê Kê Vin, Khầy, Jack - J97, Son Tung M-TP and more
                 </div>
               </div>
             </div>
@@ -117,7 +117,7 @@ export function PickForYou() {
 
             <div className="rounded-b-xl bg-zinc-700/50 px-4 py-2">
               <div className="line-clamp-2 text-center">
-                Ê Kê Vin, Khầy, Jack - J97, Vũ , Son Tung M-TP and more
+                Ê Kê Vin, Khầy, Jack - J97, Son Tung M-TP and more
               </div>
             </div>
           </div>
