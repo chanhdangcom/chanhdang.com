@@ -24,7 +24,7 @@ export function MusicPage() {
 
       <div className="mx-auto w-full">
         <div className="relative z-10">
-          <div className="pointer-events-none fixed top-0 z-50 h-24 w-full bg-gradient-to-b from-white via-white/50 to-transparent dark:from-black dark:via-black/50" />
+          {/* <div className="pointer-events-none fixed top-0 z-50 h-24 w-full bg-gradient-to-b from-white via-white/50 to-transparent dark:from-black dark:via-black/50" /> */}
 
           <div className="md:ml-[270px]">
             <HeaderMusicPage />

@@ -82,7 +82,9 @@ export function MenuBarMobile() {
     <div className="fixed bottom-4 z-20 flex w-full items-center justify-between sm:hidden">
       <AnimatePresence>
         {show ? (
-          <div className="relative ml-2 overflow-hidden rounded-[50px] border border-white/20 bg-zinc-200/70 px-8 py-1.5 backdrop-blur-xl dark:bg-black/80">
+          <div className="relative ml-2 overflow-hidden rounded-[50px] border border-white/20 bg-zinc-200/70 py-1.5 pr-4 backdrop-blur-xl dark:bg-zinc-900/70">
+            <div className="absolute inset-y-1 left-0 -z-10 ml-1 w-24 shrink-0 rounded-full bg-zinc-400 opacity-80 dark:bg-zinc-700" />
+
             <motion.div
               layout
               transition={{
@@ -90,11 +92,11 @@ export function MenuBarMobile() {
                 duration: 1,
               }}
               layoutId="item"
-              className="flex items-center gap-8 rounded-full border border-transparent dark:text-white"
+              className="mx-8 flex items-center justify-between gap-10 rounded-full border border-transparent dark:text-white"
             >
-              <div className="flex flex-col items-center text-red-500">
+              <div className="flex flex-col items-center rounded-full text-red-500">
                 <House size={30} weight="fill" />
-                <div className="text-sm font-semibold">Home</div>
+                <div className="text-xs">Home</div>
               </div>
 
               {isAuthenticated ? (
@@ -103,12 +105,12 @@ export function MenuBarMobile() {
                   className="flex flex-col items-center"
                 >
                   <MusicNotesSimple size={30} weight="fill" />
-                  <div className="text-sm">Add</div>
+                  <div className="text-xs">Music</div>
                 </Link>
               ) : (
                 <div className="pointer-events-none flex flex-col items-center opacity-30">
                   <MusicNotesSimple size={30} weight="fill" />
-                  <div className="text-sm">Add</div>
+                  <div className="text-xs">Music</div>
                 </div>
               )}
 
@@ -118,30 +120,30 @@ export function MenuBarMobile() {
                   className="flex flex-col items-center"
                 >
                   <MicrophoneStage size={30} weight="fill" />
-                  <div className="text-sm">Add</div>
+                  <div className="text-xs">Artists</div>
                 </Link>
               ) : (
                 <div className="pointer-events-none flex flex-col items-center opacity-30">
                   <MicrophoneStage size={30} weight="fill" />
-                  <div className="text-sm">Add</div>
+                  <div className="text-xs">Artists</div>
                 </div>
               )}
 
               {isAuthenticated ? (
                 <Link
-                  href={"/music/add"}
+                  href={"/music/favorites"}
                   className="flex flex-col items-center"
                 >
                   <div className="flex flex-col items-center">
                     <Bookmarks size={30} weight="fill" />
-                    <div className="text-sm"> Library</div>
+                    <div className="text-xs"> Library</div>
                   </div>
                 </Link>
               ) : (
                 <div className="pointer-events-none flex flex-col items-center opacity-30">
                   <div className="flex flex-col items-center">
                     <Bookmarks size={30} weight="fill" />
-                    <div className="text-sm"> Library</div>
+                    <div className="text-xs"> Library</div>
                   </div>
                 </div>
               )}
@@ -196,7 +198,7 @@ export function MenuBarMobile() {
           >
             <Link href={"/music/search"}>
               <MagnifyingGlass
-                size={30}
+                size={28}
                 weight="bold"
                 className="text-black dark:text-white"
               />

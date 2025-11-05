@@ -145,10 +145,10 @@ export function AudioBar() {
         layout: { duration: 0.2, ease: "easeInOut" },
       }}
       className={`fixed z-50 flex justify-center md:inset-x-96 md:bottom-4 ${
-        scroll ? "inset-x-2 bottom-[85px]" : "inset-x-20 bottom-6"
+        scroll ? "inset-x-2 bottom-[82px]" : "inset-x-20 bottom-6"
       }`}
     >
-      <div className="relative overflow-hidden rounded-[50px] border border-white/20 bg-zinc-200/70 px-3 py-1 backdrop-blur-xl dark:bg-black/80 md:rounded-[55px]">
+      <div className="relative overflow-hidden rounded-[50px] border border-white/20 bg-zinc-200/70 px-3 py-1 backdrop-blur-xl dark:bg-zinc-900/70 md:rounded-[55px]">
         <div
           onClick={() => {
             if (window.innerWidth < 768) {

@@ -15,6 +15,8 @@ export default function AddMusicForm() {
     youtube: "",
     content: "",
     type: "",
+    srt: "",
+    beat: "",
   });
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -85,8 +87,60 @@ export default function AddMusicForm() {
         }
       }
 
+      // Upload SRT nếu có
+      let srtUrl = form.srt;
+      if (srtFile) {
+        const presignedRes = await fetch(
+          `/api/upload-music?fileName=${encodeURIComponent(srtFile.name)}&contentType=${encodeURIComponent(srtFile.type || "application/octet-stream")}`
+        );
+        const { presignedUrl, publicUrl } = await presignedRes.json();
+        const uploadRes = await fetch(presignedUrl, {
+          method: "PUT",
+          headers: {
+            "Content-Type": srtFile.type || "application/octet-stream",
+          },
+          body: srtFile,
+        });
+        if (uploadRes.ok) {
+          srtUrl = publicUrl;
+        } else {
+          setMessage("Upload file SRT thất bại!");
+          setIsLoading(false);
+          return;
+        }
+      }
+
+      // Upload BEAT nếu có
+      let beatUrl = form.beat;
+      if (beatFile) {
+        const presignedRes = await fetch(
+          `/api/upload-music?fileName=${encodeURIComponent(beatFile.name)}&contentType=${encodeURIComponent(beatFile.type || "application/octet-stream")}`
+        );
+        const { presignedUrl, publicUrl } = await presignedRes.json();
+        const uploadRes = await fetch(presignedUrl, {
+          method: "PUT",
+          headers: {
+            "Content-Type": beatFile.type || "application/octet-stream",
+          },
+          body: beatFile,
+        });
+        if (uploadRes.ok) {
+          beatUrl = publicUrl;
+        } else {
+          setMessage("Upload file beat thất bại!");
+          setIsLoading(false);
+          return;
+        }
+      }
+
       // Gửi thông tin bài hát
-      const bodyData = { ...form, audio: audioUrl, cover: coverUrl };
+      const bodyData = {
+        ...form,
+        audio: audioUrl,
+        cover: coverUrl,
+        srt: srtUrl,
+        beat: beatUrl,
+      };
 
       let res, data;
 
@@ -125,9 +179,13 @@ export default function AddMusicForm() {
           youtube: "",
           content: "",
           type: "",
+          srt: "",
+          beat: "",
         });
         setFile(null);
         setImageFile(null);
+        setSrtFile(null);
+        setBeatFile(null);
         setSelectedSingerId("");
         setUseExistingSinger(false);
       } else {
@@ -142,6 +200,8 @@ export default function AddMusicForm() {
 
   const [file, setFile] = useState<File | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [srtFile, setSrtFile] = useState<File | null>(null);
+  const [beatFile, setBeatFile] = useState<File | null>(null);
 
   // Fetch singers on component mount
   useEffect(() => {
@@ -164,6 +224,18 @@ export default function AddMusicForm() {
     }
   };
 
+  const handleSrtFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSrtFile(e.target.files[0]);
+    }
+  };
+
+  const handleBeatFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setBeatFile(e.target.files[0]);
+    }
+  };
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setImageFile(e.target.files[0]);
@@ -181,11 +253,6 @@ export default function AddMusicForm() {
       <div className="pointer-events-none fixed top-0 z-20 h-24 w-full bg-gradient-to-b from-white via-white/50 to-transparent dark:from-black dark:via-black/50" />
 
       <div className="">
-        {/* <div className="my-8 hidden max-w-full md:block">
-          <TableRanking addPage />
-          <SingerList addPage />
-        </div> */}
-
         <form
           className="left-6 z-30 mx-4 space-y-4 rounded-3xl border border-zinc-300 bg-gradient-to-tr from-transparent to-black/10 p-4 font-apple backdrop-blur-2xl dark:border-zinc-700 dark:to-white/10 md:mx-72"
           onSubmit={handleSubmit}
@@ -269,53 +336,110 @@ export default function AddMusicForm() {
               </div>
             </div>
 
-            {imageFile ? (
-              <div className="font-semibold text-green-600">
-                Đã chọn file ảnh: {imageFile.name}
-              </div>
-            ) : (
+            <div className="flex flex-col gap-2 rounded-2xl border border-zinc-300 p-1 dark:border-zinc-700">
+              {imageFile ? (
+                <div className="font-semibold text-green-600">
+                  Đã chọn file ảnh: {imageFile.name}
+                </div>
+              ) : (
+                <input
+                  name="cover"
+                  placeholder="Link ảnh cover hoặc chọn file bên dưới"
+                  value={form.cover}
+                  onChange={handleChange}
+                  required
+                  disabled={isLoading}
+                  className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+                />
+              )}
+
               <input
-                name="cover"
-                placeholder="Link ảnh cover hoặc chọn file bên dưới"
-                value={form.cover}
-                onChange={handleChange}
-                required
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
                 disabled={isLoading}
-                className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+                className="rounded-xl border bg-zinc-100 px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-800"
               />
-            )}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              disabled={isLoading}
-              className="rounded-xl border bg-zinc-100 px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-800"
-            />
+            </div>
 
             {/* Nếu đã chọn file mp3 thì ẩn input nhập link audio */}
-            {file ? (
-              <div className="font-semibold text-green-600">
-                Đã chọn file mp3: {file.name}
-              </div>
-            ) : (
-              <input
-                name="audio"
-                placeholder="Link audio (.mp3) hoặc chọn file bên dưới"
-                value={form.audio}
-                onChange={handleChange}
-                required
-                disabled={isLoading}
-                className="rounded-xl border bg-zinc-100 px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
-              />
-            )}
+            <div className="flex flex-col gap-2 rounded-2xl border border-zinc-300 p-1 dark:border-zinc-700">
+              {file ? (
+                <div className="font-semibold text-green-600">
+                  Đã chọn file mp3: {file.name}
+                </div>
+              ) : (
+                <input
+                  name="audio"
+                  placeholder="Link audio (.mp3) hoặc chọn file bên dưới"
+                  value={form.audio}
+                  onChange={handleChange}
+                  required
+                  disabled={isLoading}
+                  className="rounded-xl border bg-zinc-100 px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+                />
+              )}
 
-            <input
-              type="file"
-              accept=".mp3"
-              onChange={handleFileChange}
-              disabled={isLoading}
-              className="rounded-xl border bg-zinc-100 px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-800"
-            />
+              <input
+                type="file"
+                accept=".mp3"
+                onChange={handleFileChange}
+                disabled={isLoading}
+                className="rounded-xl border bg-zinc-100 px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-800"
+              />
+            </div>
+
+            {/* Beat: cho phép chọn file hoặc nhập link */}
+            <div className="flex flex-col gap-2 rounded-2xl border border-zinc-300 p-1 dark:border-zinc-700">
+              {beatFile ? (
+                <div className="font-semibold text-green-600">
+                  Đã chọn file beat: {beatFile.name}
+                </div>
+              ) : (
+                <input
+                  name="beat"
+                  placeholder="Link beat nhạc (tuỳ chọn) hoặc chọn file bên dưới"
+                  value={form.beat}
+                  onChange={handleChange}
+                  disabled={isLoading}
+                  className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+                />
+              )}
+
+              <input
+                type="file"
+                accept="audio/*,.mp3,.wav,.m4a"
+                onChange={handleBeatFileChange}
+                disabled={isLoading}
+                className="rounded-xl border bg-zinc-100 px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-800"
+              />
+            </div>
+
+            {/* SRT: cho phép chọn file hoặc nhập link */}
+            <div className="flex flex-col gap-2 rounded-2xl border border-zinc-300 p-1 dark:border-zinc-700">
+              {srtFile ? (
+                <div className="font-semibold text-green-600">
+                  Đã chọn file SRT: {srtFile.name}
+                </div>
+              ) : (
+                <input
+                  name="srt"
+                  placeholder="Link file .srt (tuỳ chọn) hoặc chọn file bên dưới"
+                  value={form.srt}
+                  onChange={handleChange}
+                  disabled={isLoading}
+                  className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+                />
+              )}
+
+              <input
+                type="file"
+                accept=".srt,application/x-subrip"
+                onChange={handleSrtFileChange}
+                disabled={isLoading}
+                className="rounded-xl border bg-zinc-100 px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-800"
+              />
+            </div>
 
             <input
               name="youtube"
@@ -351,7 +475,7 @@ export default function AddMusicForm() {
                 size="lg"
                 loading={isLoading}
                 loadingText="Đang thêm bài hát..."
-                className="w-full rounded-xl border border-zinc-800 bg-zinc-800"
+                className="w-full rounded-xl border border-zinc-800 bg-zinc-50 font-semibold text-black"
               >
                 Thêm bài hát
               </Button>

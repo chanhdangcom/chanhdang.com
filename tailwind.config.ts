@@ -105,14 +105,10 @@ const config: Config = {
     addVariablesForColors,
     backgroundUtilities,
     require("tailwindcss-animate"),
-    typography, // ✅ Thêm vào đây
+    typography,
     require('tailwind-scrollbar-hide')
   ],
 };
-
-
-
-
 
 export default config;
 
