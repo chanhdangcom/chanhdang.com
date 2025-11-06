@@ -5,10 +5,11 @@ import { ObjectId } from "mongodb";
 // PATCH /api/users/:id
 export async function PATCH(
   request: Request,
-  context: { params: { id?: string } }
+  context: unknown
 ) {
   try {
-    const userId = context?.params?.id;
+    const params = (context as { params?: { id?: string } })?.params;
+    const userId = params?.id;
     console.log("[users:PATCH] Incoming request", { userId });
     if (!userId) {
       console.warn("[users:PATCH] Missing user id in route params");
