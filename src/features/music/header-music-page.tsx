@@ -10,7 +10,7 @@ type IProp = {
 
 export const HeaderMusicPage = ({ name }: IProp) => {
   return (
-    <div className="bt-2 sticky inset-0 top-0 z-50 rounded-b-xl pb-4 font-apple transition">
+    <div className="bt-2 sticky inset-0 top-0 z-10 rounded-b-xl pb-4 font-apple transition">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
