@@ -19,7 +19,7 @@ export function SingerListClient({ home, addPage, singers }: IProp) {
     <AnimatePresence>
       <motion.div layoutId="singer" layout>
         <div className="w-full">
-          <div className="flex gap-1 px-1 text-2xl font-semibold">
+          <div className="flex gap-1 px-1 text-xl font-semibold">
             <div className="ml-2 text-black dark:text-white md:ml-[270px]">
               Popular Artists
             </div>

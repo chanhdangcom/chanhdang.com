@@ -11,8 +11,8 @@ export function PickForYou() {
   const useRefScroll = useRef<HTMLDivElement>(null);
   return (
     <div>
-      <div className="flex text-3xl font-bold">
-        <div className="ml-2 px-1 text-2xl text-black dark:text-white md:ml-[270px]">
+      <div className="flex text-xl font-bold">
+        <div className="ml-2 px-1 text-black dark:text-white md:ml-[270px]">
           Top Pick For You
         </div>
       </div>

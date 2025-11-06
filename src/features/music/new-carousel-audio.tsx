@@ -1,9 +1,9 @@
 import { IMusic } from "@/app/[locale]/features/profile /types/music";
-import { AuidoListClient } from "./audio-list-client";
 import clientPromise from "@/lib/mongodb";
+import { NewAuidoListClient } from "./new-audio-list-client";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 
-export default async function CarouselAudio() {
+export default async function NewCarouselAudio() {
   try {
     // ✅ Kết nối MongoDB
     const client = await clientPromise;
@@ -33,12 +33,11 @@ export default async function CarouselAudio() {
           .filter((m) => m.title && m.audio)
       : [];
 
-    // ✅ Render UI
     return (
       <div className="w-full rounded-3xl text-black dark:text-white md:max-h-full">
         <div className="flex justify-between">
           <h2 className="ml-2 flex items-center gap-1 px-1 text-xl font-bold text-black dark:text-white md:ml-[270px]">
-            <div> Trending Now </div>
+            <div>New Release</div>
 
             <CaretRight
               size={20}
@@ -48,8 +47,7 @@ export default async function CarouselAudio() {
           </h2>
         </div>
 
-        {/* ✅ Client Component */}
-        <AuidoListClient musics={musics} />
+        <NewAuidoListClient musics={musics} />
       </div>
     );
   } catch (error) {

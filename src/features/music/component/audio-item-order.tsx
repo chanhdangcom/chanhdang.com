@@ -21,7 +21,7 @@ export function AudioItemOrder({ music, handlePlay, className, item }: IProp) {
   const UnClick = () => {
     return (
       <div
-        className="flex w-80 items-center gap-3 md:w-[50vh]"
+        className="flex w-[35vh] items-center gap-3 md:w-[50vh]"
         onClick={handlePlay}
       >
         {music.cover ? (

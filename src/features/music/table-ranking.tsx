@@ -19,7 +19,7 @@ export function TableRanking({ home, addPage, none }: IProp) {
   return (
     <div className="z-[1] rounded-3xl p-1 md:max-w-full">
       {home && (
-        <div className="ml-2 px-1 text-2xl font-semibold text-black dark:text-white md:ml-[270px]">
+        <div className="ml-2 px-1 text-xl font-semibold text-black dark:text-white md:ml-[270px]">
           Today's Hits
         </div>
       )}

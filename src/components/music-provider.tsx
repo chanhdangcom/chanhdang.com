@@ -380,6 +380,29 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       };
 
       audioEl.addEventListener("canplay", handleCanPlay);
+      // Ghi lịch sử phát nhạc (fire-and-forget)
+      (async () => {
+        try {
+          const userFromStorage = localStorage.getItem("user");
+          if (!userFromStorage) return;
+          const parsed = JSON.parse(userFromStorage) as { id?: string } | null;
+          const userId = parsed?.id;
+          if (!userId) return;
+          const payload = {
+            userId,
+            musicId: currentMusic.id,
+            musicData: currentMusic,
+          };
+          await fetch("/api/history", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+            cache: "no-store",
+          });
+        } catch (e) {
+          console.warn("Không thể lưu lịch sử phát:", e);
+        }
+      })();
       return;
     }
 
