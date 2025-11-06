@@ -142,7 +142,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                       <div className="flex h-[45vh] w-full shrink-0 justify-center rounded-xl bg-zinc-700" />
                     )}
 
-                    <div>
+                    <div className="">
                       <div className="line-clamp-1 font-semibold">
                         {currentMusic?.title || "TITLE SONG"}
                       </div>
@@ -150,6 +150,8 @@ export function PlayerPage({ setIsClick }: IProp) {
                       <div className="line-clamp-1">
                         {currentMusic?.singer || "SINGER"}
                       </div>
+
+                      <div className="absolute left-0 top-[70px] h-8 w-screen bg-zinc-950 blur-2xl md:hidden" />
                     </div>
                   </div>
 
@@ -210,7 +212,7 @@ export function PlayerPage({ setIsClick }: IProp) {
     <AnimatePresence mode="wait">
       <motion.div
         layoutId="audio-bar"
-        className="fixed inset-0 z-50 flex justify-between space-y-4 px-4 md:rounded-3xl md:border md:border-white/10"
+        className="fixed inset-0 z-50 flex justify-between space-y-4 px-4 md:rounded-3xl md:border-white/10"
       >
         <div className="w-full">
           <div className="absolute inset-0 -z-10 flex justify-center gap-8 bg-zinc-200 backdrop-blur-sm dark:bg-zinc-950">
@@ -253,7 +255,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                       type: "spring",
                       damping: 15,
                     }}
-                    className="flex h-[50vh] w-full shrink-0 justify-center rounded-2xl object-cover md:h-[70vh] md:w-[80vh]"
+                    className="flex h-[50vh] w-full shrink-0 justify-center rounded-2xl object-cover md:h-[55vh] md:w-[60vh]"
                   />
 
                   <div
@@ -269,14 +271,16 @@ export function PlayerPage({ setIsClick }: IProp) {
               <div className="flex h-[45vh] w-full shrink-0 justify-center rounded-2xl bg-zinc-700" />
             )}
 
-            <div className="space-y-4 rounded-3xl md:absolute md:inset-x-8 md:-bottom-20 md:border md:border-black/10 md:bg-white/70 md:px-4 md:py-3 md:backdrop-blur-xl dark:md:border-white/10 dark:md:bg-zinc-950/40">
+            <div className="mx-auto space-y-4 rounded-3xl md:inset-x-8 md:-bottom-20 md:w-[60vh]">
+              <div className="absolute bottom-0 left-0 -z-10 hidden h-[30vh] w-[75vh] bg-black/60 text-sm blur-3xl md:flex" />
+
               <div className="flex items-center justify-between">
                 <div>
                   <div className="line-clamp-1 text-xl font-semibold">
                     {currentMusic?.title || "TITLE SONG"}
                   </div>
 
-                  <div className="line-clamp-1 text-lg text-zinc-400">
+                  <div className="text-lg text-zinc-400">
                     {currentMusic?.singer || "SINGER"}
                   </div>
                 </div>
@@ -384,7 +388,7 @@ export function PlayerPage({ setIsClick }: IProp) {
         </div>
 
         <div className="pointer-events-none ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block">
-          <div className="text-balance px-4 pt-12 font-apple text-4xl font-bold leading-loose text-zinc-300">
+          <div className="text-balance px-4 py-12 font-apple text-4xl font-bold leading-loose text-zinc-300">
             {subtitles.map((line) => (
               <SubtitleItem
                 key={line.id}
