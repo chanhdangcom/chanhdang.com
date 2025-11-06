@@ -11,6 +11,8 @@ import Link from "next/link";
 
 import { useUser } from "@/hooks/use-user";
 import { FavoritesCount } from "./favorites-count";
+import { motion } from "framer-motion";
+import { BorderPro } from "./border-pro";
 
 export function LogoutButton() {
   const { user, logout } = useUser();
@@ -32,7 +34,18 @@ export function LogoutButton() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div className="my-2">
-              <UserCircle size={20} weight="fill" className="size-10" />
+              {user?.avatarUrl ? (
+                <BorderPro roundedSize="rounded-full">
+                  <motion.img
+                    src={user.avatarUrl}
+                    alt={user.username}
+                    className="size-10 rounded-full object-cover"
+                    whileTap={{ scale: 0.8 }}
+                  />
+                </BorderPro>
+              ) : (
+                <UserCircle size={20} weight="fill" className="size-10" />
+              )}
             </div>
           </DropdownMenuTrigger>
 
@@ -64,6 +77,10 @@ export function LogoutButton() {
 
               <div className="flex items-center gap-1 rounded-md px-1 py-0.5 hover:bg-zinc-300 dark:hover:bg-zinc-800">
                 <Link href={"/music/add-singer"}>Add Artists</Link>
+              </div>
+
+              <div className="flex items-center gap-1 rounded-md px-1 py-0.5 hover:bg-zinc-300 dark:hover:bg-zinc-800">
+                <Link href={"/music/profile-setting"}>Profile Setting</Link>
               </div>
 
               <div

@@ -24,7 +24,12 @@ export async function POST(request: Request) {
     // Đơn giản: trả về user info (KHÔNG trả về password)
     return NextResponse.json({
       success: true,
-      user: { username: user.username, id: user._id },
+      user: {
+        id: String(user._id),
+        username: user.username,
+        displayName: user.displayName,
+        avatarUrl: user.avatarUrl,
+      },
     });
   } catch {
     return NextResponse.json({ error: "Lỗi server" }, { status: 500 });

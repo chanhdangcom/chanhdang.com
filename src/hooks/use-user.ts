@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 interface User {
   id: string;
   username: string;
+  displayName?: string;
+  avatarUrl?: string;
 }
 
 export function useUser() {
