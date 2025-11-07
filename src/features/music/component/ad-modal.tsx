@@ -14,6 +14,7 @@ type AdModalProps = {
 export function AdModal({ isOpen, onClose, onContinue }: AdModalProps) {
   const [countdown, setCountdown] = useState(5);
   const [canSkip, setCanSkip] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState<string>("/ad/ad.mov");
 
   useEffect(() => {
     if (!isOpen) {
@@ -21,6 +22,11 @@ export function AdModal({ isOpen, onClose, onContinue }: AdModalProps) {
       setCanSkip(false);
       return;
     }
+
+    // Random chọn 1 trong 2 video khi modal mở
+    const videos = ["/ad/ad.mov", "/ad/ad2.MOV"];
+    const randomVideo = videos[Math.floor(Math.random() * videos.length)];
+    setSelectedVideo(randomVideo);
 
     // Countdown timer
     const timer = setInterval(() => {
@@ -46,7 +52,7 @@ export function AdModal({ isOpen, onClose, onContinue }: AdModalProps) {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 mx-2 flex items-center justify-center font-apple md:mx-0">
+      <div className="fixed inset-0 z-50 flex items-center justify-center px-2 font-apple md:px-0">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -75,11 +81,12 @@ export function AdModal({ isOpen, onClose, onContinue }: AdModalProps) {
 
             <div className="relative">
               <video
-                src="/ad/ad.mov"
+                key={selectedVideo}
+                src={selectedVideo}
                 autoPlay
                 loop
                 playsInline
-                className="pointer-events-none h-full w-full select-none rounded-3xl object-cover"
+                className="pointer-events-none h-80 w-full select-none rounded-3xl object-cover"
               />
 
               <ChanhdangLogotype className="absolute bottom-2 right-4" />
