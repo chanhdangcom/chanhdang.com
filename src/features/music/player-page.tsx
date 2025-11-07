@@ -31,10 +31,10 @@ const SubtitleItem = memo(
     return (
       <p
         id={`subtitle-${id}`}
-        className={`transition-all duration-300 ${
+        className={`mb-4 transition-all duration-300 md:mb-8 ${
           isActive
             ? "font-semibold leading-snug text-white"
-            : "text-zinc-500 [filter:blur(1px)]"
+            : "leading-snug text-zinc-500 [filter:blur(1px)]"
         }`}
       >
         {text}
