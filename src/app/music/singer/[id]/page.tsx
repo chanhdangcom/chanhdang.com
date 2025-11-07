@@ -5,6 +5,9 @@ import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { ISingerItem } from "@/features/music/type/singer";
 import { IMusic } from "@/app/[locale]/features/profile /types/music";
+import NewCarouselAudio from "@/features/music/new-carousel-audio";
+import RecentCarouselAudio from "@/features/music/recent-carousel-audio";
+import { Footer } from "@/app/[locale]/features/profile /footer";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -67,7 +70,9 @@ export default async function SingerDetailPage({ params }: Props) {
       <div className="md:flex">
         <MenuBar />
         <div className="pointer-events-none fixed top-0 z-10 h-24 w-full bg-gradient-to-b from-white via-white/50 to-transparent dark:from-black dark:via-black/50" />
+
         <MotionHeaderMusic name="Artists" />
+
         <div className="flex items-center justify-center py-8">
           <div className="text-zinc-500">Singer not found</div>
         </div>
@@ -75,5 +80,15 @@ export default async function SingerDetailPage({ params }: Props) {
     );
   }
 
-  return <SingerPageClient singer={singer} />;
+  return (
+    <>
+      <SingerPageClient singer={singer} />
+      <RecentCarouselAudio />
+      <NewCarouselAudio />
+
+      <div className="mb-40 mt-8 md:ml-60">
+        <Footer />
+      </div>
+    </>
+  );
 }

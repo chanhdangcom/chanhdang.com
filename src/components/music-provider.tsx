@@ -9,6 +9,8 @@ import React, {
 } from "react";
 
 import { IMusic } from "@/app/[locale]/features/profile /types/music";
+import { useUser } from "@/hooks/use-user";
+import { AdModal } from "@/features/music/component/ad-modal";
 
 // ----------------------------
 // Types
@@ -231,8 +233,13 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   );
   const [isKaraokeMode, setIsKaraokeMode] = useState<boolean>(false);
   const [isPlayerPageOpen, setIsPlayerPageOpen] = useState<boolean>(false);
+  const [showAd, setShowAd] = useState(false);
+  const [pendingNextTrack, setPendingNextTrack] = useState<(() => void) | null>(
+    null
+  );
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { isAuthenticated } = useUser();
 
   // ----------------------------
   // Load subtitles for the current track from cloud/raw
@@ -621,7 +628,13 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         audioRef.current.currentTime = 0;
         audioRef.current.play();
       } else {
-        handlePlayRandomAudio();
+        // Kiểm tra nếu user chưa đăng nhập, hiển thị quảng cáo
+        if (!isAuthenticated) {
+          setPendingNextTrack(() => handlePlayRandomAudio);
+          setShowAd(true);
+        } else {
+          handlePlayRandomAudio();
+        }
       }
     };
 
@@ -632,7 +645,35 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       audioEl.removeEventListener("timeupdate", syncLyrics);
       audioEl.removeEventListener("ended", handleEnded);
     };
-  }, [subtitles, handlePlayRandomAudio, isRepeat, isPlayerPageOpen]);
+  }, [
+    subtitles,
+    handlePlayRandomAudio,
+    isRepeat,
+    isPlayerPageOpen,
+    isAuthenticated,
+  ]);
+
+  // Handle ad modal close/continue
+  const handleAdClose = () => {
+    // Khi đóng quảng cáo, không phát bài tiếp theo
+    setShowAd(false);
+    setPendingNextTrack(null);
+    // Pause audio nếu đang phát
+    if (audioRef.current && !audioRef.current.paused) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+      setIsPaused(true);
+    }
+  };
+
+  const handleAdContinue = () => {
+    // Khi bấm "Bỏ qua", phát bài tiếp theo
+    setShowAd(false);
+    if (pendingNextTrack) {
+      pendingNextTrack();
+      setPendingNextTrack(null);
+    }
+  };
 
   // ----------------------------
   // Return context provider
@@ -662,6 +703,11 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     >
       <audio ref={audioRef} />
       {children}
+      <AdModal
+        isOpen={showAd}
+        onClose={handleAdClose}
+        onContinue={handleAdContinue}
+      />
     </Provider>
   );
 }
