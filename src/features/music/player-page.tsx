@@ -292,7 +292,7 @@ export function PlayerPage({ setIsClick }: IProp) {
               </div>
 
               <div className="flex items-center justify-center">
-                <AudioTimeLine />
+                <AudioTimeLine coverUrl={currentMusic?.cover || ""} />
               </div>
 
               <div className="flex items-center justify-between">

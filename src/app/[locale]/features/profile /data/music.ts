@@ -1,18 +1,5 @@
 export const MUSICS = [
-  // {
-  //   id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231221",
-  //   title: "ANH CHƯA MỘT LẦN NÓI",
-  //   singer: "Ê Kê Vin",
-  //   cover: "https://cdn.chanhdang.com/cover_rap_with_tran_nha.jpg",
-  //   audio: "https://cdn.chanhdang.com/music_rap_with_tran_nha.mp3",
-  //   youtube: "https://www.youtube.com/watch?v=Zt7eyyAIEDw",
-  //   content: `
-  //     Bài hát “Anh Chưa Một Lần Nói” – một sáng tác của Lê Khánh Vinh, được viết nên trong khoảnh khắc trái tim vỡ vụn, giữa những đêm cô đơn dài bất tận, khi người con trai chợt nhận ra rằng… đôi lúc điều khiến ta tiếc nuối nhất không phải là một mối tình đã tan vỡ, mà là những lời chưa từng dám nói ra.
-  //   `,
-  //   type: "Jack"
-  // },
-
-  {
+    {
     id: "7ff65b56-3fd3-4814-9fea-9f722b4250d7231",
     title: "HỒNG NHAN",
     singer: "Jack - J97",
