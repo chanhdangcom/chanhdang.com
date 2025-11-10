@@ -2,6 +2,31 @@ import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 
+const normalizeEmbeddedMusic = (music: Record<string, unknown>) => {
+  const idFromDoc = (() => {
+    if (typeof music.id === "string") return music.id;
+    const raw = (music as { _id?: unknown })._id;
+    if (typeof raw === "string") return raw;
+    if (raw && typeof (raw as { toString: () => string }).toString === "function") {
+      return (raw as { toString: () => string }).toString();
+    }
+    return "";
+  })();
+
+  return {
+    id: idFromDoc,
+    title: String(music.title ?? ""),
+    singer: String(music.singer ?? ""),
+    cover: String(music.cover ?? ""),
+    audio: String(music.audio ?? ""),
+    youtube: String(music.youtube ?? ""),
+    content: String(music.content ?? ""),
+    type: music.type ? String(music.type) : undefined,
+    srt: music.srt ? String(music.srt) : undefined,
+    beat: music.beat ? String(music.beat) : undefined,
+  };
+};
+
 // GET /api/playlists
 // - No query: return stored playlists
 // - ?genre=RAP (or any type): build a virtual playlist from musics.type
@@ -35,34 +60,20 @@ export async function GET(request: Request) {
       }
 
       const musics = Array.isArray(singer.musics) ? singer.musics : [];
+      const normalizedMusics = musics.map((m: Record<string, unknown>) =>
+        normalizeEmbeddedMusic(m)
+      );
       const cover =
         typeof singer.cover === "string" && singer.cover
           ? singer.cover
-          : musics[0]?.cover || "";
+          : normalizedMusics[0]?.cover || "https://cdn.chanhdang.com/top50_global.jpg";
 
       const playlist = {
         id: String(singer._id),
         title: `Playlist • ${String(singer.singer ?? "Unknown")}`,
         singer: String(singer.singer ?? "Unknown"),
         cover,
-        musics: musics.map((m: Record<string, unknown>) => ({
-          id:
-            typeof m.id === "string"
-              ? m.id
-              : typeof (m as { _id?: unknown })._id === "string"
-                ? (m as { _id: string })._id
-                : ((m as { _id?: { toString?: () => string } })._id?.toString() ??
-                  ""),
-          title: String(m.title ?? ""),
-          singer: String(m.singer ?? ""),
-          cover: String(m.cover ?? ""),
-          audio: String(m.audio ?? ""),
-          youtube: String(m.youtube ?? ""),
-          content: String(m.content ?? ""),
-          type: m.type ? String(m.type) : undefined,
-          srt: m.srt ? String(m.srt) : undefined,
-          beat: m.beat ? String(m.beat) : undefined,
-        })),
+        musics: normalizedMusics,
       };
 
       return NextResponse.json([playlist]);
@@ -81,19 +92,9 @@ export async function GET(request: Request) {
         title: `Top ${type}`,
         singer: "Genre Mix",
         cover: musics[0]?.cover || "https://cdn.chanhdang.com/top50_global.jpg",
-        musics: musics.map((m) => ({
-          id:
-            typeof m._id === "string" ? m._id : (m._id?.toString() ?? ""),
-          title: String(m.title ?? ""),
-          singer: String(m.singer ?? ""),
-          cover: String(m.cover ?? ""),
-          audio: String(m.audio ?? ""),
-          youtube: String(m.youtube ?? ""),
-          content: String(m.content ?? ""),
-          type: m.type ? String(m.type) : undefined,
-          srt: m.srt ? String(m.srt) : undefined,
-          beat: m.beat ? String(m.beat) : undefined,
-        })),
+        musics: musics.map((m) =>
+          normalizeEmbeddedMusic(m as unknown as Record<string, unknown>)
+        ),
       };
 
       return NextResponse.json([playlist]);
@@ -108,24 +109,9 @@ export async function GET(request: Request) {
         title: String(p.title ?? ""),
         singer: String(p.singer ?? ""),
         cover: String(p.cover ?? ""),
-        musics: musics.map((m: Record<string, unknown>) => ({
-          id:
-            typeof m.id === "string"
-              ? m.id
-              : typeof (m as { _id?: unknown })._id === "string"
-                ? (m as { _id: string })._id
-                : ((m as { _id?: { toString?: () => string } })._id?.toString() ??
-                  ""),
-          title: String(m.title ?? ""),
-          singer: String(m.singer ?? ""),
-          cover: String(m.cover ?? ""),
-          audio: String(m.audio ?? ""),
-          youtube: String(m.youtube ?? ""),
-          content: String(m.content ?? ""),
-          type: m.type ? String(m.type) : undefined,
-          srt: m.srt ? String(m.srt) : undefined,
-          beat: m.beat ? String(m.beat) : undefined,
-        })),
+        musics: musics.map((m: Record<string, unknown>) =>
+          normalizeEmbeddedMusic(m)
+        ),
       };
     });
 
@@ -165,18 +151,9 @@ export async function POST(request: Request) {
           .collection("musics")
           .find({ _id: { $in: ids } })
           .toArray();
-        musics = found.map((m) => ({
-          id: typeof m._id === "string" ? m._id : (m._id?.toString() ?? ""),
-          title: String(m.title ?? ""),
-          singer: String(m.singer ?? ""),
-          cover: String(m.cover ?? ""),
-          audio: String(m.audio ?? ""),
-          youtube: String(m.youtube ?? ""),
-          content: String(m.content ?? ""),
-          type: m.type ? String(m.type) : undefined,
-          srt: m.srt ? String(m.srt) : undefined,
-          beat: m.beat ? String(m.beat) : undefined,
-        }));
+        musics = found.map((m) =>
+          normalizeEmbeddedMusic(m as unknown as Record<string, unknown>)
+        );
       }
     }
 
