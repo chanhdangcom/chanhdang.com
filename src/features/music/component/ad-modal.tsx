@@ -73,8 +73,8 @@ export function AdModal({ isOpen, onClose, onContinue }: AdModalProps) {
           {/* Ad Content */}
           <div className="space-y-6 text-center">
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold text-white">Quảng cáo</h2>
-              <p className="text-zinc-400">
+              <h2 className="text-3xl font-bold dark:text-white">Quảng cáo</h2>
+              <p className="text-zinc-700 dark:text-zinc-400">
                 Đăng nhập để nghe nhạc không gián đoạn
               </p>
             </div>
@@ -89,7 +89,7 @@ export function AdModal({ isOpen, onClose, onContinue }: AdModalProps) {
                 className="pointer-events-none h-80 w-full select-none rounded-3xl object-cover"
               />
 
-              <ChanhdangLogotype className="absolute bottom-2 right-4" />
+              <ChanhdangLogotype className="absolute left-2 top-2" />
             </div>
 
             {/* Action Buttons */}
@@ -107,7 +107,7 @@ export function AdModal({ isOpen, onClose, onContinue }: AdModalProps) {
                 disabled={!canSkip}
                 className={`w-full rounded-full border-2 px-6 py-3 font-semibold transition-all ${
                   canSkip
-                    ? "border-white bg-transparent text-white hover:bg-white hover:text-black"
+                    ? "border-white bg-transparent hover:bg-white hover:text-black dark:text-white"
                     : "cursor-not-allowed border-zinc-600 bg-transparent text-zinc-600"
                 }`}
               >
@@ -116,7 +116,7 @@ export function AdModal({ isOpen, onClose, onContinue }: AdModalProps) {
             </div>
 
             {/* Info text */}
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs dark:text-zinc-500">
               Đăng nhập để tận hưởng trải nghiệm không quảng cáo
             </p>
           </div>

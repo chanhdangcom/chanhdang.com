@@ -16,7 +16,7 @@ export function AudioSingerItem({ music }: IProp) {
 
   return (
     <div>
-      <div className="md:hidden">
+      <div className="w-full md:hidden">
         {music.musics?.map((music) => (
           <div key={music.id} className="p-2">
             <AudioItemOrder

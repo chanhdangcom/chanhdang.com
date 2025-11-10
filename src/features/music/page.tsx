@@ -12,6 +12,7 @@ import { AudioBar } from "./audio-bar";
 import NewCarouselAudio from "./new-carousel-audio";
 import { CarouselAudioPlaylist } from "./carousel-audio-playlist";
 import RecentCarouselAudio from "./recent-carousel-audio";
+import { NewCarouselAudioPlaylist } from "./new-carousel-audio-playlist";
 
 // import { useDisableRightClick } from "../../hooks/use-disable-right-click";
 
@@ -51,11 +52,15 @@ export function MusicPage() {
             </div>
 
             <div className="mt-4 flex justify-start">
-              <CarouselAudioPlaylist />
+              <NewCarouselAudioPlaylist />
             </div>
 
             <div className="mt-4 flex justify-start">
               <CarouselAudio />
+            </div>
+
+            <div className="mt-4 flex justify-start">
+              <CarouselAudioPlaylist />
             </div>
 
             <div className="mt-4">

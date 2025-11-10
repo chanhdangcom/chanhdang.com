@@ -5,7 +5,7 @@ import { PlaylistItem } from "./component/playlist-item";
 import { IPlaylistItem } from "./type/playlist";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 
-export function CarouselAudioPlaylist() {
+export function NewCarouselAudioPlaylist() {
   const ref = React.useRef<HTMLDivElement>(null);
   const [playlists, setPlaylists] = React.useState<IPlaylistItem[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -56,7 +56,7 @@ export function CarouselAudioPlaylist() {
     <div className="w-full md:max-w-full">
       <div className="flex justify-between">
         <h2 className="ml-2 flex items-center gap-1 px-1 text-xl font-bold text-black dark:text-white md:ml-[270px]">
-          <div>Playlist</div>
+          <div>New Playlist</div>
 
           <CaretRight
             size={20}
@@ -70,19 +70,22 @@ export function CarouselAudioPlaylist() {
         ref={ref}
         className="flex snap-x snap-mandatory overflow-x-auto scrollbar-hide md:mx-auto"
       >
-        {playlists.map((music, index) => (
-          <div key={music.id} className="shrink-0 snap-start">
-            <div className={`${index === 0 ? "ml-2 md:ml-[270px]" : ""} `}>
-              <PlaylistItem
-                music={music}
-                onClick={(item) => {
-                  if (!item.id) return;
-                  router.push(`/music/playlist/${item.id}`);
-                }}
-              />
+        {playlists
+          .slice(-8)
+          .reverse()
+          .map((music, index) => (
+            <div key={music.id} className="shrink-0 snap-start">
+              <div className={`${index === 0 ? "ml-2 md:ml-[270px]" : ""} `}>
+                <PlaylistItem
+                  music={music}
+                  onClick={(item) => {
+                    if (!item.id) return;
+                    router.push(`/music/playlist/${item.id}`);
+                  }}
+                />
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );

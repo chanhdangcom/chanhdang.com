@@ -6,4 +6,5 @@ export type IPlaylistItem = {
   singer: string;
   cover: string;
   musics?: IMusic[];
+  queueName?: string;
 };

@@ -8,6 +8,7 @@ import { IMusic } from "@/app/[locale]/features/profile /types/music";
 import NewCarouselAudio from "@/features/music/new-carousel-audio";
 import RecentCarouselAudio from "@/features/music/recent-carousel-audio";
 import { Footer } from "@/app/[locale]/features/profile /footer";
+import { CarouselAudioPlaylist } from "@/features/music/carousel-audio-playlist";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -84,6 +85,7 @@ export default async function SingerDetailPage({ params }: Props) {
     <>
       <SingerPageClient singer={singer} />
       <RecentCarouselAudio />
+      <CarouselAudioPlaylist />
       <NewCarouselAudio />
 
       <div className="mb-40 mt-8 md:ml-60">

@@ -138,7 +138,7 @@ export function SingerPageClient({ singer }: IProp) {
               </div>
             </div>
 
-            <div className="mx-8 flex items-center justify-center md:ml-[270px] md:justify-between">
+            <div className="flex items-center md:mx-8 md:ml-[270px] md:justify-between">
               {singer.musics && singer.musics.length > 0 && (
                 <div>
                   {singer.musics.slice(-1).map((music) => (
@@ -174,7 +174,7 @@ export function SingerPageClient({ singer }: IProp) {
                 </div>
               )}
 
-              <div className="md:mx-a mt-8 justify-center px-3 md:mt-0 md:max-w-3xl md:justify-center">
+              <div className="mt-8 max-w-full justify-center px-3 md:mt-0 md:max-w-3xl md:justify-center">
                 <AudioSingerItem music={singer} />
               </div>
             </div>
