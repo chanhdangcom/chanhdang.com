@@ -5,17 +5,20 @@ export function ComponentList() {
   const t = useTranslations();
 
   return (
-    <>
+    <section aria-labelledby="components-heading">
       <div className="mb-8">
-        <div className="top-0 mx-4 font-mono text-xs text-zinc-500 md:mx-48">
+        <p className="top-0 mx-4 font-mono text-xs text-zinc-500 md:mx-48">
           text-4xl pb-8 pt-12
-        </div>
+        </p>
 
         <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
 
-        <div className="mx-4 flex text-balance font-mono text-3xl font-semibold leading-tight tracking-tight md:mx-48 md:text-4xl">
-          <div>Component</div>
-        </div>
+        <h2
+          id="components-heading"
+          className="mx-4 flex text-balance font-mono text-3xl font-semibold leading-tight tracking-tight md:mx-48 md:text-4xl"
+        >
+          Component
+        </h2>
 
         <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
       </div>
@@ -23,9 +26,9 @@ export function ComponentList() {
       <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
 
       <div className="mx-0 md:mx-48">
-        <div className="mx-4 mt-4 text-balance font-mono">
+        <p className="mx-4 mt-4 text-balance font-mono">
           {t("descomponent.Descriptio")}
-        </div>
+        </p>
 
         <div className="mb-8 mt-4 border-t border-dashed border-zinc-200 dark:border-zinc-800">
           <ComponentListItem
@@ -43,6 +46,6 @@ export function ComponentList() {
       </div>
 
       <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
-    </>
+    </section>
   );
 }

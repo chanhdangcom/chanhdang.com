@@ -13,67 +13,83 @@ import { TitleIntro } from "./components/title-intro";
 
 export const Profile = () => {
   return (
-    <>
-      <div>
-        <div className="fixed left-0 h-screen w-px bg-zinc-200 dark:bg-zinc-800 md:left-48" />
-        <div className="fixed right-0 h-screen w-px bg-zinc-200 dark:bg-zinc-800 md:right-48" />
+    <div>
+      <div className="fixed left-0 h-screen w-px bg-zinc-200 dark:bg-zinc-800 md:left-48" />
+      <div className="fixed right-0 h-screen w-px bg-zinc-200 dark:bg-zinc-800 md:right-48" />
 
-        <HeaderMotion />
+      <HeaderMotion />
 
-        <ScrollHeaderPage />
+      <ScrollHeaderPage />
 
-        <div className="mx-0 border border-zinc-300 p-2 dark:border-zinc-800 md:mx-48">
-          <Header />
-        </div>
+      <header className="mx-0 border border-zinc-300 p-2 dark:border-zinc-800 md:mx-48">
+        <Header />
+      </header>
 
+      <main id="main-content">
         <div className="hidden h-80 items-center justify-center pt-12 lg:flex">
           <TextHoverEffect text="DANG" />
         </div>
 
         <TitleIntro />
 
-        <div className="mt-8">
+        <section aria-labelledby="overview-heading" className="mt-8">
           <div className="h-px w-full bg-zinc-200 dark:bg-zinc-800 md:top-0" />
 
           <div className="mx-0 items-center justify-center md:mx-48 lg:flex">
             <div className="w-full max-w-xl">
+              <h2 id="overview-heading" className="sr-only">
+                Professional overview and contact details
+              </h2>
               <Overview />
             </div>
 
             <div className="flex-1">
-              <SocialItem
-                scrImg="img/tech-stack/github.webp"
-                title="Github"
-                accountName="chanhdangcom"
-                link="https://github.com/chanhdangcom"
-              />
-              <SocialItem
-                scrImg="img/tech-stack/youtube.webp"
-                title="Youtube"
-                accountName="@nguyenchanhdang"
-                link="https://www.youtube.com/@angnguyenchanh5942"
-              />
-              <SocialItem
-                scrImg="img/tech-stack/zalo.webp"
-                title="Zalo"
-                accountName="0799.979.382"
-              />
-              <SocialItem
-                scrImg="img/tech-stack/linkedin.webp"
-                title="LinkedIn"
-                accountName="@ncdang"
-              />
-              <SocialItem
-                scrImg="img/tech-stack/ncdangmusic.png"
-                title="ChanhDangMusic"
-                accountName=""
-                link="https://chanhdang.com/music"
-              />
+              <h3 className="sr-only">Social profiles</h3>
+              <ul className="flex flex-col" role="list">
+                <li>
+                  <SocialItem
+                    scrImg="img/tech-stack/github.webp"
+                    title="Github"
+                    accountName="chanhdangcom"
+                    link="https://github.com/chanhdangcom"
+                  />
+                </li>
+                <li>
+                  <SocialItem
+                    scrImg="img/tech-stack/youtube.webp"
+                    title="Youtube"
+                    accountName="@nguyenchanhdang"
+                    link="https://www.youtube.com/@angnguyenchanh5942"
+                  />
+                </li>
+                <li>
+                  <SocialItem
+                    scrImg="img/tech-stack/zalo.webp"
+                    title="Zalo"
+                    accountName="0799.979.382"
+                  />
+                </li>
+                <li>
+                  <SocialItem
+                    scrImg="img/tech-stack/linkedin.webp"
+                    title="LinkedIn"
+                    accountName="@ncdang"
+                  />
+                </li>
+                <li>
+                  <SocialItem
+                    scrImg="img/tech-stack/ncdangmusic.png"
+                    title="ChanhDangMusic"
+                    accountName=""
+                    link="https://chanhdang.com/music"
+                  />
+                </li>
+              </ul>
             </div>
           </div>
 
           <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
-        </div>
+        </section>
 
         <div className="my-8">
           <WorkExperience />
@@ -87,12 +103,10 @@ export const Profile = () => {
           <FinalBlog />
         </div>
 
-        <div>
-          <ComponentList />
-        </div>
+        <ComponentList />
+      </main>
 
-        <Footer />
-      </div>
-    </>
+      <Footer />
+    </div>
   );
 };
