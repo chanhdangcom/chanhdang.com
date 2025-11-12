@@ -11,6 +11,7 @@ import { BorderPro } from "../component/border-pro";
 import { CaretLeft, Play, Shuffle } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import Image from "next/image";
+import { Footer } from "@/app/[locale]/features/profile /footer";
 
 type Props = {
   playlist: IPlaylistItem;
@@ -66,24 +67,28 @@ export function PlaylistDetailClient({ playlist }: Props) {
           </Link>
         </div>
 
-        <div className="mx-4 mb-12 md:ml-[270px] md:mr-12 md:mt-10 md:flex md:gap-10">
-          <div className="pointer-events-auto max-w-xs md:max-w-sm">
+        <div className="relative mx-4 mb-12 md:ml-[270px] md:mr-12 md:mt-10 md:gap-10">
+          <div className="pointer-events-auto w-full">
             <BorderPro roundedSize="rounded-3xl">
               <Image
                 src={coverUrl}
                 alt={playlist.title || "Playlist cover"}
                 width={480}
                 height={480}
-                className="h-64 w-full rounded-3xl object-cover shadow-2xl md:h-72"
+                className="h-64 w-full rounded-3xl object-cover shadow-2xl md:h-96"
               />
+
+              <div className="absolute top-0 h-40 w-full rounded-t-2xl bg-gradient-to-b from-zinc-900 to-transparent" />
             </BorderPro>
 
             <div className="mt-4 space-y-2 text-black dark:text-white">
-              <h1 className="text-3xl font-semibold md:text-4xl">
-                {playlist.title || "Playlist"}
-              </h1>
-              <div className="text-base text-zinc-500">
-                {playlist.singer || "ChanhDang Music"}
+              <div className="absolute left-4 top-4">
+                <h1 className="text-3xl font-semibold md:text-4xl">
+                  {playlist.title || "Playlist"}
+                </h1>
+                <div className="text-base text-zinc-500">
+                  {playlist.singer || "ChanhDang Music"}
+                </div>
               </div>
 
               <div className="flex gap-3 pt-2">
@@ -106,7 +111,7 @@ export function PlaylistDetailClient({ playlist }: Props) {
             </div>
           </div>
 
-          <div className="pointer-events-auto mt-8 flex-1 space-y-2 md:mt-0">
+          <div className="pointer-events-auto mt-8 flex-1 space-y-2">
             {musics.length === 0 ? (
               <div className="rounded-3xl border border-dashed border-zinc-300 p-8 text-center text-sm text-zinc-500 dark:border-zinc-800">
                 Playlist chưa có bài hát nào.
@@ -122,6 +127,10 @@ export function PlaylistDetailClient({ playlist }: Props) {
               ))
             )}
           </div>
+        </div>
+
+        <div className="mb-40 md:ml-60">
+          <Footer />
         </div>
       </div>
     </div>

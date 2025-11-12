@@ -104,7 +104,7 @@ export function SingerPageClient({ singer }: IProp) {
                     </div>
 
                     <div className="space-y-4">
-                      <div className="flex w-full justify-between gap-4">
+                      <div className="w-full justify-between gap-4 md:flex">
                         <motion.div
                           whileTap={{ scale: 0.9 }}
                           className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 dark:bg-zinc-900"

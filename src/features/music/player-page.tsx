@@ -31,7 +31,7 @@ const SubtitleItem = memo(
     return (
       <p
         id={`subtitle-${id}`}
-        className={`mb-4 transition-all duration-300 md:mb-8 ${
+        className={`mb-4 text-balance transition-all duration-300 md:mb-8 ${
           isActive
             ? "font-semibold leading-snug text-white"
             : "leading-snug text-zinc-500 [filter:blur(1px)]"
@@ -388,7 +388,7 @@ export function PlayerPage({ setIsClick }: IProp) {
         </div>
 
         <div className="pointer-events-none ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block">
-          <div className="text-balance px-4 py-12 font-apple text-4xl font-bold leading-loose text-zinc-300">
+          <div className="px-4 py-12 font-apple text-4xl font-bold leading-loose text-zinc-300">
             {subtitles.map((line) => (
               <SubtitleItem
                 key={line.id}
