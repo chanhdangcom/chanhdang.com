@@ -36,7 +36,7 @@ export function MusicList() {
   console.log("Render Music List");
 
   return (
-    <div>
+    <div data-nosnippet>
       <div className="space-y-2">
         <div className="m-1 mx-2 flex items-center justify-between space-x-2 font-mono text-sm">
           <CodeTag tagName="ChanhDangMusic" shortTag />

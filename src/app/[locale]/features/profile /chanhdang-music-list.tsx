@@ -10,7 +10,7 @@ export function ChanhdangMusicList() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <div className="">
+    <div className="" data-nosnippet>
       <div className="top-0 mx-4 font-mono text-xs text-zinc-500 md:mx-48">
         text-4xl pb-8 pt-12
       </div>

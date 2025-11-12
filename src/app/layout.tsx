@@ -25,24 +25,6 @@ const fontMono = JetBrains_Mono({
   weight: ["400", "700"],
 });
 
-// export const metadata: Metadata = {
-//   title: "Chánh Đang - I am a Developer",
-//   description:
-//     "I specialize in building modern websites and mobile applications with a focus on performance, usability, and clean design. Passionate about creating seamless digital experiences that blend functionality and aesthetics.",
-//   manifest: "/manifest.webmanifest",
-//   themeColor: "#000000",
-//   icons: {
-//     icon: "/img/Logomark.png",
-//     apple: "/img/Logomark.png",
-//     shortcut: "/img/Logomark.png",
-//   },
-//   appleWebApp: {
-//     capable: true,
-//     statusBarStyle: "black-translucent",
-//     title: "Chánh Đang",
-//   },
-// };
-
 export const metadata: Metadata = {
   title: "Chánh Đang — Developer & Designer",
   description:
@@ -122,6 +104,9 @@ export const metadata: Metadata = {
     },
   },
   category: "technology",
+  verification: {
+    google: "36ju_9MyCskDFTLww39Evm-gx-AD_u0PEIlykT7Xbmo",
+  },
 };
 
 export default async function RootLayout({
