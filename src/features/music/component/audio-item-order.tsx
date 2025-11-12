@@ -20,16 +20,16 @@ export function AudioItemOrder({ music, handlePlay, className, item }: IProp) {
 
   const UnClick = () => {
     return (
-      <div className="flex w-full items-center gap-3" onClick={handlePlay}>
+      <div
+        className={cn(`flex w-full items-center gap-3`, className)}
+        onClick={handlePlay}
+      >
         {music.cover ? (
           <BorderPro roundedSize="rounded-md">
             <img
               src={music.cover}
               alt="cover"
-              className={cn(
-                "size-12 shrink-0 rounded-md object-cover shadow-sm md:size-14",
-                className
-              )}
+              className="size-12 shrink-0 rounded-md object-cover shadow-sm md:size-14"
             />
           </BorderPro>
         ) : (

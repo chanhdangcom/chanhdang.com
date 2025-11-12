@@ -20,7 +20,7 @@ export function TableRankingItem({ music, handlePlay }: Iprop) {
     >
       <div className="flex items-center justify-between">
         <AudioItemOrder
-          className="size-12"
+          className="w-[35vh]"
           music={music}
           handlePlay={() => handlePlayAudio}
           item={<DotsThreeVertical size={20} weight="bold" />}
