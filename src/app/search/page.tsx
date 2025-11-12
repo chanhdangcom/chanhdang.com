@@ -8,12 +8,6 @@ export const metadata: Metadata = {
     "Search across portfolio pages, music playlists, and blog posts on chanhdang.com.",
 };
 
-type SearchPageProps = {
-  searchParams?: {
-    q?: string;
-  };
-};
-
 const normalize = (value: string) =>
   value
     .toLowerCase()
@@ -21,8 +15,20 @@ const normalize = (value: string) =>
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/đ/g, "d");
 
-export default function SearchPage({ searchParams }: SearchPageProps) {
-  const query = searchParams?.q?.trim() ?? "";
+export default async function SearchPage({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[]>>;
+}) {
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+
+  const queryValue = resolvedSearchParams.q;
+  const query =
+    typeof queryValue === "string"
+      ? queryValue
+      : Array.isArray(queryValue)
+        ? (queryValue[0] ?? "")
+        : "";
   const hasQuery = query.length > 0;
   const normalizedQuery = hasQuery ? normalize(query) : "";
 
