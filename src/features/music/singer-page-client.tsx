@@ -104,7 +104,7 @@ export function SingerPageClient({ singer }: IProp) {
                     </div>
 
                     <div className="space-y-4">
-                      <div className="w-full justify-between gap-4 md:flex">
+                      <div className="flex w-full justify-between gap-4">
                         <motion.div
                           whileTap={{ scale: 0.9 }}
                           className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 dark:bg-zinc-900"
@@ -138,7 +138,7 @@ export function SingerPageClient({ singer }: IProp) {
               </div>
             </div>
 
-            <div className="flex items-center md:mx-8 md:ml-[270px] md:justify-between">
+            <div className="items-center md:mx-8 md:ml-[270px] md:flex md:justify-center">
               {singer.musics && singer.musics.length > 0 && (
                 <div>
                   {singer.musics.slice(-1).map((music) => (
