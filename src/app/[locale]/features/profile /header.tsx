@@ -31,28 +31,35 @@ export const Header = () => {
         <Progress className="w-[60%]" value={33} />
       </div>
 
-      <div className="flex items-center justify-between px-2">
+      <div className="flex items-center justify-between px-2" role="banner">
         <Link href="/">
           <ChanhdangLogotype />
         </Link>
 
-        <div className="hidden items-center gap-6 font-mono text-sm md:flex">
-          <Link href="/" className="hover:underline">
-            Daifolio
-          </Link>
-
-          <Link href="/music" className="hover:underline">
-            Musics
-          </Link>
-
-          <Link href="/blog" className="hover:underline">
-            Blogs
-          </Link>
-
-          <Link href="/components" className="hover:underline">
-            Components
-          </Link>
-        </div>
+        <nav aria-label="Primary" className="hidden md:block">
+          <ul className="flex items-center gap-6 font-mono text-sm">
+            <li>
+              <Link href="/" className="hover:underline">
+                Daifolio
+              </Link>
+            </li>
+            <li>
+              <Link href="/music" className="hover:underline">
+                Musics
+              </Link>
+            </li>
+            <li>
+              <Link href="/blog" className="hover:underline">
+                Blogs
+              </Link>
+            </li>
+            <li>
+              <Link href="/components" className="hover:underline">
+                Components
+              </Link>
+            </li>
+          </ul>
+        </nav>
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
