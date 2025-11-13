@@ -22,9 +22,30 @@ export async function GET(request: Request) {
 
     const items = await db
       .collection("history")
-      .find({ userId })
-      .sort({ playedAt: -1 })
-      .limit(limit)
+      .aggregate([
+        { $match: { userId } },
+        { $sort: { playedAt: -1 } },
+        {
+          $group: {
+            _id: "$musicId",
+            userId: { $first: "$userId" },
+            musicId: { $first: "$musicId" },
+            musicData: { $first: "$musicData" },
+            playedAt: { $first: "$playedAt" },
+            playCount: {
+              $sum: {
+                $cond: [
+                  { $gt: ["$playCount", 0] },
+                  "$playCount",
+                  1,
+                ],
+              },
+            },
+          },
+        },
+        { $sort: { playedAt: -1 } },
+        { $limit: limit },
+      ])
       .toArray();
 
     return NextResponse.json(items);

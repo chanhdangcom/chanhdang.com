@@ -145,8 +145,7 @@ export function SearchMotion() {
                         <AudioItemOrder
                           music={item}
                           handlePlay={() => handlePlayAudio(item)}
-                          className="size-20"
-                          classNameOrder="w-96"
+                          className="w-full"
                         />
                       </Link>
                     </motion.div>

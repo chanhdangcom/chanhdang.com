@@ -27,7 +27,7 @@ export function AudioSingerItem({ music }: IProp) {
         ))}
       </div>
 
-      <div className="hidden w-full overflow-x-auto scrollbar-hide md:flex">
+      <div className="hidden w-full overflow-x-auto scrollbar-hide md:flex md:justify-center">
         <div className="grid grid-flow-col grid-rows-3 gap-x-4">
           {music.musics?.map((music) => (
             <div key={music.id}>
@@ -35,6 +35,7 @@ export function AudioSingerItem({ music }: IProp) {
                 <AudioItemOrder
                   music={music}
                   handlePlay={() => handlePlayAudio(music)}
+                  className="w-[50vh]"
                 />
               </div>
             </div>

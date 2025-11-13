@@ -32,22 +32,24 @@ export function MusicType() {
       </div>
 
       {!isHide && (
-        <div ref={ref}>
+        <div
+          ref={ref}
+          className="absolute my-2 space-y-4 rounded-2xl bg-zinc-200/60 p-4 shadow-sm backdrop-blur-xl dark:bg-zinc-900/60"
+        >
           {MUSICS.filter((item) => item.type === isTitle).map((item) => (
-            <div key={item.id} className="container mt-4 space-y-4">
+            <div key={item.id} className="">
               <motion.div
                 layout
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.9 }}
-                className="rounded-2xl p-1 hover:bg-zinc-900"
+                className="rounded-2xl hover:bg-zinc-900"
               >
                 <Link href="/music">
                   <AudioItemOrder
                     music={item}
                     handlePlay={() => handlePlayAudio(item)}
-                    className="size-20"
-                    classNameOrder="w-96"
+                    className="w-[50vh]"
                   />
                 </Link>
               </motion.div>

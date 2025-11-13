@@ -9,7 +9,7 @@ export function RecentAuidoListClient({ musics }: { musics: IMusic[] }) {
 
   return (
     <div className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth scrollbar-hide md:snap-none">
-      {musics.slice(-8).map((music, index) => (
+      {musics.slice(0, 8).map((music, index) => (
         <div key={music.id} className="snap-start">
           <div
             className={`w-full shrink-0 ${

@@ -11,6 +11,7 @@ type HistoryItem = {
   musicId: string;
   musicData: IMusic;
   playedAt: string;
+  playCount?: number;
 };
 
 export default function RecentCarouselAudio() {
@@ -44,19 +45,10 @@ export default function RecentCarouselAudio() {
         });
         if (!res.ok) throw new Error("Failed to fetch history");
         const items = (await res.json()) as HistoryItem[];
-        const list = items
-          .map((h) => h.musicData)
+        const uniqueList = items
+          .map((item) => item.musicData)
           .filter((m) => m && m.id && m.audio);
-        // Dedupe theo id, giữ thứ tự mới nhất trước
-        const deduped: IMusic[] = [];
-        const seen = new Set<string>();
-        for (const m of list) {
-          if (!seen.has(m.id)) {
-            deduped.push(m);
-            seen.add(m.id);
-          }
-        }
-        setMusics(deduped);
+        setMusics(uniqueList);
       } catch (e) {
         console.error("❌ Failed to fetch history:", e);
         setMusics([]);
