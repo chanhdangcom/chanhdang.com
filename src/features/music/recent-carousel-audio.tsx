@@ -45,9 +45,30 @@ export default function RecentCarouselAudio() {
         });
         if (!res.ok) throw new Error("Failed to fetch history");
         const items = (await res.json()) as HistoryItem[];
-        const uniqueList = items
-          .map((item) => item.musicData)
-          .filter((m) => m && m.id && m.audio);
+        const uniqueList: IMusic[] = [];
+        const seen = new Set<string>();
+
+        for (const item of items) {
+          const music = item.musicData;
+          if (!music || !music.audio) {
+            continue;
+          }
+
+          const key =
+            item.musicId ||
+            music.id ||
+            `${music.title?.toLowerCase().trim() ?? ""}__${
+              music.audio?.toLowerCase().trim() ?? ""
+            }`;
+
+          if (seen.has(key)) {
+            continue;
+          }
+
+          seen.add(key);
+          uniqueList.push(music);
+        }
+
         setMusics(uniqueList);
       } catch (e) {
         console.error("❌ Failed to fetch history:", e);

@@ -24,17 +24,9 @@ export function MusicPage() {
       <MotionHeaderMusic />
       <MenuBar />
 
-      {/* <div className="absolute top-0 h-80 w-full bg-gradient-to-r from-red-500 via-blue-500 to-orange-400 opacity-30 blur-xl md:hidden md:h-60 md:to-transparent" /> */}
-
       <div className="mx-auto w-full">
         <div className="relative z-10">
-          {/* <div className="pointer-events-none fixed left-0 top-0 z-50 h-10 w-full bg-gradient-to-b from-zinc-50/60 to-transparent dark:from-zinc-950/60">
-            <div className="h-10 w-full backdrop-blur-[1px]" />
-          </div> */}
-
-          <div className="pointer-events-none fixed bottom-0 left-0 z-10 h-[77px] w-full backdrop-blur-[1px]" />
-
-          <div className="md:ml-[270px]">
+          <div className="z-20 md:ml-[270px]">
             <HeaderMusicPage />
           </div>
 

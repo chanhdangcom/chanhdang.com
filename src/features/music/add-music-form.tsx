@@ -250,8 +250,6 @@ export default function AddMusicForm() {
         <HeaderMusicPage name="New Music" />
       </div>
 
-      <div className="pointer-events-none fixed top-0 z-20 h-24 w-full bg-gradient-to-b from-white via-white/50 to-transparent dark:from-black dark:via-black/50" />
-
       <div className="">
         <form
           className="left-6 z-30 mx-4 space-y-4 rounded-3xl border border-zinc-300 bg-gradient-to-tr from-transparent to-black/10 p-4 font-apple backdrop-blur-2xl dark:border-zinc-700 dark:to-white/10 md:mx-72"

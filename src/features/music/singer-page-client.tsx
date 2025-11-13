@@ -48,8 +48,6 @@ export function SingerPageClient({ singer }: IProp) {
       <div className="md:flex">
         <MenuBar />
 
-        <div className="pointer-events-none fixed top-0 z-10 h-24 w-full bg-gradient-to-b from-white via-white/50 to-transparent dark:from-black dark:via-black/50" />
-
         <MotionHeaderMusic name={singer.singer} />
 
         <AnimatePresence>
@@ -57,7 +55,7 @@ export function SingerPageClient({ singer }: IProp) {
             <AudioBar />
             <MenuBarMobile />
 
-            <div className="hidden md:ml-[270px] md:block">
+            <div className="z-20 hidden md:ml-[270px] md:block">
               <HeaderMusicPage name="Artists" />
             </div>
 

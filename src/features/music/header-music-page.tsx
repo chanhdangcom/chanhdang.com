@@ -14,16 +14,22 @@ export const HeaderMusicPage = ({ name }: IProp) => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="ml-3 text-3xl font-bold md:ml-0">
-              {name || "Home"}
-            </div>
+            <>
+              <div className="pointer-events-none fixed left-0 top-0 z-10 h-14 w-full bg-gradient-to-b from-zinc-100/40 to-transparent dark:from-zinc-950/80">
+                <div className="h-10 w-full backdrop-blur-[1px]" />
+              </div>
+
+              <div className="z-20 ml-3 text-3xl font-bold md:ml-0">
+                {name || "Home"}
+              </div>
+            </>
 
             <div className="hidden md:flex">
               <MusicType />
             </div>
           </div>
 
-          <div className="mr-4">
+          <div className="z-20 mr-4">
             <LogoutButton />
           </div>
         </div>
