@@ -69,7 +69,7 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: "Chánh Đang — Developer & Designer",
+    title: "Chánh Đang - Developer & Designer",
     description:
       "Building modern web and mobile experiences with clean code and creative design.",
     url: "https://chanhdang.com",
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
         url: "https://cdn.chanhdang.com/ncdang_cover_2.jpg",
         width: 1200,
         height: 630,
-        alt: "Chanh Dang — Developer & Designer",
+        alt: "Chanh Dang - Developer & Designer",
       },
     ],
     locale: "en_US",
@@ -87,7 +87,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Chánh Đang — Developer & Designer",
+    title: "Chánh Đang - Developer & Designer",
     description:
       "Full-stack developer creating high-quality web and mobile experiences with a passion for design and performance.",
     creator: "@chanhdang",
