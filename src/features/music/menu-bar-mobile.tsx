@@ -82,7 +82,7 @@ export function MenuBarMobile() {
     <div className="fixed bottom-4 z-20 flex w-full items-center justify-between sm:hidden">
       <AnimatePresence>
         {show ? (
-          <div className="relative ml-2 overflow-hidden rounded-[50px] border border-white/20 bg-zinc-200/70 py-1.5 pr-4 backdrop-blur-xl dark:bg-zinc-900/70">
+          <div className="relative ml-2 overflow-hidden rounded-[50px] border border-white/20 bg-zinc-200/70 py-1.5 pr-4 backdrop-blur-sm dark:bg-zinc-900/70">
             <div className="absolute inset-y-1 left-0 -z-10 ml-1 w-24 shrink-0 rounded-full bg-zinc-400 opacity-80 dark:bg-zinc-700" />
 
             <motion.div

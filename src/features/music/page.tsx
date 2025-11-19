@@ -10,7 +10,7 @@ import { Footer } from "@/app/[locale]/features/profile /footer";
 import CarouselAudio from "./carousel-audio";
 import { AudioBar } from "./audio-bar";
 import NewCarouselAudio from "./new-carousel-audio";
-import { CarouselAudioPlaylist } from "./carousel-audio-playlist";
+// import { CarouselAudioPlaylist } from "./carousel-audio-playlist";
 import RecentCarouselAudio from "./recent-carousel-audio";
 import { NewCarouselAudioPlaylist } from "./new-carousel-audio-playlist";
 
@@ -51,9 +51,9 @@ export function MusicPage() {
               <CarouselAudio />
             </div>
 
-            <div className="mt-4 flex justify-start">
+            {/* <div className="mt-4 flex justify-start">
               <CarouselAudioPlaylist />
-            </div>
+            </div> */}
 
             <div className="mt-4">
               <TableRanking home />

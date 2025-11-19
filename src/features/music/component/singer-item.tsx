@@ -16,9 +16,26 @@ export function SingerItem({ music, onClick }: IProp) {
       onClick(id);
     }
   };
+
+  // Validate cover URL to prevent "Failed to construct 'URL': Invalid URL" error
+  const isValidUrl = (url: string | undefined | null): boolean => {
+    if (!url || typeof url !== "string" || url.trim() === "") {
+      return false;
+    }
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      // If it's a relative URL, check if it starts with /
+      return url.startsWith("/");
+    }
+  };
+
+  const hasValidCover = music.cover && isValidUrl(music.cover);
+
   return (
     <motion.div whileTap={{ scale: 0.8 }} onClick={handleClick}>
-      {music.cover ? (
+      {hasValidCover ? (
         <BorderPro roundedSize="rounded-full">
           <Image
             alt="singer cover"
