@@ -26,17 +26,24 @@ export async function POST(request: Request) {
   const language = payload.language?.trim() || getEnv("NCDANG_BOT_DEFAULT_LANGUAGE") || "vi";
 
   try {
+    console.log("[ncdang-chat] Starting request processing");
+    console.log("[ncdang-chat] MONGODB_URI exists:", Boolean(process.env.MONGODB_URI));
+    console.log("[ncdang-chat] NCDANG_BOT_DB:", process.env.NCDANG_BOT_DB);
+    
     const facts = await fetchFacts(language);
+    console.log("[ncdang-chat] Facts fetched:", facts.length);
 
     let answer: string | undefined;
     const hasLLM = hasLLMSupport();
     console.log("[ncdang-chat] hasLLMSupport:", hasLLM);
-    console.log("[ncdang-chat] LLM_PROVIDER:", getEnv("LLM_PROVIDER"));
-    console.log("[ncdang-chat] GEMINI_API_KEY exists:", Boolean(getEnv("GEMINI_API_KEY")));
+    console.log("[ncdang-chat] LLM_PROVIDER:", process.env.LLM_PROVIDER);
+    console.log("[ncdang-chat] GEMINI_API_KEY exists:", Boolean(process.env.GEMINI_API_KEY));
 
     if (hasLLM) {
       try {
-        answer = await buildLLMResponse(facts, message, language);
+        // buildLLMResponse may return string | null, but answer should be string | undefined
+        const llmAnswer = await buildLLMResponse(facts, message, language);
+        answer = llmAnswer ?? undefined;
         console.log("[ncdang-chat] LLM response received:", answer ? "yes" : "no");
       } catch (error) {
         console.error("[ncdang-chat] llm error", error);
@@ -51,6 +58,7 @@ export async function POST(request: Request) {
 
     if (!answer) {
       answer = buildSimilarityResponse(facts, message, language);
+      console.log("[ncdang-chat] Using similarity response");
     }
 
     return Response.json({ answer });
@@ -58,16 +66,16 @@ export async function POST(request: Request) {
     console.error("[ncdang-chat] internal error", error);
     if (error instanceof Error) {
       console.error("[ncdang-chat] error message:", error.message);
+      console.error("[ncdang-chat] error stack:", error.stack);
     }
-    return Response.json({ error: "Server gặp lỗi, thử lại sau." }, { status: 500 });
+    return Response.json({ 
+      error: "Server gặp lỗi, thử lại sau.",
+      details: process.env.NODE_ENV === "development" ? (error instanceof Error ? error.message : String(error)) : undefined
+    }, { status: 500 });
   }
 }
 
 function getEnv(key: string) {
-  const envHolder = (globalThis as typeof globalThis & {
-    process?: { env?: Record<string, string | undefined> };
-  }).process?.env;
-
-  return envHolder?.[key];
+  return process.env[key];
 }
 

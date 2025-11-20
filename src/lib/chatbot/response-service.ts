@@ -70,21 +70,42 @@ export const buildSimilarityResponse = (facts: FactRecord[], message: string, la
 };
 
 export const buildLLMResponse = async (facts: FactRecord[], message: string, language = "vi") => {
-  if (!facts.length || !hasLLMSupport()) {
-    return fallbackMessage(language);
+  if (!hasLLMSupport()) {
+    return null; // Let similarity matching handle it
   }
 
-  const queryEmbedding = await getEmbedding(message);
-  const scoredFacts = facts
-    .filter((fact) => Array.isArray(fact.embedding) && fact.embedding.length)
-    .map((fact) => ({
-      fact,
-      score: cosineSimilarity(queryEmbedding, fact.embedding ?? []),
-    }))
-    .filter((item) => Number.isFinite(item.score) && item.score > 0);
+  // If no facts, still try to use Gemini with general knowledge
+  if (!facts.length) {
+    const answer = await generateAnswer({
+      context: "Không có dữ liệu cá nhân trong database. Bạn có thể trả lời dựa trên kiến thức chung.",
+      question: message,
+      language,
+      allowGeneral: true,
+    });
+    return answer || null;
+  }
+
+  // Try to get embeddings for similarity search
+  let scoredFacts: Array<{ fact: FactRecord; score: number }> = [];
+  try {
+    const queryEmbedding = await getEmbedding(message);
+    scoredFacts = facts
+      .filter((fact) => Array.isArray(fact.embedding) && fact.embedding.length)
+      .map((fact) => ({
+        fact,
+        score: cosineSimilarity(queryEmbedding, fact.embedding ?? []),
+      }))
+      .filter((item) => Number.isFinite(item.score) && item.score > 0);
+  } catch (error) {
+    console.error("[response-service] Error getting embedding:", error);
+    // Fallback: use all facts if embedding fails
+    scoredFacts = facts.map((fact) => ({ fact, score: 0.5 }));
+  }
 
   const topK = Number(process.env.RETRIEVAL_TOP_K || 5);
   const hasMatches = scoredFacts.length > 0;
+  
+  // If no matches from embedding, use all facts or similarity matching
   const context = hasMatches
     ? scoredFacts
         .sort((a, b) => b.score - a.score)
@@ -94,15 +115,23 @@ export const buildLLMResponse = async (facts: FactRecord[], message: string, lan
             `Câu hỏi mẫu: ${fact.questions.join(" / ")}\nTrả lời: ${fact.answer}\nTags: ${fact.tags?.join(", ") ?? "none"}`
         )
         .join("\n---\n")
+    : facts.length > 0
+    ? facts
+        .slice(0, topK)
+        .map(
+          (fact) =>
+            `Câu hỏi mẫu: ${fact.questions.join(" / ")}\nTrả lời: ${fact.answer}\nTags: ${fact.tags?.join(", ") ?? "none"}`
+        )
+        .join("\n---\n")
     : "Không có dữ liệu cá nhân liên quan đến câu hỏi này.";
 
   const answer = await generateAnswer({
     context,
     question: message,
     language,
-    allowGeneral: !hasMatches,
+    allowGeneral: !hasMatches && facts.length === 0,
   });
 
-  return answer || fallbackMessage(language);
+  return answer || null;
 };
 

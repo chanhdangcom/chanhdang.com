@@ -7,9 +7,13 @@ declare global {
 }
 
 const uri = process.env.MONGODB_URI as string;
-const options = {};
+const options = {
+  maxPoolSize: 10,
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
+};
 
-let client;
+let client: MongoClient | undefined;
 let clientPromise: Promise<MongoClient>;
 
 if (!process.env.MONGODB_URI) {
@@ -23,6 +27,7 @@ if (process.env.NODE_ENV === "development") {
   }
   clientPromise = global._mongoClientPromise;
 } else {
+  // In production/serverless, create a new client for each request
   client = new MongoClient(uri, options);
   clientPromise = client.connect();
 }

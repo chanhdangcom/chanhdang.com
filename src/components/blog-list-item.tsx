@@ -20,7 +20,7 @@ export function BlogListItem({ post }: { post: IPost }) {
         <div className="relative mx-auto mb-4">
           {isHover ? (
             <motion.img
-              className="h-56 w-full shrink-0 rounded-xl md:h-40"
+              className="h-auto w-full shrink-0 rounded-xl"
               src={post.cover.formats.medium.url}
               alt={post.title}
               animate={{ x: 10, y: -10 }}
@@ -28,7 +28,7 @@ export function BlogListItem({ post }: { post: IPost }) {
             />
           ) : (
             <motion.img
-              className="h-56 w-full shrink-0 rounded-xl md:h-40"
+              className="h-auto w-full shrink-0 rounded-xl"
               src={post.cover.formats.medium.url}
               alt={post.title}
             />
