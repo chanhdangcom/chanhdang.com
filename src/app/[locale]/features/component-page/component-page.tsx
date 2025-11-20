@@ -14,7 +14,8 @@ import { Header } from "../profile /header";
 import { Footer } from "../profile /footer";
 import { Hello } from "../profile /components/hello";
 
-const components = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const components: any = {
   TabPreView,
   CodeBlock,
   ThemeSwitcher,

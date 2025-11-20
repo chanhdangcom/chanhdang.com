@@ -10,6 +10,7 @@ import { ComponentList } from "./component-list";
 import { WorkExperience } from "./work-experience";
 import { ChanhdangMusicList } from "./chanhdang-music-list";
 import { TitleIntro } from "./components/title-intro";
+import { ScrollChatBot } from "@/components/scroll-chat-bot";
 
 export const Profile = () => {
   return (
@@ -20,6 +21,8 @@ export const Profile = () => {
       <HeaderMotion />
 
       <ScrollHeaderPage />
+
+      <ScrollChatBot />
 
       <header className="mx-0 border border-zinc-300 p-2 dark:border-zinc-800 md:mx-48">
         <Header />

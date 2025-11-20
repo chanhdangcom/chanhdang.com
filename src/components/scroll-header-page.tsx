@@ -6,17 +6,18 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 export const ScrollHeaderPage = () => {
   const { scrollY } = useScroll();
 
-  const _bottom = useTransform(scrollY, [100, 400], [-80, 20]);
+  const _bottom = useTransform(scrollY, [100, 400], [-80, 75]);
   const bottom = useSpring(_bottom, { stiffness: 100, damping: 15 });
 
   const opacity = useTransform(scrollY, [100, 400], [0, 1]);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
     <motion.header
-      className="fixed right-6 z-[1000] flex justify-end"
+      className="fixed right-6 z-[50] flex justify-end"
       style={{ bottom, opacity }}
     >
       <ChevronsUpIcon

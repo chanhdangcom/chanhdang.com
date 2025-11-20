@@ -33,6 +33,25 @@ I love designing clean interfaces, writing elegant code, and turning ideas into 
 
 ---
 
+## 🤖 NCDangBot Chat
+
+- Truy cập trực tiếp tại [`/chatbot`](https://chanhdang.com/chatbot) trong dự án Next.js.
+- UI viết bằng React + Tailwind, proxy qua API route để nói chuyện với backend Express (`NCDangBot`).
+- Tin nhắn ưu tiên dữ liệu cá nhân lưu trong MongoDB, fallback sang AI nếu server gốc bật model gateway.
+
+**Cài đặt nhanh**
+
+1. Chạy service NCDangBot (repo `/Users/ncdang/Study/Web/NCDangBot`), để mặc định ở `http://localhost:4000`.
+2. Tạo file `.env.local` trong dự án Next.js và thêm:
+
+```
+NCDANG_BOT_API_URL=http://localhost:4000
+```
+
+3. `pnpm dev` rồi mở [http://localhost:3000/chatbot](http://localhost:3000/chatbot).
+
+---
+
 ## 🖼️ Screenshots
 
 |                                               |                                             |                                                  |
