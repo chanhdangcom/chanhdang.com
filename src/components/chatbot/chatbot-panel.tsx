@@ -208,11 +208,7 @@ export function ChatbotPanel({ className, handle }: IProp) {
                     : "bg-white/10 text-zinc-50 backdrop-blur"
                 )}
               >
-                {isSubmitting
-                  ? index === messages.length - 1
-                    ? "..."
-                    : "..."
-                  : message.content}
+                {message.content}
               </article>
 
               {isUser && <div className="hidden h-8 w-8 sm:block" />}
