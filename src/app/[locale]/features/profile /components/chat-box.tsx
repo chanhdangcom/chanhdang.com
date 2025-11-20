@@ -7,12 +7,6 @@ type Iprop = {
   content?: React.ReactNode;
 };
 
-const backdropVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
-  exit: { opacity: 0 },
-};
-
 const panelVariants = {
   hidden: {
     opacity: 0,
@@ -63,25 +57,17 @@ export function ChatBox({ content }: Iprop) {
         {isClick && (
           <>
             <motion.div
-              key="backdrop"
-              variants={backdropVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              transition={{ duration: 0.1 }}
-              className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
-              onClick={() => setIsClick(false)}
-            />
-
-            <motion.div
               key="panel"
               variants={panelVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="fixed bottom-4 right-4 z-50 max-w-md font-apple"
+              className="fixed inset-0 z-50 m-2 max-w-full font-apple md:inset-auto md:bottom-4 md:right-4 md:max-w-sm"
             >
-              <ChatbotPanel handle={() => setIsClick(false)} />
+              <ChatbotPanel
+                handle={() => setIsClick(false)}
+                className="h-full md:h-fit"
+              />
             </motion.div>
           </>
         )}

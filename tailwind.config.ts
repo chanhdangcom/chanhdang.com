@@ -55,6 +55,7 @@ const config: Config = {
     background: 'var(--background)',
     foreground: 'var(--foreground)',
     'exact-red': '#f3123c',
+    deepsky: "#00bfff",
   },
   fontFamily: {
     body: 'var(--font-body)',

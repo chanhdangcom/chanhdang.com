@@ -4,6 +4,7 @@ import { cn } from "@/utils/cn";
 import { PaperPlaneRight, X } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import React, { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { Ping } from "../ping";
 
 type ChatRole = "user" | "bot";
 
@@ -22,6 +23,7 @@ const SAMPLE_QUESTIONS = [
   "Bạn đang làm gì dạo này?",
   "Cho mình biết vài dự án nổi bật nhé?",
   "Sở thích cá nhân của bạn là gì?",
+  "Team bạn hiện tại có bao nhiêu người?",
 ];
 
 const createId = () => {
@@ -140,50 +142,94 @@ export function ChatbotPanel({ className, handle }: IProp) {
   return (
     <div
       className={cn(
-        "z-20 flex max-w-3xl flex-col gap-6 rounded-3xl border border-white/10 bg-zinc-900 p-4 dark:backdrop-blur-2xl",
+        "z-20 flex w-full max-w-full flex-col gap-2 rounded-3xl border border-white/10 bg-zinc-950 pb-2 text-white shadow-2xl backdrop-blur-xl sm:max-w-3xl",
         className
       )}
     >
-      <div className="flex items-center gap-1">
+      <header className="absolute z-10 flex w-full items-center gap-3 rounded-t-3xl bg-white/5 px-4 py-3 shadow-inner backdrop-blur">
         <Image
-          src={"/img/NCDangBot.png"}
+          src={"/img/gemini-icon.webp"}
           alt="NCDangBot"
-          width={100}
-          height={100}
-          className="h-auto w-12"
+          width={64}
+          height={64}
+          className="h-12 w-12 rounded-full border border-white/20 object-cover"
         />
+        <div className="flex-1 space-y-1">
+          <p className="text-base font-semibold leading-tight">ChanhDang AI</p>
 
-        <div className="text-xl font-semibold text-zinc-50">ChanhDang AI</div>
-      </div>
+          <p className="flex items-center gap-1 text-xs text-emerald-300">
+            <Ping />
 
-      <div className="absolute right-4 top-4" onClick={() => handle?.()}>
-        <X size={24} weight="bold" className="text-zinc-50" />
-      </div>
+            <div> Đang hoạt động</div>
+          </p>
+        </div>
+
+        <button
+          type="button"
+          aria-label="Đóng chatbot"
+          onClick={() => handle?.()}
+          className="rounded-full p-2 text-white transition hover:bg-white/10"
+        >
+          <X size={20} weight="bold" />
+        </button>
+      </header>
 
       <div
         ref={scrollRef}
-        className="flex h-[40vh] flex-col gap-3 overflow-y-auto rounded-3xl border border-white/5 bg-black/20 p-4"
+        className="mx-2 flex h-[40vh] flex-col gap-3 overflow-y-auto sm:h-[45vh]"
       >
-        {messages.map((message) => (
-          <article
-            key={message.id}
-            className={`max-w-[82%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm ${
-              message.role === "user"
-                ? "ml-auto bg-cyan-500 text-zinc-50"
-                : "mr-auto bg-white/10 text-zinc-100 backdrop-blur"
-            }`}
-          >
-            {message.content}
-          </article>
-        ))}
+        {messages.map((message, index) => {
+          const isUser = message.role === "user";
+
+          return (
+            <div
+              key={message.id}
+              className={cn(
+                "flex w-full items-end gap-2",
+                index === 0 && "mt-24",
+                isUser ? "flex-row-reverse text-right" : "text-left"
+              )}
+            >
+              {!isUser && (
+                <Image
+                  src={"/img/gemini-icon.webp"}
+                  alt="Bot"
+                  width={32}
+                  height={32}
+                  className="hidden h-8 w-8 rounded-full border border-white/20 object-cover sm:block"
+                />
+              )}
+
+              <article
+                className={cn(
+                  "max-w-[82%] rounded-2xl px-4 py-2 text-sm leading-relaxed shadow-sm",
+                  isUser
+                    ? "bg-gradient-to-r from-cyan-500 to-sky-500 text-white"
+                    : "bg-white/10 text-zinc-50 backdrop-blur"
+                )}
+              >
+                {isSubmitting
+                  ? index === messages.length - 1
+                    ? "..."
+                    : "..."
+                  : message.content}
+              </article>
+
+              {isUser && <div className="hidden h-8 w-8 sm:block" />}
+            </div>
+          );
+        })}
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        {SAMPLE_QUESTIONS.map((question) => (
+      <div className="flex snap-x gap-2 overflow-x-auto pb-1">
+        {SAMPLE_QUESTIONS.map((question, index) => (
           <button
             key={question}
             type="button"
-            className="rounded-full border border-white/10 px-3 py-1 text-sm text-zinc-200 transition hover:border-cyan-400/60 hover:text-white"
+            className={cn(
+              "shrink-0 rounded-full border border-white/10 px-4 py-2 text-sm text-zinc-200 shadow-sm transition hover:border-cyan-400/60 hover:bg-white/5 hover:text-white",
+              index === 0 && "ml-2"
+            )}
             onClick={() => setInput(question)}
             disabled={isSubmitting}
           >
@@ -195,15 +241,15 @@ export function ChatbotPanel({ className, handle }: IProp) {
       <form
         ref={formRef}
         onSubmit={handleSubmit}
-        className="flex flex-row gap-3"
+        className="mx-2 flex items-center gap-3 rounded-full border border-white/10 bg-black/40 px-3 py-2 shadow-inner backdrop-blur"
       >
         <input
           name="message"
           type="text"
           value={input}
           onChange={(event) => setInput(event.target.value)}
-          placeholder="Bạn Muốn Hỏi Gì ?"
-          className="h-12 flex-1 rounded-full border border-white/10 bg-black/40 px-5 text-sm text-white outline-none transition focus:border-cyan-400"
+          placeholder="Bạn muốn hỏi gì?"
+          className="h-8 flex-1 bg-transparent text-sm text-white placeholder:text-zinc-500 focus:outline-none"
           autoComplete="off"
           autoFocus
         />
@@ -211,13 +257,9 @@ export function ChatbotPanel({ className, handle }: IProp) {
         <button
           type="submit"
           disabled={!canSubmit}
-          className="rounded-full bg-cyan-400 p-2 text-sm font-semibold text-zinc-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400"
+          className="flex size-8 items-center justify-center rounded-full bg-gradient-to-r from-cyan-500 to-sky-500 text-white transition hover:opacity-90 disabled:bg-zinc-600 disabled:text-zinc-200"
         >
-          {isSubmitting ? (
-            "Đang gửi..."
-          ) : (
-            <PaperPlaneRight size={32} weight="fill" className="seiz-6" />
-          )}
+          {isSubmitting ? "..." : <PaperPlaneRight size={22} weight="fill" />}
         </button>
       </form>
 
