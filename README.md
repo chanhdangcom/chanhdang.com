@@ -20,7 +20,7 @@ I love designing clean interfaces, writing elegant code, and turning ideas into 
 
 > A personal music web app inspired by Spotify, built with modern web technologies.
 
-🌟 **Live:** [https://chanhdang.com/music](https://chanhdang.com/music)
+🌟 **Live:** [https://chanhdang.com/music](https://chanhdang.com/music)s
 
 ### ✨ Features
 
