@@ -1,6 +1,6 @@
 "use client";
 import ChatbotPanel from "@/components/chatbot/chatbot-panel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 type Iprop = {
@@ -41,6 +41,36 @@ const panelVariants = {
 export function ChatBox({ content }: Iprop) {
   const [isClick, setIsClick] = useState(false);
 
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const body = document.body;
+    const html = document.documentElement;
+    const previousBodyOverflow = body.style.overflow;
+    const previousHtmlOverflow = html.style.overflow;
+    const previousTouchAction = body.style.touchAction;
+
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+    if (isClick && isMobile) {
+      body.style.overflow = "hidden";
+      html.style.overflow = "hidden";
+      body.style.touchAction = "none";
+    } else {
+      body.style.overflow = previousBodyOverflow || "";
+      html.style.overflow = previousHtmlOverflow || "";
+      body.style.touchAction = previousTouchAction || "";
+    }
+
+    return () => {
+      body.style.overflow = previousBodyOverflow || "";
+      html.style.overflow = previousHtmlOverflow || "";
+      body.style.touchAction = previousTouchAction || "";
+    };
+  }, [isClick]);
+
   return (
     <>
       <motion.div
@@ -62,11 +92,11 @@ export function ChatBox({ content }: Iprop) {
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="fixed inset-0 z-50 m-2 max-w-full font-apple md:inset-auto md:bottom-4 md:right-4 md:max-w-sm"
+              className="fixed inset-0 z-50 max-w-full font-apple md:inset-auto md:bottom-4 md:right-4 md:m-2 md:max-w-sm"
             >
               <ChatbotPanel
                 handle={() => setIsClick(false)}
-                className="h-full md:h-fit"
+                className="h-full rounded-none md:h-full md:rounded-3xl"
               />
             </motion.div>
           </>

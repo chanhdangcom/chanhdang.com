@@ -360,7 +360,7 @@ export const HeaderMotion = () => {
 
   return (
     <motion.header
-      className="fixed inset-x-0 top-0 z-[1000] flex justify-center"
+      className="fixed inset-x-0 top-0 z-40 flex justify-center"
       style={{ top }}
     >
       <div ref={headerRef} className="mt-2">

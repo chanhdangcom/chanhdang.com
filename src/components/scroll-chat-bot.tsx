@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export const ScrollChatBot = () => {
   return (
-    <header className="fixed bottom-6 right-6 z-[50] flex size-10 justify-end rounded-full border border-zinc-300 bg-zinc-100 p-2 shadow-xl">
+    <header className="rou fixed bottom-6 right-6 z-[50] flex size-10 justify-end rounded-full border border-zinc-300 bg-zinc-100 p-2 shadow-xl">
       <ChatBox
         content={
           <Image

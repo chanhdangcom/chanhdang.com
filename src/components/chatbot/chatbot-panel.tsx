@@ -146,13 +146,13 @@ export function ChatbotPanel({ className, handle }: IProp) {
         className
       )}
     >
-      <header className="absolute z-10 flex w-full items-center gap-3 rounded-t-3xl bg-white/5 px-4 py-3 shadow-inner backdrop-blur">
+      <header className="absolute top-0 z-10 flex w-full items-center gap-3 rounded-t-3xl bg-white/5 px-4 py-3 shadow-inner backdrop-blur">
         <Image
           src={"/img/gemini-icon.webp"}
           alt="NCDangBot"
           width={64}
           height={64}
-          className="h-12 w-12 rounded-full border border-white/20 object-cover"
+          className="size-10 rounded-full border border-white/20 object-cover"
         />
         <div className="flex-1 space-y-1">
           <p className="text-base font-semibold leading-tight">ChanhDang AI</p>
@@ -176,7 +176,7 @@ export function ChatbotPanel({ className, handle }: IProp) {
 
       <div
         ref={scrollRef}
-        className="mx-2 flex h-[40vh] flex-col gap-3 overflow-y-auto sm:h-[45vh]"
+        className="mx-2 flex h-auto flex-col gap-3 overflow-y-auto rounded-3xl sm:h-[60vh]"
       >
         {messages.map((message, index) => {
           const isUser = message.role === "user";
@@ -187,7 +187,8 @@ export function ChatbotPanel({ className, handle }: IProp) {
               className={cn(
                 "flex w-full items-end gap-2",
                 index === 0 && "mt-24",
-                isUser ? "flex-row-reverse text-right" : "text-left"
+                index === messages.length - 1 && "mb-28",
+                isUser ? "flex-row-reverse text-left" : "text-left"
               )}
             >
               {!isUser && (
@@ -217,47 +218,49 @@ export function ChatbotPanel({ className, handle }: IProp) {
         })}
       </div>
 
-      <div className="flex snap-x gap-2 overflow-x-auto pb-1">
-        {SAMPLE_QUESTIONS.map((question, index) => (
-          <button
-            key={question}
-            type="button"
-            className={cn(
-              "shrink-0 rounded-full border border-white/10 px-4 py-2 text-sm text-zinc-200 shadow-sm transition hover:border-cyan-400/60 hover:bg-white/5 hover:text-white",
-              index === 0 && "ml-2"
-            )}
-            onClick={() => setInput(question)}
-            disabled={isSubmitting}
-          >
-            {question}
-          </button>
-        ))}
-      </div>
+      <div className="absolute bottom-4 space-y-1">
+        <div className="flex snap-x gap-2 overflow-x-auto pb-1">
+          {SAMPLE_QUESTIONS.map((question, index) => (
+            <button
+              key={question}
+              type="button"
+              className={cn(
+                "shrink-0 rounded-full border border-white/10 px-4 py-2 text-sm text-zinc-200 shadow-sm backdrop-blur-sm transition hover:border-cyan-400/60 hover:bg-white/5 hover:text-white",
+                index === 0 && "ml-2"
+              )}
+              onClick={() => setInput(question)}
+              disabled={isSubmitting}
+            >
+              {question}
+            </button>
+          ))}
+        </div>
 
-      <form
-        ref={formRef}
-        onSubmit={handleSubmit}
-        className="mx-2 flex items-center gap-3 rounded-full border border-white/10 bg-black/40 px-3 py-2 shadow-inner backdrop-blur"
-      >
-        <input
-          name="message"
-          type="text"
-          value={input}
-          onChange={(event) => setInput(event.target.value)}
-          placeholder="Bạn muốn hỏi gì?"
-          className="h-8 flex-1 bg-transparent text-sm text-white placeholder:text-zinc-500 focus:outline-none"
-          autoComplete="off"
-          autoFocus
-        />
-
-        <button
-          type="submit"
-          disabled={!canSubmit}
-          className="flex size-8 items-center justify-center rounded-full bg-gradient-to-r from-cyan-500 to-sky-500 text-white transition hover:opacity-90 disabled:bg-zinc-600 disabled:text-zinc-200"
+        <form
+          ref={formRef}
+          onSubmit={handleSubmit}
+          className="mx-2 flex items-center gap-3 rounded-full border border-white/10 bg-black/40 px-3 py-2 shadow-inner backdrop-blur"
         >
-          {isSubmitting ? "..." : <PaperPlaneRight size={22} weight="fill" />}
-        </button>
-      </form>
+          <input
+            name="message"
+            type="text"
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            placeholder="Bạn muốn hỏi gì?"
+            className="h-8 flex-1 bg-transparent text-base text-white placeholder:text-zinc-500 focus:outline-none"
+            autoComplete="off"
+            autoFocus
+          />
+
+          <button
+            type="submit"
+            disabled={!canSubmit}
+            className="flex size-8 items-center justify-center rounded-full bg-gradient-to-r from-cyan-500 to-sky-500 text-white transition hover:opacity-90 disabled:bg-zinc-600 disabled:text-zinc-200"
+          >
+            {isSubmitting ? "..." : <PaperPlaneRight size={22} weight="fill" />}
+          </button>
+        </form>
+      </div>
 
       {error ? (
         <p className="text-center text-sm text-rose-300">{error}</p>
