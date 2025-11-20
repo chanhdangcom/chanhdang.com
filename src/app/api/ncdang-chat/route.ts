@@ -29,12 +29,24 @@ export async function POST(request: Request) {
     const facts = await fetchFacts(language);
 
     let answer: string | undefined;
-    if (hasLLMSupport()) {
+    const hasLLM = hasLLMSupport();
+    console.log("[ncdang-chat] hasLLMSupport:", hasLLM);
+    console.log("[ncdang-chat] LLM_PROVIDER:", getEnv("LLM_PROVIDER"));
+    console.log("[ncdang-chat] GEMINI_API_KEY exists:", Boolean(getEnv("GEMINI_API_KEY")));
+
+    if (hasLLM) {
       try {
         answer = await buildLLMResponse(facts, message, language);
+        console.log("[ncdang-chat] LLM response received:", answer ? "yes" : "no");
       } catch (error) {
         console.error("[ncdang-chat] llm error", error);
+        if (error instanceof Error) {
+          console.error("[ncdang-chat] error message:", error.message);
+          console.error("[ncdang-chat] error stack:", error.stack);
+        }
       }
+    } else {
+      console.log("[ncdang-chat] No LLM support, using similarity matching");
     }
 
     if (!answer) {
@@ -44,6 +56,9 @@ export async function POST(request: Request) {
     return Response.json({ answer });
   } catch (error) {
     console.error("[ncdang-chat] internal error", error);
+    if (error instanceof Error) {
+      console.error("[ncdang-chat] error message:", error.message);
+    }
     return Response.json({ error: "Server gặp lỗi, thử lại sau." }, { status: 500 });
   }
 }

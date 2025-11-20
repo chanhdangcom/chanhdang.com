@@ -14,21 +14,34 @@ export const isGeminiConfigured = () => Boolean(getApiKey());
 const request = async <T>(endpoint: string, payload: Record<string, unknown>): Promise<T> => {
   const apiKey = getApiKey();
   if (!apiKey) {
+    console.error("[gemini-service] Missing GEMINI_API_KEY");
     throw new Error("Missing GEMINI_API_KEY");
   }
 
-  const response = await fetch(`${GEMINI_BASE_URL}/${endpoint}?key=${apiKey}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+  const url = `${GEMINI_BASE_URL}/${endpoint}?key=${apiKey}`;
+  console.log("[gemini-service] Request URL:", url.replace(apiKey, "***"));
+  console.log("[gemini-service] Request payload keys:", Object.keys(payload));
 
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Gemini request failed: ${response.status} ${text}`);
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      console.error("[gemini-service] Request failed:", response.status, text);
+      throw new Error(`Gemini request failed: ${response.status} ${text}`);
+    }
+
+    const data = (await response.json()) as T;
+    console.log("[gemini-service] Request successful");
+    return data;
+  } catch (error) {
+    console.error("[gemini-service] Fetch error:", error);
+    throw error;
   }
-
-  return (await response.json()) as T;
 };
 
 export const getEmbedding = async (text: string) => {

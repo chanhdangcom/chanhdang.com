@@ -13,6 +13,11 @@ const pickProvider = (): Provider | null => {
   const wantOllama = providerPreference === "ollama";
   const wantGemini = providerPreference === "gemini";
 
+  console.log("[model-gateway] Provider preference:", providerPreference);
+  console.log("[model-gateway] OpenAI configured:", isOpenAIConfigured());
+  console.log("[model-gateway] Ollama configured:", isOllamaConfigured());
+  console.log("[model-gateway] Gemini configured:", isGeminiConfigured());
+
   if (wantOpenAI && isOpenAIConfigured()) return "openai";
   if (wantOllama && isOllamaConfigured()) return "ollama";
   if (wantGemini && isGeminiConfigured()) return "gemini";
