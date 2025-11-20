@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Pacifico, Roboto_Condensed, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/utils/cn";
@@ -33,7 +33,6 @@ export const metadata: Metadata = {
   description:
     "Passionate IT Developer specialized in building efficient, scalable, and user-focused digital solutions.",
   manifest: "/manifest.webmanifest",
-  themeColor: "#000000",
   icons: {
     icon: "/img/Logomark.png",
     apple: "/img/Logomark.png",
@@ -44,6 +43,10 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "Chánh Đang",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
 };
 
 export default async function RootLayout({

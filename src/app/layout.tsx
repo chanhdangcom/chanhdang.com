@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Pacifico, Roboto_Condensed, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
@@ -43,7 +43,6 @@ export const metadata: Metadata = {
   creator: "Chánh Đang",
   publisher: "Chánh Đang",
   manifest: "/manifest.webmanifest",
-  themeColor: "#000000",
   robots: {
     index: true,
     follow: true,
@@ -107,6 +106,10 @@ export const metadata: Metadata = {
   verification: {
     google: "36ju_9MyCskDFTLww39Evm-gx-AD_u0PEIlykT7Xbmo",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
 };
 
 export default async function RootLayout({

@@ -78,7 +78,7 @@ export const generateAnswer = async ({
   language,
   allowGeneral = false,
 }: GenerateAnswerParams) => {
-  const model = normalizeModel(process.env.GEMINI_CHAT_MODEL || "gemini-2.0-flash-lite") ?? "models/gemini-2.0-flash-lite";
+  const model = normalizeModel(process.env.GEMINI_CHAT_MODEL || "gemini-1.5-flash") ?? "models/gemini-1.5-flash";
 
   const response = await request<{
     candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
