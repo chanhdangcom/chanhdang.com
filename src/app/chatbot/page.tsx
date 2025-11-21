@@ -13,10 +13,8 @@ export const metadata: ChatbotPageMetadata = {
 
 export default function ChatbotPage() {
   return (
-    <div className="z-50 bg-zinc-950">
-      <div className="mx-auto h-screen max-w-full">
-        <ChatbotPanel className="h-screen w-full max-w-full rounded-none" />
-      </div>
+    <div className="fixed inset-0 flex h-full w-full items-center justify-center">
+      <ChatbotPanel className="h-full" />
     </div>
   );
 }

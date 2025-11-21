@@ -1,7 +1,12 @@
 "use client";
 
 import { cn } from "@/utils/cn";
-import { PaperPlaneRight, X } from "@phosphor-icons/react/dist/ssr";
+import {
+  PaperPlaneRight,
+  Pause,
+  Play,
+  X,
+} from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import React, { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Ping } from "../ping";
@@ -12,6 +17,8 @@ interface ChatMessage {
   id: string;
   role: ChatRole;
   content: string;
+  audioUrl?: string;
+  autoPlay?: boolean;
 }
 
 type IProp = {
@@ -39,6 +46,15 @@ const createId = () => {
 
 const CHAT_ENDPOINT = "/api/ncdang-chat";
 
+type ChatApiResponse = {
+  answer?: string;
+  error?: string;
+  audio?: {
+    url: string;
+    autoPlay?: boolean;
+  };
+};
+
 export function ChatbotPanel({ className, handle }: IProp) {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -53,6 +69,8 @@ export function ChatbotPanel({ className, handle }: IProp) {
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const audioRefs = useRef<Record<string, HTMLAudioElement | null>>({});
+  const [playingId, setPlayingId] = useState<string | null>(null);
 
   useEffect(() => {
     const container = scrollRef.current;
@@ -106,10 +124,7 @@ export function ChatbotPanel({ className, handle }: IProp) {
         );
       }
 
-      const data = (await response.json()) as {
-        answer?: string;
-        error?: string;
-      };
+      const data = (await response.json()) as ChatApiResponse;
       const content =
         data.answer?.trim() ??
         data.error?.trim() ??
@@ -117,7 +132,13 @@ export function ChatbotPanel({ className, handle }: IProp) {
 
       setMessages((prev) => [
         ...prev,
-        { id: createId(), role: "bot", content },
+        {
+          id: createId(),
+          role: "bot",
+          content,
+          audioUrl: data.audio?.url,
+          autoPlay: data.audio?.autoPlay,
+        },
       ]);
     } catch (err) {
       const message =
@@ -137,6 +158,32 @@ export function ChatbotPanel({ className, handle }: IProp) {
         ?.querySelector<HTMLInputElement>('input[name="message"]')
         ?.focus();
     }
+  };
+
+  const handleToggleAudio = (messageId: string) => {
+    const target = audioRefs.current[messageId];
+    if (!target) {
+      return;
+    }
+
+    if (playingId && playingId !== messageId) {
+      audioRefs.current[playingId]?.pause();
+    }
+
+    if (!target.paused) {
+      target.pause();
+      setPlayingId(null);
+      return;
+    }
+
+    target
+      .play()
+      .then(() => {
+        setPlayingId(messageId);
+      })
+      .catch((error) => {
+        console.error("[chatbot-panel] audio play error", error);
+      });
   };
 
   return (
@@ -203,13 +250,69 @@ export function ChatbotPanel({ className, handle }: IProp) {
 
               <article
                 className={cn(
-                  "max-w-[82%] rounded-2xl px-4 py-2 text-sm leading-relaxed shadow-sm",
+                  "max-w-[82%] space-y-2 rounded-2xl px-4 py-2 text-sm leading-relaxed shadow-sm",
                   isUser
                     ? "bg-gradient-to-r from-cyan-500 to-sky-500 text-white"
                     : "bg-white/10 text-zinc-50 backdrop-blur"
                 )}
               >
-                {message.content}
+                <p>{message.content}</p>
+
+                {message.audioUrl && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 rounded-full border border-white/10 bg-black/30 p-1">
+                      <button
+                        type="button"
+                        onClick={() => handleToggleAudio(message.id)}
+                        className="flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+                        aria-label={
+                          playingId === message.id
+                            ? "Tạm dừng phát audio"
+                            : "Phát audio"
+                        }
+                      >
+                        {playingId === message.id ? (
+                          <Pause size={22} weight="fill" />
+                        ) : (
+                          <Play size={22} weight="fill" />
+                        )}
+                      </button>
+
+                      <div className="flex-1 text-zinc-200">
+                        <p className="font-medium text-white">Kẻ Đa Tình</p>
+
+                        <p className="text-xs">ChanhDang </p>
+                      </div>
+                    </div>
+
+                    <audio
+                      ref={(node) => {
+                        if (node) {
+                          audioRefs.current[message.id] = node;
+                        } else {
+                          delete audioRefs.current[message.id];
+                        }
+                      }}
+                      autoPlay={message.autoPlay}
+                      className="hidden"
+                      src={message.audioUrl}
+                      onPlay={() => {
+                        if (playingId && playingId !== message.id) {
+                          audioRefs.current[playingId]?.pause();
+                        }
+                        setPlayingId(message.id);
+                      }}
+                      onPause={() => {
+                        setPlayingId((current) =>
+                          current === message.id ? null : current
+                        );
+                      }}
+                      onEnded={() => setPlayingId(null)}
+                    >
+                      Trình duyệt của bạn không hỗ trợ phát audio.
+                    </audio>
+                  </div>
+                )}
               </article>
 
               {isUser && <div className="hidden h-8 w-8 sm:block" />}

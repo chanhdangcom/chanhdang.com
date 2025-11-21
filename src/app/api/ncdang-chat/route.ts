@@ -1,6 +1,7 @@
 import { fetchFacts } from "@/lib/chatbot/facts-repository";
-import { buildLLMResponse, buildSimilarityResponse } from "@/lib/chatbot/response-service";
+import { detectMusicIntent, MUSIC_AUDIO_PAYLOAD } from "@/lib/chatbot/intent-service";
 import { hasLLMSupport } from "@/lib/chatbot/model-gateway";
+import { buildLLMResponse, buildSimilarityResponse } from "@/lib/chatbot/response-service";
 
 export const dynamic = "force-dynamic";
 
@@ -30,8 +31,20 @@ export async function POST(request: Request) {
     console.log("[ncdang-chat] MONGODB_URI exists:", Boolean(process.env.MONGODB_URI));
     console.log("[ncdang-chat] NCDANG_BOT_DB:", process.env.NCDANG_BOT_DB);
     
-    const facts = await fetchFacts(language);
+    const musicIntentPromise = detectMusicIntent(message).catch((error) => {
+      console.error("[ncdang-chat] detectMusicIntent error:", error);
+      return false;
+    });
+
+    const factsPromise = fetchFacts(language);
+
+    const [facts, shouldPlayMusic] = await Promise.all([factsPromise, musicIntentPromise]);
     console.log("[ncdang-chat] Facts fetched:", facts.length);
+
+    if (shouldPlayMusic) {
+      console.log("[ncdang-chat] Music intent detected");
+      return Response.json(MUSIC_AUDIO_PAYLOAD);
+    }
 
     let answer: string | undefined;
     const hasLLM = hasLLMSupport();
