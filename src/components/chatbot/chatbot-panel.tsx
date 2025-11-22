@@ -30,7 +30,6 @@ const SAMPLE_QUESTIONS = [
   "Bạn đang làm gì dạo này?",
   "Cho mình biết vài dự án nổi bật nhé?",
   "Sở thích cá nhân của bạn là gì?",
-  "Team bạn hiện tại có bao nhiêu người?",
 ];
 
 const createId = () => {
