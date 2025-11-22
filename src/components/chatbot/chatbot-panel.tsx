@@ -278,7 +278,9 @@ export function ChatbotPanel({ className, handle }: IProp) {
                       </button>
 
                       <div className="flex-1 text-zinc-200">
-                        <p className="font-medium text-white">Kẻ Đa Tình</p>
+                        <p className="font-medium text-white">
+                          Yêu Dân Tộc Việt Nam
+                        </p>
 
                         <p className="text-xs">ChanhDang </p>
                       </div>
