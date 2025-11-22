@@ -31,9 +31,9 @@ const hasKeywordMatch = (message: string) => {
 };
 
 export const MUSIC_AUDIO_PAYLOAD = {
-  answer: "Đây là mình hát, nghe thử nhé! Nếu chưa phát được, bạn nhấn nút play giúp mình.",
+  answer: "Nghe thử nhé! Nếu chưa phát được, bạn nhấn nút play giúp mình.",
   audio: {
-    url: "https://cdn.chanhdang.com/music_pl_2.mp3",
+    url: "https://cdn.chanhdang.com/music_pl_3.mp3",
     autoPlay: true,
   },
 };

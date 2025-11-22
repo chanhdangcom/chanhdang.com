@@ -59,7 +59,7 @@ export function ChatbotPanel({ className, handle }: IProp) {
     {
       id: "intro",
       role: "bot",
-      content: "Mình là NCDangBot. Bạn muốn biết gì về Chánh Đang ?",
+      content: "Mình là ChanhDang AI. Bạn muốn biết gì về Chánh Đang ?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -279,10 +279,10 @@ export function ChatbotPanel({ className, handle }: IProp) {
 
                       <div className="flex-1 text-zinc-200">
                         <p className="font-medium text-white">
-                          Yêu Dân Tộc Việt Nam
+                          Mõi Người Một Suy Nghĩ
                         </p>
 
-                        <p className="text-xs">ChanhDang </p>
+                        <p className="text-xs">Khầy Trí Tín</p>
                       </div>
                     </div>
 
