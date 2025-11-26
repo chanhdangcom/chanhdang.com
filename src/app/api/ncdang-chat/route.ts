@@ -1,7 +1,8 @@
 import { fetchFacts } from "@/lib/chatbot/facts-repository";
-import { detectMusicIntent, MUSIC_AUDIO_PAYLOAD } from "@/lib/chatbot/intent-service";
+import { detectMusicIntent, detectThemeIntent, MUSIC_AUDIO_PAYLOAD } from "@/lib/chatbot/intent-service";
 import { hasLLMSupport } from "@/lib/chatbot/model-gateway";
 import { buildLLMResponse, buildSimilarityResponse } from "@/lib/chatbot/response-service";
+import { searchMusicByTitle, getRandomMusic } from "@/lib/chatbot/music-search-service";
 
 export const dynamic = "force-dynamic";
 
@@ -33,17 +34,85 @@ export async function POST(request: Request) {
     
     const musicIntentPromise = detectMusicIntent(message).catch((error) => {
       console.error("[ncdang-chat] detectMusicIntent error:", error);
-      return false;
+      return { isMusicRequest: false } as const;
+    });
+
+    const themeIntentPromise = detectThemeIntent(message).catch((error) => {
+      console.error("[ncdang-chat] detectThemeIntent error:", error);
+      return null;
     });
 
     const factsPromise = fetchFacts(language);
 
-    const [facts, shouldPlayMusic] = await Promise.all([factsPromise, musicIntentPromise]);
+    const [facts, musicIntent, themeIntent] = await Promise.all([factsPromise, musicIntentPromise, themeIntentPromise]);
     console.log("[ncdang-chat] Facts fetched:", facts.length);
 
-    if (shouldPlayMusic) {
-      console.log("[ncdang-chat] Music intent detected");
+    if (musicIntent.isMusicRequest) {
+      const songTitle = musicIntent.songTitle;
+      console.log("[ncdang-chat] Music intent detected", songTitle ? `- Song: ${songTitle}` : "");
+
+      // If specific song requested, search for it
+      if (songTitle) {
+        const foundMusic = await searchMusicByTitle(songTitle);
+        
+        if (foundMusic && foundMusic.audio) {
+          console.log("[ncdang-chat] Found song:", foundMusic.title, "by", foundMusic.singer);
+          return Response.json({
+            answer: `Đã tìm thấy bài "${foundMusic.title}" của ${foundMusic.singer}. Nghe thử nhé! 🎵`,
+            audio: {
+              url: foundMusic.audio,
+              autoPlay: true,
+            },
+            music: {
+              id: foundMusic.id,
+              title: foundMusic.title,
+              singer: foundMusic.singer,
+              cover: foundMusic.cover,
+              audio: foundMusic.audio,
+              youtube: foundMusic.youtube,
+            },
+          });
+        } else {
+          // Song not found, offer random or suggest
+          console.log("[ncdang-chat] Song not found:", songTitle);
+          const randomMusic = await getRandomMusic();
+          
+          if (randomMusic && randomMusic.audio) {
+            return Response.json({
+              answer: `Mình không tìm thấy bài "${songTitle}" trong thư viện. Mình phát một bài khác cho bạn nhé! 🎵`,
+              audio: {
+                url: randomMusic.audio,
+                autoPlay: true,
+              },
+              music: {
+                id: randomMusic.id,
+                title: randomMusic.title,
+                singer: randomMusic.singer,
+                cover: randomMusic.cover,
+                youtube: randomMusic.youtube,
+              },
+            });
+          }
+        }
+      }
+
+      // General music request - use default payload
       return Response.json(MUSIC_AUDIO_PAYLOAD);
+    }
+
+    if (themeIntent) {
+      console.log("[ncdang-chat] Theme intent detected:", themeIntent);
+      const themeMessages: Record<"light" | "dark", string> = {
+        light: "Đã chuyển sang giao diện sáng rồi nhé! ",
+        dark: "Đã chuyển sang giao diện tối rồi nhé! ",
+      };
+      return Response.json({
+        answer: themeMessages[themeIntent],
+        action: {
+          type: "theme",
+          value: themeIntent,
+        },
+      });
     }
 
     let answer: string | undefined;

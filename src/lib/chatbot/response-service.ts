@@ -53,19 +53,43 @@ export const buildSimilarityResponse = (facts: FactRecord[], message: string, la
     return fallbackMessage(language);
   }
 
-  const matches = facts
+  const normalizedMessage = normalize(message);
+  
+  // Try to match against questions first (more accurate)
+  const questionMatches = facts
     .flatMap((fact) => fact.questions.map((question) => ({ fact, question })))
     .map(({ fact, question }) => ({
-      rating: diceCoefficient(question, message),
+      rating: diceCoefficient(normalize(question), normalizedMessage),
       fact,
+      source: "question" as const,
     }))
-    .sort((a, b) => b.rating - a.rating);
+    .filter((item) => item.rating > 0);
 
-  const best = matches[0];
-  if (!best || best.rating < 0.4) {
+  // Also try to match against answer content (for more flexible matching)
+  const answerMatches = facts
+    .map((fact) => {
+      const answerText = normalize(fact.answer);
+      // Extract key phrases from answer (first 100 chars or first sentence)
+      const keyPhrase = answerText.slice(0, 100);
+      return {
+        rating: diceCoefficient(keyPhrase, normalizedMessage) * 0.7, // Lower weight for answer matching
+        fact,
+        source: "answer" as const,
+      };
+    })
+    .filter((item) => item.rating > 0);
+
+  // Combine and sort by rating
+  const allMatches = [...questionMatches, ...answerMatches].sort((a, b) => b.rating - a.rating);
+
+  const best = allMatches[0];
+  const threshold = 0.35; // Slightly lower threshold for better recall
+  
+  if (!best || best.rating < threshold) {
     return fallbackMessage(language);
   }
 
+  // If we have a good match, return it
   return best.fact.answer;
 };
 
@@ -87,43 +111,95 @@ export const buildLLMResponse = async (facts: FactRecord[], message: string, lan
 
   // Try to get embeddings for similarity search
   let scoredFacts: Array<{ fact: FactRecord; score: number }> = [];
+  let embeddingFailed = false;
+  
   try {
     const queryEmbedding = await getEmbedding(message);
-    scoredFacts = facts
-      .filter((fact) => Array.isArray(fact.embedding) && fact.embedding.length)
-      .map((fact) => ({
-        fact,
-        score: cosineSimilarity(queryEmbedding, fact.embedding ?? []),
-      }))
-      .filter((item) => Number.isFinite(item.score) && item.score > 0);
+    const factsWithEmbeddings = facts.filter(
+      (fact) => Array.isArray(fact.embedding) && fact.embedding.length > 0
+    );
+    
+    if (factsWithEmbeddings.length === 0) {
+      console.log("[response-service] No facts with embeddings, using fallback");
+      embeddingFailed = true;
+    } else {
+      scoredFacts = factsWithEmbeddings
+        .map((fact) => {
+          try {
+            const score = cosineSimilarity(queryEmbedding, fact.embedding ?? []);
+            return { fact, score: Number.isFinite(score) ? score : 0 };
+          } catch (err) {
+            console.error("[response-service] Error calculating similarity:", err);
+            return { fact, score: 0 };
+          }
+        })
+        .filter((item) => item.score > 0);
+    }
   } catch (error) {
     console.error("[response-service] Error getting embedding:", error);
-    // Fallback: use all facts if embedding fails
-    scoredFacts = facts.map((fact) => ({ fact, score: 0.5 }));
+    embeddingFailed = true;
+  }
+  
+  // Fallback: use keyword-based similarity if embedding failed
+  if (embeddingFailed || scoredFacts.length === 0) {
+    console.log("[response-service] Using keyword-based similarity as fallback");
+    // Use a simple keyword matching approach
+    const normalizedQuery = message.toLowerCase();
+    scoredFacts = facts
+      .map((fact) => {
+        const questionText = fact.questions.join(" ").toLowerCase();
+        const answerText = fact.answer.toLowerCase();
+        const tagsText = fact.tags?.join(" ").toLowerCase() || "";
+        
+        // Simple keyword overlap score
+        const queryWords = normalizedQuery.split(/\s+/).filter((w) => w.length > 2);
+        const allText = `${questionText} ${answerText} ${tagsText}`;
+        const matches = queryWords.filter((word) => allText.includes(word)).length;
+        const score = queryWords.length > 0 ? matches / queryWords.length : 0;
+        
+        return { fact, score };
+      })
+      .filter((item) => item.score > 0.2) // Lower threshold for keyword matching
+      .sort((a, b) => b.score - a.score);
   }
 
   const topK = Number(process.env.RETRIEVAL_TOP_K || 5);
-  const hasMatches = scoredFacts.length > 0;
+  const minRelevanceScore = Number(process.env.MIN_RELEVANCE_SCORE || 0.3);
+  const hasMatches = scoredFacts.length > 0 && scoredFacts.some((item) => item.score >= minRelevanceScore);
   
-  // If no matches from embedding, use all facts or similarity matching
-  const context = hasMatches
-    ? scoredFacts
-        .sort((a, b) => b.score - a.score)
-        .slice(0, topK)
-        .map(
-          ({ fact }) =>
-            `Câu hỏi mẫu: ${fact.questions.join(" / ")}\nTrả lời: ${fact.answer}\nTags: ${fact.tags?.join(", ") ?? "none"}`
-        )
-        .join("\n---\n")
-    : facts.length > 0
-    ? facts
-        .slice(0, topK)
-        .map(
-          (fact) =>
-            `Câu hỏi mẫu: ${fact.questions.join(" / ")}\nTrả lời: ${fact.answer}\nTags: ${fact.tags?.join(", ") ?? "none"}`
-        )
-        .join("\n---\n")
-    : "Không có dữ liệu cá nhân liên quan đến câu hỏi này.";
+  // Build context with better formatting and relevance information
+  let context: string;
+  
+  if (hasMatches) {
+    // Use only highly relevant facts
+    const relevantFacts = scoredFacts
+      .filter((item) => item.score >= minRelevanceScore)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, topK);
+    
+    context = relevantFacts
+      .map(({ fact, score }, index) => {
+        const relevance = score >= 0.7 ? "Rất liên quan" : score >= 0.5 ? "Liên quan" : "Có liên quan";
+        return `[Thông tin ${index + 1} - ${relevance}]\n` +
+          `Câu hỏi có thể: ${fact.questions.join(" / ")}\n` +
+          `Nội dung: ${fact.answer}` +
+          (fact.tags && fact.tags.length > 0 ? `\nChủ đề: ${fact.tags.join(", ")}` : "");
+      })
+      .join("\n\n---\n\n");
+  } else if (facts.length > 0) {
+    // Fallback: use top facts by similarity if embedding failed
+    const topFacts = facts.slice(0, topK);
+    context = topFacts
+      .map((fact, index) => {
+        return `[Thông tin ${index + 1}]\n` +
+          `Câu hỏi có thể: ${fact.questions.join(" / ")}\n` +
+          `Nội dung: ${fact.answer}` +
+          (fact.tags && fact.tags.length > 0 ? `\nChủ đề: ${fact.tags.join(", ")}` : "");
+      })
+      .join("\n\n---\n\n");
+  } else {
+    context = "Không có dữ liệu cá nhân liên quan đến câu hỏi này trong database.";
+  }
 
   const answer = await generateAnswer({
     context,

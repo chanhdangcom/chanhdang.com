@@ -8,8 +8,11 @@ import {
   X,
 } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
+import { useTheme } from "next-themes";
 import React, { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Ping } from "../ping";
+import { useAudio } from "@/components/music-provider";
+import type { IMusic } from "@/app/[locale]/features/profile /types/music";
 
 type ChatRole = "user" | "bot";
 
@@ -19,6 +22,13 @@ interface ChatMessage {
   content: string;
   audioUrl?: string;
   autoPlay?: boolean;
+  music?: {
+    id: string;
+    title: string;
+    singer: string;
+    cover: string;
+    youtube?: string;
+  };
 }
 
 type IProp = {
@@ -52,9 +62,23 @@ type ChatApiResponse = {
     url: string;
     autoPlay?: boolean;
   };
+  action?: {
+    type: "theme";
+    value: "light" | "dark";
+  };
+  music?: {
+    id: string;
+    title: string;
+    singer: string;
+    cover: string;
+    audio?: string;
+    youtube?: string;
+  };
 };
 
 export function ChatbotPanel({ className, handle }: IProp) {
+  const { setTheme } = useTheme();
+  const { handlePlayAudio } = useAudio();
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "intro",
@@ -129,14 +153,57 @@ export function ChatbotPanel({ className, handle }: IProp) {
         data.error?.trim() ??
         "Xin lỗi, mình chưa thể trả lời câu này. Bạn thử lại sau nhé.";
 
+      // Handle theme action
+      if (data.action?.type === "theme" && data.action.value) {
+        const themeValue = data.action.value;
+        // Use view transition if available
+        if (document.startViewTransition) {
+          document.startViewTransition(() => {
+            setTheme(themeValue);
+          });
+        } else {
+          setTheme(themeValue);
+        }
+      }
+
+      // Handle music playback - sync with header-motion
+      let shouldPlayInHeader = false;
+      if (data.music) {
+        try {
+          const audioUrl = data.music.audio || data.audio?.url;
+          if (audioUrl) {
+            const musicData: IMusic = {
+              id: data.music.id,
+              title: data.music.title,
+              singer: data.music.singer,
+              cover: data.music.cover,
+              audio: audioUrl,
+              youtube: data.music.youtube || "",
+              content: "",
+              type: undefined,
+              srt: undefined,
+              beat: undefined,
+            };
+
+            // Play music in header-motion player
+            handlePlayAudio(musicData);
+            shouldPlayInHeader = true;
+          }
+        } catch (err) {
+          console.error("[chatbot-panel] Error playing music:", err);
+        }
+      }
+
       setMessages((prev) => [
         ...prev,
         {
           id: createId(),
           role: "bot",
           content,
-          audioUrl: data.audio?.url,
-          autoPlay: data.audio?.autoPlay,
+          // Only set audioUrl if not playing in header-motion
+          audioUrl: shouldPlayInHeader ? undefined : data.audio?.url,
+          autoPlay: shouldPlayInHeader ? false : data.audio?.autoPlay,
+          music: data.music,
         },
       ]);
     } catch (err) {
@@ -257,7 +324,8 @@ export function ChatbotPanel({ className, handle }: IProp) {
               >
                 <p>{message.content}</p>
 
-                {message.audioUrl && (
+                {/* Only show audio player if not synced with header-motion */}
+                {message.audioUrl && !message.music && (
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 rounded-full border border-white/10 bg-black/30 p-1">
                       <button
@@ -312,6 +380,19 @@ export function ChatbotPanel({ className, handle }: IProp) {
                     >
                       Trình duyệt của bạn không hỗ trợ phát audio.
                     </audio>
+                  </div>
+                )}
+
+                {/* Show music info if synced with header-motion */}
+                {message.music && !message.audioUrl && (
+                  <div className="mt-2 rounded-full border border-white/10 bg-black/20 px-4 py-2">
+                    <p className="font-medium text-white">
+                      {message.music.title}
+                    </p>
+
+                    <p className="text-xs text-zinc-300">
+                      {message.music.singer}
+                    </p>
                   </div>
                 )}
               </article>

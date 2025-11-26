@@ -1,4 +1,5 @@
 import type { GenerateAnswerParams } from "./types";
+import { buildSystemPrompt, buildUserPrompt } from "./system-prompt";
 
 const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
 
@@ -65,12 +66,6 @@ export const getEmbedding = async (text: string) => {
   return embedding;
 };
 
-const buildSystemPrompt = () =>
-  "Bạn là NCDangBot – người bạn thân thiện của NCDang. " +
-  "Phong cách trò chuyện ấm áp, thân mật, xưng “mình” hoặc “tớ”, có thể chào hỏi và dùng emoji nhẹ nhàng. " +
-  "Khi câu hỏi liên quan đến NCDang, chỉ dùng chính xác dữ liệu trong ngữ cảnh được cung cấp. " +
-  "Nếu câu hỏi nằm ngoài ngữ cảnh nhưng là chủ đề chung, hãy trả lời ngắn gọn bằng kiến thức phổ biến và đảm bảo chính xác. " +
-  "Nếu không chắc chắn, hãy nói chưa có dữ liệu và gợi ý người dùng hỏi khác.";
 
 export const generateAnswer = async ({
   context,
@@ -80,6 +75,8 @@ export const generateAnswer = async ({
 }: GenerateAnswerParams) => {
   const model = normalizeModel(process.env.GEMINI_CHAT_MODEL || "gemini-1.5-flash") ?? "models/gemini-1.5-flash";
 
+  const userPrompt = buildUserPrompt({ context, question, language, allowGeneral });
+
   const response = await request<{
     candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
   }>(`${model}:generateContent`, {
@@ -87,22 +84,7 @@ export const generateAnswer = async ({
     contents: [
       {
         role: "user",
-        parts: [
-          {
-            text: `Ngữ cảnh:
-${context}
-
-Câu hỏi: ${question}
-
-Hướng dẫn thêm: ${
-              allowGeneral
-                ? "Không có dữ liệu cá nhân liên quan. Bạn có thể trả lời dựa trên kiến thức phổ biến và trải nghiệm chung, nhưng tránh bịa đặt chi tiết cá nhân."
-                : "Chỉ dùng thông tin trong ngữ cảnh."
-            }
-
-Trả lời bằng ${language === "en" ? "English" : "tiếng Việt"}, giữ giọng điệu thân thiện và đảm bảo độ chính xác.`,
-          },
-        ],
+        parts: [{ text: userPrompt }],
       },
     ],
   });

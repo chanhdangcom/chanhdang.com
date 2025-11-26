@@ -16,7 +16,8 @@ const nextConfig: NextConfig = {
     ],
   },
   // Exclude MongoDB from client-side bundling
-  serverComponentsExternalPackages: ["mongodb"],
+  // In Next.js 15, use serverExternalPackages instead of serverComponentsExternalPackages
+  serverExternalPackages: ["mongodb"],
   webpack(config, { isServer }) {
     // Cho phép import file .tsx kèm ?raw giống Vite
     config.module.rules.push({
