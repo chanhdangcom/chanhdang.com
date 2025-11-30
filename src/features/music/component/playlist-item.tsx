@@ -49,8 +49,8 @@ export function PlaylistItem({ music, onClick }: IProp) {
           <Image
             alt={music.title || "Playlist cover"}
             src={coverUrl}
-            width={300}
-            height={300}
+            width={500}
+            height={500}
             className="mx-auto h-60 w-80 shrink-0 justify-center rounded-md object-cover md:h-80 md:w-[50vh]"
           />
         </BorderPro>

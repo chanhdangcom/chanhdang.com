@@ -40,7 +40,7 @@ export const ExperienceItem = ({
 }: IProps) => {
   return (
     <div className="relative ml-2 py-2 first:before:absolute first:before:top-0 first:before:z-[1] first:before:size-6 first:before:bg-zinc-50 last:after:absolute last:after:bottom-0 last:after:z-[1] last:after:size-[13px] last:after:bg-zinc-50 dark:first:before:bg-zinc-950 dark:last:after:bg-zinc-950">
-      <div className="absolute left-3 top-0 h-full w-px bg-zinc-200 dark:bg-zinc-800" />
+      <div className="absolute left-3 top-0 h-full w-px bg-zinc-200 dark:bg-zinc-900" />
 
       <div className="relative z-[2] mb-2 text-lg font-semibold">
         <ExperienceInfoItem

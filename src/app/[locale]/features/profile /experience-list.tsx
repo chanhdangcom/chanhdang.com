@@ -69,7 +69,7 @@ export const ExperienceList = () => {
             className="ml-2 text-cyan-500 dark:text-cyan-400"
           />
 
-          <div className="ml-2 text-balance border-l border-zinc-200 text-sm dark:border-zinc-800">
+          <div className="ml-2 text-balance border-l border-zinc-200 text-sm dark:border-zinc-900">
             {EXPERIENCE_WORK.map((item, index) => {
               return (
                 <ExperienceItem
@@ -99,7 +99,7 @@ export const ExperienceList = () => {
             className="ml-2 text-cyan-500 dark:text-cyan-400"
           />
 
-          <div className="text-balanc ml-2 border-l border-zinc-200 text-sm dark:border-zinc-800">
+          <div className="text-balanc ml-2 border-l border-zinc-200 text-sm dark:border-zinc-900">
             {EXPERIENCE_EDUCATION.map((item, index) => {
               return (
                 <ExperienceItem

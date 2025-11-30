@@ -12,10 +12,10 @@ export function ChanhdangMusicList() {
   return (
     <section aria-labelledby="music-heading" data-nosnippet>
       <p className="top-0 mx-4 font-mono text-xs text-zinc-500 md:mx-48">
-        text-4xl pb-8 pt-12
+        text-4xl tracking-tight font-mono
       </p>
 
-      <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
+      <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-900" />
 
       <h2
         id="music-heading"
@@ -24,10 +24,10 @@ export function ChanhdangMusicList() {
         ChanhDang Music
       </h2>
 
-      <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
+      <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-900" />
 
       <div className="my-8">
-        <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
+        <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-900" />
 
         <div className="mx-0 grid grid-cols-2 md:mx-48 md:grid-cols-5">
           {MUSICS.map((music, index) => {

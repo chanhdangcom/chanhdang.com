@@ -74,7 +74,7 @@ export const Overview = () => {
   };
 
   return (
-    <div className="relative overflow-hidden border-zinc-200 font-medium shadow-sm dark:border-zinc-800 dark:text-zinc-50 md:border-x">
+    <div className="relative overflow-hidden border-zinc-200 font-medium shadow-sm dark:border-zinc-900 dark:text-zinc-50 md:border-x">
       <div className="relative aspect-3/1 overflow-hidden before:absolute before:inset-0 before:bg-[image:url(/img/cover.jpg)] before:bg-cover before:bg-center after:absolute after:bottom-0 after:left-0 after:z-[1] after:h-px after:w-full after:bg-white/20">
         <div className="relative m-2 flex justify-end">
           <div className="p-2">
@@ -93,7 +93,7 @@ export const Overview = () => {
         />
       </div>
 
-      <div className="mb-6 space-x-2 border-zinc-200 pl-8 text-3xl dark:border-zinc-800 sm:text-4xl md:text-3xl lg:text-4xl">
+      <div className="mb-6 space-x-2 border-zinc-200 pl-8 text-3xl dark:border-zinc-900 sm:text-4xl md:text-3xl lg:text-4xl">
         <span className="flex items-center">
           <TypewriterEffect words={NAME} className="font-bold" />
 
@@ -122,7 +122,7 @@ export const Overview = () => {
 
       {/* <div className="flex h-4 w-full bg-[image:repeating-linear-gradient(315deg,_var(--pattern-foreground)_0,_var(--pattern-foreground)_1px,_transparent_0,_transparent_50%)] bg-[size:10px_10px] [--pattern-foreground:#e4e4e7] dark:[--pattern-foreground:#27272a]" /> */}
 
-      <div className="space-y-2 border-zinc-200 px-8 dark:border-zinc-800">
+      <div className="space-y-2 border-zinc-200 px-8 dark:border-zinc-900">
         {/* <div className="absolute left-9 top-[402px] hidden w-full font-mono text-xs text-zinc-400 dark:text-zinc-700 md:block">
           text-lg font-mono text-zinc-500
         </div> */}

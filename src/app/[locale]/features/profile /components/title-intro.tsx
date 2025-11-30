@@ -11,10 +11,10 @@ export function TitleIntro() {
     >
       <div>
         <p className="pointer-events-none top-0 mx-4 font-mono text-xs text-zinc-500 md:mx-48">
-          text-5xl text-balance tracking-tight
+          text-4xl font-semibold tracking-tight
         </p>
 
-        <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
+        <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-900" />
 
         <h1
           id="profile-intro-heading"
@@ -23,17 +23,17 @@ export function TitleIntro() {
           {t("titleintro.Title")}
         </h1>
 
-        <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800" />
+        <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-900" />
       </div>
 
       <div>
-        <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
+        <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-900" />
 
         <div className="mx-0 md:mx-48">
           <TeckLish />
         </div>
 
-        <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-800" />
+        <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-900" />
       </div>
     </section>
   );

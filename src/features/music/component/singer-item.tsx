@@ -39,8 +39,8 @@ export function SingerItem({ music, onClick }: IProp) {
         <BorderPro roundedSize="rounded-full">
           <Image
             alt="singer cover"
-            width={128}
-            height={128}
+            width={300}
+            height={300}
             src={music.cover}
             className="size-44 rounded-full object-cover md:size-52"
           />

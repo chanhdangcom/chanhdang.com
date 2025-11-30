@@ -88,7 +88,7 @@ export const Header = () => {
             <Link
               href="https://github.com/chanhdangcom"
               target="_blank"
-              className="rounded-full border border-zinc-300 p-1 dark:border-zinc-800"
+              className="rounded-full border border-zinc-300 p-1 dark:border-zinc-900"
             >
               <img
                 src={

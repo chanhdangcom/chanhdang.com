@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 
+"use client";
 import { FavoriteButton } from "./favorite-button";
 import { useUser } from "@/hooks/use-user";
 import { useEffect, useState } from "react";

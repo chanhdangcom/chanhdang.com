@@ -137,41 +137,6 @@ export function SingerPageClient({ singer }: IProp) {
             </div>
 
             <div className="items-center md:mx-8 md:ml-[270px] md:flex">
-              {singer.musics && singer.musics.length > 0 && (
-                <div>
-                  {singer.musics.slice(-1).map((music) => (
-                    <div key={music.id}>
-                      <div className="hidden w-fit shrink-0 cursor-pointer gap-4 space-y-2 rounded-xl p-1.5 text-zinc-50 hover:bg-zinc-100 dark:hover:bg-zinc-900 md:flex">
-                        {music.cover ? (
-                          <img
-                            src={music.cover}
-                            alt="cover"
-                            className="mx-auto h-40 w-40 justify-center rounded-lg object-cover md:size-44"
-                          />
-                        ) : (
-                          <div className="size-40 rounded-2xl bg-zinc-800"></div>
-                        )}
-
-                        <div className="flex flex-col justify-center gap-4 py-4 text-black dark:text-white">
-                          <div>
-                            <div className="line-clamp-2 w-40 text-lg font-semibold">
-                              {music.title || "TITLE"}
-                            </div>
-                            <div className="line-clamp-1 w-32 text-sm text-zinc-500">
-                              {music.singer || "SINGER"}
-                            </div>
-                          </div>
-
-                          <div className="w-fit rounded-2xl bg-zinc-200 px-4 py-1 text-blue-600 dark:bg-zinc-400">
-                            Add +
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
               <div className="mt-8 w-full max-w-full justify-center px-3 md:mt-0 md:max-w-full md:justify-center">
                 <AudioSingerItem music={singer} />
               </div>

@@ -2,6 +2,7 @@ import { IMusic } from "@/app/[locale]/features/profile /types/music";
 import { AuidoListClient } from "./audio-list-client";
 import clientPromise from "@/lib/mongodb";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
 
 export default async function CarouselAudio() {
   try {
@@ -37,7 +38,10 @@ export default async function CarouselAudio() {
     return (
       <div className="w-full rounded-3xl text-black dark:text-white md:max-h-full">
         <div className="flex justify-between">
-          <h2 className="ml-2 flex items-center gap-1 px-1 text-xl font-bold text-black dark:text-white md:ml-[270px]">
+          <Link
+            href="/music/trending-now"
+            className="ml-2 flex cursor-pointer items-center gap-1 px-1 text-xl font-bold text-black dark:text-white md:ml-[270px]"
+          >
             <div> Trending Now </div>
 
             <CaretRight
@@ -45,7 +49,7 @@ export default async function CarouselAudio() {
               weight="bold"
               className="text-zinc-500 md:mt-1"
             />
-          </h2>
+          </Link>
         </div>
 
         {/* ✅ Client Component */}
