@@ -11,6 +11,7 @@ import { WorkExperience } from "./work-experience";
 import { ChanhdangMusicList } from "./chanhdang-music-list";
 import { TitleIntro } from "./components/title-intro";
 import { ScrollChatBot } from "@/components/scroll-chat-bot";
+import { GitHubChart } from "./github-chart";
 
 export const Profile = () => {
   return (
@@ -94,6 +95,10 @@ export const Profile = () => {
 
           <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-900" />
         </section>
+
+        <div className="my-8">
+          <GitHubChart />
+        </div>
 
         <div className="my-8">
           <WorkExperience />
