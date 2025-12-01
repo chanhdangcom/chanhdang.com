@@ -4,18 +4,17 @@ import { MUSICS } from "../data/music-page";
 import { useAudio } from "@/components/music-provider";
 import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-
 import { AudioItemOrder } from "./audio-item-order";
-
-import { CaretLeft } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
-
-import { MusicType } from "../music-type";
 import { MUSICSSINGER } from "../data/music-page-singer";
 import { SingerItem } from "./singer-item";
 import { useRouter } from "next/navigation";
 
-export function SearchMotion() {
+type SearchMotionProps = {
+  onQueryChange?: (value: string) => void;
+};
+
+export function SearchMotion({ onQueryChange }: SearchMotionProps) {
   const { handlePlayAudio } = useAudio();
   const [value, setValue] = useState("");
   const ref = useRef<HTMLDivElement>(null);
@@ -43,44 +42,31 @@ export function SearchMotion() {
             damping: 20,
             duration: 0.1,
           }}
-          className="fixed inset-x-0 inset-y-0 z-50 flex md:inset-x-60"
+          className="inset-x-0 inset-y-0 z-50 flex md:inset-x-60"
         >
           <div className="w-full">
-            <motion.div className="container border-zinc-800 p-2">
+            <motion.div className="border-zinc-800">
               <motion.div
-                layoutId="Search"
                 layout
-                className="mb-2 flex items-center gap-4"
+                className="mx-4 flex items-center gap-4 md:mx-2 md:gap-0"
               >
-                <div className="sticky top-0 z-10 flex items-center gap-1">
-                  <Link
-                    href={"/music"}
-                    className="rounded-full bg-zinc-200 p-2 dark:bg-zinc-900"
-                  >
-                    <CaretLeft
-                      size={28}
-                      weight="bold"
-                      className="text-black dark:text-white"
-                    />
-                  </Link>
-                </div>
-
                 <Input
                   type="text"
                   placeholder="Music, Playlist ..."
-                  className="z-10 rounded-2xl border-none bg-zinc-200 dark:bg-zinc-800"
+                  className="z-10 rounded-3xl border-none bg-white shadow-lg dark:bg-zinc-800 md:w-[40vw]"
                   value={value}
-                  onChange={(e) => setValue(e.target.value)}
+                  onChange={(e) => {
+                    const nextValue = e.target.value;
+                    setValue(nextValue);
+                    onQueryChange?.(nextValue);
+                  }}
                   autoFocus
                 />
               </motion.div>
 
-              <MusicType />
-
-              {/* singer */}
-              <div className="container mt-4 flex gap-4 overflow-x-auto">
+              <div className="container mt-4 flex w-full gap-4 overflow-x-auto">
                 {MUSICSSINGER.filter((music) => {
-                  if (value == "") return null;
+                  if (value == "") return;
 
                   const searchWords = value.toLowerCase().trim().split(" ");
                   const titleWordsRemoveVietnameseTones = removeVietnameseTones(
@@ -115,7 +101,7 @@ export function SearchMotion() {
               </div>
               {/* singer */}
 
-              <div className="container mt-4 h-screen space-y-4 overflow-y-auto">
+              <div className="container mt-4 h-screen space-y-4 overflow-y-auto bg-zinc-50 dark:bg-black">
                 {MUSICS.filter((music) => {
                   if (value == "") return null;
 
@@ -159,7 +145,7 @@ export function SearchMotion() {
   };
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="">
       <LargerSearch />
     </div>
   );

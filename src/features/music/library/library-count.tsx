@@ -3,11 +3,11 @@
 import { IMusic } from "@/app/[locale]/features/profile /types/music";
 import { useState, useEffect } from "react";
 
-interface FavoritesCountProps {
+interface LibraryCountProps {
   userId?: string;
 }
 
-interface FavoriteItem {
+interface LibraryItem {
   _id: string;
   userId: string;
   musicId: string;
@@ -15,7 +15,7 @@ interface FavoriteItem {
   createdAt: string;
 }
 
-export function FavoritesCount({ userId }: FavoritesCountProps) {
+export function LibraryCount({ userId }: LibraryCountProps) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -24,19 +24,19 @@ export function FavoritesCount({ userId }: FavoritesCountProps) {
       return;
     }
 
-    const fetchFavoritesCount = async () => {
+    const fetchLibraryCount = async () => {
       try {
-        const response = await fetch(`/api/favorites?userId=${userId}`);
+        const response = await fetch(`/api/library?userId=${userId}`);
         if (response.ok) {
-          const favorites: FavoriteItem[] = await response.json();
-          setCount(favorites.length);
+          const items: LibraryItem[] = await response.json();
+          setCount(items.length);
         }
       } catch (error) {
-        console.error("Error fetching favorites count:", error);
+        console.error("Error fetching library count:", error);
       }
     };
 
-    fetchFavoritesCount();
+    fetchLibraryCount();
   }, [userId]);
 
   if (!userId || count === 0) {

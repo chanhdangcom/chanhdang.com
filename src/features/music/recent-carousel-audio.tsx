@@ -1,9 +1,7 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { IMusic } from "@/app/[locale]/features/profile /types/music";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 import { RecentAuidoListClient } from "./recent-audio-list-client";
+import clientPromise from "@/lib/mongodb";
 
 type HistoryItem = {
   _id: string;
@@ -14,78 +12,19 @@ type HistoryItem = {
   playCount?: number;
 };
 
-export default function RecentCarouselAudio() {
-  const [musics, setMusics] = useState<IMusic[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const userRaw = localStorage.getItem("user");
-    if (!userRaw) {
-      setLoading(false);
-      setMusics([]);
-      return;
-    }
-    let userId: string | undefined;
-    try {
-      const parsed = JSON.parse(userRaw) as { id?: string } | null;
-      userId = parsed?.id;
-    } catch {
-      userId = undefined;
-    }
-    if (!userId) {
-      setLoading(false);
-      setMusics([]);
-      return;
-    }
-
-    (async () => {
-      try {
-        const res = await fetch(`/api/history?userId=${userId}&limit=30`, {
-          cache: "no-store",
-        });
-        if (!res.ok) throw new Error("Failed to fetch history");
-        const items = (await res.json()) as HistoryItem[];
-        const uniqueList: IMusic[] = [];
-        const seen = new Set<string>();
-
-        for (const item of items) {
-          const music = item.musicData;
-          if (!music || !music.audio) {
-            continue;
-          }
-
-          const key =
-            item.musicId ||
-            music.id ||
-            `${music.title?.toLowerCase().trim() ?? ""}__${
-              music.audio?.toLowerCase().trim() ?? ""
-            }`;
-
-          if (seen.has(key)) {
-            continue;
-          }
-
-          seen.add(key);
-          uniqueList.push(music);
-        }
-
-        setMusics(uniqueList);
-      } catch (e) {
-        console.error("❌ Failed to fetch history:", e);
-        setMusics([]);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
-
-  if (loading) {
-    return <div className="py-8 text-center text-zinc-500">Đang tải...</div>;
-  }
-  if (musics.length === 0) {
-    return;
-  }
-
+export async function RecentCarouselAudio() {
+  const client = await clientPromise;
+  const data = await client.db("musicdb");
+  const history = await data.collection("history").find({}).toArray();
+  const historyItems: HistoryItem[] = Array.isArray(history)
+    ? history.map((item) => ({
+        _id: item._id.toString(),
+        userId: item.userId.toString(),
+        musicId: item.musicId.toString(),
+        musicData: item.musicData as IMusic,
+        playedAt: item.playedAt.toString(),
+      }))
+    : [];
   return (
     <>
       <div className="w-full rounded-3xl text-black dark:text-white md:max-h-full">
@@ -101,7 +40,9 @@ export default function RecentCarouselAudio() {
           </h2>
         </div>
 
-        <RecentAuidoListClient musics={musics} />
+        <RecentAuidoListClient
+          musics={historyItems.map((item) => item.musicData)}
+        />
       </div>
     </>
   );

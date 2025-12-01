@@ -5,10 +5,11 @@ import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { ISingerItem } from "@/features/music/type/singer";
 import { IMusic } from "@/app/[locale]/features/profile /types/music";
-import NewCarouselAudio from "@/features/music/new-carousel-audio";
-import RecentCarouselAudio from "@/features/music/recent-carousel-audio";
+
 import { Footer } from "@/app/[locale]/features/profile /footer";
 import { CarouselAudioPlaylist } from "@/features/music/carousel-audio-playlist";
+import { RecentCarouselAudio } from "@/features/music/recent-carousel-audio";
+import { NewCarouselAudio } from "@/features/music/new-carousel-audio";
 
 type Props = {
   params: Promise<{ id: string }>;

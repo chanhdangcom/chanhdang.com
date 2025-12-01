@@ -11,15 +11,16 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { MagnifyingGlass } from "phosphor-react";
+import { LogoutButton } from "./component/logout-button";
 
 export function MenuBar() {
   const { isAuthenticated } = useUser();
 
   return (
-    <div className="fixed left-4 top-4 z-30 hidden md:flex">
-      <div className="absolute h-[96vh] w-60 space-y-4 rounded-3xl bg-gradient-to-tr from-transparent to-black/10 px-3 pt-5 text-zinc-50 shadow-xl backdrop-blur-2xl dark:to-white/10">
+    <div className="fixed left-4 top-4 z-30 hidden font-apple md:flex">
+      <div className="absolute h-[96vh] w-60 space-y-4 rounded-3xl bg-gradient-to-tr from-transparent to-zinc-50 px-3 pt-5 text-zinc-50 shadow-xl backdrop-blur-3xl dark:to-white/10">
         <>
-          <div className="space-y-1 text-base text-black dark:text-white">
+          <div className="space-y-2 text-base text-black dark:text-white">
             <div className="flex items-end gap-1">
               <Link href={"/music"} className="flex cursor-pointer">
                 <ChanhdangLogotype className="w-40" />
@@ -41,16 +42,20 @@ export function MenuBar() {
               >
                 <Link href="/music/search">
                   <div className="flex items-center gap-2 rounded-xl p-2">
-                    <MagnifyingGlass size={20} weight="bold" />
-                    <div className="">Search</div>
+                    <MagnifyingGlass
+                      size={25}
+                      weight="bold"
+                      className="text-red-500"
+                    />
+                    <div className="font-medium">Search</div>
                   </div>
                 </Link>
               </motion.div>
             </AnimatePresence>
 
-            <div className="flex items-center gap-2 rounded-xl bg-blue-700 p-2 text-white dark:bg-blue-600">
-              <House size={20} weight="fill" />
-              <div className="">Home</div>
+            <div className="flex items-center gap-2 rounded-3xl bg-zinc-200/60 p-2 text-white dark:bg-zinc-800/60">
+              <House size={25} weight="fill" className="text-red-500" />
+              <div className="font-medium text-red-500">Home</div>
             </div>
 
             {isAuthenticated ? (
@@ -58,14 +63,22 @@ export function MenuBar() {
                 href={"/music/add-music"}
                 className="flex items-center gap-2 rounded-2xl p-2"
               >
-                <MusicNotesSimple size={20} weight="bold" />
+                <MusicNotesSimple
+                  size={25}
+                  weight="bold"
+                  className="text-red-500"
+                />
 
-                <div className="">Add New Music</div>
+                <div className="font-medium">Add New Music</div>
               </Link>
             ) : (
               <div className="pointer-events-none flex items-center gap-2 p-2 opacity-30">
-                <MusicNotesSimple size={20} weight="bold" />
-                <div className="">Add New Music</div>
+                <MusicNotesSimple
+                  size={25}
+                  weight="bold"
+                  className="text-red-500"
+                />
+                <div className="font-medium">Add New Music</div>
               </div>
             )}
 
@@ -74,30 +87,50 @@ export function MenuBar() {
                 href={"/music/add-singer"}
                 className="flex items-center gap-2 rounded-2xl p-2"
               >
-                <MicrophoneStage size={20} weight="fill" />
-                <div className="">Add Artists</div>
+                <MicrophoneStage
+                  size={25}
+                  weight="fill"
+                  className="text-red-500"
+                />
+                <div className="font-medium">Add Artists</div>
               </Link>
             ) : (
               <div className="pointer-events-none flex items-center gap-2 p-2 opacity-30">
-                <MicrophoneStage size={20} weight="fill" />
-                <div className="">Add Artists</div>
+                <MicrophoneStage
+                  size={25}
+                  weight="fill"
+                  className="text-red-500"
+                />
+                <div className="font-medium">Add Artists</div>
               </div>
             )}
 
             {isAuthenticated ? (
               <Link
-                href={"/music/favorites"}
+                href={"/music/library"}
                 className="flex items-center gap-2 rounded-2xl p-2"
               >
-                <BookBookmark size={20} weight="fill" />
-                <div className="">Library</div>
+                <BookBookmark
+                  size={25}
+                  weight="fill"
+                  className="text-red-500"
+                />
+                <div className="font-medium">Library</div>
               </Link>
             ) : (
               <div className="pointer-events-none flex items-center gap-2 p-2 opacity-30">
-                <BookBookmark size={20} weight="fill" />
-                <div className="">Library</div>
+                <BookBookmark
+                  size={25}
+                  weight="fill"
+                  className="text-red-500"
+                />
+                <div className="font-medium">Library</div>
               </div>
             )}
+
+            <div className="absolute bottom-0 left-0 flex w-full justify-center">
+              <LogoutButton />
+            </div>
           </div>
         </>
       </div>

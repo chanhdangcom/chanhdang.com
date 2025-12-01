@@ -4,7 +4,7 @@ import { NewAuidoListClient } from "./new-audio-list-client";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 
-export default async function NewCarouselAudio() {
+export async function NewCarouselAudio() {
   try {
     // ✅ Kết nối MongoDB
     const client = await clientPromise;

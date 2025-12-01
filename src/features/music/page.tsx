@@ -9,19 +9,23 @@ import { MotionHeaderMusic } from "./component/motion-header-music";
 import { Footer } from "@/app/[locale]/features/profile /footer";
 import CarouselAudio from "./carousel-audio";
 import { AudioBar } from "./audio-bar";
-import NewCarouselAudio from "./new-carousel-audio";
+
 // import { CarouselAudioPlaylist } from "./carousel-audio-playlist";
-import RecentCarouselAudio from "./recent-carousel-audio";
+
 import { NewCarouselAudioPlaylist } from "./new-carousel-audio-playlist";
+import { RecentCarouselAudio } from "./recent-carousel-audio";
+import { NewCarouselAudio } from "./new-carousel-audio";
 // import { useDisableRightClick } from "../../hooks/use-disable-right-click";
 
 export function MusicPage() {
   // useDisableRightClick();
 
   return (
-    <div className="flex font-apple">
+    <div className="flex bg-zinc-100 font-apple dark:bg-zinc-950">
       <MotionHeaderMusic />
       <MenuBar />
+
+      <div className="pointer-events-none fixed bottom-0 z-50 h-16 w-full bg-gradient-to-t from-white to-transparent dark:from-black" />
 
       <div className="mx-auto w-full">
         <div className="relative z-10">
@@ -49,10 +53,6 @@ export function MusicPage() {
             <div className="mt-4 flex justify-start">
               <CarouselAudio />
             </div>
-
-            {/* <div className="mt-4 flex justify-start">
-              <CarouselAudioPlaylist />
-            </div> */}
 
             <div className="mt-4">
               <TableRanking home />

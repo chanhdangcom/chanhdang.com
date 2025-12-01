@@ -1,4 +1,4 @@
-import { PageSearch } from "@/features/music/page-search";
+import { PageSearch } from "@/features/music/search/page-search";
 
 export default function Page() {
   return <PageSearch />;

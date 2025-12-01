@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 "use client";
-import { FavoriteButton } from "./favorite-button";
+
 import { useUser } from "@/hooks/use-user";
 import { useEffect, useState } from "react";
 import { Play } from "phosphor-react";
@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { IMusic } from "@/app/[locale]/features/profile /types/music";
 import { BorderPro } from "./border-pro";
 import { FastAverageColor } from "fast-average-color";
+import { LibraryTrackButton } from "../library/library-track-button";
 
 type IProp = {
   music: IMusic;
@@ -123,7 +124,7 @@ export function AuidoItem({ music, handlePlay }: IProp) {
               transition={{ duration: 0.2, ease: "easeIn" }}
               className="absolute right-2 top-2"
             >
-              <FavoriteButton music={music} userId={user?.id} size="sm" />
+              <LibraryTrackButton music={music} userId={user?.id} size="sm" />
             </motion.div>
           )}
 

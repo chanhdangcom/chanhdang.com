@@ -12,6 +12,8 @@ import Image from "next/image";
 import { Footer } from "@/app/[locale]/features/profile /footer";
 import { HeaderMusicPage } from "../header-music-page";
 import { MotionHeaderMusic } from "../component/motion-header-music";
+import { LibraryPlaylistButton } from "../library/library-playlist-button";
+import { useUser } from "@/hooks/use-user";
 
 type Props = {
   playlist: IPlaylistItem;
@@ -19,6 +21,7 @@ type Props = {
 
 export function PlaylistDetailClient({ playlist }: Props) {
   const { handlePlayAudio, handlePlayRandomAudio } = useAudio();
+  const { user } = useUser();
 
   const musics = useMemo(
     () => playlist.musics?.filter((m) => m && m.id) ?? [],
@@ -86,7 +89,7 @@ export function PlaylistDetailClient({ playlist }: Props) {
             </Link>
           </div>
 
-          <div className="mx-4 mb-12 md:ml-[270px] md:mr-12 md:mt-10 md:gap-10">
+          <div className="mx-4 mb-12 md:ml-[270px]">
             <div className="">
               <Image
                 src={coverUrl}
@@ -106,10 +109,10 @@ export function PlaylistDetailClient({ playlist }: Props) {
                   </div>
                 </div>
 
-                <div className="flex gap-3 pt-2">
+                <div className="flex justify-between gap-4">
                   <button
                     onClick={handlePlayFirst}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-2 font-semibold text-red-500 transition hover:scale-[1.02] dark:bg-zinc-900"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 transition hover:scale-[1.02] dark:bg-zinc-900"
                   >
                     <Play size={20} weight="fill" />
                     Play
@@ -117,11 +120,20 @@ export function PlaylistDetailClient({ playlist }: Props) {
 
                   <button
                     onClick={handleShuffle}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-2 font-semibold text-red-500 transition hover:scale-[1.02] dark:bg-zinc-900"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 transition hover:scale-[1.02] dark:bg-zinc-900"
                   >
                     <Shuffle size={20} weight="fill" />
                     Shuffle
                   </button>
+
+                  <div className="flex flex-1 items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 transition hover:scale-[1.02] dark:bg-zinc-900">
+                    <LibraryPlaylistButton
+                      playlist={playlist}
+                      userId={user?.id}
+                      size="lg"
+                    />
+                    Favorite
+                  </div>
                 </div>
               </div>
             </div>

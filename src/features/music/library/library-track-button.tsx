@@ -4,47 +4,43 @@ import { useState, useEffect } from "react";
 import { Heart } from "lucide-react";
 import { IMusic } from "@/app/[locale]/features/profile /types/music";
 
-interface FavoriteButtonProps {
+interface LibraryTrackButtonProps {
   music: IMusic;
   userId?: string;
   size?: "sm" | "md" | "lg";
 }
 
-interface FavoriteItem {
-  _id: string;
-  userId: string;
-  musicId: string;
-  musicData: IMusic;
-  createdAt: string;
-}
-
-export function FavoriteButton({
+export function LibraryTrackButton({
   music,
   userId,
   size = "md",
-}: FavoriteButtonProps) {
-  const [isFavorite, setIsFavorite] = useState(false);
+}: LibraryTrackButtonProps) {
+  const [isInLibrary, setIsInLibrary] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Kiểm tra xem bài hát có trong danh sách yêu thích không
+  // Kiểm tra xem bài hát có trong Library hay không
   useEffect(() => {
     if (!userId) return;
 
-    const checkFavorite = async () => {
+    const checkLibrary = async () => {
       try {
-        const response = await fetch(`/api/favorites?userId=${userId}`);
-        const favorites: FavoriteItem[] = await response.json();
-        const isFav = favorites.some((fav) => fav.musicId === music.id);
-        setIsFavorite(isFav);
+        const response = await fetch(
+          `/api/library?userId=${userId}&type=music`
+        );
+        const entries = await response.json();
+        const isFav = entries.some((entry: { resourceId: string }) => {
+          return entry.resourceId === music.id;
+        });
+        setIsInLibrary(isFav);
       } catch (error) {
-        console.error("Error checking favorite status:", error);
+        console.error("Error checking library status:", error);
       }
     };
 
-    checkFavorite();
+    checkLibrary();
   }, [userId, music.id]);
 
-  const handleToggleFavorite = async () => {
+  const handleToggleLibrary = async () => {
     if (!userId) {
       alert("Vui lòng đăng nhập để sử dụng tính năng này!");
       return;
@@ -52,44 +48,45 @@ export function FavoriteButton({
 
     setIsLoading(true);
     try {
-      if (isFavorite) {
-        // Xóa khỏi yêu thích
+      if (isInLibrary) {
+        // Xóa khỏi Library
         const response = await fetch(
-          `/api/favorites?userId=${userId}&musicId=${music.id}`,
+          `/api/library?userId=${userId}&resourceId=${music.id}&type=music`,
           {
             method: "DELETE",
           }
         );
 
         if (response.ok) {
-          setIsFavorite(false);
+          setIsInLibrary(false);
         } else {
           const error = await response.json();
           alert(error.error || "Có lỗi xảy ra!");
         }
       } else {
-        // Thêm vào yêu thích
-        const response = await fetch("/api/favorites", {
+        // Thêm vào Library
+        const response = await fetch("/api/library", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
             userId,
-            musicId: music.id,
-            musicData: music,
+            resourceId: music.id,
+            resourceType: "music",
+            data: music,
           }),
         });
 
         if (response.ok) {
-          setIsFavorite(true);
+          setIsInLibrary(true);
         } else {
           const error = await response.json();
           alert(error.error || "Có lỗi xảy ra!");
         }
       }
     } catch (error) {
-      console.error("Error toggling favorite:", error);
+      console.error("Error toggling library track:", error);
       alert("Có lỗi xảy ra!");
     } finally {
       setIsLoading(false);
@@ -104,18 +101,18 @@ export function FavoriteButton({
 
   return (
     <button
-      onClick={handleToggleFavorite}
+      onClick={handleToggleLibrary}
       disabled={isLoading}
       className={`rounded-full bg-zinc-900/60 p-2 backdrop-blur-sm transition-all duration-200 hover:scale-110 ${
-        isFavorite
+        isInLibrary
           ? "text-red-500 hover:text-red-600"
           : "text-zinc-50 hover:text-red-500"
       } ${isLoading ? "cursor-not-allowed opacity-50" : ""}`}
-      title={isFavorite ? "Bỏ yêu thích" : "Thêm vào yêu thích"}
+      title={isInLibrary ? "Gỡ khỏi Library" : "Thêm vào Library"}
     >
       <Heart
         className={sizeClasses[size]}
-        fill={isFavorite ? "currentColor" : "none"}
+        fill={isInLibrary ? "currentColor" : "none"}
       />
     </button>
   );

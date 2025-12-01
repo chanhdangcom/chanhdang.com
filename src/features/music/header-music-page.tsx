@@ -1,7 +1,5 @@
 "use client";
 
-import { MusicType } from "./music-type";
-
 import { LogoutButton } from "./component/logout-button";
 
 type IProp = {
@@ -10,7 +8,7 @@ type IProp = {
 
 export const HeaderMusicPage = ({ name }: IProp) => {
   return (
-    <div className="bt-2 sticky inset-0 top-0 z-10 rounded-b-xl pb-4 font-apple transition">
+    <div className="bt-2 sticky inset-0 top-0 z-10 rounded-b-xl pb-2 font-apple transition">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -23,13 +21,9 @@ export const HeaderMusicPage = ({ name }: IProp) => {
                 {name || "Home"}
               </div>
             </>
-
-            <div className="hidden md:flex">
-              <MusicType />
-            </div>
           </div>
 
-          <div className="z-20 mr-4">
+          <div className="z-20 mr-4 md:hidden">
             <LogoutButton />
           </div>
         </div>
