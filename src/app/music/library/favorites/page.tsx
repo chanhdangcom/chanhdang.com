@@ -9,11 +9,12 @@ import { MenuBar } from "@/features/music/menu-bar";
 import { MenuBarMobile } from "@/features/music/menu-bar-mobile";
 import { AudioBar } from "@/features/music/audio-bar";
 import { MotionHeaderMusic } from "@/features/music/component/motion-header-music";
-import { Play, Shuffle } from "phosphor-react";
+import { CaretLeft, Play, Shuffle } from "phosphor-react";
 import { motion } from "framer-motion";
 import { useAudio } from "@/components/music-provider";
 import { IMusic } from "@/app/[locale]/features/profile /types/music";
 import { Footer } from "@/app/[locale]/features/profile /footer";
+import Link from "next/link";
 
 export default function LibraryFavoriteSongsPage() {
   const { user } = useUser();
@@ -57,7 +58,7 @@ export default function LibraryFavoriteSongsPage() {
     handlePlayAudio(randomMusic);
   };
   return (
-    <div className="flex font-apple">
+    <div className="flex font-apple md:mt-2">
       <MenuBar />
 
       <MotionHeaderMusic name="Favorite Songs" />
@@ -66,8 +67,20 @@ export default function LibraryFavoriteSongsPage() {
 
       <div className="mx-auto w-full">
         <div className="relative z-10">
-          <div className="md:ml-[270px]">
+          <div className="hidden md:ml-[270px] md:block">
             <HeaderMusicPage name="Favorite Songs" />
+          </div>
+
+          <div className="sticky top-0 z-10 m-4 flex items-center gap-1 md:hidden">
+            <Link href="/music">
+              <div className="pointer-events-auto rounded-full bg-zinc-200 p-2 dark:bg-zinc-900">
+                <CaretLeft
+                  size={28}
+                  weight="regular"
+                  className="text-black dark:text-white"
+                />
+              </div>
+            </Link>
           </div>
 
           <div className="mx-4 md:ml-[270px]">
@@ -81,9 +94,9 @@ export default function LibraryFavoriteSongsPage() {
                   />
                 </div>
 
-                <div className="space-y-2 text-6xl">
+                <div className="mt-2 space-y-2 text-6xl">
                   <div className="text-center text-lg text-zinc-500">
-                    ChanhDang Music
+                    Favorites Songs
                   </div>
 
                   <div className="space-y-4">

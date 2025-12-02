@@ -10,6 +10,7 @@ import { LibraryPlaylistsList } from "@/features/music/library/library-playlists
 import { MotionHeaderMusic } from "@/features/music/component/motion-header-music";
 import { Input } from "@/components/ui/input";
 import { Footer } from "@/app/[locale]/features/profile /footer";
+import { CaretLeft } from "phosphor-react";
 
 export function LibraryPage() {
   const { user } = useUser();
@@ -24,8 +25,20 @@ export function LibraryPage() {
 
       <div className="mx-auto w-full">
         <div className="relative z-10 space-y-4">
-          <div className="my-4 md:ml-[270px]">
+          <div className="my-4 hidden md:ml-[270px] md:block">
             <HeaderMusicPage name="Library" />
+          </div>
+
+          <div className="sticky top-0 z-10 m-4 flex items-center gap-1 md:hidden">
+            <Link href="/music">
+              <div className="pointer-events-auto rounded-full bg-zinc-200 p-2 dark:bg-zinc-900">
+                <CaretLeft
+                  size={28}
+                  weight="regular"
+                  className="text-black dark:text-white"
+                />
+              </div>
+            </Link>
           </div>
 
           <div className="mx-4 md:ml-[270px]">

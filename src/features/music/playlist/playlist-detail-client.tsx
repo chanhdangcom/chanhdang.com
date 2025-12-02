@@ -63,7 +63,7 @@ export function PlaylistDetailClient({ playlist }: Props) {
   };
 
   return (
-    <div>
+    <div className="mt-2">
       <MotionHeaderMusic name="Playlist" />
 
       <div className="z-20 hidden md:ml-[270px] md:flex">
