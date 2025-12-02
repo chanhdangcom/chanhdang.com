@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useUser } from "@/hooks/use-user";
 import { HeaderMusicPage } from "@/features/music/header-music-page";
@@ -7,7 +8,6 @@ import { AudioBar } from "@/features/music/audio-bar";
 import Link from "next/link";
 import { LibraryPlaylistsList } from "@/features/music/library/library-playlists-list";
 import { MotionHeaderMusic } from "@/features/music/component/motion-header-music";
-import { Heart } from "@phosphor-icons/react/dist/ssr";
 import { Input } from "@/components/ui/input";
 import { Footer } from "@/app/[locale]/features/profile /footer";
 
@@ -29,22 +29,24 @@ export function LibraryPage() {
           </div>
 
           <div className="mx-4 md:ml-[270px]">
-            <Input
-              type="text"
-              placeholder="Music, Playlist ..."
-              className="z-10 rounded-3xl border-none bg-white shadow-lg dark:bg-zinc-800 md:w-full"
-              autoFocus
-            />
+            <Link href={"/music/search"} className="">
+              <Input
+                type="text"
+                placeholder="Music, Playlist ..."
+                className="z-10 rounded-3xl border-none bg-white shadow-lg dark:bg-zinc-800 md:w-[40vw]"
+              />
+            </Link>
           </div>
 
           <div className="mx-4 md:ml-[270px]">
             <div className="gap-4 md:flex">
               <div className="space-y-2">
-                <Link
-                  href="/music/library/favorites"
-                  className="flex size-48 items-center justify-center rounded-3xl bg-gradient-to-tl from-red-600 to-red-400"
-                >
-                  <Heart weight="fill" className="size-28 text-white" />
+                <Link href="/music/library/favorites" className=" ">
+                  <img
+                    src="/img/favorites-icon.jpg"
+                    alt="favorites"
+                    className="flex size-48 items-center justify-center rounded-3xl border border-zinc-200 dark:border-none"
+                  />
                 </Link>
 
                 <div className="ml-2 font-semibold text-black dark:text-white">
@@ -64,9 +66,7 @@ export function LibraryPage() {
           <MenuBarMobile />
         </div>
 
-        {/* <SearchSection /> */}
-
-        <div className="mb-40 mt-8 md:ml-60">
+        <div className="mt-8 md:ml-60">
           <Footer />
         </div>
       </div>

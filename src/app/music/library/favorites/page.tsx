@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -8,7 +9,7 @@ import { MenuBar } from "@/features/music/menu-bar";
 import { MenuBarMobile } from "@/features/music/menu-bar-mobile";
 import { AudioBar } from "@/features/music/audio-bar";
 import { MotionHeaderMusic } from "@/features/music/component/motion-header-music";
-import { Heart, Play, Shuffle } from "phosphor-react";
+import { Play, Shuffle } from "phosphor-react";
 import { motion } from "framer-motion";
 import { useAudio } from "@/components/music-provider";
 import { IMusic } from "@/app/[locale]/features/profile /types/music";
@@ -73,9 +74,11 @@ export default function LibraryFavoriteSongsPage() {
             <div className="">
               <div className="w-full flex-col items-center md:flex-none">
                 <div className="flex justify-center">
-                  <div className="flex size-60 items-center justify-center rounded-3xl bg-gradient-to-tl from-red-600 to-red-400">
-                    <Heart weight="fill" className="size-28 text-white" />
-                  </div>
+                  <img
+                    src="/img/favorites-icon.jpg"
+                    alt="favorites"
+                    className="flex size-60 items-center justify-center rounded-3xl"
+                  />
                 </div>
 
                 <div className="space-y-2 text-6xl">

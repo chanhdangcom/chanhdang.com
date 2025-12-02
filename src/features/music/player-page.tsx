@@ -5,7 +5,6 @@ import {
   CaretDown,
   DotsThreeVertical,
   FastForward,
-  MagicWand,
   Pause,
   Play,
   Repeat,
@@ -16,10 +15,20 @@ import {
 
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState, memo } from "react";
+import { useRouter } from "next/navigation";
 import { AudioTimeLine } from "./component/audio-time-line";
 import DynamicIslandWave from "@/components/ui/dynamic-island";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { BorderPro } from "./component/border-pro";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useUser } from "@/hooks/use-user";
 
 type IProp = {
   setIsClick: () => void;
@@ -72,6 +81,11 @@ export function PlayerPage({ setIsClick }: IProp) {
     setIsPlayerPageOpen,
   } = useAudio();
 
+  const { user } = useUser();
+  const router = useRouter();
+  const [isInFavorites, setIsInFavorites] = useState(false);
+  const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
     setIsPlayerPageOpen(true); // Báo PlayerPage đang mở để sync subtitle
@@ -82,6 +96,114 @@ export function PlayerPage({ setIsClick }: IProp) {
   }, [setIsPlayerPageOpen]);
 
   const [isClickLyric, setIsClickLyric] = useState(false);
+
+  // Kiểm tra xem bài hát có trong Favorites hay không
+  useEffect(() => {
+    if (!user?.id || !currentMusic?.id) {
+      setIsInFavorites(false);
+      return;
+    }
+
+    const checkFavorites = async () => {
+      try {
+        const response = await fetch(
+          `/api/library?userId=${user.id}&type=music`
+        );
+        if (!response.ok) return;
+        const entries = await response.json();
+        const isFav = entries.some(
+          (entry: { resourceId: string }) =>
+            entry.resourceId === currentMusic.id
+        );
+        setIsInFavorites(isFav);
+      } catch (error) {
+        console.error("Error checking favorites:", error);
+      }
+    };
+
+    checkFavorites();
+  }, [user?.id, currentMusic?.id]);
+
+  // Xử lý thêm/xóa khỏi Favorites
+  const handleToggleFavorites = async () => {
+    if (!user?.id) {
+      alert("Vui lòng đăng nhập để sử dụng tính năng này!");
+      return;
+    }
+
+    if (!currentMusic) return;
+
+    setIsLoadingFavorite(true);
+    try {
+      if (isInFavorites) {
+        // Xóa khỏi Favorites
+        const response = await fetch(
+          `/api/library?userId=${user.id}&resourceId=${currentMusic.id}&type=music`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        if (response.ok) {
+          setIsInFavorites(false);
+        } else {
+          const error = await response.json();
+          alert(error.error || "Có lỗi xảy ra!");
+        }
+      } else {
+        // Thêm vào Favorites
+        const response = await fetch("/api/library", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            resourceId: currentMusic.id,
+            resourceType: "music",
+            data: currentMusic,
+          }),
+        });
+
+        if (response.ok) {
+          setIsInFavorites(true);
+        } else {
+          const error = await response.json();
+          alert(error.error || "Có lỗi xảy ra!");
+        }
+      }
+    } catch (error) {
+      console.error("Error toggling favorites:", error);
+      alert("Có lỗi xảy ra!");
+    } finally {
+      setIsLoadingFavorite(false);
+    }
+  };
+
+  // Xử lý Share
+  const handleShare = async () => {
+    if (!currentMusic) return;
+
+    const shareData = {
+      title: currentMusic.title || "Bài hát",
+      text: `${currentMusic.title} - ${currentMusic.singer}`,
+      url: window.location.href,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        // Fallback: copy to clipboard
+        await navigator.clipboard.writeText(
+          `${shareData.text}\n${shareData.url}`
+        );
+        alert("Đã sao chép link vào clipboard!");
+      }
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  };
 
   if (isClickLyric)
     return (
@@ -110,7 +232,65 @@ export function PlayerPage({ setIsClick }: IProp) {
                 <ChanhdangLogotype className="w-28" />
               </div>
 
-              <DotsThreeVertical size={20} weight="bold" className="" />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="cursor-pointer outline-none">
+                    <DotsThreeVertical size={20} weight="bold" />
+                  </button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent
+                  align="end"
+                  className="min-w-[180px] rounded-xl border-white/10 backdrop-blur-sm dark:bg-zinc-950/50"
+                >
+                  <DropdownMenuItem
+                    onClick={handleToggleFavorites}
+                    disabled={isLoadingFavorite}
+                    className="flex items-center gap-3 text-white focus:bg-white/10"
+                  >
+                    <span className="font-semibold">
+                      {isInFavorites
+                        ? "Gỡ khỏi Favorites"
+                        : "Thêm vào Favorites"}
+                    </span>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuCheckboxItem
+                    checked={isKaraokeMode}
+                    onCheckedChange={handleToggleKaraoke}
+                    disabled={!currentMusic?.beat}
+                    className="flex items-center gap-3 text-white focus:bg-white/10 disabled:opacity-50"
+                  >
+                    {isKaraokeMode ? (
+                      <span className="font-semibold">Off Beat Mode</span>
+                    ) : (
+                      <span className="font-semibold">Beat Mode</span>
+                    )}
+                  </DropdownMenuCheckboxItem>
+
+                  <DropdownMenuSeparator className="bg-white/10" />
+
+                  <DropdownMenuItem
+                    onClick={handleShare}
+                    className="flex items-center gap-3 text-white focus:bg-white/10"
+                  >
+                    <span className="font-semibold">Chia sẻ</span>
+                  </DropdownMenuItem>
+
+                  {isInFavorites && (
+                    <DropdownMenuItem
+                      onClick={() => {
+                        router.push("/music/library/favorites");
+                      }}
+                      className="flex items-center gap-3 text-white focus:bg-white/10"
+                    >
+                      <span className="font-semibold">
+                        Hiển thị trong Library
+                      </span>
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </header>
 
             <div className="absolute inset-x-4 z-10 mt-2 rounded-2xl p-1">
@@ -234,7 +414,63 @@ export function PlayerPage({ setIsClick }: IProp) {
               <ChanhdangLogotype className="w-28" />
             </div>
 
-            <DotsThreeVertical size={20} weight="bold" className="" />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="cursor-pointer outline-none">
+                  <DotsThreeVertical size={20} weight="bold" />
+                </button>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent
+                align="end"
+                className="min-w-[180px] rounded-xl border-white/10 backdrop-blur-sm dark:bg-zinc-950/50"
+              >
+                <DropdownMenuItem
+                  onClick={handleToggleFavorites}
+                  disabled={isLoadingFavorite}
+                  className="flex items-center gap-3 text-white focus:bg-white/10"
+                >
+                  <span className="font-semibold">
+                    {isInFavorites ? "Gỡ khỏi Favorites" : "Thêm vào Favorites"}
+                  </span>
+                </DropdownMenuItem>
+
+                <DropdownMenuCheckboxItem
+                  checked={isKaraokeMode}
+                  onCheckedChange={handleToggleKaraoke}
+                  disabled={!currentMusic?.beat}
+                  className="flex items-center gap-3 text-white focus:bg-white/10 disabled:opacity-50"
+                >
+                  {isKaraokeMode ? (
+                    <span className="font-semibold">Off Beat Mode</span>
+                  ) : (
+                    <span className="font-semibold">Beat Mode</span>
+                  )}
+                </DropdownMenuCheckboxItem>
+
+                <DropdownMenuSeparator className="bg-white/10" />
+
+                <DropdownMenuItem
+                  onClick={handleShare}
+                  className="flex items-center gap-3 text-white focus:bg-white/10"
+                >
+                  <span className="font-semibold">Chia sẻ</span>
+                </DropdownMenuItem>
+
+                {isInFavorites && (
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router.push("/music/library/favorites");
+                    }}
+                    className="flex items-center gap-3 text-white focus:bg-white/10"
+                  >
+                    <span className="font-semibold">
+                      Hiển thị trong Library
+                    </span>
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </header>
 
           <div className="relative mx-3 space-y-4 md:space-y-10">
@@ -349,22 +585,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                   </motion.button>
                 </div>
 
-                <div className="items-center gap-1">
-                  <motion.div
-                    whileTap={{ scale: 0.85 }}
-                    transition={{ duration: 0.15 }}
-                    onClick={handleToggleKaraoke}
-                    className={`flex h-10 w-10 cursor-pointer items-center justify-center ${
-                      currentMusic?.beat ? "" : "cursor-not-allowed opacity-20"
-                    }`}
-                  >
-                    {isKaraokeMode ? (
-                      <MagicWand size={25} weight="fill" />
-                    ) : (
-                      <MagicWand size={25} />
-                    )}
-                  </motion.div>
-
+                <div className="flex items-center gap-1">
                   <motion.div
                     whileTap={{ scale: 0.85 }}
                     transition={{ duration: 0.15 }}
