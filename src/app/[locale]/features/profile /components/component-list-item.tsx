@@ -8,9 +8,10 @@ import { useState } from "react";
 type IProp = {
   title: string;
   slug?: string;
+  img?: string;
 };
 
-export function ComponentListItem({ title, slug }: IProp) {
+export function ComponentListItem({ title, slug, img }: IProp) {
   const [isHover, setIsHover] = useState<boolean>(false);
 
   return (
@@ -26,9 +27,9 @@ export function ComponentListItem({ title, slug }: IProp) {
           <motion.img
             animate={isHover ? { x: 10 } : { x: 0 }}
             transition={{ delay: 0.1, ease: "easeOut" }}
-            src="/img/tech-stack/react.svg"
+            src={img || "/img/tech-stack/react.svg"}
             alt="icon"
-            className="size-6"
+            className="size-6 rounded-sm"
           />
 
           <motion.div

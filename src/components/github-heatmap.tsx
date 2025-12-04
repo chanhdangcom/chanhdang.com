@@ -121,7 +121,7 @@ export function GitHubHeatmap() {
                     return (
                       <div
                         key={dayIdx}
-                        className={`h-4 w-4 ${color} animate-pulse rounded-sm`}
+                        className={`h-4 w-4 ${color} animate-pulse`}
                         style={{ animationDuration: "2.8s" }}
                       ></div>
                     );
@@ -266,7 +266,7 @@ export function GitHubHeatmap() {
                   return (
                     <div
                       key={j}
-                      className={`h-4 w-4 ${COLORS[level]} rounded-sm transition hover:brightness-125 ${
+                      className={`h-4 w-4 ${COLORS[level]} transition hover:brightness-125 ${
                         isActive ? "animate-pulse" : ""
                       }`}
                       style={

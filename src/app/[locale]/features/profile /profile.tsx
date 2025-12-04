@@ -12,6 +12,7 @@ import { ChanhdangMusicList } from "./chanhdang-music-list";
 import { TitleIntro } from "./components/title-intro";
 import { ScrollChatBot } from "@/components/scroll-chat-bot";
 import { GitHubChart } from "./github-chart";
+import { ProjectList } from "./project-list";
 
 export const Profile = () => {
   return (
@@ -97,11 +98,11 @@ export const Profile = () => {
         </section>
 
         <div className="my-8">
-          <GitHubChart />
+          <WorkExperience />
         </div>
 
         <div className="my-8">
-          <WorkExperience />
+          <ProjectList />
         </div>
 
         <div className="my-8">
@@ -113,6 +114,10 @@ export const Profile = () => {
         </div>
 
         <ComponentList />
+
+        <div className="my-8">
+          <GitHubChart />
+        </div>
       </main>
 
       <Footer />

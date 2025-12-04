@@ -71,6 +71,15 @@ export const Header = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
+                <Link href="/" className="hover:underline">
+                  Projects
+                </Link>
+              </motion.li>
+
+              <motion.li
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <Link href="/components" className="hover:underline">
                   Components
                 </Link>
