@@ -3,7 +3,7 @@ import Link from "next/link";
 import { MUSICS } from "@/features/music/data/music-page";
 
 export const metadata: Metadata = {
-  title: "Search — Chánh Đang",
+  title: "Search - Chánh Đang",
   description:
     "Search across portfolio pages, music playlists, and blog posts on chanhdang.com.",
 };

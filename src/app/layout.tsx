@@ -26,7 +26,7 @@ const fontMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Chánh Đang — Developer & Designer",
+  title: "Chánh Đang - Developer & Designer",
   description:
     "Full-stack developer specialized in building modern websites and mobile applications with clean design, performance, and creativity.",
   applicationName: "ChanhDang",
@@ -120,10 +120,30 @@ export default async function RootLayout({
   console.log("Render RootLayout");
 
   const primaryNavigationLinks = [
-    { name: "Daifolio", url: "https://chanhdang.com/" },
-    { name: "Musics", url: "https://chanhdang.com/music" },
-    { name: "Blogs", url: "https://chanhdang.com/blog" },
-    { name: "Components", url: "https://chanhdang.com/components" },
+    {
+      name: "Daifolio",
+      url: "https://chanhdang.com/",
+      description:
+        "Portfolio showcasing projects, work experience, and professional overview of Chánh Đang - Full-stack Developer & Designer",
+    },
+    {
+      name: "Musics",
+      url: "https://chanhdang.com/music",
+      description:
+        "Music platform featuring songs, playlists, and music library by ChanhDang Music",
+    },
+    {
+      name: "Blogs",
+      url: "https://chanhdang.com/blog",
+      description:
+        "Blog articles about web development, design, and technology insights",
+    },
+    {
+      name: "Components",
+      url: "https://chanhdang.com/components",
+      description:
+        "Reusable UI components and design system components for modern web applications",
+    },
   ] as const;
 
   const structuredDataPerson = {
@@ -182,6 +202,27 @@ export default async function RootLayout({
       "@type": "WebPage",
       name: link.name,
       url: link.url,
+      description: link.description,
+    })),
+  } as const;
+
+  // ItemList để Google hiển thị các thành phần trong kết quả tìm kiếm
+  const structuredDataItemList = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "ChanhDang Website Sections",
+    description:
+      "Main sections of ChanhDang website including portfolio, music, blog, and components",
+    itemListElement: primaryNavigationLinks.map((link, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "WebPage",
+        "@id": link.url,
+        name: link.name,
+        url: link.url,
+        description: link.description,
+      },
     })),
   } as const;
 
@@ -189,6 +230,7 @@ export default async function RootLayout({
     structuredDataPerson,
     structuredDataWebsite,
     structuredDataSiteNavigation,
+    structuredDataItemList,
   ] as const;
 
   return (
