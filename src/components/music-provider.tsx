@@ -8,7 +8,7 @@ import React, {
   useEffect,
 } from "react";
 
-import { IMusic } from "@/app/[locale]/features/profile /types/music";
+import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { useUser } from "@/hooks/use-user";
 import { AdModal } from "@/features/music/component/ad-modal";
 

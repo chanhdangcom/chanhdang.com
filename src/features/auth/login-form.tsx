@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import { useUser } from "@/hooks/use-user";
 import { HeaderMusicPage } from "../music/header-music-page";
-import { Footer } from "@/app/[locale]/features/profile /footer";
+import { Footer } from "@/app/[locale]/features/profile/footer";
 export default function LoginForm() {
   const [form, setForm] = useState({ username: "", password: "" });
   const [message, setMessage] = useState("");

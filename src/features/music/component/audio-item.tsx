@@ -6,7 +6,7 @@ import { useUser } from "@/hooks/use-user";
 import { useState } from "react";
 import { Play } from "phosphor-react";
 import { motion } from "framer-motion";
-import { IMusic } from "@/app/[locale]/features/profile /types/music";
+import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { BorderPro } from "./border-pro";
 import { LibraryTrackButton } from "../library/library-track-button";
 import { useImageHoverColor } from "@/hooks/use-image-hover-color";

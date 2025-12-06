@@ -1,6 +1,6 @@
-import { BlogListPage } from "../[locale]/features/profile /blog-list-page";
-import { Footer } from "../[locale]/features/profile /footer";
-import { Header } from "../[locale]/features/profile /header";
+import { BlogListPage } from "../[locale]/features/profile/blog-list-page";
+import { Footer } from "../[locale]/features/profile/footer";
+import { Header } from "../[locale]/features/profile/header";
 import type { Metadata } from "next";
 import Script from "next/script";
 

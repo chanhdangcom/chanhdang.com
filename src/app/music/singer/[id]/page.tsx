@@ -4,9 +4,9 @@ import { MotionHeaderMusic } from "@/features/music/component/motion-header-musi
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { ISingerItem } from "@/features/music/type/singer";
-import { IMusic } from "@/app/[locale]/features/profile /types/music";
+import { IMusic } from "@/app/[locale]/features/profile/types/music";
 
-import { Footer } from "@/app/[locale]/features/profile /footer";
+import { Footer } from "@/app/[locale]/features/profile/footer";
 import { CarouselAudioPlaylist } from "@/features/music/carousel-audio-playlist";
 import { RecentCarouselAudio } from "@/features/music/recent-carousel-audio";
 import { NewCarouselAudio } from "@/features/music/new-carousel-audio";

@@ -12,7 +12,7 @@ import { useTheme } from "next-themes";
 import React, { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Ping } from "../ping";
 import { useAudio } from "@/components/music-provider";
-import type { IMusic } from "@/app/[locale]/features/profile /types/music";
+import type { IMusic } from "@/app/[locale]/features/profile/types/music";
 
 type ChatRole = "user" | "bot";
 

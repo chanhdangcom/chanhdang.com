@@ -4,8 +4,8 @@ import { MotionHeaderMusic } from "./component/motion-header-music";
 import { HeaderMusicPage } from "./header-music-page";
 import { MenuBar } from "./menu-bar";
 import { MenuBarMobile } from "./menu-bar-mobile";
-import { Footer } from "@/app/[locale]/features/profile /footer";
-import { IMusic } from "@/app/[locale]/features/profile /types/music";
+import { Footer } from "@/app/[locale]/features/profile/footer";
+import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { NewReleaseList } from "./new-release-list";
 
 export async function NewReleasePage() {

@@ -6,7 +6,7 @@ import { SingerList } from "./singer-list";
 import { MenuBarMobile } from "./menu-bar-mobile";
 import { PickForYou } from "./pick-for-you";
 import { MotionHeaderMusic } from "./component/motion-header-music";
-import { Footer } from "@/app/[locale]/features/profile /footer";
+import { Footer } from "@/app/[locale]/features/profile/footer";
 import CarouselAudio from "./carousel-audio";
 import { AudioBar } from "./audio-bar";
 

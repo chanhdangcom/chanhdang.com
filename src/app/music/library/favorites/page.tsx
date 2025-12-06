@@ -12,8 +12,8 @@ import { MotionHeaderMusic } from "@/features/music/component/motion-header-musi
 import { CaretLeft, Play, Shuffle } from "phosphor-react";
 import { motion } from "framer-motion";
 import { useAudio } from "@/components/music-provider";
-import { IMusic } from "@/app/[locale]/features/profile /types/music";
-import { Footer } from "@/app/[locale]/features/profile /footer";
+import { IMusic } from "@/app/[locale]/features/profile/types/music";
+import { Footer } from "@/app/[locale]/features/profile/footer";
 import Link from "next/link";
 
 export default function LibraryFavoriteSongsPage() {

@@ -10,7 +10,7 @@ import { SpeakerHigh } from "@phosphor-icons/react/dist/ssr";
 
 const RatingButton = dynamic(
   () =>
-    import("@/app/[locale]/features/profile /components/rating-button").then(
+    import("@/app/[locale]/features/profile/components/rating-button").then(
       (res) => res.RatingButton
     ),
   {

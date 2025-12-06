@@ -1,4 +1,4 @@
-import { IMusic } from "@/app/[locale]/features/profile /types/music";
+import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 import { RecentAuidoListClient } from "./recent-audio-list-client";
 import clientPromise from "@/lib/mongodb";

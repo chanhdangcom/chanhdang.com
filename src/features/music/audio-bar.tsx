@@ -21,7 +21,7 @@ import {
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PlayerPage } from "./player-page";
-import { useOutsideClick } from "@/app/[locale]/features/profile /hook/use-outside-click";
+import { useOutsideClick } from "@/app/[locale]/features/profile/hook/use-outside-click";
 import { useAudio } from "@/components/music-provider";
 import { BorderPro } from "./component/border-pro";
 

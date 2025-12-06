@@ -10,9 +10,9 @@ import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { TabInstall } from "./component/tab-install";
 import { TabGroup, TabPanel } from "./component/tab-group";
 import { Button } from "@/components/button-new";
-import { Header } from "../profile /header";
-import { Footer } from "../profile /footer";
-import { Hello } from "../profile /components/hello";
+import { Header } from "../profile/header";
+import { Footer } from "../profile/footer";
+import { Hello } from "../profile/components/hello";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const components: any = {

@@ -1,6 +1,6 @@
 "use client";
 
-import { IMusic } from "@/app/[locale]/features/profile /types/music";
+import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { AuidoItem } from "./component/audio-item";
 import { useAudio } from "@/components/music-provider";
 

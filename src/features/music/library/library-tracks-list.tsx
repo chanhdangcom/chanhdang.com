@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAudio } from "@/components/music-provider";
 import { motion } from "framer-motion";
-import { IMusic } from "@/app/[locale]/features/profile /types/music";
+import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { AudioItemOrder } from "../component/audio-item-order";
 
 interface LibraryTracksListProps {

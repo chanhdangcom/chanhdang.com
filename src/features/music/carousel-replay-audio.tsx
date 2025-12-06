@@ -8,7 +8,7 @@ import { useAudio } from "@/components/music-provider";
 
 import Image from "next/image";
 import { CaretLeft, CaretRight } from "@phosphor-icons/react/dist/ssr";
-import { MUSICS } from "@/app/[locale]/features/profile /data/music";
+import { MUSICS } from "@/app/[locale]/features/profile/data/music";
 
 export function CarouselReplayAudio() {
   const { handlePlayAudio } = useAudio();

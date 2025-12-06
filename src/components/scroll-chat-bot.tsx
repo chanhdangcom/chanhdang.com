@@ -1,5 +1,5 @@
 "use client";
-import { ChatBox } from "@/app/[locale]/features/profile /components/chat-box";
+import { ChatBox } from "@/app/[locale]/features/profile/components/chat-box";
 import Image from "next/image";
 
 export const ScrollChatBot = () => {

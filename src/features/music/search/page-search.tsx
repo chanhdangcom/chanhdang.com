@@ -1,4 +1,4 @@
-import { Footer } from "@/app/[locale]/features/profile /footer";
+import { Footer } from "@/app/[locale]/features/profile/footer";
 import { AudioBar } from "../audio-bar";
 import { MenuBarMobile } from "../menu-bar-mobile";
 import { HeaderMusicPage } from "../header-music-page";

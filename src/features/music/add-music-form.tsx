@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { HeaderMusicPage } from "./header-music-page";
 import { Button } from "@/components/ui/button";
 import { MotionHeaderMusic } from "./component/motion-header-music";
-import { Footer } from "@/app/[locale]/features/profile /footer";
+import { Footer } from "@/app/[locale]/features/profile/footer";
 import { ISingerItem } from "./type/singer";
 
 export default function AddMusicForm() {

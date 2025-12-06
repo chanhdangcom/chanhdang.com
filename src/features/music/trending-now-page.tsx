@@ -4,9 +4,9 @@ import { MotionHeaderMusic } from "./component/motion-header-music";
 import { HeaderMusicPage } from "./header-music-page";
 import { MenuBar } from "./menu-bar";
 import { MenuBarMobile } from "./menu-bar-mobile";
-import { IMusic } from "@/app/[locale]/features/profile /types/music";
+import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { TrendingNowList } from "./trending-now-list";
-import { Footer } from "@/app/[locale]/features/profile /footer";
+import { Footer } from "@/app/[locale]/features/profile/footer";
 
 export async function TrendingNowPage() {
   try {

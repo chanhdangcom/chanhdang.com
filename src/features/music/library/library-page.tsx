@@ -9,7 +9,7 @@ import Link from "next/link";
 import { LibraryPlaylistsList } from "@/features/music/library/library-playlists-list";
 import { MotionHeaderMusic } from "@/features/music/component/motion-header-music";
 import { Input } from "@/components/ui/input";
-import { Footer } from "@/app/[locale]/features/profile /footer";
+import { Footer } from "@/app/[locale]/features/profile/footer";
 import { CaretLeft } from "phosphor-react";
 
 export function LibraryPage() {

@@ -2,7 +2,7 @@ import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { notFound } from "next/navigation";
 import { IPlaylistItem } from "@/features/music/type/playlist";
-import { IMusic } from "@/app/[locale]/features/profile /types/music";
+import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { PlaylistDetailClient } from "@/features/music/playlist/playlist-detail-client";
 
 type Props = {
