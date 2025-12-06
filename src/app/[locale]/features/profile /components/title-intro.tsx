@@ -10,7 +10,7 @@ export function TitleIntro() {
       className="space-y-8 md:my-0"
     >
       <div>
-        <p className="pointer-events-none top-0 mx-4 font-mono text-xs text-zinc-500 md:mx-48">
+        <p className="pointer-events-none top-0 mx-4 font-mono text-xs text-zinc-500 md:mx-[15vw]">
           text-4xl font-semibold tracking-tight
         </p>
 
@@ -18,7 +18,7 @@ export function TitleIntro() {
 
         <h1
           id="profile-intro-heading"
-          className="mx-4 text-balance font-mono text-3xl font-semibold leading-tight tracking-tight md:mx-48 md:text-4xl"
+          className="mx-4 text-balance font-mono text-3xl font-semibold leading-tight tracking-tight md:mx-[15vw] md:text-4xl"
         >
           {t("titleintro.Title")}
         </h1>
@@ -29,7 +29,7 @@ export function TitleIntro() {
       <div>
         <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-900" />
 
-        <div className="mx-0 md:mx-48">
+        <div className="mx-0 md:mx-[15vw]">
           <TeckLish />
         </div>
 

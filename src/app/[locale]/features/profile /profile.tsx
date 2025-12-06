@@ -17,8 +17,8 @@ import { ProjectList } from "./project-list";
 export const Profile = () => {
   return (
     <div>
-      <div className="fixed left-0 h-screen w-px bg-zinc-200 dark:bg-zinc-900 md:left-48" />
-      <div className="fixed right-0 h-screen w-px bg-zinc-200 dark:bg-zinc-900 md:right-48" />
+      <div className="fixed left-0 h-screen w-px bg-zinc-200 dark:bg-zinc-900 md:left-[15vw]" />
+      <div className="fixed right-0 h-screen w-px bg-zinc-200 dark:bg-zinc-900 md:right-[15vw]" />
 
       <HeaderMotion />
 
@@ -26,7 +26,7 @@ export const Profile = () => {
 
       <ScrollChatBot />
 
-      <header className="mx-0 border border-zinc-300 p-2 dark:border-zinc-900 md:mx-48">
+      <header className="mx-0 border border-zinc-300 p-2 dark:border-zinc-900 md:mx-[15vw]">
         <Header />
       </header>
 
@@ -40,7 +40,7 @@ export const Profile = () => {
         <section aria-labelledby="overview-heading" className="mt-8">
           <div className="h-px w-full bg-zinc-200 dark:bg-zinc-900 md:top-0" />
 
-          <div className="mx-0 items-center justify-center md:mx-48 lg:flex">
+          <div className="mx-0 items-center justify-center md:mx-[15vw] lg:flex">
             <div className="w-full max-w-xl">
               <h2 id="overview-heading" className="sr-only">
                 Professional overview and contact details

@@ -3,7 +3,7 @@ import { GitHubHeatmap } from "@/components/github-heatmap";
 export function GitHubChart() {
   return (
     <section aria-labelledby="experience-heading">
-      <p className="top-0 mx-4 font-mono text-xs text-zinc-500 md:mx-48">
+      <p className="top-0 mx-4 font-mono text-xs text-zinc-500 md:mx-[15vw]">
         text-4xl text-balance font-mono
       </p>
 
@@ -11,7 +11,7 @@ export function GitHubChart() {
 
       <h2
         id="experience-heading"
-        className="mx-4 flex text-balance font-mono text-3xl font-semibold leading-tight tracking-tight md:mx-48 md:text-4xl"
+        className="mx-4 flex text-balance font-mono text-3xl font-semibold leading-tight tracking-tight md:mx-[15vw] md:text-4xl"
       >
         Github Contributions
       </h2>
@@ -21,7 +21,7 @@ export function GitHubChart() {
       <div className="my-8">
         <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-900" />
 
-        <div className="mx-0 md:mx-48">
+        <div className="mx-0 md:mx-[15vw]">
           <GitHubHeatmap />
         </div>
 

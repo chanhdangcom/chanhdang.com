@@ -1,14 +1,31 @@
 import { ChatbotPanel } from "@/components/chatbot/chatbot-panel";
+import type { Metadata } from "next";
 
-type ChatbotPageMetadata = {
-  title: string;
-  description: string;
-};
-
-export const metadata: ChatbotPageMetadata = {
-  title: "NCDangBot Chat | Chánh Đang",
+export const metadata: Metadata = {
+  title: "NCDangBot Chat | ChanhDang",
   description:
-    "Tương tác với chatbot cá nhân NCDangBot ngay trên chanhdang.com.",
+    "Tương tác với chatbot cá nhân NCDangBot ngay trên chanhdang.com. Chat với AI để tìm hiểu về portfolio, dự án, và kinh nghiệm của Chánh Đang.",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  openGraph: {
+    title: "NCDangBot Chat | ChanhDang",
+    description:
+      "Tương tác với chatbot cá nhân NCDangBot ngay trên chanhdang.com.",
+    url: "https://chanhdang.com/chatbot",
+    type: "website",
+  },
+  alternates: {
+    canonical: "https://chanhdang.com/chatbot",
+  },
 };
 
 export default function ChatbotPage() {

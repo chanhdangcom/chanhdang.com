@@ -11,7 +11,7 @@ export function ChanhdangMusicList() {
 
   return (
     <section aria-labelledby="music-heading" data-nosnippet>
-      <p className="top-0 mx-4 font-mono text-xs text-zinc-500 md:mx-48">
+      <p className="top-0 mx-4 font-mono text-xs text-zinc-500 md:mx-[15vw]">
         text-4xl tracking-tight font-mono
       </p>
 
@@ -19,7 +19,7 @@ export function ChanhdangMusicList() {
 
       <h2
         id="music-heading"
-        className="mx-4 flex text-balance font-mono text-3xl font-semibold leading-tight tracking-tight md:mx-48 md:text-4xl"
+        className="mx-4 flex text-balance font-mono text-3xl font-semibold leading-tight tracking-tight md:mx-[15vw] md:text-4xl"
       >
         ChanhDang Music
       </h2>
@@ -29,7 +29,7 @@ export function ChanhdangMusicList() {
       <div className="my-8">
         <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-900" />
 
-        <div className="mx-0 grid grid-cols-2 md:mx-48 md:grid-cols-5">
+        <div className="mx-0 grid grid-cols-2 md:mx-[15vw] md:grid-cols-5">
           {MUSICS.map((music, index) => {
             return (
               <div key={index} className="shrink-0 cursor-pointer">

@@ -3,9 +3,30 @@ import Link from "next/link";
 import { MUSICS } from "@/features/music/data/music-page";
 
 export const metadata: Metadata = {
-  title: "Search - Chánh Đang",
+  title: "Search - ChanhDang",
   description:
     "Search across portfolio pages, music playlists, and blog posts on chanhdang.com.",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  openGraph: {
+    title: "Search - Chanh Dang",
+    description:
+      "Search across portfolio pages, music playlists, and blog posts on chanhdang.com.",
+    url: "https://chanhdang.com/search",
+    type: "website",
+  },
+  alternates: {
+    canonical: "https://chanhdang.com/search",
+  },
 };
 
 const normalize = (value: string) =>

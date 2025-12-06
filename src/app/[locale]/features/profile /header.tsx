@@ -38,7 +38,7 @@ export const Header = () => {
         </Link>
 
         <div className="flex items-center gap-8">
-          <nav aria-label="Primary" className="hidden md:block">
+          <nav aria-label="Primary" className="hidden xl:block">
             <ul className="flex items-center gap-6 font-mono text-sm">
               <motion.li
                 whileHover={{ scale: 1.05 }}

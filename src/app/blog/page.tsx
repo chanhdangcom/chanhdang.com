@@ -8,6 +8,17 @@ export const metadata: Metadata = {
   title: "Blogs - ChanhDang Developer Blog",
   description:
     "Read articles about web development, design, technology insights, and programming tips from Chánh Đang - Full-stack Developer & Designer.",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
     title: "Blogs - ChanhDang Developer Blog",
     description:

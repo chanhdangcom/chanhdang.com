@@ -8,6 +8,17 @@ export const metadata: Metadata = {
   title: "Components - ChanhDang UI Component Library",
   description:
     "Browse reusable UI components and design system components for modern web applications. Open-source React components with clean design.",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
     title: "Components - ChanhDang UI Component Library",
     description:

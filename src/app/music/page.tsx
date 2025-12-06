@@ -3,11 +3,22 @@ import type { Metadata } from "next";
 import Script from "next/script";
 
 export const metadata: Metadata = {
-  title: "Musics - ChanhDang Music Platform",
+  title: "ChanhDang Music",
   description:
     "Explore music collection, playlists, and songs on ChanhDang Music platform. Discover new music and enjoy your favorite tracks.",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
-    title: "Musics - ChanhDang Music Platform",
+    title: "ChanhDang Music",
     description:
       "Explore music collection, playlists, and songs on ChanhDang Music platform.",
     url: "https://chanhdang.com/music",
@@ -21,7 +32,7 @@ export const metadata: Metadata = {
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  name: "Musics - ChanhDang Music Platform",
+  name: "ChanhDang Music",
   url: "https://chanhdang.com/music",
   description:
     "Explore music collection, playlists, and songs on ChanhDang Music platform.",

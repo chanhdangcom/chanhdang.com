@@ -1,6 +1,7 @@
 // import { BlogDetailsPageClient } from "@/features/blog/page-details-client";
 import { getPosts } from "@/api/blog/get-posts";
 import { BlogDetailsPageServer } from "@/features/blog/blog-details-page-server";
+import type { Metadata } from "next";
 
 // Next.js will invalidate the cache when a
 // request comes in, at most once every 60 minutes
@@ -22,6 +23,114 @@ type IPageProps = {
   params: Promise<{
     slug: string;
   }>;
+};
+
+export async function generateMetadata({
+  params,
+}: IPageProps): Promise<Metadata> {
+  const paramsData = await params;
+  const slug = paramsData.slug;
+
+  try {
+    const res = await fetch(
+      `https://api.quaric.com/api/articles/custom/${slug}`,
+      { next: { revalidate: 600 } }
+    );
+
+    if (!res.ok) {
+      return {
+        title: "Blog Post - ChanhDang Developer Blog",
+        description:
+          "Read articles about web development, design, and technology insights.",
+        robots: {
+          index: true,
+          follow: true,
+        },
+      };
+    }
+
+    const jsonData = (await res.json()) as { data: IPost | null };
+    const post = jsonData.data;
+
+    if (!post) {
+      return {
+        title: "Blog Post - ChanhDang Developer Blog",
+        description:
+          "Read articles about web development, design, and technology insights.",
+        robots: {
+          index: true,
+          follow: true,
+        },
+      };
+    }
+
+    const title = `${post.title} - ChanhDang Developer Blog`;
+    const description =
+      post.description ||
+      "Read articles about web development, design, and technology insights.";
+
+    return {
+      title,
+      description,
+      robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          "max-image-preview": "large",
+          "max-snippet": -1,
+          "max-video-preview": -1,
+        },
+      },
+      openGraph: {
+        title,
+        description,
+        url: `https://chanhdang.com/blog/${slug}`,
+        type: "article",
+        publishedTime: post.createdAt,
+        images: post.cover?.formats?.medium?.url
+          ? [
+              {
+                url: post.cover.formats.medium.url,
+                width: post.cover.formats.medium.width,
+                height: post.cover.formats.medium.height,
+                alt: post.title,
+              },
+            ]
+          : undefined,
+      },
+      alternates: {
+        canonical: `https://chanhdang.com/blog/${slug}`,
+      },
+    };
+  } catch (error) {
+    return {
+      title: "Blog Post - ChanhDang Developer Blog",
+      description:
+        "Read articles about web development, design, and technology insights.",
+      robots: {
+        index: true,
+        follow: true,
+      },
+    };
+  }
+}
+
+type IPost = {
+  title: string;
+  description: string;
+  createdAt: string;
+  slug: string;
+  cover?: {
+    formats?: {
+      medium?: {
+        url: string;
+        width: number;
+        height: number;
+      };
+    };
+  };
 };
 
 export default async function Page({ params }: IPageProps) {
