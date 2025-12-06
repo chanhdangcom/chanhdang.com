@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Components - ChanhDang UI Component Library",
   description:
     "Browse reusable UI components and design system components for modern web applications. Open-source React components with clean design.",
+  applicationName: "ChanhDang",
   robots: {
     index: true,
     follow: true,
@@ -24,10 +25,34 @@ export const metadata: Metadata = {
     description:
       "Browse reusable UI components and design system components for modern web applications.",
     url: "https://chanhdang.com/components",
+    siteName: "ChanhDang",
+    images: [
+      {
+        url: "https://cdn.chanhdang.com/ncdang_cover_2.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Components - ChanhDang UI Component Library",
+      },
+    ],
+    locale: "en_US",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Components - ChanhDang UI Component Library",
+    description:
+      "Browse reusable UI components and design system components for modern web applications.",
+    creator: "@chanhdang",
+    site: "https://chanhdang.com",
+    images: ["https://cdn.chanhdang.com/ncdang_cover_2.jpg"],
+  },
+  metadataBase: new URL("https://chanhdang.com"),
   alternates: {
     canonical: "https://chanhdang.com/components",
+    languages: {
+      en: "https://chanhdang.com/en",
+      vi: "https://chanhdang.com/vi",
+    },
   },
 };
 

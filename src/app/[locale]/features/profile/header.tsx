@@ -44,7 +44,7 @@ export const Header = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Link href="/" className="hover:underline">
+                <Link href={"/"} className="hover:underline">
                   Daifolio
                 </Link>
               </motion.li>
@@ -53,7 +53,7 @@ export const Header = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Link href="/music" className="hover:underline">
+                <Link href={"/music"} className="hover:underline">
                   Musics
                 </Link>
               </motion.li>
@@ -62,7 +62,7 @@ export const Header = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Link href="/blog" className="hover:underline">
+                <Link href={"/blog"} className="hover:underline">
                   Blogs
                 </Link>
               </motion.li>
@@ -71,7 +71,7 @@ export const Header = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Link href="/" className="hover:underline">
+                <Link href={"/"} className="hover:underline">
                   Projects
                 </Link>
               </motion.li>
@@ -80,7 +80,7 @@ export const Header = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Link href="/components" className="hover:underline">
+                <Link href={"/components"} className="hover:underline">
                   Components
                 </Link>
               </motion.li>

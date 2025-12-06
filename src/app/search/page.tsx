@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Search - ChanhDang",
   description:
     "Search across portfolio pages, music playlists, and blog posts on chanhdang.com.",
+  applicationName: "ChanhDang",
   robots: {
     index: true,
     follow: true,
@@ -22,10 +23,34 @@ export const metadata: Metadata = {
     description:
       "Search across portfolio pages, music playlists, and blog posts on chanhdang.com.",
     url: "https://chanhdang.com/search",
+    siteName: "ChanhDang",
+    images: [
+      {
+        url: "https://cdn.chanhdang.com/ncdang_cover_2.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Search - ChanhDang",
+      },
+    ],
+    locale: "en_US",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Search - Chanh Dang",
+    description:
+      "Search across portfolio pages, music playlists, and blog posts on chanhdang.com.",
+    creator: "@chanhdang",
+    site: "https://chanhdang.com",
+    images: ["https://cdn.chanhdang.com/ncdang_cover_2.jpg"],
+  },
+  metadataBase: new URL("https://chanhdang.com"),
   alternates: {
     canonical: "https://chanhdang.com/search",
+    languages: {
+      en: "https://chanhdang.com/en",
+      vi: "https://chanhdang.com/vi",
+    },
   },
 };
 

@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Blogs - ChanhDang Developer Blog",
   description:
     "Read articles about web development, design, technology insights, and programming tips from Chánh Đang - Full-stack Developer & Designer.",
+  applicationName: "ChanhDang",
   robots: {
     index: true,
     follow: true,
@@ -24,10 +25,34 @@ export const metadata: Metadata = {
     description:
       "Read articles about web development, design, and technology insights.",
     url: "https://chanhdang.com/blog",
+    siteName: "ChanhDang",
+    images: [
+      {
+        url: "https://cdn.chanhdang.com/ncdang_cover_2.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Blogs - ChanhDang Developer Blog",
+      },
+    ],
+    locale: "en_US",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blogs - ChanhDang Developer Blog",
+    description:
+      "Read articles about web development, design, and technology insights.",
+    creator: "@chanhdang",
+    site: "https://chanhdang.com",
+    images: ["https://cdn.chanhdang.com/ncdang_cover_2.jpg"],
+  },
+  metadataBase: new URL("https://chanhdang.com"),
   alternates: {
     canonical: "https://chanhdang.com/blog",
+    languages: {
+      en: "https://chanhdang.com/en",
+      vi: "https://chanhdang.com/vi",
+    },
   },
 };
 

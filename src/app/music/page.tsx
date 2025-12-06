@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "ChanhDang Music",
   description:
     "Explore music collection, playlists, and songs on ChanhDang Music platform. Discover new music and enjoy your favorite tracks.",
+  applicationName: "ChanhDang",
   robots: {
     index: true,
     follow: true,
@@ -22,10 +23,34 @@ export const metadata: Metadata = {
     description:
       "Explore music collection, playlists, and songs on ChanhDang Music platform.",
     url: "https://chanhdang.com/music",
+    siteName: "ChanhDang",
+    images: [
+      {
+        url: "https://cdn.chanhdang.com/ncdang_cover_2.jpg",
+        width: 1200,
+        height: 630,
+        alt: "ChanhDang Music",
+      },
+    ],
+    locale: "en_US",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "ChanhDang Music",
+    description:
+      "Explore music collection, playlists, and songs on ChanhDang Music platform.",
+    creator: "@chanhdang",
+    site: "https://chanhdang.com",
+    images: ["https://cdn.chanhdang.com/ncdang_cover_2.jpg"],
+  },
+  metadataBase: new URL("https://chanhdang.com"),
   alternates: {
     canonical: "https://chanhdang.com/music",
+    languages: {
+      en: "https://chanhdang.com/en",
+      vi: "https://chanhdang.com/vi",
+    },
   },
 };
 
