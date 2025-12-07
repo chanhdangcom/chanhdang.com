@@ -5,14 +5,16 @@ import { CardSpotlight } from "./ui/card-spotlight";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 import { useState } from "react";
+import { useParams } from "next/navigation";
 
 export function BlogListItem({ post }: { post: IPost }) {
   const [isHover, setIsHover] = useState<boolean>(false);
+  const { locale } = useParams();
 
   return (
     <Link
       key={post.documentId}
-      href={`/blog/${post.slug}`}
+      href={`/${locale}/blog/${post.slug}`}
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >

@@ -23,7 +23,9 @@ export const PostContent = ({ post }: IProps) => {
           <div className="text-sm">
             {new Date(post.createdAt).toLocaleDateString("vi-VN")}
           </div>
+
           <h1>{post.title}</h1>
+
           <StrapiBlocksRenderer contentBlocks={post.content_blocks} />
         </div>
       </div>

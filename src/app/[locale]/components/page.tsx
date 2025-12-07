@@ -1,6 +1,6 @@
-import { ComponentList } from "../[locale]/features/profile/component-list";
-import { Footer } from "../[locale]/features/profile/footer";
-import { Header } from "../[locale]/features/profile/header";
+import { ComponentList } from "../features/profile/component-list";
+import { Footer } from "../features/profile/footer";
+import { Header } from "../features/profile/header";
 import type { Metadata } from "next";
 import Script from "next/script";
 

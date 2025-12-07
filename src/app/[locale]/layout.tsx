@@ -6,7 +6,7 @@ import { cn } from "@/utils/cn";
 
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { Providers } from "../Providers";
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 // i18n provider is set in app/[locale]/layout.tsx
@@ -142,6 +142,7 @@ export default async function RootLayout({
   }
 
   setRequestLocale(locale);
+  const messages = await getMessages();
 
   const baseUrl = "https://chanhdang.com";
   const localeUrl = `${baseUrl}/${locale}`;
@@ -298,7 +299,7 @@ export default async function RootLayout({
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
-        <NextIntlClientProvider>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <Providers>{children}</Providers>
         </NextIntlClientProvider>
       </body>

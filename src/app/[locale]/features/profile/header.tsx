@@ -8,11 +8,14 @@ import { useTheme } from "next-themes";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ChatBox } from "./components/chat-box";
 import { motion } from "framer-motion";
+import { useParams } from "next/navigation";
 
 export const Header = () => {
   const { theme } = useTheme();
 
   const [mounted, setMounted] = useState(false);
+
+  const { locale } = useParams();
 
   useEffect(() => setMounted(true), []);
 
@@ -53,7 +56,7 @@ export const Header = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Link href={"/music"} className="hover:underline">
+                <Link href={`${locale}/music`} className="hover:underline">
                   Musics
                 </Link>
               </motion.li>
@@ -62,7 +65,7 @@ export const Header = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Link href={"/blog"} className="hover:underline">
+                <Link href={`${locale}/blog`} className="hover:underline">
                   Blogs
                 </Link>
               </motion.li>
@@ -80,7 +83,7 @@ export const Header = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Link href={"/components"} className="hover:underline">
+                <Link href={`${locale}/components`} className="hover:underline">
                   Components
                 </Link>
               </motion.li>

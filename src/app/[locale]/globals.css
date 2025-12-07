@@ -2,58 +2,244 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
-
-/* body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-} */
-
+/* ===========================================================================
+   CSS Variables & Base Configuration
+   ============================================================================ */
 @layer base {
-  body {
-    @apply bg-zinc-50 font-body text-zinc-950 antialiased dark:bg-[#030610] dark:text-zinc-50;
-  }
   :root {
+    /* Design tokens */
     --radius: 0.5rem;
+    --expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+    
+    /* Animation durations */
+    --duration-fast: 150ms;
+    --duration-normal: 300ms;
+    --duration-slow: 500ms;
+    --duration-slower: 700ms;
+    
+    /* Easing functions */
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  }
+
+  /* ========================================================================
+     Base Styles
+     ======================================================================== */
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-zinc-50 font-body text-zinc-950 antialiased dark:bg-black dark:text-zinc-50;
+    min-height: 100vh;
+    overscroll-behavior-y: none;
+  }
+
+  /* Selection styles */
+  ::selection {
+    @apply bg-zinc-900/20 dark:bg-zinc-100/20;
+  }
+
+  /* Focus styles for accessibility */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-zinc-900 dark:outline-zinc-100;
+    outline-style: solid;
   }
 }
 
-/* Ẩn scrollbar cho tất cả các trình duyệt */
+/* ============================================================================
+   Scrollbar Utilities
+   ============================================================================ */
 @layer utilities {
-  /* Webkit browsers (Chrome, Safari, Edge) */
+  /* Hide scrollbar utility class */
   .scrollbar-hide {
-    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    -ms-overflow-style: none; /* IE 10+ */
     scrollbar-width: none; /* Firefox */
   }
-
+  
   .scrollbar-hide::-webkit-scrollbar {
-    display: none; /* Safari and Chrome */
+    display: none; /* Chrome, Safari, Edge */
   }
 
-  /* Ẩn scrollbar cho toàn bộ trang */
+  /* Global scrollbar removal */
   html {
     scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    -ms-overflow-style: none; /* IE 10+ */
   }
-
+  
   html::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Edge */
   }
 
   body {
     scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    -ms-overflow-style: none; /* IE 10+ */
   }
-
+  
   body::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Edge */
+  }
+}
+
+/* ============================================================================
+   Scroll Fade Utility
+   ============================================================================ */
+@layer utilities {
+  .scroll-fade-y {
+    position: relative;
+    overflow-y: auto;
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      black 20px,
+      black calc(100% - 20px),
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      black 20px,
+      black calc(100% - 20px),
+      transparent 100%
+    );
+  }
+
+  /* Alternative approach using pseudo-elements (for better browser support) */
+  .scroll-fade-y-alt {
+    position: relative;
+    overflow-y: auto;
+  }
+
+  .scroll-fade-y-alt::before,
+  .scroll-fade-y-alt::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 40px;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .scroll-fade-y-alt::before {
+    top: 0;
+    background: linear-gradient(
+      to bottom,
+      rgb(244 244 245 / 1),
+      rgb(244 244 245 / 0)
+    );
+  }
+
+  .scroll-fade-y-alt::after {
+    bottom: 0;
+    background: linear-gradient(
+      to top,
+      rgb(244 244 245 / 1),
+      rgb(244 244 245 / 0)
+    );
+  }
+
+  /* Dark mode gradients for alt approach */
+  .dark .scroll-fade-y-alt::before {
+    background: linear-gradient(
+      to bottom,
+      rgb(24 24 27 / 1),
+      rgb(24 24 27 / 0)
+    );
+  }
+
+  .dark .scroll-fade-y-alt::after {
+    background: linear-gradient(
+      to top,
+      rgb(24 24 27 / 1),
+      rgb(24 24 27 / 0)
+    );
+  }
+}
+
+@layer utilities {
+  /* Fade ở đầu trang toàn chiều rộng */
+  .page-top-fade {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 4rem; /* hoặc h-16 */
+    pointer-events: none;
+    z-index: 50;
+    background: linear-gradient(
+      to bottom,
+      rgb(244 244 245 / 1),
+      rgb(244 244 245 / 0)
+    );
+  }
+
+  .dark .page-top-fade {
+    background: linear-gradient(
+      to bottom,
+      rgb(24 24 27 / 1),
+      rgb(24 24 27 / 0)
+    );
+  }
+}
+
+/* ============================================================================
+   View Transitions (Theme Toggle)
+   ============================================================================ */
+html {
+  view-transition-name: root;
+}
+
+::view-transition-group(root) {
+  animation-duration: var(--duration-slower);
+  animation-timing-function: var(--expo-out);
+}
+
+::view-transition-new(root) {
+  animation-name: reveal-light;
+}
+
+::view-transition-old(root),
+.dark::view-transition-old(root) {
+  animation: none;
+  z-index: -1;
+}
+
+.dark::view-transition-new(root) {
+  animation-name: reveal-dark;
+}
+
+/* ============================================================================
+   Keyframe Animations
+   ============================================================================ */
+@keyframes reveal-dark {
+  from {
+    clip-path: polygon(50% -71%, -50% 71%, -50% 71%, 50% -71%);
+  }
+  to {
+    clip-path: polygon(50% -71%, -50% 71%, 50% 171%, 171% 50%);
+  }
+}
+
+@keyframes reveal-light {
+  from {
+    clip-path: polygon(171% 50%, 50% 171%, 50% 171%, 171% 50%);
+  }
+  to {
+    clip-path: polygon(171% 50%, 50% 171%, -50% 71%, 50% -71%);
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
   }
 }
 
@@ -83,4 +269,26 @@
 
 .animate-liquid-gradient {
   animation: moveGradient 12s ease-in-out infinite;
+}
+
+/* ============================================================================
+   Accessibility: Reduced Motion
+   ============================================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  ::view-transition-group(root),
+  ::view-transition-new(root),
+  ::view-transition-old(root),
+  .dark::view-transition-new(root),
+  .dark::view-transition-old(root) {
+    animation: none !important;
+  }
 }

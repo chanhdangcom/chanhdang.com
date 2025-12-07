@@ -1,6 +1,6 @@
-import { BlogListPage } from "../[locale]/features/profile/blog-list-page";
-import { Footer } from "../[locale]/features/profile/footer";
-import { Header } from "../[locale]/features/profile/header";
+import { BlogListPage } from "../features/profile/blog-list-page";
+import { Footer } from "../features/profile/footer";
+import { Header } from "../features/profile/header";
 import type { Metadata } from "next";
 import Script from "next/script";
 
@@ -92,20 +92,20 @@ export default function Page() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <div>
-        <div className="fixed left-0 h-screen w-px bg-zinc-200 dark:bg-zinc-900 md:left-48" />
-        <div className="fixed right-0 h-screen w-px bg-zinc-200 dark:bg-zinc-900 md:right-48" />
-        <div className="mx-0 border border-zinc-300 p-2 dark:border-zinc-900 md:mx-48">
+        <div className="fixed left-0 h-screen w-px bg-zinc-200 dark:bg-zinc-900 md:left-[15vw]" />
+        <div className="fixed right-0 h-screen w-px bg-zinc-200 dark:bg-zinc-900 md:right-[15vw]" />
+        <div className="mx-0 border border-zinc-300 p-2 dark:border-zinc-900 md:mx-[15vw]">
           <Header />
         </div>
 
         <div className="mt-6">
-          <div className="top-0 mx-4 font-mono text-xs text-zinc-500 md:mx-48">
+          <div className="top-0 mx-4 font-mono text-xs text-zinc-500 md:mx-[15vw]">
             text-4xl pb-8 pt-12
           </div>
 
           <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-900" />
 
-          <div className="mx-4 text-balance font-mono text-4xl font-semibold leading-tight tracking-tight md:mx-48">
+          <div className="mx-4 text-balance font-mono text-4xl font-semibold leading-tight tracking-tight md:mx-[15vw]">
             <div>Blogs</div>
           </div>
 
@@ -115,7 +115,7 @@ export default function Page() {
         <div className="mt-8">
           <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-900" />
 
-          <div className="md:mx-48">
+          <div className="md:mx-[15vw]">
             <BlogListPage />
           </div>
         </div>

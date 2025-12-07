@@ -105,6 +105,7 @@ export async function generateMetadata({
       },
     };
   } catch (error) {
+    console.error(error);
     return {
       title: "Blog Post - ChanhDang Developer Blog",
       description:
