@@ -1,21 +1,58 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import React from "react";
 import { IPost } from "./types";
 
 import { StrapiBlocksRenderer } from "@/components/strapi-blocks-renderer";
-import { Header } from "@/app/[locale]/features/profile/header";
 import { HeaderMotion } from "@/app/[locale]/features/profile/components/header-motion";
 import { ScrollHeaderPage } from "@/components/scroll-header-page";
 import { Footer } from "@/app/[locale]/features/profile/footer";
+import { ThemeToggle } from "@/components/theme-toggle";
+import Link from "next/link";
+import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
+import { useTheme } from "next-themes";
 
 type IProps = {
   post: IPost;
 };
 
 export const PostContent = ({ post }: IProps) => {
+  const { theme } = useTheme();
+
   return (
     <div className="mt-4">
-      <Header />
+      <div>
+        <>
+          <div className="flex items-center justify-between px-2" role="banner">
+            <Link href="/">
+              <ChanhdangLogotype />
+            </Link>
+
+            <div className="flex items-center gap-8">
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+
+                <Link
+                  href="https://github.com/chanhdangcom"
+                  target="_blank"
+                  className="rounded-full border border-zinc-300 p-1 dark:border-zinc-900"
+                >
+                  <img
+                    src={
+                      theme === "dark"
+                        ? "/img/tech-stack/github-mark-white.svg"
+                        : "/img/tech-stack/github-mark.svg"
+                    }
+                    alt="icon"
+                    className="size-6"
+                  />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </>
+      </div>
+
       <HeaderMotion />
 
       <div className="container mt-8">
