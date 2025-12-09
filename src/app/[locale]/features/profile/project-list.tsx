@@ -15,7 +15,7 @@ export function ProjectList() {
       >
         <div className="relative">
           Projects
-          <div className="absolute -right-6 top-0 text-xs">{"(4)"}</div>
+          <div className="absolute -right-6 top-0 text-xs">{"(5)"}</div>
         </div>
       </h2>
 

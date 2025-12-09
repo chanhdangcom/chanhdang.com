@@ -35,7 +35,7 @@ export async function NewCarouselAudio() {
       : [];
 
     return (
-      <div className="w-full rounded-3xl text-black dark:text-white md:max-h-full">
+      <div className="relative w-full rounded-3xl text-black dark:text-white md:max-h-full">
         <div className="flex justify-between">
           <Link
             href="/music/new-release"

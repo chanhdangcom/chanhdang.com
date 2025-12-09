@@ -10,10 +10,13 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { MagnifyingGlass } from "phosphor-react";
 import { LogoutButton } from "./component/logout-button";
 
 export function MenuBar() {
+  const params = useParams();
+  const locale = (params?.locale as string) || "vi";
   const { isAuthenticated } = useUser();
 
   return (
@@ -22,7 +25,7 @@ export function MenuBar() {
         <>
           <div className="space-y-2 text-base text-black dark:text-white">
             <div className="flex items-end gap-1">
-              <Link href={"/music"} className="flex cursor-pointer">
+              <Link href={`/${locale}/music`} className="flex cursor-pointer">
                 <ChanhdangLogotype className="w-40" />
 
                 <div className="my-4 flex text-sm font-semibold">Music</div>
@@ -40,7 +43,7 @@ export function MenuBar() {
                 // layoutId="Search"
                 className="gap-4"
               >
-                <Link href="/music/search">
+                <Link href={`/${locale}/music/search`}>
                   <div className="flex items-center gap-2 rounded-xl p-2">
                     <MagnifyingGlass
                       size={25}
@@ -60,7 +63,7 @@ export function MenuBar() {
 
             {isAuthenticated ? (
               <Link
-                href={"/music/add-music"}
+                href={`/${locale}/music/add-music`}
                 className="flex items-center gap-2 rounded-2xl p-2"
               >
                 <MusicNotesSimple
@@ -84,7 +87,7 @@ export function MenuBar() {
 
             {isAuthenticated ? (
               <Link
-                href={"/music/add-singer"}
+                href={`/${locale}/music/add-singer`}
                 className="flex items-center gap-2 rounded-2xl p-2"
               >
                 <MicrophoneStage
@@ -107,7 +110,7 @@ export function MenuBar() {
 
             {isAuthenticated ? (
               <Link
-                href={"/music/library"}
+                href={`/${locale}/music/library`}
                 className="flex items-center gap-2 rounded-2xl p-2"
               >
                 <BookBookmark

@@ -22,6 +22,8 @@ export function ProjectItem() {
         title="Library CTUM"
         img="/img/tech-stack/nextjs2-dark.svg"
       />
+
+      <ComponentListItem title="DaHuTha Web" img="/img/tech-stack/php.svg" />
     </div>
   );
 }

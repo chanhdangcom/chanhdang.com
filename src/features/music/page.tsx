@@ -59,7 +59,7 @@ export function MusicPage() {
             </div>
 
             <div className="my-4">
-              <SingerList home />
+              <SingerList />
             </div>
 
             <div className="md:ml-60">

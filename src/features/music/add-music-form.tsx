@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import { HeaderMusicPage } from "./header-music-page";
 import { Button } from "@/components/ui/button";
 import { MotionHeaderMusic } from "./component/motion-header-music";
@@ -7,6 +8,8 @@ import { Footer } from "@/app/[locale]/features/profile/footer";
 import { ISingerItem } from "./type/singer";
 
 export default function AddMusicForm() {
+  const params = useParams();
+  const locale = (params?.locale as string) || "vi";
   const [form, setForm] = useState({
     title: "",
     singer: "",
@@ -37,6 +40,20 @@ export default function AddMusicForm() {
     setMessage("");
     setIsLoading(true);
 
+    // Validate: nếu chọn ca sĩ có sẵn thì phải chọn một ca sĩ
+    if (useExistingSinger && !selectedSingerId) {
+      setMessage("Vui lòng chọn một ca sĩ từ danh sách!");
+      setIsLoading(false);
+      return;
+    }
+
+    // Validate: nếu không chọn ca sĩ có sẵn thì phải nhập tên ca sĩ
+    if (!useExistingSinger && !form.singer) {
+      setMessage("Vui lòng nhập tên ca sĩ!");
+      setIsLoading(false);
+      return;
+    }
+
     try {
       let audioUrl = form.audio;
       let coverUrl = form.cover;
@@ -45,9 +62,26 @@ export default function AddMusicForm() {
       if (file) {
         // 1. Lấy presigned URL
         const presignedRes = await fetch(
-          `/api/upload-music?fileName=${encodeURIComponent(file.name)}&contentType=${encodeURIComponent(file.type)}`
+          `/${locale}/api/upload-music?fileName=${encodeURIComponent(file.name)}&contentType=${encodeURIComponent(file.type)}`
         );
-        const { presignedUrl, publicUrl } = await presignedRes.json();
+
+        if (!presignedRes.ok) {
+          const errorData = await presignedRes.json().catch(() => ({}));
+          setMessage(
+            `Lỗi khi lấy presigned URL: ${errorData.error || "Unknown error"}`
+          );
+          setIsLoading(false);
+          return;
+        }
+
+        const presignedData = await presignedRes.json();
+        if (presignedData.error) {
+          setMessage(`Lỗi: ${presignedData.error}`);
+          setIsLoading(false);
+          return;
+        }
+
+        const { presignedUrl, publicUrl } = presignedData;
 
         // 2. Upload trực tiếp lên R2
         const uploadRes = await fetch(presignedUrl, {
@@ -59,7 +93,8 @@ export default function AddMusicForm() {
         if (uploadRes.ok) {
           audioUrl = publicUrl;
         } else {
-          setMessage("Upload mp3 thất bại!");
+          const errorText = await uploadRes.text();
+          setMessage(`Upload mp3 thất bại! ${errorText}`);
           setIsLoading(false);
           return;
         }
@@ -68,7 +103,7 @@ export default function AddMusicForm() {
       // Nếu có file ảnh, upload lên R2 trước
       if (imageFile) {
         const presignedRes = await fetch(
-          `/api/upload-music?fileName=${encodeURIComponent(imageFile.name)}&contentType=${encodeURIComponent(imageFile.type)}`
+          `/${locale}/api/upload-music?fileName=${encodeURIComponent(imageFile.name)}&contentType=${encodeURIComponent(imageFile.type)}`
         );
         const { presignedUrl, publicUrl } = await presignedRes.json();
 
@@ -91,7 +126,7 @@ export default function AddMusicForm() {
       let srtUrl = form.srt;
       if (srtFile) {
         const presignedRes = await fetch(
-          `/api/upload-music?fileName=${encodeURIComponent(srtFile.name)}&contentType=${encodeURIComponent(srtFile.type || "application/octet-stream")}`
+          `/${locale}/api/upload-music?fileName=${encodeURIComponent(srtFile.name)}&contentType=${encodeURIComponent(srtFile.type || "application/octet-stream")}`
         );
         const { presignedUrl, publicUrl } = await presignedRes.json();
         const uploadRes = await fetch(presignedUrl, {
@@ -114,7 +149,7 @@ export default function AddMusicForm() {
       let beatUrl = form.beat;
       if (beatFile) {
         const presignedRes = await fetch(
-          `/api/upload-music?fileName=${encodeURIComponent(beatFile.name)}&contentType=${encodeURIComponent(beatFile.type || "application/octet-stream")}`
+          `/${locale}/api/upload-music?fileName=${encodeURIComponent(beatFile.name)}&contentType=${encodeURIComponent(beatFile.type || "application/octet-stream")}`
         );
         const { presignedUrl, publicUrl } = await presignedRes.json();
         const uploadRes = await fetch(presignedUrl, {
@@ -131,6 +166,23 @@ export default function AddMusicForm() {
           setIsLoading(false);
           return;
         }
+      }
+
+      // Validate: Nếu chọn "Chọn ca sĩ có sẵn" thì phải chọn ca sĩ
+      if (
+        useExistingSinger &&
+        (!selectedSingerId || selectedSingerId.trim() === "")
+      ) {
+        setMessage("Vui lòng chọn ca sĩ từ danh sách!");
+        setIsLoading(false);
+        return;
+      }
+
+      // Validate: Nếu không chọn "Chọn ca sĩ có sẵn" thì phải nhập tên ca sĩ
+      if (!useExistingSinger && !form.singer.trim()) {
+        setMessage("Vui lòng nhập tên ca sĩ hoặc chọn ca sĩ có sẵn!");
+        setIsLoading(false);
+        return;
       }
 
       // Gửi thông tin bài hát
@@ -150,6 +202,8 @@ export default function AddMusicForm() {
           "Gửi lên API /api/singers/" + selectedSingerId + "/musics:",
           bodyData
         );
+        console.log("Selected singer ID:", selectedSingerId);
+
         res = await fetch(`/api/singers/${selectedSingerId}/musics`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -157,6 +211,13 @@ export default function AddMusicForm() {
         });
         data = await res.json();
         console.log("Kết quả trả về từ /api/singers/[id]/musics:", data);
+
+        // Kiểm tra nếu response không thành công
+        if (!res.ok) {
+          setMessage("Có lỗi xảy ra! " + (data.error || "Unknown error"));
+          setIsLoading(false);
+          return;
+        }
       } else {
         // Thêm vào collection musics như cũ
         console.log("Gửi lên API /api/musics:", bodyData);
@@ -167,6 +228,13 @@ export default function AddMusicForm() {
         });
         data = await res.json();
         console.log("Kết quả trả về từ /api/musics:", data);
+
+        // Kiểm tra nếu response không thành công
+        if (!res.ok) {
+          setMessage("Có lỗi xảy ra! " + (data.error || "Unknown error"));
+          setIsLoading(false);
+          return;
+        }
       }
 
       if (data.success) {
@@ -306,8 +374,12 @@ export default function AddMusicForm() {
                 {useExistingSinger ? (
                   <select
                     value={selectedSingerId}
-                    onChange={(e) => setSelectedSingerId(e.target.value)}
+                    onChange={(e) => {
+                      setSelectedSingerId(e.target.value);
+                      console.log("Selected singer ID:", e.target.value);
+                    }}
                     disabled={isLoading}
+                    required={useExistingSinger}
                     className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
                   >
                     <option value="">Chọn ca sĩ</option>
@@ -326,7 +398,7 @@ export default function AddMusicForm() {
                     placeholder="Nhập tên ca sĩ mới"
                     value={form.singer}
                     onChange={handleChange}
-                    required
+                    required={!useExistingSinger}
                     disabled={isLoading}
                     className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
                   />

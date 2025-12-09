@@ -2,11 +2,6 @@ import { ISingerItem } from "./type/singer";
 import { SingerListClient } from "./singler-list-client";
 import clientPromise from "@/lib/mongodb";
 
-type IProp = {
-  home?: boolean;
-  addPage?: boolean;
-};
-
 async function getSingers(): Promise<ISingerItem[]> {
   try {
     const client = await clientPromise;
@@ -44,8 +39,8 @@ async function getSingers(): Promise<ISingerItem[]> {
   }
 }
 
-export async function SingerList({ home, addPage }: IProp) {
+export async function SingerList() {
   const singers = await getSingers();
 
-  return <SingerListClient singers={singers} home={home} addPage={addPage} />;
+  return <SingerListClient singers={singers} />;
 }

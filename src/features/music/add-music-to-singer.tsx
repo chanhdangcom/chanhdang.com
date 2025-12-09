@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import { ISingerItem } from "./type/singer";
 // import { IMusic } from "@/app/[locale]/features/profile /types/music";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,8 @@ type IProp = {
 };
 
 export function AddMusicToSinger({ singerId }: IProp) {
+  const params = useParams();
+  const locale = (params?.locale as string) || "vi";
   const [singers, setSingers] = useState<ISingerItem[]>([]);
   const [selectedSingerId, setSelectedSingerId] = useState(singerId || "");
   // const [loading, setLoading] = useState(false);
@@ -43,7 +46,7 @@ export function AddMusicToSinger({ singerId }: IProp) {
 
   const fetchSingers = async () => {
     try {
-      const response = await fetch("/api/singers");
+      const response = await fetch(`/${locale}/api/singers`);
       const data = await response.json();
       setSingers(data);
     } catch (error) {
@@ -60,11 +63,14 @@ export function AddMusicToSinger({ singerId }: IProp) {
 
     setSubmitting(true);
     try {
-      const response = await fetch(`/api/singers/${selectedSingerId}/musics`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        `/${locale}/api/singers/${selectedSingerId}/musics`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (response.ok) {
         // const result = await response.json();

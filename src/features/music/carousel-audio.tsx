@@ -34,7 +34,6 @@ export default async function CarouselAudio() {
           .filter((m) => m.title && m.audio)
       : [];
 
-    // ✅ Render UI
     return (
       <div className="relative w-full rounded-3xl text-black dark:text-white md:max-h-full">
         <div className="flex justify-between">

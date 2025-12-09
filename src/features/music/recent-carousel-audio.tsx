@@ -27,7 +27,7 @@ export async function RecentCarouselAudio() {
     : [];
   return (
     <>
-      <div className="w-full rounded-3xl text-black dark:text-white md:max-h-full">
+      <div className="relative w-full rounded-3xl text-black dark:text-white md:max-h-full">
         <div className="flex justify-between">
           <h2 className="ml-2 flex items-center gap-1 px-1 text-xl font-bold text-black dark:text-white md:ml-[270px]">
             <div>Recently Played</div>

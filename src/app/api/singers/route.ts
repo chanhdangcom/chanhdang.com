@@ -7,7 +7,13 @@ export async function GET() {
     const client = await clientPromise;
     const db = client.db("musicdb");
     const singers = await db.collection("singers").find({}).toArray();
-    return NextResponse.json(singers);
+    // Chuyển đổi _id từ ObjectId sang string để đảm bảo tương thích
+    const singersWithStringId = singers.map((singer) => ({
+      ...singer,
+      _id: singer._id.toString(),
+      id: singer._id.toString(), // Thêm cả field id để tương thích
+    }));
+    return NextResponse.json(singersWithStringId);
   } catch (error) {
     console.error("MONGO ERROR:", error);
     return NextResponse.json(

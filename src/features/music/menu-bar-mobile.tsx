@@ -1,6 +1,7 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { Bookmarks, House, MagnifyingGlass } from "phosphor-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useUser } from "@/hooks/use-user";
@@ -10,6 +11,8 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 
 export function MenuBarMobile() {
+  const params = useParams();
+  const locale = (params?.locale as string) || "vi";
   const { isAuthenticated } = useUser();
   const [show, setShow] = useState(true);
   const lastScrollY = useRef(0);
@@ -101,7 +104,7 @@ export function MenuBarMobile() {
 
               {isAuthenticated ? (
                 <Link
-                  href={"/music/add-music"}
+                  href={`/${locale}/music/add-music`}
                   className="flex flex-col items-center"
                 >
                   <MusicNotesSimple size={30} weight="fill" />
@@ -116,7 +119,7 @@ export function MenuBarMobile() {
 
               {isAuthenticated ? (
                 <Link
-                  href={"/music/add-singer"}
+                  href={`/${locale}/music/add-singer`}
                   className="flex flex-col items-center"
                 >
                   <MicrophoneStage size={30} weight="fill" />
@@ -131,7 +134,7 @@ export function MenuBarMobile() {
 
               {isAuthenticated ? (
                 <Link
-                  href={"/music/library"}
+                  href={`/${locale}/music/library`}
                   className="flex flex-col items-center"
                 >
                   <div className="flex flex-col items-center">
@@ -178,7 +181,7 @@ export function MenuBarMobile() {
             }}
             className="mr-4 rounded-full border border-white/20 bg-zinc-200/80 p-4 dark:bg-black/90"
           >
-            <Link href={"/music/search"}>
+            <Link href={`/${locale}/music/search`}>
               <MagnifyingGlass
                 size={28}
                 weight="bold"
@@ -196,7 +199,7 @@ export function MenuBarMobile() {
             }}
             className="mr-2 rounded-full border border-white/20 bg-zinc-200/80 p-4 dark:bg-black/90"
           >
-            <Link href={"/music/search"}>
+            <Link href={`/${locale}/music/search`}>
               <MagnifyingGlass
                 size={28}
                 weight="bold"

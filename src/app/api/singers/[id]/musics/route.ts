@@ -5,11 +5,11 @@ import { ObjectId } from "mongodb";
 // Lấy danh sách nhạc của ca sĩ
 export async function GET(
   request: Request,
-  context: unknown
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { params } = context as { params: { id: string } };
-    const { id } = params;
+    const { params } = context;
+    const { id } = await params;
     
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
@@ -46,11 +46,11 @@ export async function GET(
 // Thêm nhạc vào ca sĩ
 export async function POST(
   request: Request,
-  context: unknown
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { params } = context as { params: { id: string } };
-    const { id } = params;
+    const { params } = context;
+    const { id } = await params;
     const body = await request.json();
 
     if (!ObjectId.isValid(id)) {
