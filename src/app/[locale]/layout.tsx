@@ -43,8 +43,8 @@ export async function generateMetadata({
     ? "Chánh Đang - Developer & Designer"
     : "Chánh Đang - Developer & Designer";
   const description = isEnglish
-    ? "Full-stack developer specialized in building modern websites and mobile applications with clean design, performance, and creativity."
-    : "Full-stack developer chuyên xây dựng website và ứng dụng di động hiện đại với thiết kế sạch sẽ, hiệu suất cao và sáng tạo.";
+    ? "Full-stack developer and designer. Explore my portfolio, music platform, blog articles, and UI components. Building modern websites and mobile applications with clean design, performance, and creativity."
+    : "Full-stack developer và designer. Khám phá portfolio, nền tảng âm nhạc, blog và UI components của tôi. Xây dựng website và ứng dụng di động hiện đại với thiết kế sạch sẽ, hiệu suất cao và sáng tạo.";
 
   return {
     title,
@@ -227,6 +227,50 @@ export default async function RootLayout({
       ? "Portfolio, blog, and music platform by full-stack developer and designer Chánh Đang."
       : "Portfolio, blog và nền tảng âm nhạc của full-stack developer và designer Chánh Đang.",
     inLanguage: locale,
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          item: {
+            "@type": "WebPage",
+            "@id": `${baseUrl}/music`,
+            name: isEnglish ? "Music" : "Âm nhạc",
+            description: isEnglish
+              ? "Music platform featuring songs, playlists, and music library by ChanhDang Music"
+              : "Nền tảng âm nhạc với các bài hát, playlist và thư viện nhạc của ChanhDang Music",
+            url: `${baseUrl}/music`,
+          },
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          item: {
+            "@type": "WebPage",
+            "@id": `${baseUrl}/blog`,
+            name: isEnglish ? "Blog" : "Blog",
+            description: isEnglish
+              ? "Blog articles about web development, design, and technology insights"
+              : "Bài viết blog về phát triển web, thiết kế và những hiểu biết về công nghệ",
+            url: `${baseUrl}/blog`,
+          },
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          item: {
+            "@type": "WebPage",
+            "@id": `${baseUrl}/components`,
+            name: isEnglish ? "Components" : "Components",
+            description: isEnglish
+              ? "Reusable UI components and design system components for modern web applications"
+              : "Các component UI có thể tái sử dụng và component hệ thống thiết kế cho ứng dụng web hiện đại",
+            url: `${baseUrl}/components`,
+          },
+        },
+      ],
+    },
     potentialAction: [
       {
         "@type": "SearchAction",
