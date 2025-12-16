@@ -47,7 +47,7 @@ export function AudioItemOrder({
 
         <div className="flex-2 flex-1 flex-col border-b border-zinc-200 pb-2 text-black dark:border-zinc-900 dark:text-white">
           <div className="flex items-center justify-between">
-            <div className="">
+            <div className="w-40">
               <div className="flex items-center gap-1 text-sm font-semibold">
                 <span className="line-clamp-1">
                   {music.title || "TITLE SONG"}
@@ -59,17 +59,17 @@ export function AudioItemOrder({
               </div>
             </div>
 
-            <div className="flex items-center justify-between space-x-4 md:space-x-[10vw]">
-              {date && (
-                <div className="text-sm text-zinc-400">
-                  {new Date(date).toLocaleDateString("vi-VN")}
-                </div>
-              )}
+            {date && (
+              <div className="text-xs text-zinc-400">
+                {new Date(date).toLocaleDateString("vi-VN")}
+              </div>
+            )}
 
-              <div className="text-sm text-zinc-400">{duration || ""}</div>
+            {duration && (
+              <div className="text-sm text-zinc-400">{duration}</div>
+            )}
 
-              <div>{item}</div>
-            </div>
+            {item && <div>{item}</div>}
           </div>
         </div>
       </div>

@@ -6,7 +6,12 @@ import { MenuBarMobile } from "../menu-bar-mobile";
 import { AudioBar } from "../audio-bar";
 import { IPlaylistItem } from "../type/playlist";
 import { AudioItemOrder } from "../component/audio-item-order";
-import { CaretLeft, Play, Shuffle } from "@phosphor-icons/react/dist/ssr";
+import {
+  CaretLeft,
+  DotsThreeVertical,
+  Play,
+  Shuffle,
+} from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import Image from "next/image";
 import { Footer } from "@/app/[locale]/features/profile/footer";
@@ -14,6 +19,7 @@ import { HeaderMusicPage } from "../header-music-page";
 import { MotionHeaderMusic } from "../component/motion-header-music";
 import { LibraryPlaylistButton } from "../library/library-playlist-button";
 import { useUser } from "@/hooks/use-user";
+import { BorderPro } from "../component/border-pro";
 
 type Props = {
   playlist: IPlaylistItem;
@@ -66,7 +72,7 @@ export function PlaylistDetailClient({ playlist }: Props) {
     <div className="mt-2">
       <MotionHeaderMusic name={playlist.title} />
 
-      <div className="z-20 md:ml-[270px]">
+      <div className="z-20 hidden md:ml-[270px] md:block">
         <HeaderMusicPage name="Playlists" />
       </div>
 
@@ -91,24 +97,24 @@ export function PlaylistDetailClient({ playlist }: Props) {
 
           <div className="mx-4 mb-12 md:ml-[270px]">
             <div className="items-center gap-8 md:flex">
-              <Image
-                src={coverUrl}
-                alt={playlist.title || "Playlist cover"}
-                width={480}
-                height={480}
-                className="h-80 w-auto rounded-3xl object-cover"
-              />
+              <BorderPro roundedSize="rounded-3xl">
+                <Image
+                  src={coverUrl}
+                  alt={playlist.title || "Playlist cover"}
+                  width={480}
+                  height={480}
+                  className="h-80 w-auto rounded-3xl object-cover"
+                />
+              </BorderPro>
 
               <div className="mt-4 space-y-2 text-black dark:text-white">
-                <div>
-                  <div className="text-base text-zinc-500">
-                    {playlist.singer || "ChanhDang Music"}
-                  </div>
-
-                  <h1 className="text-5xl font-semibold md:text-8xl">
-                    {playlist.title || "Playlist"}
-                  </h1>
+                <div className="text-base text-zinc-500">
+                  {playlist.singer || "ChanhDang Music"}
                 </div>
+
+                <h1 className="text-5xl font-semibold md:text-8xl">
+                  {playlist.title || "Playlist"}
+                </h1>
               </div>
             </div>
 
@@ -158,6 +164,7 @@ export function PlaylistDetailClient({ playlist }: Props) {
                             ? new Date(music.createdAt as Date).toISOString()
                             : undefined
                         }
+                        item={<DotsThreeVertical size={20} weight="bold" />}
                       />
                     </div>
                   ))
