@@ -64,10 +64,10 @@ export function PlaylistDetailClient({ playlist }: Props) {
 
   return (
     <div className="mt-2">
-      <MotionHeaderMusic name="Playlist" />
+      <MotionHeaderMusic name={playlist.title} />
 
-      <div className="z-20 hidden md:ml-[270px] md:flex">
-        <HeaderMusicPage name="Playlist" />
+      <div className="z-20 md:ml-[270px]">
+        <HeaderMusicPage name="Playlists" />
       </div>
 
       <div className="font-apple md:flex">
@@ -90,73 +90,80 @@ export function PlaylistDetailClient({ playlist }: Props) {
           </div>
 
           <div className="mx-4 mb-12 md:ml-[270px]">
-            <div className="">
+            <div className="items-center gap-8 md:flex">
               <Image
                 src={coverUrl}
                 alt={playlist.title || "Playlist cover"}
                 width={480}
                 height={480}
-                className="mx-auto h-64 w-auto rounded-3xl object-cover md:h-96"
+                className="h-80 w-auto rounded-3xl object-cover"
               />
 
               <div className="mt-4 space-y-2 text-black dark:text-white">
-                <div className="left-4 top-4">
-                  <h1 className="text-3xl font-semibold md:text-4xl">
-                    {playlist.title || "Playlist"}
-                  </h1>
+                <div>
                   <div className="text-base text-zinc-500">
                     {playlist.singer || "ChanhDang Music"}
                   </div>
-                </div>
 
-                <div className="flex justify-between gap-4">
-                  <button
-                    onClick={handlePlayFirst}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 transition hover:scale-[1.02] dark:bg-zinc-900"
-                  >
-                    <Play size={20} weight="fill" />
-                    Play
-                  </button>
-
-                  <button
-                    onClick={handleShuffle}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 transition hover:scale-[1.02] dark:bg-zinc-900"
-                  >
-                    <Shuffle size={20} weight="fill" />
-                    Shuffle
-                  </button>
-
-                  <div className="flex flex-1 items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 transition hover:scale-[1.02] dark:bg-zinc-900">
-                    <LibraryPlaylistButton
-                      playlist={playlist}
-                      userId={user?.id}
-                      size="lg"
-                    />
-                    Favorite
-                  </div>
+                  <h1 className="text-5xl font-semibold md:text-8xl">
+                    {playlist.title || "Playlist"}
+                  </h1>
                 </div>
               </div>
             </div>
 
-            <div className="pointer-events-auto mt-8 flex-1 space-y-2">
-              {musics.length === 0 ? (
-                <div className="rounded-3xl border border-dashed border-zinc-300 p-8 text-center text-sm text-zinc-500 dark:border-zinc-800">
-                  Playlist chưa có bài hát nào.
-                </div>
-              ) : (
-                musics.map((music) => (
-                  <div
-                    key={music.id}
-                    className="rounded-2xl bg-transparent p-1"
-                  >
-                    <AudioItemOrder
-                      music={music}
-                      handlePlay={() => handlePlayAudio(music)}
-                    />
-                  </div>
-                ))
-              )}
+            <div className="mt-8 flex justify-between gap-4">
+              <button
+                onClick={handlePlayFirst}
+                className="flex flex-1 items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 transition hover:scale-[1.02] dark:bg-zinc-900"
+              >
+                <Play size={20} weight="fill" />
+                Play
+              </button>
+
+              <button
+                onClick={handleShuffle}
+                className="flex flex-1 items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 transition hover:scale-[1.02] dark:bg-zinc-900"
+              >
+                <Shuffle size={20} weight="fill" />
+                Shuffle
+              </button>
+
+              <div className="flex flex-1 items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 transition hover:scale-[1.02] dark:bg-zinc-900">
+                <LibraryPlaylistButton
+                  playlist={playlist}
+                  userId={user?.id}
+                  size="lg"
+                />
+              </div>
             </div>
+
+            <>
+              <div className="pointer-events-auto mt-8 flex-1 space-y-2">
+                {musics.length === 0 ? (
+                  <div className="rounded-3xl border border-dashed border-zinc-300 p-8 text-center text-sm text-zinc-500 dark:border-zinc-800">
+                    Playlist chưa có bài hát nào.
+                  </div>
+                ) : (
+                  musics.map((music) => (
+                    <div
+                      key={music.id}
+                      className="rounded-2xl bg-transparent p-1"
+                    >
+                      <AudioItemOrder
+                        music={music}
+                        handlePlay={() => handlePlayAudio(music)}
+                        date={
+                          music.createdAt
+                            ? new Date(music.createdAt as Date).toISOString()
+                            : undefined
+                        }
+                      />
+                    </div>
+                  ))
+                )}
+              </div>
+            </>
           </div>
 
           <div className="mb-40 md:ml-60">

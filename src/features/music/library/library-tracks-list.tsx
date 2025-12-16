@@ -5,6 +5,7 @@ import { useAudio } from "@/components/music-provider";
 import { motion } from "framer-motion";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { AudioItemOrder } from "../component/audio-item-order";
+import { DotsThreeVertical } from "@phosphor-icons/react/dist/ssr";
 
 interface LibraryTracksListProps {
   userId?: string;
@@ -83,6 +84,12 @@ export function LibraryTracksList({ userId }: LibraryTracksListProps) {
                         music={music}
                         handlePlay={() => handlePlayAudio(music)}
                         className="w-full"
+                        date={
+                          music.createdAt
+                            ? new Date(music.createdAt as Date).toISOString()
+                            : undefined
+                        }
+                        item={<DotsThreeVertical size={20} weight="bold" />}
                       />
                     </div>
                   </div>

@@ -40,6 +40,7 @@ async function getPlaylist(id: string): Promise<IPlaylistItem | null> {
         type: music.type ? String(music.type) : undefined,
         srt: music.srt ? String(music.srt) : undefined,
         beat: music.beat ? String(music.beat) : undefined,
+        createdAt: doc.createdAt ? new Date(doc.createdAt) : undefined,
       }))
     : [];
 

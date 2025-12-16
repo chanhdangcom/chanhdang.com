@@ -55,8 +55,8 @@ export function SingerPageClient({ singer }: IProp) {
             <AudioBar />
             <MenuBarMobile />
 
-            <div className="z-20 hidden md:ml-[270px] md:block">
-              <HeaderMusicPage name="Artists" />
+            <div className="z-20 mt-2 hidden md:ml-[270px] md:block">
+              <HeaderMusicPage name={singer.singer} />
             </div>
 
             <div>

@@ -11,9 +11,18 @@ type IProp = {
   className?: string;
   classNameOrder?: string;
   item?: React.ReactNode;
+  date?: string;
+  duration?: string;
 };
 
-export function AudioItemOrder({ music, handlePlay, className, item }: IProp) {
+export function AudioItemOrder({
+  music,
+  handlePlay,
+  className,
+  item,
+  date,
+  duration,
+}: IProp) {
   if (!music) {
     return <div className="text-red-500">Dữ liệu nhạc chưa sẵn sàng</div>;
   }
@@ -38,7 +47,7 @@ export function AudioItemOrder({ music, handlePlay, className, item }: IProp) {
 
         <div className="flex-2 flex-1 flex-col border-b border-zinc-200 pb-2 text-black dark:border-zinc-900 dark:text-white">
           <div className="flex items-center justify-between">
-            <div>
+            <div className="">
               <div className="flex items-center gap-1 text-sm font-semibold">
                 <span className="line-clamp-1">
                   {music.title || "TITLE SONG"}
@@ -50,8 +59,17 @@ export function AudioItemOrder({ music, handlePlay, className, item }: IProp) {
               </div>
             </div>
 
-            {/* <DotsThree size={20} weight="bold" /> */}
-            <div>{item}</div>
+            <div className="flex items-center justify-between space-x-4 md:space-x-[10vw]">
+              {date && (
+                <div className="text-sm text-zinc-400">
+                  {new Date(date).toLocaleDateString("vi-VN")}
+                </div>
+              )}
+
+              <div className="text-sm text-zinc-400">{duration || ""}</div>
+
+              <div>{item}</div>
+            </div>
           </div>
         </div>
       </div>

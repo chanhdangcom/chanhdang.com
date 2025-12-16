@@ -24,6 +24,9 @@ const normalizeEmbeddedMusic = (music: Record<string, unknown>) => {
     type: music.type ? String(music.type) : undefined,
     srt: music.srt ? String(music.srt) : undefined,
     beat: music.beat ? String(music.beat) : undefined,
+    addedAt: music.addedAt
+      ? new Date(music.addedAt as string | Date).toISOString()
+      : undefined,
   };
 };
 

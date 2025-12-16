@@ -9,4 +9,5 @@ export type IMusic = {
   type?: string;
   srt?: string;
   beat?: string;
+  createdAt?: Date;
 };

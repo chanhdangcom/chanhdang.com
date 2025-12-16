@@ -98,7 +98,7 @@ export function LibraryPlaylistButton({
       type="button"
       onClick={handleToggleLibrary}
       disabled={isLoading}
-      className={`rounded-full bg-zinc-900/60 p-2 backdrop-blur-sm transition-all duration-200 hover:scale-110 ${
+      className={`rounded-full p-2 backdrop-blur-sm transition-all duration-200 hover:scale-110 dark:bg-zinc-900/60 ${
         isInLibrary
           ? "text-red-500 hover:text-red-600"
           : "text-zinc-50 hover:text-red-500"

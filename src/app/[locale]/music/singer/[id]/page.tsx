@@ -47,6 +47,12 @@ async function getSinger(id: string): Promise<ISingerItem | null> {
           youtube: String(item.youtube ?? ""),
           content: String(item.content ?? ""),
           type: item.type ? String(item.type) : undefined,
+          createdAt:
+            item.createdAt instanceof Date
+              ? item.createdAt
+              : item.createdAt
+                ? new Date(item.createdAt as string)
+                : undefined,
         }))
       : [];
 

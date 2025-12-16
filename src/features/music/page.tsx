@@ -55,7 +55,7 @@ export function MusicPage() {
             </div>
 
             <div className="mt-4">
-              <TableRanking home />
+              <TableRanking />
             </div>
 
             <div className="my-4">
