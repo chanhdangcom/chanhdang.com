@@ -392,7 +392,7 @@ export function PlayerPage({ setIsClick }: IProp) {
     <AnimatePresence mode="wait">
       <motion.div
         layoutId="audio-bar"
-        className="fixed inset-0 z-50 flex justify-between space-y-4 px-4 md:rounded-3xl md:border-white/10"
+        className="fixed inset-0 z-50 flex justify-between space-y-4 px-4 md:z-50 md:rounded-3xl md:border-white/10"
       >
         <div className="w-full">
           <div className="absolute inset-0 -z-10 flex justify-center gap-8 bg-zinc-200 backdrop-blur-sm dark:bg-zinc-950">
