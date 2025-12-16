@@ -144,7 +144,7 @@ export function AudioBar() {
         ease: "easeIn",
         layout: { duration: 0.2, ease: "easeInOut" },
       }}
-      className={`fixed z-50 flex justify-center md:inset-x-96 md:bottom-4 ${
+      className={`fixed z-50 flex justify-center md:inset-x-[25vw] md:bottom-4 ${
         scroll ? "inset-x-2 bottom-[82px]" : "inset-x-20 bottom-6"
       }`}
     >
