@@ -139,7 +139,7 @@ export function SingerPageClient({ singer }: IProp) {
                 <img
                   src={singer.cover}
                   alt="cover"
-                  className="pointer-events-none absolute top-0 -z-10 h-1/3 w-[85vw] object-cover opacity-50 blur-3xl"
+                  className="pointer-events-none absolute top-0 -z-10 h-1/3 w-full object-cover opacity-50 blur-3xl md:w-[85vw]"
                 />
               </div>
             </div>
