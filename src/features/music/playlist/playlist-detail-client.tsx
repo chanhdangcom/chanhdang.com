@@ -142,6 +142,14 @@ export function PlaylistDetailClient({ playlist }: Props) {
                   size="lg"
                 />
               </div>
+
+              <div className="flex justify-end">
+                <img
+                  src={playlist.cover}
+                  alt="cover"
+                  className="pointer-events-none absolute top-0 -z-10 h-1/3 w-[85vw] object-cover opacity-50 blur-3xl"
+                />
+              </div>
             </div>
 
             <>

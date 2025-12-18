@@ -45,7 +45,7 @@ export function SingerPageClient({ singer }: IProp) {
 
   return (
     <>
-      <div className="md:flex">
+      <div className="bg-hoverBg md:flex">
         <MenuBar />
 
         <MotionHeaderMusic name={singer.singer} />
@@ -133,6 +133,14 @@ export function SingerPageClient({ singer }: IProp) {
                     </div>
                   </div>
                 </div>
+              </div>
+
+              <div className="flex justify-end">
+                <img
+                  src={singer.cover}
+                  alt="cover"
+                  className="pointer-events-none absolute top-0 -z-10 h-1/3 w-[85vw] object-cover opacity-50 blur-3xl"
+                />
               </div>
             </div>
 
