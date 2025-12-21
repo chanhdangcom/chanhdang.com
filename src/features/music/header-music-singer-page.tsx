@@ -12,15 +12,20 @@ import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 export const HeaderMusicSingerPage = () => {
+  const params = useParams();
+  const locale = (params?.locale as string) || "en";
+  const withLocale = (path: string) => `/${locale}${path}`;
+
   return (
     <div className="container sticky inset-0 top-0 z-10 pb-2">
       <Progress className="w-[60%]" value={33} />
 
       <div className="space-y-4 md:hidden">
         <div className="flex items-center justify-between">
-          <Link href="/music">
+          <Link href={withLocale("/music")}>
             <ChanhdangLogotype />
           </Link>
           <AnimatePresence>
@@ -34,7 +39,7 @@ export const HeaderMusicSingerPage = () => {
               layoutId="Search"
               className="flex gap-4 text-zinc-500"
             >
-              <Link href="/music/search">
+              <Link href={withLocale("/music/search")}>
                 <MagnifyingGlass size={25} />
               </Link>
             </motion.div>

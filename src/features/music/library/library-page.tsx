@@ -6,6 +6,7 @@ import { MenuBar } from "@/features/music/menu-bar";
 import { MenuBarMobile } from "@/features/music/menu-bar-mobile";
 import { AudioBar } from "@/features/music/audio-bar";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { LibraryPlaylistsList } from "@/features/music/library/library-playlists-list";
 import { MotionHeaderMusic } from "@/features/music/component/motion-header-music";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,9 @@ import { CaretLeft } from "phosphor-react";
 
 export function LibraryPage() {
   const { user } = useUser();
+  const params = useParams();
+  const locale = (params?.locale as string) || "en";
+  const withLocale = (path: string) => `/${locale}${path}`;
 
   return (
     <div className="flex font-apple">
@@ -30,7 +34,7 @@ export function LibraryPage() {
           </div>
 
           <div className="sticky top-0 z-10 m-4 flex items-center gap-1 md:hidden">
-            <Link href="/music">
+            <Link href={withLocale("/music")}>
               <div className="pointer-events-auto rounded-full bg-zinc-200 p-2 dark:bg-zinc-900">
                 <CaretLeft
                   size={28}
@@ -42,7 +46,7 @@ export function LibraryPage() {
           </div>
 
           <div className="mx-4 md:ml-[270px]">
-            <Link href={"/music/search"} className="">
+            <Link href={withLocale("/music/search")} className="">
               <Input
                 type="text"
                 placeholder="Music, Playlist ..."
@@ -54,7 +58,10 @@ export function LibraryPage() {
           <div className="mx-4 md:ml-[270px]">
             <div className="gap-4 md:flex">
               <div className="space-y-2">
-                <Link href="/music/library/favorites" className=" ">
+                <Link
+                  href={withLocale("/music/library/favorites")}
+                  className=" "
+                >
                   <img
                     src="/img/favorites-icon.jpg"
                     alt="favorites"

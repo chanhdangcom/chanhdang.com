@@ -13,6 +13,7 @@ import {
   Shuffle,
 } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Footer } from "@/app/[locale]/features/profile/footer";
 import { HeaderMusicPage } from "../header-music-page";
@@ -28,6 +29,9 @@ type Props = {
 export function PlaylistDetailClient({ playlist }: Props) {
   const { handlePlayAudio, handlePlayRandomAudio } = useAudio();
   const { user } = useUser();
+  const params = useParams();
+  const locale = (params?.locale as string) || "en";
+  const withLocale = (path: string) => `/${locale}${path}`;
 
   const musics = useMemo(
     () => playlist.musics?.filter((m) => m && m.id) ?? [],
@@ -84,7 +88,7 @@ export function PlaylistDetailClient({ playlist }: Props) {
           <MenuBarMobile />
 
           <div className="sticky top-0 z-10 m-4 flex items-center gap-1 md:hidden">
-            <Link href="/music">
+            <Link href={withLocale("/music")}>
               <div className="pointer-events-auto rounded-full bg-zinc-200 p-2 dark:bg-zinc-900">
                 <CaretLeft
                   size={28}

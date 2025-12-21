@@ -11,6 +11,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import Link from "next/link";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { useTheme } from "next-themes";
+import { useParams } from "next/navigation";
 
 type IProps = {
   post: IPost;
@@ -18,13 +19,16 @@ type IProps = {
 
 export const PostContent = ({ post }: IProps) => {
   const { theme } = useTheme();
+  const params = useParams();
+  const locale = (params?.locale as string) || "en";
+  const withLocale = (path: string) => `/${locale}${path}`;
 
   return (
     <div className="mt-4">
       <div>
         <>
           <div className="flex items-center justify-between px-2" role="banner">
-            <Link href="/">
+            <Link href={withLocale("/")}>
               <ChanhdangLogotype />
             </Link>
 

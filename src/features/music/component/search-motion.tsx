@@ -8,7 +8,7 @@ import { AudioItemOrder } from "./audio-item-order";
 import Link from "next/link";
 import { MUSICSSINGER } from "../data/music-page-singer";
 import { SingerItem } from "./singer-item";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 type SearchMotionProps = {
   onQueryChange?: (value: string) => void;
@@ -19,6 +19,9 @@ export function SearchMotion({ onQueryChange }: SearchMotionProps) {
   const [value, setValue] = useState("");
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const params = useParams();
+  const locale = (params?.locale as string) || "en";
+  const withLocale = (path: string) => `/${locale}${path}`;
 
   const removeVietnameseTones = (str: string) => {
     return str
@@ -127,7 +130,7 @@ export function SearchMotion({ onQueryChange }: SearchMotionProps) {
                       exit={{ scale: 0.9 }}
                       className="rounded-2xl p-1"
                     >
-                      <Link href="/music">
+                      <Link href={withLocale("/music")}>
                         <AudioItemOrder
                           music={item}
                           handlePlay={() => handlePlayAudio(item)}

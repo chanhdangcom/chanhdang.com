@@ -1,48 +1,25 @@
 "use client";
 
-import { useState, useEffect } from "react";
-
-interface User {
-  id: string;
-  username: string;
-  displayName?: string;
-  avatarUrl?: string;
-}
+import { useSession, signIn, signOut } from "next-auth/react";
 
 export function useUser() {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data, status } = useSession();
+  const sessionUser = data?.user;
 
-  useEffect(() => {
-    // Kiểm tra user từ localStorage
-    const userFromStorage = localStorage.getItem("user");
-    if (userFromStorage) {
-      try {
-        const userData = JSON.parse(userFromStorage);
-        setUser(userData);
-      } catch (error) {
-        console.error("Error parsing user data:", error);
-        localStorage.removeItem("user");
+  const user = sessionUser
+    ? {
+        id: sessionUser.id,
+        username: sessionUser.name || sessionUser.email || "",
+        displayName: sessionUser.name || undefined,
+        avatarUrl: sessionUser.image || undefined,
       }
-    }
-    setIsLoading(false);
-  }, []);
-
-  const login = (userData: User) => {
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
-  };
-
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("user");
-  };
+    : null;
 
   return {
     user,
-    isLoading,
-    login,
-    logout,
+    isLoading: status === "loading",
+    login: () => signIn("google"),
+    logout: () => signOut(),
     isAuthenticated: !!user,
   };
 }

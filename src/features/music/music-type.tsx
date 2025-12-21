@@ -8,6 +8,7 @@ import { useAudio } from "@/components/music-provider";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useOutsideClick } from "@/app/[locale]/features/profile/hook/use-outside-click";
+import { useParams } from "next/navigation";
 
 export function MusicType() {
   const { handlePlayAudio } = useAudio();
@@ -15,6 +16,9 @@ export function MusicType() {
   const [isHide, setIsHide] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useOutsideClick(ref, () => setIsHide(true), !isHide);
+  const params = useParams();
+  const locale = (params?.locale as string) || "en";
+  const withLocale = (path: string) => `/${locale}${path}`;
 
   return (
     <div className="z-10">
@@ -45,7 +49,7 @@ export function MusicType() {
                 exit={{ scale: 0.9 }}
                 className="rounded-2xl hover:bg-zinc-900"
               >
-                <Link href="/music">
+                <Link href={withLocale("/music")}>
                   <AudioItemOrder
                     music={item}
                     handlePlay={() => handlePlayAudio(item)}

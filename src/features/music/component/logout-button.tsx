@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { User, UserCircle } from "phosphor-react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 import { useUser } from "@/hooks/use-user";
 import { LibraryCount } from "../library/library-count";
@@ -16,16 +17,19 @@ import { BorderPro } from "./border-pro";
 
 export function LogoutButton() {
   const { user, logout } = useUser();
+  const params = useParams();
+  const locale = (params?.locale as string) || "en";
+  const withLocale = (path: string) => `/${locale}${path}`;
 
   const handleLogout = () => {
     logout();
-    window.location.href = "/music";
+    window.location.href = withLocale("/music");
   };
 
   return (
     <div>
       {!user ? (
-        <Link href={"/auth/login"} className="size-10">
+        <Link href={withLocale("/auth/login")} className="size-10">
           <div className="my-2 flex items-center gap-2 text-black dark:text-white">
             <UserCircle size={20} weight="fill" className="size-10" />
 
@@ -36,24 +40,22 @@ export function LogoutButton() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div className="my-2 flex items-center gap-2 font-semibold">
-              {user?.avatarUrl ? (
-                <BorderPro roundedSize="rounded-full">
+              <BorderPro roundedSize="rounded-full">
+                {user?.avatarUrl ? (
                   <motion.img
                     src={user.avatarUrl}
                     alt={user.username}
                     className="size-10 rounded-full object-cover"
-                    whileTap={{ scale: 0.8 }}
+                    whileTap={{ scale: 0.9 }}
                   />
-                </BorderPro>
-              ) : (
-                <div className="flex gap-2">
-                  <UserCircle size={20} weight="fill" className="size-10" />
+                ) : (
+                  <div className="flex size-10 items-center justify-center rounded-full bg-zinc-200 text-sm font-bold uppercase text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
+                    {user?.username?.charAt(0) || <UserCircle size={20} />}
+                  </div>
+                )}
+              </BorderPro>
 
-                  <div>Login</div>
-                </div>
-              )}
-
-              <div> {user.username} </div>
+              <div className="max-w-[140px] truncate">{user.username}</div>
             </div>
           </DropdownMenuTrigger>
 
@@ -67,7 +69,7 @@ export function LogoutButton() {
             <div className="text-lg">
               <div className="rounded-md px-1 py-0.5 hover:bg-zinc-300 dark:hover:bg-zinc-800">
                 <Link
-                  href={"/music/add-music"}
+                  href={withLocale("/music/add-music")}
                   className="flex items-center gap-1"
                 >
                   <div>Add Music</div>
@@ -76,7 +78,7 @@ export function LogoutButton() {
 
               <div className="rounded-md px-1 py-0.5 hover:bg-zinc-300 dark:hover:bg-zinc-800">
                 <Link
-                  href={"/music/library"}
+                  href={withLocale("/music/library")}
                   className="flex items-center gap-1"
                 >
                   <div>Library</div>
@@ -85,11 +87,13 @@ export function LogoutButton() {
               </div>
 
               <div className="flex items-center gap-1 rounded-md px-1 py-0.5 hover:bg-zinc-300 dark:hover:bg-zinc-800">
-                <Link href={"/music/add-singer"}>Add Artists</Link>
+                <Link href={withLocale("/music/add-singer")}>Add Artists</Link>
               </div>
 
               <div className="flex items-center gap-1 rounded-md px-1 py-0.5 hover:bg-zinc-300 dark:hover:bg-zinc-800">
-                <Link href={"/music/profile-setting"}>Profile Setting</Link>
+                <Link href={withLocale("/music/profile-setting")}>
+                  Profile Setting
+                </Link>
               </div>
 
               <div

@@ -239,7 +239,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   );
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const { isAuthenticated } = useUser();
+  const { isAuthenticated, user } = useUser();
 
   // ----------------------------
   // Load subtitles for the current track from cloud/raw
@@ -390,10 +390,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       // Ghi lịch sử phát nhạc (fire-and-forget)
       (async () => {
         try {
-          const userFromStorage = localStorage.getItem("user");
-          if (!userFromStorage) return;
-          const parsed = JSON.parse(userFromStorage) as { id?: string } | null;
-          const userId = parsed?.id;
+          const userId = user?.id;
           if (!userId) return;
           const payload = {
             userId,
@@ -482,7 +479,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         timeUpdateIntervalRef.current = null;
       }
     };
-  }, [currentMusic, isKaraokeMode]);
+  }, [currentMusic, isKaraokeMode, user?.id]);
 
   const handleToggleRepeat = useCallback(() => {
     setIsRepeat((prev) => !prev);

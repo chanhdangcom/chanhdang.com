@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 
@@ -15,6 +16,9 @@ export function AdModal({ isOpen, onClose, onContinue }: AdModalProps) {
   const [countdown, setCountdown] = useState(5);
   const [canSkip, setCanSkip] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<string>("/ad/ad.mov");
+  const params = useParams();
+  const locale = (params?.locale as string) || "en";
+  const withLocale = (path: string) => `/${locale}${path}`;
 
   useEffect(() => {
     if (!isOpen) {
@@ -95,7 +99,7 @@ export function AdModal({ isOpen, onClose, onContinue }: AdModalProps) {
             {/* Action Buttons */}
             <div className="space-y-3">
               <Link
-                href="/auth/login"
+                href={withLocale("/auth/login")}
                 className="block w-full rounded-full bg-white px-6 py-3 text-center font-semibold text-black transition-transform hover:scale-105 active:scale-95"
                 onClick={onClose}
               >
