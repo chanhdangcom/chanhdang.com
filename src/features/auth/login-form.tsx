@@ -36,7 +36,8 @@ export default function LoginForm() {
     const data = await res.json();
     if (data.success) {
       setMessage("Đăng nhập thành công!");
-      // Form đăng nhập nội bộ, không trigger Google
+      // Lưu user vào session thông qua hook useUser
+      login(data.user);
       setForm({ username: "", password: "" });
       router.push(`/${locale}/music`);
     } else {

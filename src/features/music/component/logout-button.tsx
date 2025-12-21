@@ -41,18 +41,18 @@ export function LogoutButton() {
           <DropdownMenuTrigger asChild>
             <div className="my-2 flex items-center gap-2 font-semibold">
               <BorderPro roundedSize="rounded-full">
-                {user?.avatarUrl ? (
+              {user?.avatarUrl ? (
                   <motion.img
                     src={user.avatarUrl}
                     alt={user.username}
                     className="size-10 rounded-full object-cover"
                     whileTap={{ scale: 0.9 }}
                   />
-                ) : (
+              ) : (
                   <div className="flex size-10 items-center justify-center rounded-full bg-zinc-200 text-sm font-bold uppercase text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
                     {user?.username?.charAt(0) || <UserCircle size={20} />}
-                  </div>
-                )}
+                </div>
+              )}
               </BorderPro>
 
               <div className="max-w-[140px] truncate">{user.username}</div>
