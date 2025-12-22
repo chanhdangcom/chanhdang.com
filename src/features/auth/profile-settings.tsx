@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useSession } from "next-auth/react";
 import { useUser } from "@/hooks/use-user";
 import { HeaderMusicPage } from "../music/header-music-page";
 
@@ -20,28 +21,40 @@ type MongoUserDocish = {
   displayName?: string;
   bio?: string;
   avatarUrl?: string;
+  image?: string; // Google avatar field
 };
 
 export default function ProfileSettings() {
   const { user } = useUser();
+  const { data: session } = useSession();
 
-  // ✅ Map đúng từ MongoDB (_id -> id)
+  // Tách biệt: Google login (session) vs Login thường (user từ useUser)
   const current = useMemo<CurrentUser | null>(() => {
+    // Google login: dùng session
+    if (session?.user) {
+      return {
+        id: session.user.id || "",
+        username: session.user.name || session.user.email || "",
+        displayName: session.user.name || "",
+        bio: "",
+        avatarUrl: session.user.image || "",
+      };
+    }
+
+    // Login thường: dùng user từ useUser (localStorage)
     if (!user) return null;
-    const u = user as MongoUserDocish; // có thể từ MongoDB Document
-    const id =
-      (typeof u._id === "string" ? u._id : u._id?.toString?.()) ??
-      (typeof u.id === "string" ? u.id : undefined);
+    const u = user as MongoUserDocish;
+    const id = typeof u.id === "string" ? u.id : String(u._id || "");
     if (!id || !u.username) return null;
 
     return {
       id,
       username: u.username,
-      displayName: u.displayName ?? "",
-      bio: u.bio ?? "",
-      avatarUrl: u.avatarUrl ?? "",
+      displayName: u.displayName || "",
+      bio: u.bio || "",
+      avatarUrl: u.avatarUrl || u.image || "",
     };
-  }, [user]);
+  }, [user, session]);
 
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
@@ -51,9 +64,9 @@ export default function ProfileSettings() {
 
   useEffect(() => {
     if (!current) return;
-    setDisplayName(current.displayName ?? current.username ?? "");
-    setBio(current.bio ?? "");
-    setAvatarUrl(current.avatarUrl ?? "");
+    setDisplayName(current.displayName || current.username || "");
+    setBio(current.bio || "");
+    setAvatarUrl(current.avatarUrl || "");
   }, [current]);
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,16 +147,29 @@ export default function ProfileSettings() {
 
         <div className="mb-4 space-y-4">
           <div className="mx-auto size-40 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
-            {avatarUrl && (
+            {avatarUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={avatarUrl}
                 alt="avatar"
                 className="size-40 object-cover"
+                onError={(e) => {
+                  console.error("Avatar image failed to load:", avatarUrl);
+                  e.currentTarget.style.display = "none";
+                }}
               />
+            ) : (
+              <div className="flex size-40 items-center justify-center text-zinc-500">
+                <span>Avatar</span>
+              </div>
             )}
           </div>
           <input type="file" accept="image/*" onChange={handleAvatarChange} />
+          {session?.user?.image && !avatarUrl && (
+            <p className="text-xs text-zinc-500">
+              Avatar từ Google: {session.user.image.substring(0, 50)}...
+            </p>
+          )}
         </div>
 
         <div className="mb-3">

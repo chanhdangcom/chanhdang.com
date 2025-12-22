@@ -15,7 +15,7 @@ export function RecentAuidoListClient({ musics }: { musics: IMusic[] }) {
       <ScrollCarouselItem scrollLeft={scrollLeft} scrollRight={scrollRight}>
         <div
           ref={scrollRef}
-          className="grid snap-x snap-mandatory grid-flow-col grid-rows-1 overflow-x-auto scroll-smooth scrollbar-hide md:snap-none"
+          className="grid snap-x snap-mandatory grid-flow-col grid-rows-1 justify-start overflow-x-auto scroll-smooth scrollbar-hide md:snap-none"
         >
           {musics.slice(0, 8).map((music, index) => (
             <div key={music.id} className="snap-start">

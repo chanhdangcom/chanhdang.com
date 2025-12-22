@@ -34,11 +34,11 @@ export function AuidoItem({ music, handlePlay }: IProp) {
       >
         <div className="relative">
           {music.cover ? (
-            <BorderPro roundedSize="rounded-lg">
+            <BorderPro roundedSize="rounded-xl">
               <img
                 src={music.cover}
                 alt="cover"
-                className="mx-auto size-44 shrink-0 cursor-pointer justify-center rounded-lg object-cover md:size-52"
+                className="mx-auto size-44 shrink-0 cursor-pointer justify-center rounded-xl object-cover md:size-52"
                 onClick={handlePlay}
               />
             </BorderPro>

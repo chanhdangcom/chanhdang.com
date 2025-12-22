@@ -11,51 +11,63 @@ interface User {
 }
 
 export function useUser() {
-  const { data, status } = useSession();
-  const sessionUser = data?.user;
+  const { data: session, status } = useSession();
   const [localUser, setLocalUser] = useState<User | null>(null);
   const [isLoadingLocal, setIsLoadingLocal] = useState(true);
 
-  // Đọc user từ localStorage (cho login nội bộ)
+  // Load local user từ localStorage (login thường)
   useEffect(() => {
-    const userFromStorage = localStorage.getItem("user");
-    if (userFromStorage) {
-      try {
-        const parsed = JSON.parse(userFromStorage) as User;
-        setLocalUser(parsed);
-      } catch (error) {
-        console.error("Error parsing user data:", error);
-        localStorage.removeItem("user");
+    try {
+      const stored = localStorage.getItem("user");
+      if (stored) {
+        setLocalUser(JSON.parse(stored) as User);
       }
+    } catch {
+      localStorage.removeItem("user");
+    } finally {
+      setIsLoadingLocal(false);
     }
-    setIsLoadingLocal(false);
   }, []);
 
-  // Ưu tiên NextAuth session (Google), fallback về localStorage (login nội bộ)
-  const user = sessionUser
+  // Tách biệt: Google login (session) vs Login thường (localStorage)
+  const googleUser = session?.user
     ? {
-        id: sessionUser.id,
-        username: sessionUser.name || sessionUser.email || "",
-        displayName: sessionUser.name || undefined,
-        avatarUrl: sessionUser.image || undefined,
+        id: session.user.id,
+        username: session.user.name || session.user.email || "",
+        displayName: session.user.name,
+        avatarUrl: session.user.image || undefined,
       }
-    : localUser;
+    : null;
+
+  const user = googleUser || localUser;
+
+  // Debug: log để kiểm tra
+  useEffect(() => {
+    if (session?.user) {
+      console.log("Google user avatar:", {
+        hasSession: !!session,
+        image: session.user.image,
+        avatarUrl: googleUser?.avatarUrl,
+      });
+    }
+  }, [session, googleUser?.avatarUrl]);
 
   const login = (userData?: User) => {
     if (userData) {
-      // Login nội bộ: lưu vào localStorage
+      // Login thường: lưu vào localStorage
       setLocalUser(userData);
       localStorage.setItem("user", JSON.stringify(userData));
     } else {
-      // Login Google
+      // Login Google: dùng NextAuth
       signIn("google");
     }
   };
 
   const logout = () => {
-    // Xóa cả NextAuth session và localStorage
-    signOut();
-    setLocalUser(null);
+    if (googleUser) {
+      signOut(); // Google logout
+    }
+    setLocalUser(null); // Local logout
     localStorage.removeItem("user");
   };
 

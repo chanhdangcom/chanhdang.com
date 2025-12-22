@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
+import { normalizeDocument } from "@/lib/mongodb-helpers";
 
 export async function GET(request: Request) {
   try {
@@ -15,18 +16,17 @@ export async function GET(request: Request) {
     const client = await clientPromise;
     const db = client.db("musicdb");
 
-    if (isRandom) {
-      const sampled = await db
-        .collection("musics")
-        .aggregate([{ $sample: { size: limit } }])
-        .toArray();
-      return NextResponse.json(sampled);
-    }
+    const musics = isRandom
+      ? await db
+          .collection("musics")
+          .aggregate([{ $sample: { size: limit } }])
+          .toArray()
+      : await db.collection("musics").find({}).toArray();
 
-    const musics = await db.collection("musics").find({}).toArray();
-    return NextResponse.json(musics);
+    const normalized = musics.map((m) => normalizeDocument(m));
+    return NextResponse.json(normalized);
   } catch (error) {
-    console.error("MONGO ERROR:", error);
+    console.error("Error fetching musics:", error);
     return NextResponse.json(
       { error: "Failed to fetch musics" },
       { status: 500 }
@@ -37,13 +37,15 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    // Validate dữ liệu đầu vào ở đây nếu cần
     const client = await clientPromise;
     const db = client.db("musicdb");
     const result = await db.collection("musics").insertOne(body);
     return NextResponse.json({ success: true, insertedId: result.insertedId });
   } catch (error) {
-    console.error("MONGO ERROR:", error);
-    return NextResponse.json({ error: "Failed to add music" }, { status: 500 });
+    console.error("Error adding music:", error);
+    return NextResponse.json(
+      { error: "Failed to add music" },
+      { status: 500 }
+    );
   }
 }

@@ -8,7 +8,7 @@ import { BorderPro } from "./border-pro";
 import { useImageHoverColor } from "@/hooks/use-image-hover-color";
 
 type IProp = {
-  music: IPlaylistItem;
+  music: IPlaylistItem | null;
   onClick?: (music: IPlaylistItem) => void;
 };
 
