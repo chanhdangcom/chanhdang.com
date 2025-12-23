@@ -524,14 +524,14 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                         type: "spring",
                         damping: 15,
                       }}
-                      className="flex h-[70vh] w-full shrink-0 justify-center rounded-xl object-cover md:h-[55vh] md:w-[60vh]"
+                      className="flex h-[70vh] w-full shrink-0 justify-center rounded-3xl object-cover md:h-[55vh] md:w-[60vh]"
                     />
 
                     <div
                       className={
                         isPaused
                           ? ""
-                          : "pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-black/10 duration-300 dark:ring-white/10"
+                          : "pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-black/10 duration-300 dark:ring-white/10"
                       }
                     />
                   </div>
