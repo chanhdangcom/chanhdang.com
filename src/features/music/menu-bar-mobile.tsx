@@ -82,7 +82,7 @@ export function MenuBarMobile() {
   }, [handleScroll]);
 
   return (
-    <div className="fixed bottom-4 z-20 flex w-full items-center justify-between sm:hidden">
+    <div className="fixed bottom-4 z-10 flex w-full items-center justify-between sm:hidden">
       <AnimatePresence>
         {show ? (
           <div className="relative ml-2 overflow-hidden rounded-[50px] border border-white/20 bg-zinc-200/70 py-1.5 pr-4 backdrop-blur-sm dark:bg-zinc-900/70">
