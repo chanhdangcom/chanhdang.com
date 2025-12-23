@@ -918,7 +918,7 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                       <div className="relative mt-2">
                         <div
                           ref={recentListRef}
-                          className="max-h-64 space-y-2 overflow-y-auto pr-2 scrollbar-hide"
+                          className="h-[40vh] space-y-4 overflow-y-auto pr-2 scrollbar-hide"
                         >
                           {shuffledRecent.slice(0, 8).map((music) => (
                             <AudioItemOrder
