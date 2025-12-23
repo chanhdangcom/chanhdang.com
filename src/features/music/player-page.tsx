@@ -1,20 +1,26 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import { useAudio } from "@/components/music-provider";
+import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import {
   CaretDown,
   ChatTeardropDots,
   DotsThree,
+  Infinity,
   FastForward,
   ListBullets,
+  ListStar,
   Pause,
   Play,
+  Repeat,
   Rewind,
   ShareNetwork,
+  Shuffle,
+  Exclude,
 } from "@phosphor-icons/react/dist/ssr";
 
 import { AnimatePresence, motion } from "motion/react";
-import { useCallback, useEffect, useState, memo } from "react";
+import { useCallback, useEffect, useState, useRef, memo } from "react";
 import { useRouter } from "next/navigation";
 import { AudioTimeLine } from "./component/audio-time-line";
 // import DynamicIslandWave from "@/components/ui/dynamic-island";
@@ -29,6 +35,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useUser } from "@/hooks/use-user";
 import { VolumeBar } from "./volume-bar";
+import { AudioItemOrder } from "./component/audio-item-order";
 
 type IProp = {
   setIsClick: () => void;
@@ -404,7 +411,7 @@ const LyricPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
               </div>
             </div>
 
-            <div className="pointer-events-none relative inset-x-4 ml-4 h-full overflow-y-auto scrollbar-hide">
+            <div className="pointer-events-none relative inset-x-4 h-full overflow-y-auto scrollbar-hide">
               <div className="text-balance px-4 pt-32 font-apple text-3xl font-bold leading-loose text-zinc-700 dark:text-zinc-300">
                 {subtitles.map((line) => (
                   <SubtitleItem
@@ -571,6 +578,370 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
   );
 };
 
+// ----
+
+const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
+  const {
+    currentMusic,
+    handleToggleKaraoke,
+    isKaraokeMode,
+    handlePlayAudio,
+    setIsPlayerPageOpen,
+  } = useAudio();
+
+  const { user } = useUser();
+  const router = useRouter();
+  const [isInFavorites, setIsInFavorites] = useState(false);
+  const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const [touchDeltaY, setTouchDeltaY] = useState(0);
+  const [recentMusics, setRecentMusics] = useState<IMusic[]>([]);
+  const [isLoadingRecent, setIsLoadingRecent] = useState(false);
+  const [shuffledRecent, setShuffledRecent] = useState<IMusic[]>([]);
+  const recentListRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    setIsPlayerPageOpen(true); // Báo PlayerPage đang mở để sync subtitle
+    return () => {
+      document.body.style.overflow = "auto";
+      setIsPlayerPageOpen(false); // Báo PlayerPage đóng để tắt sync
+    };
+  }, [setIsPlayerPageOpen]);
+
+  // Kiểm tra xem bài hát có trong Favorites hay không
+  useEffect(() => {
+    if (!user?.id || !currentMusic?.id) {
+      setIsInFavorites(false);
+      return;
+    }
+
+    const checkFavorites = async () => {
+      try {
+        const response = await fetch(
+          `/api/library?userId=${user.id}&type=music`
+        );
+        if (!response.ok) return;
+        const entries = await response.json();
+        const isFav = entries.some(
+          (entry: { resourceId: string }) =>
+            entry.resourceId === currentMusic.id
+        );
+        setIsInFavorites(isFav);
+      } catch (error) {
+        console.error("Error checking favorites:", error);
+      }
+    };
+
+    checkFavorites();
+  }, [user?.id, currentMusic?.id]);
+
+  // Lấy danh sách nhạc đã nghe gần đây
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchHistory = async () => {
+      if (!user?.id) {
+        setRecentMusics([]);
+        setIsLoadingRecent(false);
+        return;
+      }
+
+      setIsLoadingRecent(true);
+      try {
+        const res = await fetch(`/api/history?userId=${user.id}&limit=8`, {
+          cache: "no-store",
+          signal: controller.signal,
+        });
+
+        if (!res.ok) return;
+
+        const data = (await res.json()) as {
+          musicData?: IMusic;
+        }[];
+
+        const parsed = Array.isArray(data)
+          ? data
+              .map((item) => item.musicData)
+              .filter((music): music is IMusic => Boolean(music?.id))
+          : [];
+
+        setRecentMusics(parsed);
+      } catch (error) {
+        if (controller.signal.aborted) return;
+        console.error("Error fetching recent history:", error);
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoadingRecent(false);
+        }
+      }
+    };
+
+    fetchHistory();
+
+    return () => controller.abort();
+  }, [user?.id]);
+
+  // Shuffle danh sách recent 1 lần cho mỗi bài/currentMusic
+  useEffect(() => {
+    if (!recentMusics.length) {
+      setShuffledRecent([]);
+      return;
+    }
+
+    const copy = [...recentMusics];
+    for (let i = copy.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+
+    setShuffledRecent(copy);
+  }, [recentMusics, currentMusic?.id]);
+
+  // Xử lý thêm/xóa khỏi Favorites
+  const handleToggleFavorites = async () => {
+    if (!user?.id) {
+      alert("Vui lòng đăng nhập để sử dụng tính năng này!");
+      return;
+    }
+
+    if (!currentMusic) return;
+
+    setIsLoadingFavorite(true);
+    try {
+      if (isInFavorites) {
+        // Xóa khỏi Favorites
+        const response = await fetch(
+          `/api/library?userId=${user.id}&resourceId=${currentMusic.id}&type=music`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        if (response.ok) {
+          setIsInFavorites(false);
+        } else {
+          const error = await response.json();
+          alert(error.error || "Có lỗi xảy ra!");
+        }
+      } else {
+        // Thêm vào Favorites
+        const response = await fetch("/api/library", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            resourceId: currentMusic.id,
+            resourceType: "music",
+            data: currentMusic,
+          }),
+        });
+
+        if (response.ok) {
+          setIsInFavorites(true);
+        } else {
+          const error = await response.json();
+          alert(error.error || "Có lỗi xảy ra!");
+        }
+      }
+    } catch (error) {
+      console.error("Error toggling favorites:", error);
+      alert("Có lỗi xảy ra!");
+    } finally {
+      setIsLoadingFavorite(false);
+    }
+  };
+
+  // Xử lý Share
+  const handleShare = async () => {
+    if (!currentMusic) return;
+
+    const shareData = {
+      title: currentMusic.title || "Bài hát",
+      text: `${currentMusic.title} - ${currentMusic.singer}`,
+      url: window.location.href,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        // Fallback: copy to clipboard
+        await navigator.clipboard.writeText(
+          `${shareData.text}\n${shareData.url}`
+        );
+        alert("Đã sao chép link vào clipboard!");
+      }
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  };
+
+  const MusicActionsMenu = useMusicActionsMenu({
+    isInFavorites,
+    isLoadingFavorite,
+    isKaraokeMode,
+    hasBeat: !!currentMusic?.beat,
+    onToggleFavorites: handleToggleFavorites,
+    onToggleKaraoke: handleToggleKaraoke,
+    onShare: handleShare,
+    onOpenFavorites: () => router.push("/music/library/favorites"),
+  });
+
+  return (
+    <>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentMusic?.id || currentMusic?.cover || "player-lyric"}
+          layoutId="audio-bar"
+          className="fixed inset-0 z-50 flex justify-between space-y-4 px-4 md:rounded-3xl md:border md:border-white/10"
+        >
+          <div className="w-full">
+            <div className="absolute inset-0 -z-10 flex justify-center bg-zinc-950 backdrop-blur-3xl">
+              <img
+                key={currentMusic?.cover}
+                src={currentMusic?.cover || ""}
+                alt="cover"
+                className="mt-8 h-full w-full rotate-180 scale-110 opacity-70 blur-3xl md:mt-24 md:h-screen md:w-full md:blur-3xl"
+              />
+            </div>
+
+            <header
+              className="flex items-center justify-start p-1 text-black dark:text-white md:py-4"
+              onTouchStart={(e) => {
+                if (e.touches.length > 0) {
+                  setTouchStartY(e.touches[0].clientY);
+                  setTouchDeltaY(0);
+                }
+              }}
+              onTouchMove={(e) => {
+                if (touchStartY === null) return;
+                const currentY = e.touches[0].clientY;
+                setTouchDeltaY(currentY - touchStartY);
+              }}
+              onTouchEnd={() => {
+                // Chỉ xử lý trên mobile: kéo xuống đủ xa thì đóng player
+                if (window.innerWidth < 768 && touchDeltaY > 50) {
+                  onRequestClose();
+                }
+                setTouchStartY(null);
+                setTouchDeltaY(0);
+              }}
+            >
+              <div className="mx-auto my-4 h-1 w-16 rounded-full bg-white/20 md:hidden" />
+            </header>
+
+            <div className="absolute inset-x-4 z-50 mt-2 rounded-2xl p-1">
+              <div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    {currentMusic?.cover ? (
+                      <motion.div
+                        layoutId="Cover"
+                        key={currentMusic?.cover}
+                        className="flex justify-center gap-8"
+                      >
+                        <BorderPro roundedSize="rounded-xl">
+                          <motion.img
+                            src={currentMusic?.cover}
+                            alt="cover"
+                            transition={{
+                              duration: 0.2,
+                              ease: "easeInOut",
+                              type: "spring",
+                              damping: 15,
+                            }}
+                            onClick={onRequestClose}
+                            className="flex size-16 shrink-0 justify-center rounded-xl object-cover"
+                          />
+                        </BorderPro>
+                      </motion.div>
+                    ) : (
+                      <div className="flex h-[45vh] w-full shrink-0 justify-center rounded-xl bg-zinc-700" />
+                    )}
+
+                    <AnimatePresence>
+                      <motion.div
+                        id="info-song"
+                        layoutId="info-song"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className=""
+                      >
+                        <div className="line-clamp-1 font-semibold">
+                          {currentMusic?.title || "TITLE SONG"}
+                        </div>
+                        <div className="line-clamp-1">
+                          {currentMusic?.singer || "SINGER"}
+                        </div>
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
+
+                  <MusicActionsMenu />
+                </div>
+
+                <div className="mt-4 flex items-center justify-between">
+                  <div className="cursor-pointer rounded-full bg-white/10 px-6 py-2">
+                    <Shuffle size={25} weight="regular" />
+                  </div>
+
+                  <div className="cursor-pointer rounded-full bg-white/10 px-6 py-2">
+                    <Repeat size={25} weight="regular" />
+                  </div>
+
+                  <div className="cursor-pointer rounded-full bg-white/10 px-6 py-2">
+                    <Infinity size={25} weight="regular" />
+                  </div>
+
+                  <div className="cursor-pointer rounded-full bg-white/10 px-6 py-2">
+                    <Exclude size={25} weight="fill" />
+                  </div>
+                </div>
+
+                <div className="mt-4">
+                  <div className="font-semibold">Continue Playing</div>
+
+                  {isLoadingRecent && (
+                    <div className="mt-2 text-xs text-zinc-400">
+                      Đang tải lịch sử...
+                    </div>
+                  )}
+
+                  {!isLoadingRecent &&
+                    user?.id &&
+                    shuffledRecent.length > 0 && (
+                      <div className="relative mt-2">
+                        <div
+                          ref={recentListRef}
+                          className="max-h-64 space-y-2 overflow-y-auto pr-2 scrollbar-hide"
+                        >
+                          {shuffledRecent.slice(0, 8).map((music) => (
+                            <AudioItemOrder
+                              key={music.id}
+                              music={music}
+                              handlePlay={() => handlePlayAudio(music)}
+                              className="w-full"
+                              border={false}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    </>
+  );
+};
+
 export function PlayerPage({ setIsClick }: IProp) {
   const {
     currentMusic,
@@ -590,6 +961,7 @@ export function PlayerPage({ setIsClick }: IProp) {
   const router = useRouter();
   const [isInFavorites, setIsInFavorites] = useState(false);
   const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
+  const [isClickFeatured, setIsClickFeatured] = useState(false);
 
   useEffect(() => {
     if (!user?.id || !currentMusic?.id) {
@@ -716,7 +1088,9 @@ export function PlayerPage({ setIsClick }: IProp) {
 
   return (
     <div>
-      {isClickLyric ? (
+      {isClickFeatured ? (
+        <FeaturedPage onRequestClose={handleClosePlayer} />
+      ) : isClickLyric ? (
         <LyricPage onRequestClose={handleClosePlayer} />
       ) : (
         <ContentPage onRequestClose={handleClosePlayer} />
@@ -727,10 +1101,10 @@ export function PlayerPage({ setIsClick }: IProp) {
           <img
             alt="cover"
             src={currentMusic?.cover || ""}
-            className="absolute -bottom-16 left-0 -z-10 h-[40vh] w-full scale-150 blur-3xl brightness-0"
+            className="pointer-events-none absolute -bottom-16 left-0 -z-10 h-[40vh] w-full scale-150 blur-3xl brightness-0"
           />
 
-          {!isClickLyric && (
+          {!isClickLyric && !isClickFeatured && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <AnimatePresence>
@@ -807,7 +1181,7 @@ export function PlayerPage({ setIsClick }: IProp) {
 
             <div className="mx-8 flex items-center justify-between text-base text-zinc-400 md:hidden">
               <div onClick={() => setIsClickLyric(!isClickLyric)}>
-                {isClickLyric ? (
+                {!isClickLyric ? (
                   <ChatTeardropDots size={25} />
                 ) : (
                   <ChatTeardropDots size={25} weight="fill" />
@@ -816,7 +1190,13 @@ export function PlayerPage({ setIsClick }: IProp) {
 
               <ShareNetwork size={25} weight="fill" />
 
-              <ListBullets size={28} weight="bold" />
+              <div onClick={() => setIsClickFeatured(!isClickFeatured)}>
+                {!isClickFeatured ? (
+                  <ListBullets size={28} weight="bold" />
+                ) : (
+                  <ListStar size={28} weight="bold" />
+                )}
+              </div>
             </div>
           </div>
         </div>

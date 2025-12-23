@@ -13,6 +13,7 @@ type IProp = {
   item?: React.ReactNode;
   date?: string;
   duration?: string;
+  border?: boolean;
 };
 
 export function AudioItemOrder({
@@ -22,6 +23,7 @@ export function AudioItemOrder({
   item,
   date,
   duration,
+  border,
 }: IProp) {
   if (!music) {
     return <div className="text-red-500">Dữ liệu nhạc chưa sẵn sàng</div>;
@@ -45,7 +47,12 @@ export function AudioItemOrder({
           <div className="size-12 rounded-2xl bg-zinc-800"></div>
         )}
 
-        <div className="flex-2 flex-1 flex-col border-b border-zinc-200 pb-2 text-black dark:border-zinc-900 dark:text-white">
+        <div
+          className={cn(
+            "flex-2 flex-1 flex-col pb-2 text-black dark:text-white",
+            border && "border-b border-zinc-200 dark:border-zinc-900"
+          )}
+        >
           <div className="flex items-center justify-between">
             <div className="w-40">
               <div className="flex items-center gap-1 text-sm font-semibold">
