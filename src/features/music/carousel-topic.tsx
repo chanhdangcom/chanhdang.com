@@ -11,10 +11,10 @@ export async function CarouselTopic() {
   return (
     <div className="w-full">
       {topics.map((topic) => (
-        <div key={topic._id.toString()}>
+        <div key={topic._id.toString()} className="">
           <Link href={`/en/music/topic/${topic._id.toString()}`}>
             <h2 className="ml-2 flex items-center gap-1 px-1 text-xl font-bold text-black dark:text-white md:ml-[270px]">
-              <div className="line-clamp-1"> {topic.title}</div>
+              <div className="mb-1 mt-2 line-clamp-1"> {topic.title}</div>
 
               <CaretRight
                 size={20}
