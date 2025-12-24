@@ -17,6 +17,8 @@ import {
   ShareNetwork,
   Shuffle,
   Exclude,
+  MagicWand,
+  RepeatOnce,
 } from "@phosphor-icons/react/dist/ssr";
 
 import { AnimatePresence, motion } from "motion/react";
@@ -587,6 +589,9 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
     isKaraokeMode,
     handlePlayAudio,
     setIsPlayerPageOpen,
+    handlePlayRandomAudio,
+    handleToggleRepeat,
+    isRepeat,
   } = useAudio();
 
   const { user } = useUser();
@@ -886,13 +891,25 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                 </div>
 
                 <div className="mt-4 flex items-center justify-between">
-                  <div className="cursor-pointer rounded-full bg-white/10 px-6 py-2">
+                  <motion.div
+                    className="cursor-pointer rounded-full bg-white/10 px-6 py-2"
+                    onClick={() => handlePlayRandomAudio()}
+                    whileTap={{ scale: 0.8 }}
+                  >
                     <Shuffle size={25} weight="regular" />
-                  </div>
+                  </motion.div>
 
-                  <div className="cursor-pointer rounded-full bg-white/10 px-6 py-2">
-                    <Repeat size={25} weight="regular" />
-                  </div>
+                  <motion.div
+                    className="cursor-pointer rounded-full bg-white/10 px-6 py-2"
+                    onClick={() => handleToggleRepeat()}
+                    whileTap={{ scale: 0.8 }}
+                  >
+                    {!isRepeat ? (
+                      <Repeat size={25} weight="regular" />
+                    ) : (
+                      <RepeatOnce size={25} weight="regular" />
+                    )}
+                  </motion.div>
 
                   <div className="cursor-pointer rounded-full bg-white/10 px-6 py-2">
                     <Infinity size={25} weight="regular" />
@@ -1103,6 +1120,36 @@ export function PlayerPage({ setIsClick }: IProp) {
             src={currentMusic?.cover || ""}
             className="pointer-events-none absolute -bottom-16 left-0 -z-10 h-[40vh] w-full scale-150 blur-3xl brightness-0"
           />
+
+          {isClickLyric && (
+            <>
+              {!isKaraokeMode ? (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  whileTap={{ scale: 0.85 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  onClick={() => handleToggleKaraoke()}
+                  className="absolute -top-16 right-8 cursor-pointer rounded-full bg-white/10 p-1"
+                >
+                  <MagicWand size={28} />
+                </motion.div>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  whileTap={{ scale: 0.85 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  onClick={() => handleToggleKaraoke()}
+                  className="absolute -top-16 right-8 cursor-pointer rounded-full bg-white/10 p-1"
+                >
+                  <MagicWand size={28} weight="fill" />
+                </motion.div>
+              )}
+            </>
+          )}
 
           {!isClickLyric && !isClickFeatured && (
             <div className="space-y-4">
