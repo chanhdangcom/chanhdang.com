@@ -9,6 +9,7 @@ const handler = NextAuth({
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      allowDangerousEmailAccountLinking: true, // Cho phép link account tự động khi email match
       profile(profile) {
         return {
           id: profile.sub,
@@ -20,15 +21,55 @@ const handler = NextAuth({
     }),
   ],
   session: { strategy: "jwt" },
+  pages: {
+    signIn: "/auth/login",
+    error: "/auth/login", // Redirect error về login page
+  },
   callbacks: {
     async signIn({ user, account, profile }) {
-      // Lưu avatar Google vào DB
-      if (account?.provider === "google" && profile && user.email) {
-        const picture = (profile as { picture?: string }).picture;
-        if (picture) {
-          try {
-            const client = await clientPromise;
-            const db = client.db("musicdb");
+      if (!user.email) {
+        return false;
+      }
+
+      try {
+        const client = await clientPromise;
+        const db = client.db("musicdb");
+
+        // Kiểm tra xem user đã tồn tại chưa
+        const existingUser = await db.collection("users").findOne({
+          email: user.email,
+        });
+
+        // Nếu user đã tồn tại nhưng chưa có account linked với Google
+        if (existingUser && account?.provider === "google") {
+          // Kiểm tra xem account đã được link chưa
+          const existingAccount = await db
+            .collection("accounts")
+            .findOne({
+              userId: existingUser._id,
+              provider: "google",
+            });
+
+          // Nếu chưa có account Google, tạo mới và link
+          if (!existingAccount && account) {
+            await db.collection("accounts").insertOne({
+              userId: existingUser._id,
+              type: account.type,
+              provider: account.provider,
+              providerAccountId: account.providerAccountId,
+              access_token: account.access_token,
+              expires_at: account.expires_at,
+              token_type: account.token_type,
+              scope: account.scope,
+              id_token: account.id_token,
+            });
+          }
+        }
+
+        // Lưu/cập nhật avatar Google vào DB
+        if (account?.provider === "google" && profile && user.email) {
+          const picture = (profile as { picture?: string }).picture;
+          if (picture) {
             await db.collection("users").updateOne(
               { email: user.email },
               {
@@ -42,12 +83,15 @@ const handler = NextAuth({
               },
               { upsert: true }
             );
-          } catch (error) {
-            console.error("Error saving Google avatar:", error);
           }
         }
+
+        return true;
+      } catch (error) {
+        console.error("Error in signIn callback:", error);
+        // Cho phép đăng nhập ngay cả khi có lỗi DB (fallback)
+        return true;
       }
-      return true;
     },
     async jwt({ token, account, profile, user }) {
       // Khi đăng nhập lần đầu: lưu data từ Google
