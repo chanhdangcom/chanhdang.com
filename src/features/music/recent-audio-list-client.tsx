@@ -8,14 +8,23 @@ import { useScrollCarousel } from "@/hooks/use-scroll-carousel";
 
 export function RecentAuidoListClient({ musics }: { musics: IMusic[] }) {
   const { handlePlayAudio } = useAudio();
-  const { scrollRef, scrollLeft, scrollRight } = useScrollCarousel();
+  const { scrollRef, scrollLeft, scrollRight, canScrollLeft, canScrollRight } = useScrollCarousel();
 
   return (
     <>
-      <ScrollCarouselItem scrollLeft={scrollLeft} scrollRight={scrollRight}>
+      <ScrollCarouselItem 
+        scrollLeft={scrollLeft} 
+        scrollRight={scrollRight}
+        canScrollLeft={canScrollLeft}
+        canScrollRight={canScrollRight}
+      >
         <div
           ref={scrollRef}
           className="grid snap-x snap-mandatory grid-flow-col grid-rows-1 justify-start overflow-x-auto scroll-smooth scrollbar-hide md:snap-none"
+          style={{
+            scrollBehavior: "smooth",
+            WebkitOverflowScrolling: "touch",
+          }}
         >
           {musics.slice(0, 8).map((music, index) => (
             <div key={music.id} className="snap-start">

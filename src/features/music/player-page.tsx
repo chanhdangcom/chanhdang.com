@@ -144,14 +144,12 @@ const SubtitleItem = memo(
         animate={
           isActive
             ? { opacity: 1, y: 0, scale: 1 }
-            : { opacity: 0.4, y: 6, scale: 0.98 }
+            : { opacity: 0.35, y: 10, scale: 0.97 }
         }
         transition={{ type: "spring", stiffness: 220, damping: 22, mass: 0.7 }}
         id={`subtitle-${id}`}
-        className={`mb-4 text-balance md:mb-8 ${
-          isActive
-            ? "font-semibold leading-snug text-white"
-            : "leading-snug text-zinc-400"
+        className={`z-40 mb-4 text-balance md:mb-8 ${
+          isActive ? "font-semibold leading-snug text-white" : "leading-snug"
         }`}
       >
         {text}
@@ -187,6 +185,7 @@ const LyricPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
   const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const [touchDeltaY, setTouchDeltaY] = useState(0);
+  const subtitleScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -196,6 +195,51 @@ const LyricPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
       setIsPlayerPageOpen(false); // Báo PlayerPage đóng để tắt sync
     };
   }, [setIsPlayerPageOpen]);
+
+  // Auto scroll đến subtitle active với hiệu ứng mượt mà
+  useEffect(() => {
+    if (!currentSubtitleId || !subtitleScrollRef.current) return;
+
+    // Delay nhỏ để đảm bảo DOM đã render và animation đã bắt đầu
+    const timeoutId = setTimeout(() => {
+      const scrollContainer = subtitleScrollRef.current;
+      const activeElement = document.getElementById(
+        `subtitle-${currentSubtitleId}`
+      );
+
+      if (!scrollContainer || !activeElement) return;
+
+      const containerRect = scrollContainer.getBoundingClientRect();
+      const elementRect = activeElement.getBoundingClientRect();
+      const containerScrollTop = scrollContainer.scrollTop;
+      const viewportHeight = containerRect.height;
+
+      // Tính toán vị trí chính xác của element trong container
+      const elementTop =
+        elementRect.top - containerRect.top + containerScrollTop;
+
+      // Vị trí mục tiêu: 20% từ trên viewport (cố định)
+      const targetOffset = viewportHeight * 0.2;
+      const targetScrollTop = elementTop - targetOffset;
+
+      // Kiểm tra xem element có đang ở vị trí tốt không (tolerance ±50px để tránh scroll liên tục)
+      const currentOffset = elementRect.top - containerRect.top;
+      const offsetDifference = Math.abs(currentOffset - targetOffset);
+
+      // Nếu đã ở vị trí tốt (sai lệch < 50px), không cần scroll
+      if (offsetDifference < 50 && currentOffset >= 0) {
+        return;
+      }
+
+      // Scroll mượt mà với easing
+      scrollContainer.scrollTo({
+        top: Math.max(0, targetScrollTop),
+        behavior: "smooth",
+      });
+    }, 150); // Delay 150ms để đảm bảo animation đã render hoàn toàn
+
+    return () => clearTimeout(timeoutId);
+  }, [currentSubtitleId]);
 
   // Kiểm tra xem bài hát có trong Favorites hay không
   useEffect(() => {
@@ -413,7 +457,14 @@ const LyricPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
               </div>
             </div>
 
-            <div className="pointer-events-none relative inset-x-4 h-full overflow-y-auto scrollbar-hide">
+            <div
+              ref={subtitleScrollRef}
+              className="pointer-events-none relative inset-x-4 h-full overflow-y-auto scrollbar-hide"
+              style={{
+                scrollBehavior: "smooth",
+                WebkitOverflowScrolling: "touch",
+              }}
+            >
               <div className="text-balance px-4 pt-32 font-apple text-3xl font-bold leading-loose text-zinc-700 dark:text-zinc-300">
                 {subtitles.map((line) => (
                   <SubtitleItem
@@ -447,6 +498,7 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
 
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const [touchDeltaY, setTouchDeltaY] = useState(0);
+  const subtitleScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -456,6 +508,51 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
       setIsPlayerPageOpen(false); // Báo PlayerPage đóng để tắt sync
     };
   }, [setIsPlayerPageOpen]);
+
+  // Auto scroll đến subtitle active với hiệu ứng mượt mà
+  useEffect(() => {
+    if (!currentSubtitleId || !subtitleScrollRef.current) return;
+
+    // Delay nhỏ để đảm bảo DOM đã render và animation đã bắt đầu
+    const timeoutId = setTimeout(() => {
+      const scrollContainer = subtitleScrollRef.current;
+      const activeElement = document.getElementById(
+        `subtitle-${currentSubtitleId}`
+      );
+
+      if (!scrollContainer || !activeElement) return;
+
+      const containerRect = scrollContainer.getBoundingClientRect();
+      const elementRect = activeElement.getBoundingClientRect();
+      const containerScrollTop = scrollContainer.scrollTop;
+      const viewportHeight = containerRect.height;
+
+      // Tính toán vị trí chính xác của element trong container
+      const elementTop =
+        elementRect.top - containerRect.top + containerScrollTop;
+
+      // Vị trí mục tiêu: 20% từ trên viewport (cố định)
+      const targetOffset = viewportHeight * 0.2;
+      const targetScrollTop = elementTop - targetOffset;
+
+      // Kiểm tra xem element có đang ở vị trí tốt không (tolerance ±50px để tránh scroll liên tục)
+      const currentOffset = elementRect.top - containerRect.top;
+      const offsetDifference = Math.abs(currentOffset - targetOffset);
+
+      // Nếu đã ở vị trí tốt (sai lệch < 50px), không cần scroll
+      if (offsetDifference < 50 && currentOffset >= 0) {
+        return;
+      }
+
+      // Scroll mượt mà với easing
+      scrollContainer.scrollTo({
+        top: Math.max(0, targetScrollTop),
+        behavior: "smooth",
+      });
+    }, 150); // Delay 150ms để đảm bảo animation đã render hoàn toàn
+
+    return () => clearTimeout(timeoutId);
+  }, [currentSubtitleId]);
 
   // Kiểm tra xem bài hát có trong Favorites hay không
 
@@ -562,7 +659,14 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
             </div>
           </div>
 
-          <div className="pointer-events-none ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block">
+          <div
+            ref={subtitleScrollRef}
+            className="pointer-events-none ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block"
+            style={{
+              scrollBehavior: "smooth",
+              WebkitOverflowScrolling: "touch",
+            }}
+          >
             <div className="px-4 py-12 font-apple text-4xl font-bold leading-loose text-zinc-300">
               {subtitles.map((line) => (
                 <SubtitleItem

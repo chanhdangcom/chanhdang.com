@@ -65,6 +65,13 @@
     display: none; /* Chrome, Safari, Edge */
   }
 
+  /* Smooth scrolling with momentum */
+  .scroll-smooth-momentum {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    overscroll-behavior-x: contain;
+  }
+
   /* Global scrollbar removal */
   html {
     scrollbar-width: none; /* Firefox */

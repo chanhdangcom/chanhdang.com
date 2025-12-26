@@ -8,13 +8,23 @@ import { useScrollCarousel } from "@/hooks/use-scroll-carousel";
 
 export function NewAuidoListClient({ musics }: { musics: IMusic[] }) {
   const { handlePlayAudio } = useAudio();
-  const { scrollRef, scrollLeft, scrollRight } = useScrollCarousel();
+  const { scrollRef, scrollLeft, scrollRight, canScrollLeft, canScrollRight } =
+    useScrollCarousel();
 
   return (
-    <ScrollCarouselItem scrollLeft={scrollLeft} scrollRight={scrollRight}>
+    <ScrollCarouselItem
+      scrollLeft={scrollLeft}
+      scrollRight={scrollRight}
+      canScrollLeft={canScrollLeft}
+      canScrollRight={canScrollRight}
+    >
       <div
         ref={scrollRef}
         className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth scrollbar-hide md:snap-none"
+        style={{
+          scrollBehavior: "smooth",
+          WebkitOverflowScrolling: "touch",
+        }}
       >
         {musics
           .slice(-8)
