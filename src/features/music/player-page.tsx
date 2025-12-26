@@ -149,8 +149,10 @@ const SubtitleItem = memo(
         }
         transition={{ type: "spring", stiffness: 220, damping: 22, mass: 0.7 }}
         id={`subtitle-${id}`}
-        className={`z-40 mb-6 md:mb-8 ${
-          isActive ? "font-semibold leading-snug text-white" : "leading-snug"
+        className={`z-40 mb-6 text-balance md:mb-8 ${
+          isActive
+            ? "text-balance font-semibold leading-snug text-white"
+            : "leading-snug"
         }`}
       >
         {text}
@@ -618,7 +620,7 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                 <motion.div
                   layoutId="Cover"
                   key={currentMusic?.cover}
-                  className="flex justify-center gap-8"
+                  className="flex justify-center md:mx-2 md:justify-start"
                 >
                   <div className="relative">
                     <motion.img
@@ -631,7 +633,7 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                         type: "spring",
                         damping: 15,
                       }}
-                      className="flex h-[70vh] w-full shrink-0 justify-center rounded-3xl object-cover md:h-[55vh] md:w-[60vh]"
+                      className="flex h-[70vh] w-full shrink-0 justify-center rounded-3xl object-cover md:h-[55vh] md:w-[37vw]"
                     />
 
                     <div
@@ -676,7 +678,7 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
               overscrollBehaviorY: "auto",
             }}
           >
-            <div className="px-4 py-12 font-apple text-4xl font-bold leading-loose text-zinc-300">
+            <div className="px-4 py-12 text-right font-apple text-4xl font-bold leading-loose text-zinc-300">
               {subtitles.map((line) => (
                 <SubtitleItem
                   key={line.id}
@@ -705,6 +707,8 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
     handlePlayRandomAudio,
     handleToggleRepeat,
     isRepeat,
+    currentSubtitleId,
+    subtitles,
   } = useAudio();
 
   const { user } = useUser();
@@ -717,6 +721,10 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
   const [isLoadingRecent, setIsLoadingRecent] = useState(false);
   const [shuffledRecent, setShuffledRecent] = useState<IMusic[]>([]);
   const recentListRef = useRef<HTMLDivElement | null>(null);
+  const subtitleScrollRef = useRef<HTMLDivElement>(null);
+
+  // Thêm hiệu ứng scroll lò xo
+  useSpringScroll(subtitleScrollRef);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -726,6 +734,53 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
       setIsPlayerPageOpen(false); // Báo PlayerPage đóng để tắt sync
     };
   }, [setIsPlayerPageOpen]);
+
+  // Auto scroll đến subtitle active với hiệu ứng mượt mà
+  useEffect(() => {
+    if (!currentSubtitleId || !subtitleScrollRef.current) return;
+
+    // Delay nhỏ để đảm bảo DOM đã render và animation đã bắt đầu
+    const timeoutId = setTimeout(() => {
+      const scrollContainer = subtitleScrollRef.current;
+      const activeElement = document.getElementById(
+        `subtitle-${currentSubtitleId}`
+      );
+
+      if (!scrollContainer || !activeElement) return;
+
+      const containerRect = scrollContainer.getBoundingClientRect();
+      const elementRect = activeElement.getBoundingClientRect();
+      const containerScrollTop = scrollContainer.scrollTop;
+      const viewportHeight = containerRect.height;
+
+      // Kiểm tra xem element có đang ở vị trí tốt trong viewport không
+      const elementTopInView = elementRect.top - containerRect.top;
+      const elementBottomInView = elementRect.bottom - containerRect.top;
+
+      // Kiểm tra nếu element đã ở vị trí tốt (giữa 15% và 50% viewport - ở phía trên)
+      const isElementInGoodPosition =
+        elementTopInView >= viewportHeight * 0.15 &&
+        elementBottomInView <= viewportHeight * 0.5 &&
+        elementTopInView >= 0 &&
+        elementBottomInView <= viewportHeight;
+
+      // Nếu đã ở vị trí tốt, không cần scroll
+      if (isElementInGoodPosition) return;
+
+      // Tính toán vị trí để subtitle active ở 20% từ trên (ở phía trên viewport)
+      const elementTop =
+        elementRect.top - containerRect.top + containerScrollTop;
+      const targetScrollTop = elementTop - viewportHeight * 0.2;
+
+      // Scroll mượt mà với easing
+      scrollContainer.scrollTo({
+        top: Math.max(0, targetScrollTop),
+        behavior: "smooth",
+      });
+    }, 150); // Delay 150ms để đảm bảo animation đã render hoàn toàn
+
+    return () => clearTimeout(timeoutId);
+  }, [currentSubtitleId]);
 
   // Kiểm tra xem bài hát có trong Favorites hay không
   useEffect(() => {
@@ -916,13 +971,13 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
           layoutId="audio-bar"
           className="fixed inset-0 z-50 flex justify-between space-y-4 px-4 md:rounded-3xl md:border md:border-white/10"
         >
-          <div className="w-full">
+          <div className="flex w-full">
             <div className="absolute inset-0 -z-10 flex justify-center bg-zinc-950 backdrop-blur-3xl">
               <img
                 key={currentMusic?.cover}
                 src={currentMusic?.cover || ""}
                 alt="cover"
-                className="mt-8 h-full w-full rotate-180 scale-110 opacity-70 blur-3xl md:mt-24 md:h-screen md:w-full md:blur-3xl"
+                className="mt-8 h-full w-[50vw] rotate-180 scale-110 opacity-70 blur-3xl md:mt-24 md:h-screen md:w-full md:blur-3xl"
               />
             </div>
 
@@ -1003,7 +1058,7 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                   <MusicActionsMenu />
                 </div>
 
-                <div className="mt-4 flex items-center justify-between">
+                <div className="mt-4 flex items-center justify-between md:justify-start md:gap-16">
                   <motion.div
                     className="cursor-pointer rounded-full bg-white/10 px-6 py-2"
                     onClick={() => handlePlayRandomAudio()}
@@ -1063,6 +1118,27 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                       </div>
                     )}
                 </div>
+              </div>
+            </div>
+
+            <div
+              ref={subtitleScrollRef}
+              className="scroll-spring pointer-events-none ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block"
+              style={{
+                scrollBehavior: "smooth",
+                WebkitOverflowScrolling: "touch",
+                overscrollBehaviorY: "auto",
+              }}
+            >
+              <div className="text-balance px-4 py-12 text-right font-apple text-4xl font-bold leading-loose text-zinc-300">
+                {subtitles.map((line) => (
+                  <SubtitleItem
+                    key={line.id}
+                    id={line.id}
+                    text={line.text}
+                    isActive={currentSubtitleId === line.id}
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -1227,7 +1303,7 @@ export function PlayerPage({ setIsClick }: IProp) {
       )}
 
       <>
-        <div className="fixed bottom-0 z-50 w-full space-y-6 px-8 pb-8 md:bottom-8 md:w-[50vw]">
+        <div className="fixed bottom-0 z-50 w-full space-y-6 px-8 pb-8 md:bottom-8 md:w-[40vw]">
           <img
             alt="cover"
             src={currentMusic?.cover || ""}
@@ -1265,7 +1341,7 @@ export function PlayerPage({ setIsClick }: IProp) {
           )}
 
           {!isClickLyric && !isClickFeatured && (
-            <div className="space-y-4">
+            <div className="">
               <div className="flex items-center justify-between">
                 <AnimatePresence>
                   <motion.div
@@ -1280,7 +1356,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                       {currentMusic?.title || "TITLE SONG"}
                     </div>
 
-                    <div className="text-lg text-zinc-400">
+                    <div className="text-lg text-zinc-300">
                       {currentMusic?.singer || "SINGER"}
                     </div>
                   </motion.div>
@@ -1339,7 +1415,7 @@ export function PlayerPage({ setIsClick }: IProp) {
           <div className="space-y-6">
             <VolumeBar />
 
-            <div className="mx-8 flex items-center justify-between text-base text-zinc-400 md:hidden">
+            <div className="mx-8 flex items-center justify-between text-base text-zinc-400">
               <div onClick={() => setIsClickLyric(!isClickLyric)}>
                 {!isClickLyric ? (
                   <ChatTeardropDots size={25} />
