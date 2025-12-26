@@ -7,13 +7,14 @@ export function NewReleaseList({ musics }: { musics: IMusic[] }) {
   const { handlePlayAudio } = useAudio();
 
   return (
-    <div className="ml-2 flex shrink-0 justify-center md:ml-[270px]">
-      <div className="grid grid-cols-2 md:grid-cols-5">
+    <div className="shrink-0 md:ml-[270px]">
+      <div className="mx-2 grid grid-cols-2 gap-1 md:grid-cols-5">
         {musics.reverse().map((music) => (
           <div key={music.id}>
             <AuidoItem
               music={music}
               handlePlay={() => handlePlayAudio(music)}
+              className="w-full"
             />
           </div>
         ))}

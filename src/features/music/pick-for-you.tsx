@@ -12,14 +12,14 @@ export function PickForYou() {
   return (
     <>
       <div className="flex text-xl font-bold">
-        <div className="ml-2 px-1 text-black dark:text-white md:ml-[270px]">
+        <div className="px-1 text-black dark:text-white md:ml-[270px]">
           Top Pick For You
         </div>
       </div>
 
       <div
         ref={useRefScroll}
-        className="mt-2 flex w-full snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth px-1.5 text-white scrollbar-hide"
+        className="mt-2 flex w-full snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth text-white scrollbar-hide"
       >
         <div className="snap-start">
           <div
@@ -46,7 +46,7 @@ export function PickForYou() {
 
         <div className="snap-start">
           <div
-            className="relative ml-2 h-72 w-56 shrink-0 overflow-hidden rounded-2xl"
+            className="relative h-72 w-56 shrink-0 overflow-hidden rounded-2xl"
             onClick={() => handlePlayRandomAudio()}
           >
             <BorderPro roundedSize="rounded-3x">
@@ -78,7 +78,7 @@ export function PickForYou() {
 
         <div className="snap-start">
           <div
-            className="relative ml-2 h-72 w-56 shrink-0 snap-start overflow-hidden rounded-2xl"
+            className="relative h-72 w-56 shrink-0 snap-start overflow-hidden rounded-2xl"
             onClick={() => handlePlayRandomAudio()}
           >
             <img src="/img/image.png" alt="" className="h-full w-full" />
@@ -98,7 +98,7 @@ export function PickForYou() {
         </div>
 
         <div
-          className="relative ml-2 h-72 w-56 shrink-0 snap-start overflow-hidden rounded-2xl bg-red-600"
+          className="relative h-72 w-56 shrink-0 snap-start overflow-hidden rounded-2xl bg-red-600"
           onClick={() => handlePlayRandomAudio()}
         >
           <img

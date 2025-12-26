@@ -22,6 +22,7 @@ export function TableRankingItem({ music, handlePlay }: Iprop) {
           music={music}
           handlePlay={() => handlePlayAudio}
           // item={<DotsThreeVertical size={20} weight="bold" />}
+          border={true}
         />
       </div>
     </div>

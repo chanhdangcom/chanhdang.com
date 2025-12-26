@@ -10,13 +10,15 @@ import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { BorderPro } from "./border-pro";
 import { LibraryTrackButton } from "../library/library-track-button";
 import { useImageHoverColor } from "@/hooks/use-image-hover-color";
+import { cn } from "@/lib/utils";
 
 type IProp = {
   music: IMusic;
   handlePlay?: () => void;
+  className?: string;
 };
 
-export function AuidoItem({ music, handlePlay }: IProp) {
+export function AuidoItem({ music, handlePlay, className }: IProp) {
   const { user } = useUser();
   const [isEnter, setIsEnter] = useState<boolean>(false);
   const hoverBg = useImageHoverColor(music?.cover);
@@ -26,7 +28,10 @@ export function AuidoItem({ music, handlePlay }: IProp) {
       <div
         onMouseEnter={() => setIsEnter(true)}
         onMouseLeave={() => setIsEnter(false)}
-        className="w-44 shrink-0 space-y-1 rounded-xl p-2 text-zinc-50 md:w-52"
+        className={cn(
+          "w-44 shrink-0 space-y-1 rounded-xl p-1 pb-1.5 text-zinc-50 md:w-52",
+          className
+        )}
         style={{
           backgroundColor: isEnter ? hoverBg : "transparent",
           transition: "background-color 150ms ease",
@@ -38,7 +43,10 @@ export function AuidoItem({ music, handlePlay }: IProp) {
               <img
                 src={music.cover}
                 alt="cover"
-                className="mx-auto size-44 shrink-0 cursor-pointer justify-center rounded-xl object-cover md:size-52"
+                className={cn(
+                  "mx-auto size-44 shrink-0 cursor-pointer justify-center rounded-xl object-cover md:size-52",
+                  className
+                )}
                 onClick={handlePlay}
               />
             </BorderPro>
@@ -54,7 +62,7 @@ export function AuidoItem({ music, handlePlay }: IProp) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.2, ease: "easeIn" }}
-              className="pointer-events-none absolute top-0 h-20 w-full rounded-md bg-gradient-to-b from-zinc-900/80 to-transparent"
+              className="pointer-events-none absolute top-0 h-20 w-full rounded-t-lg bg-gradient-to-b from-zinc-900/80 to-transparent"
             ></motion.div>
           )}
 

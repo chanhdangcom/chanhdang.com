@@ -28,7 +28,7 @@ export function MusicPage() {
 
       <div className="mx-auto w-full">
         <div className="relative z-10">
-          <div className="z-20 md:ml-[270px]">
+          <div className="z-20 mb-2 md:ml-[270px]">
             <HeaderMusicPage />
           </div>
 
@@ -37,11 +37,11 @@ export function MusicPage() {
               <PickForYou />
             </div>
 
-            <div className="mt-6 flex justify-start">
+            <div className="flex justify-start">
               <CarouselTopic />
             </div>
 
-            <div className="mt-6 flex justify-start">
+            <div className="mt-4 flex justify-start">
               <RecentCarouselAudio />
             </div>
 
@@ -61,7 +61,7 @@ export function MusicPage() {
               <TableRanking />
             </div>
 
-            <div className="my-4">
+            <div className="mt-4">
               <SingerList />
             </div>
 
