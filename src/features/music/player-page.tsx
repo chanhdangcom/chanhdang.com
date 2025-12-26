@@ -23,6 +23,7 @@ import {
 
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useState, useRef, memo } from "react";
+import { useSpringScroll } from "@/hooks/use-spring-scroll";
 import { useRouter } from "next/navigation";
 import { AudioTimeLine } from "./component/audio-time-line";
 // import DynamicIslandWave from "@/components/ui/dynamic-island";
@@ -148,7 +149,7 @@ const SubtitleItem = memo(
         }
         transition={{ type: "spring", stiffness: 220, damping: 22, mass: 0.7 }}
         id={`subtitle-${id}`}
-        className={`z-40 mb-4 text-balance md:mb-8 ${
+        className={`z-40 mb-6 md:mb-8 ${
           isActive ? "font-semibold leading-snug text-white" : "leading-snug"
         }`}
       >
@@ -186,6 +187,9 @@ const LyricPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const [touchDeltaY, setTouchDeltaY] = useState(0);
   const subtitleScrollRef = useRef<HTMLDivElement>(null);
+
+  // Thêm hiệu ứng scroll lò xo
+  useSpringScroll(subtitleScrollRef);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -459,13 +463,14 @@ const LyricPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
 
             <div
               ref={subtitleScrollRef}
-              className="pointer-events-none relative inset-x-4 h-full overflow-y-auto scrollbar-hide"
+              className="scroll-spring pointer-events-none relative h-full overflow-y-auto scrollbar-hide"
               style={{
                 scrollBehavior: "smooth",
                 WebkitOverflowScrolling: "touch",
+                overscrollBehaviorY: "auto",
               }}
             >
-              <div className="text-balance px-4 pt-32 font-apple text-3xl font-bold leading-loose text-zinc-700 dark:text-zinc-300">
+              <div className="px-2 pt-32 font-apple text-3xl font-bold leading-loose text-zinc-700 dark:text-zinc-300">
                 {subtitles.map((line) => (
                   <SubtitleItem
                     key={line.id}
@@ -499,6 +504,9 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const [touchDeltaY, setTouchDeltaY] = useState(0);
   const subtitleScrollRef = useRef<HTMLDivElement>(null);
+
+  // Thêm hiệu ứng scroll lò xo
+  useSpringScroll(subtitleScrollRef);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -661,10 +669,11 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
 
           <div
             ref={subtitleScrollRef}
-            className="pointer-events-none ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block"
+            className="scroll-spring pointer-events-none ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block"
             style={{
               scrollBehavior: "smooth",
               WebkitOverflowScrolling: "touch",
+              overscrollBehaviorY: "auto",
             }}
           >
             <div className="px-4 py-12 font-apple text-4xl font-bold leading-loose text-zinc-300">

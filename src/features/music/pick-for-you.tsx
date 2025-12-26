@@ -23,7 +23,7 @@ export function PickForYou() {
       >
         <div className="snap-start">
           <div
-            className="relative ml-4 h-72 w-56 shrink-0 overflow-hidden rounded-2xl md:ml-[270px]"
+            className="relative ml-3 h-72 w-56 shrink-0 overflow-hidden rounded-2xl md:ml-[270px]"
             onClick={() => handlePlayRandomAudio()}
           >
             <img src="/img/image-1.PNG" alt="" className="h-72 w-56" />

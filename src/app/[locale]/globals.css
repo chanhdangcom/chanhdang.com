@@ -72,6 +72,21 @@
     overscroll-behavior-x: contain;
   }
 
+  /* Apple Music iOS 16 style spring scroll */
+  .scroll-spring {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: bounce;
+    overscroll-behavior-x: contain;
+    scroll-behavior: smooth;
+  }
+
+  /* Spring bounce effect for webkit browsers */
+  @supports (-webkit-overflow-scrolling: touch) {
+    .scroll-spring {
+      overscroll-behavior-y: auto;
+    }
+  }
+
   /* Global scrollbar removal */
   html {
     scrollbar-width: none; /* Firefox */
