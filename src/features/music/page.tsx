@@ -33,7 +33,7 @@ export function MusicPage() {
           </div>
 
           <>
-            <div>
+            <div className="mb-3">
               <PickForYou />
             </div>
 

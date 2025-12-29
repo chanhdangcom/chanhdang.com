@@ -11,7 +11,8 @@ type IProp = {
 
 export function SingerListClient({ singers }: IProp) {
   const router = useRouter();
-  const { scrollRef, scrollLeft, scrollRight } = useScrollCarousel();
+  const { scrollRef, scrollLeft, scrollRight, canScrollLeft, canScrollRight } =
+    useScrollCarousel();
   const params = useParams();
   const locale = (params?.locale as string) || "vi";
 
@@ -23,7 +24,12 @@ export function SingerListClient({ singers }: IProp) {
         </div>
       </div>
 
-      <ScrollCarouselItem scrollLeft={scrollLeft} scrollRight={scrollRight}>
+      <ScrollCarouselItem
+        scrollLeft={scrollLeft}
+        scrollRight={scrollRight}
+        canScrollLeft={canScrollLeft}
+        canScrollRight={canScrollRight}
+      >
         <div
           ref={scrollRef}
           className="mt-2 flex snap-x snap-mandatory items-center gap-1 overflow-x-auto scrollbar-hide md:snap-none"
@@ -32,7 +38,7 @@ export function SingerListClient({ singers }: IProp) {
             <div key={music.id} className="max-w-full shrink-0 snap-start">
               <div className="shrink-0 snap-start">
                 <div
-                  className={` ${index === 0 ? "ml-4 md:ml-[270px]" : ""} ml-2`}
+                  className={`${index === 0 ? "ml-4 md:ml-[270px]" : "ml-2"}`}
                 >
                   <SingerItem
                     music={music}

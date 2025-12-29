@@ -17,7 +17,7 @@ export const HeaderMusicPage = ({ name }: IProp) => {
                 <div className="h-10 w-full backdrop-blur-[1px]" />
               </div>
 
-              <div className="z-20 ml-3 text-3xl font-bold md:ml-0">
+              <div className="z-20 ml-3 text-3xl font-bold md:ml-0 md:mt-4">
                 {name || "Home"}
               </div>
             </>

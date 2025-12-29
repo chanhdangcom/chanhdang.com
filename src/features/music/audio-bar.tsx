@@ -148,7 +148,7 @@ export function AudioBar() {
         scroll ? "inset-x-2 bottom-[82px]" : "inset-x-20 bottom-6"
       }`}
     >
-      <div className="relative overflow-hidden rounded-[50px] border border-white/20 bg-zinc-200/70 px-3 py-1 backdrop-blur-sm dark:bg-zinc-900/70 md:rounded-[55px]">
+      <div className="relative overflow-hidden rounded-[50px] border border-white/10 bg-zinc-200/70 px-3 py-1 backdrop-blur-sm dark:bg-zinc-900/70 md:rounded-[55px]">
         <div
           onClick={() => {
             if (window.innerWidth < 768) {

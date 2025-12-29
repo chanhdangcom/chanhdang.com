@@ -12,7 +12,7 @@ export function PickForYou() {
   return (
     <>
       <div className="flex text-xl font-bold">
-        <div className="px-3 text-black dark:text-white md:ml-[270px]">
+        <div className="px-3 text-black dark:text-white md:ml-[270px] md:px-0">
           Top Pick For You
         </div>
       </div>

@@ -24,10 +24,11 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useState, useRef, memo } from "react";
 import { useSpringScroll } from "@/hooks/use-spring-scroll";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { AudioTimeLine } from "./component/audio-time-line";
 // import DynamicIslandWave from "@/components/ui/dynamic-island";
 import { BorderPro } from "./component/border-pro";
+import { ISingerItem } from "./type/singer";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,6 +40,7 @@ import {
 import { useUser } from "@/hooks/use-user";
 import { VolumeBar } from "./volume-bar";
 import { AudioItemOrder } from "./component/audio-item-order";
+import Link from "next/link";
 
 type IProp = {
   setIsClick: () => void;
@@ -69,14 +71,17 @@ const useMusicActionsMenu = ({
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="cursor-pointer rounded-full bg-white/10 p-0.5">
-            <DotsThree size={30} weight="bold" />
-          </button>
+          <motion.button
+            whileTap={{ scale: 0.8 }}
+            className="cursor-pointer rounded-full bg-white/10 p-0.5"
+          >
+            <DotsThree size={30} weight="bold" className="text-white" />
+          </motion.button>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent
           align="end"
-          className="min-w-[180px] rounded-xl border-white/10 backdrop-blur-xl dark:bg-zinc-950/50"
+          className="min-w-[180px] rounded-xl border-white/10 bg-zinc-950/50 backdrop-blur-xl"
         >
           <DropdownMenuItem
             onClick={onToggleFavorites}
@@ -385,7 +390,7 @@ const LyricPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
             </div>
 
             <header
-              className="flex items-center justify-start p-1 text-black dark:text-white md:py-4"
+              className="flex items-center justify-start p-1 text-white md:py-4"
               onTouchStart={(e) => {
                 if (e.touches.length > 0) {
                   setTouchStartY(e.touches[0].clientY);
@@ -448,10 +453,10 @@ const LyricPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                         transition={{ duration: 0.3, ease: "easeInOut" }}
                         className=""
                       >
-                        <div className="line-clamp-1 font-semibold">
+                        <div className="line-clamp-1 font-semibold text-white">
                           {currentMusic?.title || "TITLE SONG"}
                         </div>
-                        <div className="line-clamp-1">
+                        <div className="line-clamp-1 text-zinc-300">
                           {currentMusic?.singer || "SINGER"}
                         </div>
                       </motion.div>
@@ -472,7 +477,7 @@ const LyricPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                 overscrollBehaviorY: "auto",
               }}
             >
-              <div className="px-2 pt-32 font-apple text-3xl font-bold leading-loose text-zinc-700 dark:text-zinc-300">
+              <div className="px-2 pt-32 font-apple text-3xl font-bold leading-loose text-zinc-300">
                 {subtitles.map((line) => (
                   <SubtitleItem
                     key={line.id}
@@ -585,7 +590,7 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
             </div>
 
             <header
-              className="flex items-center justify-start p-1 text-black dark:text-white md:py-4"
+              className="flex items-center justify-start p-1 text-white md:py-4"
               onTouchStart={(e) => {
                 if (e.touches.length > 0) {
                   setTouchStartY(e.touches[0].clientY);
@@ -608,7 +613,7 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
             >
               <CaretDown
                 size={20}
-                className="hidden cursor-pointer md:flex"
+                className="ml-4 hidden cursor-pointer md:flex"
                 onClick={onRequestClose}
               />
 
@@ -640,7 +645,7 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                       className={
                         isPaused
                           ? ""
-                          : "pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-black/10 duration-300 dark:ring-white/10"
+                          : "pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/10 duration-300"
                       }
                     />
                   </div>
@@ -717,10 +722,9 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
   const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const [touchDeltaY, setTouchDeltaY] = useState(0);
-  const [recentMusics, setRecentMusics] = useState<IMusic[]>([]);
-  const [isLoadingRecent, setIsLoadingRecent] = useState(false);
-  const [shuffledRecent, setShuffledRecent] = useState<IMusic[]>([]);
-  const recentListRef = useRef<HTMLDivElement | null>(null);
+  const [randomMusics, setRandomMusics] = useState<IMusic[]>([]);
+  const [isLoadingRandom, setIsLoadingRandom] = useState(false);
+  const randomListRef = useRef<HTMLDivElement | null>(null);
   const subtitleScrollRef = useRef<HTMLDivElement>(null);
 
   // Thêm hiệu ứng scroll lò xo
@@ -809,67 +813,45 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
     checkFavorites();
   }, [user?.id, currentMusic?.id]);
 
-  // Lấy danh sách nhạc đã nghe gần đây
+  // Lấy danh sách nhạc random
   useEffect(() => {
     const controller = new AbortController();
 
-    const fetchHistory = async () => {
-      if (!user?.id) {
-        setRecentMusics([]);
-        setIsLoadingRecent(false);
-        return;
-      }
-
-      setIsLoadingRecent(true);
+    const fetchRandomMusics = async () => {
+      setIsLoadingRandom(true);
       try {
-        const res = await fetch(`/api/history?userId=${user.id}&limit=8`, {
+        const res = await fetch(`/api/musics?random=1&limit=8`, {
           cache: "no-store",
           signal: controller.signal,
         });
 
         if (!res.ok) return;
 
-        const data = (await res.json()) as {
-          musicData?: IMusic;
-        }[];
+        const data = (await res.json()) as IMusic[];
 
         const parsed = Array.isArray(data)
-          ? data
-              .map((item) => item.musicData)
-              .filter((music): music is IMusic => Boolean(music?.id))
+          ? data.filter((music): music is IMusic => Boolean(music?.id))
           : [];
 
-        setRecentMusics(parsed);
+        // Loại bỏ bài hát hiện tại nếu có
+        const filtered = parsed.filter(
+          (music) => music.id !== currentMusic?.id
+        );
+        setRandomMusics(filtered);
       } catch (error) {
         if (controller.signal.aborted) return;
-        console.error("Error fetching recent history:", error);
+        console.error("Error fetching random musics:", error);
       } finally {
         if (!controller.signal.aborted) {
-          setIsLoadingRecent(false);
+          setIsLoadingRandom(false);
         }
       }
     };
 
-    fetchHistory();
+    fetchRandomMusics();
 
     return () => controller.abort();
-  }, [user?.id]);
-
-  // Shuffle danh sách recent 1 lần cho mỗi bài/currentMusic
-  useEffect(() => {
-    if (!recentMusics.length) {
-      setShuffledRecent([]);
-      return;
-    }
-
-    const copy = [...recentMusics];
-    for (let i = copy.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [copy[i], copy[j]] = [copy[j], copy[i]];
-    }
-
-    setShuffledRecent(copy);
-  }, [recentMusics, currentMusic?.id]);
+  }, [currentMusic?.id]);
 
   // Xử lý thêm/xóa khỏi Favorites
   const handleToggleFavorites = async () => {
@@ -1045,10 +1027,10 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                         transition={{ duration: 0.3, ease: "easeInOut" }}
                         className=""
                       >
-                        <div className="line-clamp-1 font-semibold">
+                        <div className="line-clamp-1 font-semibold text-white">
                           {currentMusic?.title || "TITLE SONG"}
                         </div>
-                        <div className="line-clamp-1">
+                        <div className="line-clamp-1 text-zinc-300">
                           {currentMusic?.singer || "SINGER"}
                         </div>
                       </motion.div>
@@ -1060,7 +1042,7 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
 
                 <div className="mt-4 flex items-center justify-between md:justify-start md:gap-16">
                   <motion.div
-                    className="cursor-pointer rounded-full bg-white/10 px-6 py-2"
+                    className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white"
                     onClick={() => handlePlayRandomAudio()}
                     whileTap={{ scale: 0.8 }}
                   >
@@ -1068,7 +1050,7 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                   </motion.div>
 
                   <motion.div
-                    className="cursor-pointer rounded-full bg-white/10 px-6 py-2"
+                    className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white"
                     onClick={() => handleToggleRepeat()}
                     whileTap={{ scale: 0.8 }}
                   >
@@ -1079,43 +1061,41 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                     )}
                   </motion.div>
 
-                  <div className="cursor-pointer rounded-full bg-white/10 px-6 py-2">
+                  <div className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white">
                     <Infinity size={25} weight="regular" />
                   </div>
 
-                  <div className="cursor-pointer rounded-full bg-white/10 px-6 py-2">
+                  <div className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white">
                     <Exclude size={25} weight="fill" />
                   </div>
                 </div>
 
                 <div className="mt-4">
-                  <div className="font-semibold">Continue Playing</div>
+                  <div className="font-semibold text-white">Random Music</div>
 
-                  {isLoadingRecent && (
+                  {isLoadingRandom && (
                     <div className="mt-2 text-xs text-zinc-400">
-                      Đang tải lịch sử...
+                      Đang tải nhạc...
                     </div>
                   )}
 
-                  {!isLoadingRecent &&
-                    user?.id &&
-                    shuffledRecent.length > 0 && (
-                      <div className="relative mt-2">
-                        <div
-                          ref={recentListRef}
-                          className="h-[40vh] w-full space-y-4 overflow-y-auto pr-2 scrollbar-hide"
-                        >
-                          {shuffledRecent.slice(0, 8).map((music) => (
-                            <AudioItemOrder
-                              key={music.id}
-                              music={music}
-                              handlePlay={() => handlePlayAudio(music)}
-                              border={false}
-                            />
-                          ))}
-                        </div>
+                  {!isLoadingRandom && randomMusics.length > 0 && (
+                    <div className="relative mt-2">
+                      <div
+                        ref={randomListRef}
+                        className="h-[40vh] w-full space-y-4 overflow-y-auto pr-2 scrollbar-hide"
+                      >
+                        {randomMusics.slice(0, 8).map((music) => (
+                          <AudioItemOrder
+                            key={music.id}
+                            music={music}
+                            handlePlay={() => handlePlayAudio(music)}
+                            border={false}
+                          />
+                        ))}
                       </div>
-                    )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -1164,9 +1144,12 @@ export function PlayerPage({ setIsClick }: IProp) {
   const { handleAudioSkip } = useAudio();
   const { user } = useUser();
   const router = useRouter();
+  const params = useParams();
+  const locale = (params?.locale as string) || "en";
   const [isInFavorites, setIsInFavorites] = useState(false);
   const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
   const [isClickFeatured, setIsClickFeatured] = useState(false);
+  const [singerId, setSingerId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user?.id || !currentMusic?.id) {
@@ -1193,6 +1176,40 @@ export function PlayerPage({ setIsClick }: IProp) {
 
     checkFavorites();
   }, [user?.id, currentMusic?.id]);
+
+  // Tìm singerId từ tên singer
+  useEffect(() => {
+    const findSingerId = async () => {
+      if (!currentMusic?.singer) {
+        setSingerId(null);
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/singers");
+        if (!response.ok) {
+          console.error("Failed to fetch singers");
+          return;
+        }
+
+        const singers: ISingerItem[] = await response.json();
+        const matchedSinger = singers.find(
+          (singer) => singer.singer === currentMusic.singer
+        );
+
+        if (matchedSinger) {
+          setSingerId(matchedSinger.id || matchedSinger._id || null);
+        } else {
+          setSingerId(null);
+        }
+      } catch (error) {
+        console.error("Error finding singer ID:", error);
+        setSingerId(null);
+      }
+    };
+
+    findSingerId();
+  }, [currentMusic?.singer]);
 
   // Xử lý thêm/xóa khỏi Favorites
   const handleToggleFavorites = async () => {
@@ -1306,7 +1323,7 @@ export function PlayerPage({ setIsClick }: IProp) {
           <img
             alt="cover"
             src={currentMusic?.cover || ""}
-            className="pointer-events-none absolute -bottom-16 left-0 -z-10 h-[40vh] w-full scale-150 blur-3xl brightness-0"
+            className="pointer-events-none absolute -bottom-16 left-0 -z-10 h-[40vh] w-full scale-150 blur-3xl brightness-0 md:w-[35vw]"
           />
 
           {isClickLyric && (
@@ -1321,7 +1338,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                   onClick={() => handleToggleKaraoke()}
                   className="absolute -top-16 right-8 cursor-pointer rounded-full bg-white/10 p-1"
                 >
-                  <MagicWand size={28} />
+                  <MagicWand size={28} className="text-white" />
                 </motion.div>
               ) : (
                 <motion.div
@@ -1340,7 +1357,7 @@ export function PlayerPage({ setIsClick }: IProp) {
           )}
 
           {!isClickLyric && !isClickFeatured && (
-            <div className="">
+            <div>
               <div className="flex items-center justify-between">
                 <AnimatePresence>
                   <motion.div
@@ -1351,13 +1368,22 @@ export function PlayerPage({ setIsClick }: IProp) {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                   >
-                    <div className="line-clamp-1 text-xl font-semibold">
+                    <div className="line-clamp-1 text-xl font-semibold text-white">
                       {currentMusic?.title || "TITLE SONG"}
                     </div>
 
-                    <div className="text-lg text-zinc-300">
-                      {currentMusic?.singer || "SINGER"}
-                    </div>
+                    {singerId ? (
+                      <Link
+                        href={`/${locale}/music/singer/${singerId}`}
+                        className="text-lg text-zinc-300 hover:underline"
+                      >
+                        {currentMusic?.singer || "SINGER"}
+                      </Link>
+                    ) : (
+                      <span className="text-lg text-zinc-300">
+                        {currentMusic?.singer || "SINGER"}
+                      </span>
+                    )}
                   </motion.div>
                 </AnimatePresence>
 
@@ -1371,7 +1397,7 @@ export function PlayerPage({ setIsClick }: IProp) {
           </div>
 
           <div className="justify-cente flex items-center">
-            <div className="mx-8 flex w-full items-center justify-between text-black dark:text-white">
+            <div className="mx-8 flex w-full items-center justify-between text-white">
               <motion.button
                 onClick={handAudioForward}
                 whileTap={{ scale: 0.85 }}
@@ -1382,7 +1408,7 @@ export function PlayerPage({ setIsClick }: IProp) {
               </motion.button>
 
               <motion.button
-                whileTap={{ scale: 0.85 }}
+                whileTap={{ scale: 0.8 }}
                 transition={{ duration: 0.15 }}
                 onClick={
                   isPlaying
@@ -1415,23 +1441,29 @@ export function PlayerPage({ setIsClick }: IProp) {
             <VolumeBar />
 
             <div className="mx-8 flex items-center justify-between text-base text-zinc-400">
-              <div onClick={() => setIsClickLyric(!isClickLyric)}>
+              <motion.div
+                whileTap={{ scale: 0.8 }}
+                onClick={() => setIsClickLyric(!isClickLyric)}
+              >
                 {!isClickLyric ? (
                   <ChatTeardropDots size={25} />
                 ) : (
                   <ChatTeardropDots size={25} weight="fill" />
                 )}
-              </div>
+              </motion.div>
 
               <ShareNetwork size={25} weight="fill" />
 
-              <div onClick={() => setIsClickFeatured(!isClickFeatured)}>
+              <motion.div
+                whileTap={{ scale: 0.8 }}
+                onClick={() => setIsClickFeatured(!isClickFeatured)}
+              >
                 {!isClickFeatured ? (
                   <ListBullets size={28} weight="bold" />
                 ) : (
                   <ListStar size={28} weight="bold" />
                 )}
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>

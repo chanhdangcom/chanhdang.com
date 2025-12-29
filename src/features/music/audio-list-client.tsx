@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { AuidoItem } from "./component/audio-item";
 import { useAudio } from "@/components/music-provider";
@@ -9,12 +10,23 @@ import { ScrollCarouselItem } from "./component/scroll-carousel-item";
 export function AuidoListClient({ musics }: { musics: IMusic[] }) {
   const { handlePlayAudio } = useAudio();
 
-  const { scrollRef, scrollLeft, scrollRight, canScrollLeft, canScrollRight } = useScrollCarousel();
+  const { scrollRef, scrollLeft, scrollRight, canScrollLeft, canScrollRight } =
+    useScrollCarousel();
+
+  // Random danh sách một lần khi component mount hoặc khi musics thay đổi
+  const shuffledMusics = useMemo(() => {
+    const shuffled = [...musics];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }, [musics]);
 
   return (
     <>
-      <ScrollCarouselItem 
-        scrollLeft={scrollLeft} 
+      <ScrollCarouselItem
+        scrollLeft={scrollLeft}
         scrollRight={scrollRight}
         canScrollLeft={canScrollLeft}
         canScrollRight={canScrollRight}
@@ -27,7 +39,7 @@ export function AuidoListClient({ musics }: { musics: IMusic[] }) {
             WebkitOverflowScrolling: "touch",
           }}
         >
-          {musics.map((music, index) => (
+          {shuffledMusics.map((music, index) => (
             <div key={music.id} className="snap-start">
               <div
                 className={`w-full shrink-0 ${
