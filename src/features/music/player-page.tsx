@@ -1110,7 +1110,6 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                               key={music.id}
                               music={music}
                               handlePlay={() => handlePlayAudio(music)}
-                              className="w-full"
                               border={false}
                             />
                           ))}
