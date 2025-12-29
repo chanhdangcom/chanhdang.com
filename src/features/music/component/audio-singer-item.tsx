@@ -30,6 +30,7 @@ export function AudioSingerItem({ music }: IProp) {
               }
               item={<DotsThreeVertical size={20} weight="bold" />}
               className="w-full"
+              border={true}
             />
           </div>
         ))}

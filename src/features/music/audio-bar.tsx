@@ -137,13 +137,10 @@ export function AudioBar() {
     <motion.div
       layoutId="audio-bar"
       layout
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.2,
-        ease: "easeIn",
-        layout: { duration: 0.2, ease: "easeInOut" },
-      }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5, type: "spring" }}
       className={`fixed z-50 flex justify-center md:inset-x-[25vw] md:bottom-4 ${
         scroll ? "inset-x-2 bottom-[82px]" : "inset-x-20 bottom-6"
       }`}

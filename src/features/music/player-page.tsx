@@ -456,6 +456,7 @@ const LyricPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                         <div className="line-clamp-1 font-semibold text-white">
                           {currentMusic?.title || "TITLE SONG"}
                         </div>
+
                         <div className="line-clamp-1 text-zinc-300">
                           {currentMusic?.singer || "SINGER"}
                         </div>

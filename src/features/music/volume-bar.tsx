@@ -2,7 +2,7 @@ import { SpeakerHigh, SpeakerNone } from "@phosphor-icons/react/dist/ssr";
 
 export function VolumeBar() {
   return (
-    <div className="flex items-center justify-between space-x-1">
+    <div className="flex items-center justify-between space-x-1 text-white">
       <div className="flex items-center justify-start">
         <SpeakerNone size={18} weight="fill" />
       </div>
