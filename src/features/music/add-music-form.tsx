@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
 import { HeaderMusicPage } from "./header-music-page";
 import { Button } from "@/components/ui/button";
 import { MotionHeaderMusic } from "./component/motion-header-music";
@@ -8,8 +7,6 @@ import { Footer } from "@/app/[locale]/features/profile/footer";
 import { ISingerItem } from "./type/singer";
 
 export default function AddMusicForm() {
-  const params = useParams();
-  const locale = (params?.locale as string) || "vi";
   const [form, setForm] = useState({
     title: "",
     singer: "",
@@ -62,7 +59,7 @@ export default function AddMusicForm() {
       if (file) {
         // 1. Lấy presigned URL
         const presignedRes = await fetch(
-          `/${locale}/api/upload-music?fileName=${encodeURIComponent(file.name)}&contentType=${encodeURIComponent(file.type)}`
+          `/api/upload-music?fileName=${encodeURIComponent(file.name)}&contentType=${encodeURIComponent(file.type)}`
         );
 
         if (!presignedRes.ok) {
@@ -103,9 +100,26 @@ export default function AddMusicForm() {
       // Nếu có file ảnh, upload lên R2 trước
       if (imageFile) {
         const presignedRes = await fetch(
-          `/${locale}/api/upload-music?fileName=${encodeURIComponent(imageFile.name)}&contentType=${encodeURIComponent(imageFile.type)}`
+          `/api/upload-music?fileName=${encodeURIComponent(imageFile.name)}&contentType=${encodeURIComponent(imageFile.type)}`
         );
-        const { presignedUrl, publicUrl } = await presignedRes.json();
+
+        if (!presignedRes.ok) {
+          const errorData = await presignedRes.json().catch(() => ({}));
+          setMessage(
+            `Lỗi khi lấy presigned URL: ${errorData.error || "Unknown error"}`
+          );
+          setIsLoading(false);
+          return;
+        }
+
+        const presignedData = await presignedRes.json();
+        if (presignedData.error) {
+          setMessage(`Lỗi: ${presignedData.error}`);
+          setIsLoading(false);
+          return;
+        }
+
+        const { presignedUrl, publicUrl } = presignedData;
 
         const uploadRes = await fetch(presignedUrl, {
           method: "PUT",
@@ -116,7 +130,8 @@ export default function AddMusicForm() {
         if (uploadRes.ok) {
           coverUrl = publicUrl;
         } else {
-          setMessage("Upload ảnh thất bại!");
+          const errorText = await uploadRes.text();
+          setMessage(`Upload ảnh thất bại! ${errorText}`);
           setIsLoading(false);
           return;
         }
@@ -126,9 +141,26 @@ export default function AddMusicForm() {
       let srtUrl = form.srt;
       if (srtFile) {
         const presignedRes = await fetch(
-          `/${locale}/api/upload-music?fileName=${encodeURIComponent(srtFile.name)}&contentType=${encodeURIComponent(srtFile.type || "application/octet-stream")}`
+          `/api/upload-music?fileName=${encodeURIComponent(srtFile.name)}&contentType=${encodeURIComponent(srtFile.type || "application/octet-stream")}`
         );
-        const { presignedUrl, publicUrl } = await presignedRes.json();
+
+        if (!presignedRes.ok) {
+          const errorData = await presignedRes.json().catch(() => ({}));
+          setMessage(
+            `Lỗi khi lấy presigned URL: ${errorData.error || "Unknown error"}`
+          );
+          setIsLoading(false);
+          return;
+        }
+
+        const presignedData = await presignedRes.json();
+        if (presignedData.error) {
+          setMessage(`Lỗi: ${presignedData.error}`);
+          setIsLoading(false);
+          return;
+        }
+
+        const { presignedUrl, publicUrl } = presignedData;
         const uploadRes = await fetch(presignedUrl, {
           method: "PUT",
           headers: {
@@ -139,7 +171,8 @@ export default function AddMusicForm() {
         if (uploadRes.ok) {
           srtUrl = publicUrl;
         } else {
-          setMessage("Upload file SRT thất bại!");
+          const errorText = await uploadRes.text();
+          setMessage(`Upload file SRT thất bại! ${errorText}`);
           setIsLoading(false);
           return;
         }
@@ -149,9 +182,26 @@ export default function AddMusicForm() {
       let beatUrl = form.beat;
       if (beatFile) {
         const presignedRes = await fetch(
-          `/${locale}/api/upload-music?fileName=${encodeURIComponent(beatFile.name)}&contentType=${encodeURIComponent(beatFile.type || "application/octet-stream")}`
+          `/api/upload-music?fileName=${encodeURIComponent(beatFile.name)}&contentType=${encodeURIComponent(beatFile.type || "application/octet-stream")}`
         );
-        const { presignedUrl, publicUrl } = await presignedRes.json();
+
+        if (!presignedRes.ok) {
+          const errorData = await presignedRes.json().catch(() => ({}));
+          setMessage(
+            `Lỗi khi lấy presigned URL: ${errorData.error || "Unknown error"}`
+          );
+          setIsLoading(false);
+          return;
+        }
+
+        const presignedData = await presignedRes.json();
+        if (presignedData.error) {
+          setMessage(`Lỗi: ${presignedData.error}`);
+          setIsLoading(false);
+          return;
+        }
+
+        const { presignedUrl, publicUrl } = presignedData;
         const uploadRes = await fetch(presignedUrl, {
           method: "PUT",
           headers: {
@@ -162,7 +212,8 @@ export default function AddMusicForm() {
         if (uploadRes.ok) {
           beatUrl = publicUrl;
         } else {
-          setMessage("Upload file beat thất bại!");
+          const errorText = await uploadRes.text();
+          setMessage(`Upload file beat thất bại! ${errorText}`);
           setIsLoading(false);
           return;
         }

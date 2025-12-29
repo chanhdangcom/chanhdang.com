@@ -977,12 +977,12 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                 key={currentMusic?.cover}
                 src={currentMusic?.cover || ""}
                 alt="cover"
-                className="mt-8 h-full w-[50vw] rotate-180 scale-110 opacity-70 blur-3xl md:mt-24 md:h-screen md:w-full md:blur-3xl"
+                className="mt-8 h-full w-full rotate-180 scale-110 opacity-70 blur-3xl md:mt-24 md:h-screen md:w-full md:blur-3xl"
               />
             </div>
 
             <header
-              className="flex items-center justify-start p-1 text-black dark:text-white md:py-4"
+              className="absolute inset-x-0 flex items-center p-1 text-black dark:text-white md:py-4"
               onTouchStart={(e) => {
                 if (e.touches.length > 0) {
                   setTouchStartY(e.touches[0].clientY);
@@ -1006,7 +1006,7 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
               <div className="mx-auto my-4 h-1 w-16 rounded-full bg-white/20 md:hidden" />
             </header>
 
-            <div className="absolute inset-x-4 z-50 mt-2 rounded-2xl p-1">
+            <div className="absolute inset-x-4 z-50 mt-8 rounded-2xl p-1">
               <div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -1103,7 +1103,7 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                       <div className="relative mt-2">
                         <div
                           ref={recentListRef}
-                          className="h-[40vh] space-y-4 overflow-y-auto pr-2 scrollbar-hide"
+                          className="h-[40vh] w-full space-y-4 overflow-y-auto pr-2 scrollbar-hide"
                         >
                           {shuffledRecent.slice(0, 8).map((music) => (
                             <AudioItemOrder
