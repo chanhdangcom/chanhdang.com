@@ -18,6 +18,7 @@ import { MotionHeaderMusic } from "./component/motion-header-music";
 
 import { ISingerItem } from "./type/singer";
 import { useAudio } from "@/components/music-provider";
+import { useParams } from "next/navigation";
 
 type IProp = {
   singer: ISingerItem;
@@ -43,6 +44,9 @@ export function SingerPageClient({ singer }: IProp) {
     handlePlayAudio(randomMusic);
   };
 
+  const param = useParams();
+  const locale = (param?.locale as string) || "en";
+
   return (
     <>
       <div className="bg-hoverBg md:flex">
@@ -61,7 +65,7 @@ export function SingerPageClient({ singer }: IProp) {
 
             <div>
               <div className="sticky top-0 z-20 m-4 flex items-center gap-1 md:hidden">
-                <Link href={"/music"}>
+                <Link href={`/${locale}/music`}>
                   <motion.div
                     whileTap={{ scale: 0.3 }}
                     className="rounded-full bg-zinc-200 p-2 dark:bg-zinc-900"
