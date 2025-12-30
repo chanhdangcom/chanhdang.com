@@ -8,6 +8,7 @@ interface User {
   username: string;
   displayName?: string;
   avatarUrl?: string;
+  email?: string;
 }
 
 export function useUser() {
@@ -36,6 +37,7 @@ export function useUser() {
         username: session.user.name || session.user.email || "",
         displayName: session.user.name,
         avatarUrl: session.user.image || undefined,
+        email: session.user.email || undefined,
       }
     : null;
 
@@ -63,12 +65,24 @@ export function useUser() {
     }
   };
 
-  const logout = () => {
-    if (googleUser) {
-      signOut(); // Google logout
+  const logout = async () => {
+    try {
+      // Check if user is logged in via Google (has active session)
+      if (session) {
+        // Google logout - signOut with redirect disabled
+        // This will clear the NextAuth session
+        await signOut({
+          redirect: false, // We'll handle redirect manually
+        });
+      }
+    } catch (error) {
+      console.error("Error during Google logout:", error);
+      // Continue with local logout even if Google logout fails
+    } finally {
+      // Always clear local user data
+      setLocalUser(null);
+      localStorage.removeItem("user");
     }
-    setLocalUser(null); // Local logout
-    localStorage.removeItem("user");
   };
 
   return {

@@ -1,16 +1,14 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import {
   Eye,
   EyeOff,
-  Mail,
   Lock,
-  User,
   AlertCircle,
   CheckCircle2,
-  Check,
+  ArrowLeft,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -21,44 +19,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 interface FormErrors {
-  username?: string;
-  email?: string;
   password?: string;
   confirmPassword?: string;
   general?: string;
 }
 
-interface PasswordStrength {
-  score: number;
-  feedback: string[];
-}
-
-function calculatePasswordStrength(password: string): PasswordStrength {
-  const feedback: string[] = [];
-  let score = 0;
-
-  if (password.length >= 8) score += 1;
-  else feedback.push("Ít nhất 8 ký tự");
-
-  if (/[a-z]/.test(password)) score += 1;
-  else feedback.push("Có chữ thường");
-
-  if (/[A-Z]/.test(password)) score += 1;
-  else feedback.push("Có chữ hoa");
-
-  if (/[0-9]/.test(password)) score += 1;
-  else feedback.push("Có số");
-
-  if (/[^a-zA-Z0-9]/.test(password)) score += 1;
-  else feedback.push("Có ký tự đặc biệt");
-
-  return { score, feedback };
-}
-
-export default function RegisterForm() {
+export default function ResetPasswordForm() {
   const [form, setForm] = useState({
-    username: "",
-    email: "",
     password: "",
     confirmPassword: "",
   });
@@ -67,43 +34,47 @@ export default function RegisterForm() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [isValidatingToken, setIsValidatingToken] = useState(true);
+  const [tokenValid, setTokenValid] = useState(false);
   const params = useParams();
-  const locale = (params?.locale as string) || "en";
+  const searchParams = useSearchParams();
   const router = useRouter();
+  const locale = (params?.locale as string) || "en";
+  const token = searchParams.get("token");
 
-  const passwordStrength = calculatePasswordStrength(form.password);
+  useEffect(() => {
+    const validateToken = async () => {
+      if (!token) {
+        setTokenValid(false);
+        setIsValidatingToken(false);
+        return;
+      }
+
+      try {
+        const res = await fetch(
+          `/api/auth/validate-reset-token?token=${token}`
+        );
+        const data = await res.json();
+        setTokenValid(data.valid);
+      } catch {
+        setTokenValid(false);
+      } finally {
+        setIsValidatingToken(false);
+      }
+    };
+
+    validateToken();
+  }, [token]);
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    // Username validation
-    if (!form.username.trim()) {
-      newErrors.username = "Vui lòng nhập tên đăng nhập";
-    } else if (form.username.length < 3) {
-      newErrors.username = "Tên đăng nhập phải có ít nhất 3 ký tự";
-    } else if (!/^[a-zA-Z0-9_]+$/.test(form.username)) {
-      newErrors.username =
-        "Tên đăng nhập chỉ được chứa chữ, số và dấu gạch dưới";
-    }
-
-    // Email validation
-    if (!form.email.trim()) {
-      newErrors.email = "Vui lòng nhập email";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      newErrors.email = "Email không hợp lệ";
-    }
-
-    // Password validation
     if (!form.password) {
       newErrors.password = "Vui lòng nhập mật khẩu";
     } else if (form.password.length < 8) {
       newErrors.password = "Mật khẩu phải có ít nhất 8 ký tự";
-    } else if (passwordStrength.score < 3) {
-      newErrors.password =
-        "Mật khẩu quá yếu. Vui lòng sử dụng mật khẩu mạnh hơn.";
     }
 
-    // Confirm password validation
     if (!form.confirmPassword) {
       newErrors.confirmPassword = "Vui lòng xác nhận mật khẩu";
     } else if (form.password !== form.confirmPassword) {
@@ -118,12 +89,10 @@ export default function RegisterForm() {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
 
-    // Clear error when user starts typing
     if (errors[name as keyof FormErrors]) {
       setErrors({ ...errors, [name]: undefined });
     }
 
-    // Clear general error
     if (errors.general) {
       setErrors({ ...errors, general: undefined });
     }
@@ -141,12 +110,11 @@ export default function RegisterForm() {
     setErrors({});
 
     try {
-      const res = await fetch("/api/auth/register", {
+      const res = await fetch("/api/auth/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: form.username,
-          email: form.email,
+          token,
           password: form.password,
         }),
       });
@@ -155,9 +123,9 @@ export default function RegisterForm() {
 
       if (data.success) {
         setSuccessMessage(
-          "Đăng ký thành công! Đang chuyển đến trang đăng nhập..."
+          "Đặt lại mật khẩu thành công! Đang chuyển đến trang đăng nhập..."
         );
-        setForm({ username: "", email: "", password: "", confirmPassword: "" });
+        setForm({ password: "", confirmPassword: "" });
 
         setTimeout(() => {
           router.push(`/${locale}/auth/login`);
@@ -172,25 +140,57 @@ export default function RegisterForm() {
     }
   };
 
-  const getStrengthColor = (score: number) => {
-    if (score <= 1) return "bg-red-500";
-    if (score <= 2) return "bg-orange-500";
-    if (score <= 3) return "bg-yellow-500";
-    if (score <= 4) return "bg-blue-500";
-    return "bg-green-500";
-  };
+  if (isValidatingToken) {
+    return (
+      <div className="container">
+        <HeaderMusicPage name="Đặt Lại Mật Khẩu" />
+        <div className="z-30 mx-4 my-8 flex items-center justify-center rounded-3xl border border-zinc-200 p-8 font-apple backdrop-blur-2xl dark:border-zinc-900 md:mx-auto md:w-[30vw]">
+          <div className="text-center">
+            <div className="mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-zinc-900 border-t-transparent dark:border-zinc-100" />
+            <p className="text-zinc-600 dark:text-zinc-400">Đang xác thực...</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
-  const getStrengthText = (score: number) => {
-    if (score <= 1) return "Rất yếu";
-    if (score <= 2) return "Yếu";
-    if (score <= 3) return "Trung bình";
-    if (score <= 4) return "Mạnh";
-    return "Rất mạnh";
-  };
+  if (!tokenValid) {
+    return (
+      <div className="container">
+        <HeaderMusicPage name="Đặt Lại Mật Khẩu" />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-red-200 bg-red-50 p-8 font-apple backdrop-blur-2xl dark:border-red-900 dark:bg-red-950/50 md:mx-auto md:w-[30vw]"
+        >
+          <div className="text-center">
+            <AlertCircle className="mx-auto mb-4 h-12 w-12 text-red-500" />
+            <h1 className="mb-2 text-2xl font-bold text-red-600 dark:text-red-400">
+              Link không hợp lệ hoặc đã hết hạn
+            </h1>
+            <p className="mb-4 text-sm text-red-600 dark:text-red-400">
+              Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn. Vui lòng yêu
+              cầu link mới.
+            </p>
+            <Link
+              href={`/${locale}/auth/forgot-password`}
+              className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Yêu cầu link mới
+            </Link>
+          </div>
+        </motion.div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="container">
-      <HeaderMusicPage name="Đăng Ký" />
+      <HeaderMusicPage name="Đặt Lại Mật Khẩu" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -198,16 +198,16 @@ export default function RegisterForm() {
         transition={{ duration: 0.5 }}
         className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-zinc-200 p-8 font-apple backdrop-blur-2xl dark:border-zinc-900 md:mx-auto md:w-[30vw]"
       >
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          <div className="text-center">
-            <h1 className="bg-gradient-to-r from-zinc-900 to-zinc-700 bg-clip-text text-3xl font-bold text-transparent dark:from-white dark:to-zinc-300">
-              Đăng Ký
-            </h1>
-            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-              Tạo tài khoản mới để bắt đầu
-            </p>
-          </div>
+        <div className="text-center">
+          <h1 className="bg-gradient-to-r from-zinc-900 to-zinc-700 bg-clip-text text-3xl font-bold text-transparent dark:from-white dark:to-zinc-300">
+            Đặt Lại Mật Khẩu
+          </h1>
+          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+            Nhập mật khẩu mới của bạn
+          </p>
+        </div>
 
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <AnimatePresence>
             {errors.general && (
               <motion.div
@@ -235,80 +235,17 @@ export default function RegisterForm() {
           </AnimatePresence>
 
           <div className="space-y-4">
-            {/* Username Field */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                Tên đăng nhập
-              </label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
-                <Input
-                  name="username"
-                  placeholder="Nhập tên đăng nhập"
-                  value={form.username}
-                  onChange={handleChange}
-                  required
-                  className={`pl-10 ${errors.username ? "border-red-500 focus-visible:ring-red-500" : ""}`}
-                  disabled={isSubmitting}
-                />
-              </div>
-              <AnimatePresence>
-                {errors.username && (
-                  <motion.p
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="text-xs text-red-500"
-                  >
-                    {errors.username}
-                  </motion.p>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Email Field */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                Email
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
-                <Input
-                  name="email"
-                  type="email"
-                  placeholder="Nhập email của bạn"
-                  value={form.email}
-                  onChange={handleChange}
-                  required
-                  className={`pl-10 ${errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}`}
-                  disabled={isSubmitting}
-                />
-              </div>
-              <AnimatePresence>
-                {errors.email && (
-                  <motion.p
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="text-xs text-red-500"
-                  >
-                    {errors.email}
-                  </motion.p>
-                )}
-              </AnimatePresence>
-            </div>
-
             {/* Password Field */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                Mật khẩu
+                Mật khẩu mới
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
                 <Input
                   name="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Nhập mật khẩu"
+                  placeholder="Nhập mật khẩu mới"
                   value={form.password}
                   onChange={handleChange}
                   required
@@ -328,44 +265,6 @@ export default function RegisterForm() {
                   )}
                 </button>
               </div>
-
-              {/* Password Strength Indicator */}
-              {form.password && (
-                <div className="space-y-2">
-                  <div className="flex gap-1">
-                    {[1, 2, 3, 4, 5].map((level) => (
-                      <div
-                        key={level}
-                        className={`h-1 flex-1 rounded-full ${
-                          level <= passwordStrength.score
-                            ? getStrengthColor(passwordStrength.score)
-                            : "bg-zinc-200 dark:bg-zinc-800"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <span
-                      className={`font-medium ${
-                        passwordStrength.score <= 2
-                          ? "text-red-500"
-                          : passwordStrength.score <= 3
-                            ? "text-yellow-500"
-                            : "text-green-500"
-                      }`}
-                    >
-                      {getStrengthText(passwordStrength.score)}
-                    </span>
-                    {passwordStrength.score >= 3 && (
-                      <span className="flex items-center gap-1 text-green-500">
-                        <Check className="h-3 w-3" />
-                        Mật khẩu hợp lệ
-                      </span>
-                    )}
-                  </div>
-                </div>
-              )}
-
               <AnimatePresence>
                 {errors.password && (
                   <motion.p
@@ -414,13 +313,6 @@ export default function RegisterForm() {
                   )}
                 </button>
               </div>
-              {form.confirmPassword &&
-                form.password === form.confirmPassword && (
-                  <p className="flex items-center gap-1 text-xs text-green-500">
-                    <Check className="h-3 w-3" />
-                    Mật khẩu khớp
-                  </p>
-                )}
               <AnimatePresence>
                 {errors.confirmPassword && (
                   <motion.p
@@ -441,18 +333,19 @@ export default function RegisterForm() {
               className="w-full rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 px-4 py-3 text-white transition-all hover:from-zinc-800 hover:to-zinc-700 dark:from-zinc-100 dark:to-zinc-200 dark:text-zinc-900 dark:hover:from-zinc-200 dark:hover:to-zinc-300"
               disabled={isSubmitting}
               loading={isSubmitting}
-              loadingText="Đang đăng ký..."
+              loadingText="Đang đặt lại..."
             >
-              {!isSubmitting && "Đăng Ký"}
+              {!isSubmitting && "Đặt Lại Mật Khẩu"}
             </Button>
 
-            {/* Login Link */}
+            {/* Back to Login Link */}
             <div className="text-center">
               <Link
                 href={`/${locale}/auth/login`}
-                className="text-sm text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+                className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
               >
-                Đã có tài khoản? Đăng nhập ngay
+                <ArrowLeft className="h-4 w-4" />
+                Quay lại đăng nhập
               </Link>
             </div>
           </div>

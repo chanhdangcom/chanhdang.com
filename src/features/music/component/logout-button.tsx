@@ -21,9 +21,17 @@ export function LogoutButton() {
   const locale = (params?.locale as string) || "en";
   const withLocale = (path: string) => `/${locale}${path}`;
 
-  const handleLogout = () => {
-    logout();
-    window.location.href = withLocale("/music");
+  const handleLogout = async () => {
+    try {
+      await logout();
+      // Force page reload to ensure session is fully cleared
+      // This is important for NextAuth session cleanup
+      window.location.href = withLocale("/music");
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Still redirect even if there's an error
+      window.location.href = withLocale("/music");
+    }
   };
 
   return (

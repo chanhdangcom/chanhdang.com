@@ -22,6 +22,10 @@ export function PickForYou() {
         className="mt-2 flex w-full snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth text-white scrollbar-hide"
       >
         <div className="snap-start">
+          <div className="mx-4 mb-1 font-apple text-sm font-medium text-zinc-500">
+            Make for you
+          </div>
+
           <div
             className="relative ml-3 h-72 w-56 shrink-0 overflow-hidden rounded-2xl md:ml-[270px]"
             onClick={() => handlePlayRandomAudio()}
@@ -45,6 +49,10 @@ export function PickForYou() {
         </div>
 
         <div className="snap-start">
+          <div className="mx-4 mb-1 font-apple text-sm font-medium text-zinc-500">
+            Make for you
+          </div>
+
           <div
             className="relative h-72 w-56 shrink-0 overflow-hidden rounded-2xl"
             onClick={() => handlePlayRandomAudio()}
@@ -77,6 +85,10 @@ export function PickForYou() {
         </div>
 
         <div className="snap-start">
+          <div className="mx-4 mb-1 font-apple text-sm font-medium text-zinc-500">
+            Make for you
+          </div>
+
           <div
             className="relative h-72 w-56 shrink-0 snap-start overflow-hidden rounded-2xl"
             onClick={() => handlePlayRandomAudio()}
@@ -97,27 +109,33 @@ export function PickForYou() {
           </div>
         </div>
 
-        <div
-          className="relative h-72 w-56 shrink-0 snap-start overflow-hidden rounded-2xl bg-red-600"
-          onClick={() => handlePlayRandomAudio()}
-        >
-          <img
-            src="/img/image-2.PNG"
-            alt=""
-            className="h-72 w-56 rounded-3xl"
-          />
+        <div>
+          <div className="mx-4 mb-1 font-apple text-sm font-medium text-zinc-500">
+            Make for you
+          </div>
 
-          <div className="absolute inset-0 flex h-full flex-col justify-between">
-            <div className="p-4">
-              <ChanhdangLogotype className="mb-1 w-24 text-white" />
+          <div
+            className="relative h-72 w-56 shrink-0 snap-start overflow-hidden rounded-2xl bg-red-600"
+            onClick={() => handlePlayRandomAudio()}
+          >
+            <img
+              src="/img/image-2.PNG"
+              alt=""
+              className="h-72 w-56 rounded-3xl"
+            />
 
-              <div className="text-4xl font-bold">Chill</div>
-              <div className="text-3xl">Mix</div>
-            </div>
+            <div className="absolute inset-0 flex h-full flex-col justify-between">
+              <div className="p-4">
+                <ChanhdangLogotype className="mb-1 w-24 text-white" />
 
-            <div className="rounded-b-xl bg-zinc-700/50 px-4 py-2">
-              <div className="line-clamp-2 text-center">
-                Ê Kê Vin, Khầy, Jack - J97, Son Tung M-TP and more
+                <div className="text-4xl font-bold">Chill</div>
+                <div className="text-3xl">Mix</div>
+              </div>
+
+              <div className="rounded-b-xl bg-zinc-700/50 px-4 py-2">
+                <div className="line-clamp-2 text-center">
+                  Ê Kê Vin, Khầy, Jack - J97, Son Tung M-TP and more
+                </div>
               </div>
             </div>
           </div>
