@@ -15,7 +15,7 @@ export function ComponentList() {
 
         <h2
           id="components-heading"
-          className="flex text-balance font-mono text-3xl font-semibold leading-tight tracking-tight md:mx-[15vw] md:text-4xl"
+          className="flex text-balance px-4 font-mono text-3xl font-semibold leading-tight tracking-tight md:mx-[15vw] md:px-0 md:text-4xl"
         >
           Component
         </h2>
