@@ -84,6 +84,7 @@ export function LibraryTracksList({ userId }: LibraryTracksListProps) {
                         music={music}
                         handlePlay={() => handlePlayAudio(music)}
                         className="w-full"
+                        border
                         date={
                           music.createdAt
                             ? new Date(music.createdAt as Date).toISOString()

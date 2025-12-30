@@ -128,7 +128,9 @@ export function SingerManagement() {
     <div>
       <div
         className={
-          showAddForm ? "z-10 bg-zinc-950 font-apple blur-2xl" : "font-apple"
+          showAddForm
+            ? "z-10 font-apple blur-2xl dark:bg-zinc-950"
+            : "font-apple"
         }
       >
         <div className="md:ml-6">

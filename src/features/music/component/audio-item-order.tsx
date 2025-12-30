@@ -67,7 +67,7 @@ export function AudioItemOrder({
             </div>
 
             {date && (
-              <div className="text-xs text-zinc-400">
+              <div className="font-apple text-xs text-zinc-400">
                 {new Date(date).toLocaleDateString("vi-VN")}
               </div>
             )}

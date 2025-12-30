@@ -34,24 +34,26 @@ export function SingerListClient({ singers }: IProp) {
           ref={scrollRef}
           className="mt-2 flex snap-x snap-mandatory items-center gap-1 overflow-x-auto scrollbar-hide md:snap-none"
         >
-          {singers.map((music, index) => (
-            <div key={music.id} className="max-w-full shrink-0 snap-start">
-              <div className="shrink-0 snap-start">
-                <div
-                  className={`${index === 0 ? "ml-4 md:ml-[270px]" : "ml-2"}`}
-                >
-                  <SingerItem
-                    music={music}
-                    onClick={() => {
-                      router.push(
-                        `/${locale}/music/singer/${music._id || music.id}`
-                      );
-                    }}
-                  />
+          {singers
+            .sort(() => Math.random() - 0.5)
+            .map((music, index) => (
+              <div key={music.id} className="max-w-full shrink-0 snap-start">
+                <div className="shrink-0 snap-start">
+                  <div
+                    className={`${index === 0 ? "ml-4 md:ml-[270px]" : "ml-2"}`}
+                  >
+                    <SingerItem
+                      music={music}
+                      onClick={() => {
+                        router.push(
+                          `/${locale}/music/singer/${music._id || music.id}`
+                        );
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </ScrollCarouselItem>
     </div>

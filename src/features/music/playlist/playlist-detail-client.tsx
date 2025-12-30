@@ -8,6 +8,7 @@ import { IPlaylistItem } from "../type/playlist";
 import { AudioItemOrder } from "../component/audio-item-order";
 import {
   CaretLeft,
+  DotsThree,
   DotsThreeVertical,
   Play,
   Shuffle,
@@ -87,7 +88,7 @@ export function PlaylistDetailClient({ playlist }: Props) {
           <AudioBar />
           <MenuBarMobile />
 
-          <div className="sticky top-0 z-10 m-4 flex items-center gap-1 md:hidden">
+          <div className="sticky top-0 z-10 m-4 flex items-center justify-between gap-1 md:hidden">
             <Link href={withLocale("/music")}>
               <div className="pointer-events-auto rounded-full bg-zinc-200 p-2 dark:bg-zinc-900">
                 <CaretLeft
@@ -97,6 +98,20 @@ export function PlaylistDetailClient({ playlist }: Props) {
                 />
               </div>
             </Link>
+
+            <div className="flex items-center justify-center gap-6 rounded-full border border-white/10 p-2 backdrop-blur-xl">
+              <div>
+                <LibraryPlaylistButton
+                  playlist={playlist}
+                  userId={user?.id}
+                  size="lg"
+                />
+              </div>
+
+              <div>
+                <DotsThree size={25} weight="bold" />
+              </div>
+            </div>
           </div>
 
           <div className="mx-4 mb-12 md:ml-[270px]">
@@ -125,7 +140,7 @@ export function PlaylistDetailClient({ playlist }: Props) {
             <div className="mt-8 flex justify-between gap-4">
               <button
                 onClick={handlePlayFirst}
-                className="flex flex-1 items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 transition hover:scale-[1.02] dark:bg-zinc-900"
+                className="flex flex-1 items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-2 font-semibold text-red-500 transition hover:scale-[1.02] dark:bg-zinc-900"
               >
                 <Play size={20} weight="fill" />
                 Play
@@ -138,14 +153,6 @@ export function PlaylistDetailClient({ playlist }: Props) {
                 <Shuffle size={20} weight="fill" />
                 Shuffle
               </button>
-
-              <div className="flex flex-1 items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 transition hover:scale-[1.02] dark:bg-zinc-900">
-                <LibraryPlaylistButton
-                  playlist={playlist}
-                  userId={user?.id}
-                  size="lg"
-                />
-              </div>
 
               <div className="flex justify-end">
                 <img
@@ -163,14 +170,19 @@ export function PlaylistDetailClient({ playlist }: Props) {
                     Playlist chưa có bài hát nào.
                   </div>
                 ) : (
-                  musics.map((music) => (
+                  musics.map((music, index) => (
                     <div
                       key={music.id}
-                      className="rounded-2xl bg-transparent p-1"
+                      className="flex items-center gap-4 rounded-2xl bg-transparent p-1"
                     >
+                      <div className="font-apple font-medium text-zinc-500">
+                        {index + 1}
+                      </div>
+
                       <AudioItemOrder
                         music={music}
                         handlePlay={() => handlePlayAudio(music)}
+                        border
                         date={
                           music.createdAt
                             ? new Date(music.createdAt as Date).toISOString()

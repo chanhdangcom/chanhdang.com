@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MUSICS } from "@/features/music/data/music-page";
+import clientPromise from "@/lib/mongodb";
 
 export const metadata: Metadata = {
   title: "Search - ChanhDang",
@@ -68,6 +68,11 @@ export default async function SearchPage({
 }) {
   const resolvedSearchParams = searchParams ? await searchParams : {};
 
+  const client = await clientPromise;
+  const db = client.db("musicdb");
+  const collection = db.collection("musics");
+  const musics = await collection.find({}).toArray();
+
   const queryValue = resolvedSearchParams.q;
   const query =
     typeof queryValue === "string"
@@ -79,9 +84,11 @@ export default async function SearchPage({
   const normalizedQuery = hasQuery ? normalize(query) : "";
 
   const musicResults = hasQuery
-    ? MUSICS.filter((music) =>
-        normalize(`${music.title} ${music.singer}`).includes(normalizedQuery)
-      ).slice(0, 8)
+    ? musics
+        .filter((music) =>
+          normalize(`${music.title} ${music.singer}`).includes(normalizedQuery)
+        )
+        .slice(0, 8)
     : [];
 
   const primaryDestinations = [
@@ -115,6 +122,7 @@ export default async function SearchPage({
           <label htmlFor="site-search" className="sr-only">
             Search
           </label>
+
           <input
             id="site-search"
             type="search"

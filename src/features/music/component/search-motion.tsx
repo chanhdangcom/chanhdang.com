@@ -1,14 +1,14 @@
 "use client";
 import { Input } from "@/components/ui/input";
-import { MUSICS } from "../data/music-page";
 import { useAudio } from "@/components/music-provider";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { AudioItemOrder } from "./audio-item-order";
 import Link from "next/link";
-import { MUSICSSINGER } from "../data/music-page-singer";
 import { SingerItem } from "./singer-item";
 import { useParams, useRouter } from "next/navigation";
+import { IMusic } from "@/app/[locale]/features/profile/types/music";
+import { ISingerItem } from "../type/singer";
 
 type SearchMotionProps = {
   onQueryChange?: (value: string) => void;
@@ -22,6 +22,26 @@ export function SearchMotion({ onQueryChange }: SearchMotionProps) {
   const params = useParams();
   const locale = (params?.locale as string) || "en";
   const withLocale = (path: string) => `/${locale}${path}`;
+  const [data, setData] = useState<IMusic[]>([]);
+  const [singers, setSingers] = useState<ISingerItem[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch("/api/musics");
+      const data = await response.json();
+      setData(data);
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchSingers = async () => {
+      const response = await fetch("/api/singers");
+      const data = await response.json();
+      setSingers(data);
+    };
+    fetchSingers();
+  }, []);
 
   const removeVietnameseTones = (str: string) => {
     return str
@@ -37,8 +57,9 @@ export function SearchMotion({ onQueryChange }: SearchMotionProps) {
         <motion.div
           layout
           ref={ref}
-          initial={{ borderRadius: 20 }}
-          exit={{ borderRadius: 20 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           transition={{
             type: "spring",
             stiffness: 120,
@@ -67,22 +88,23 @@ export function SearchMotion({ onQueryChange }: SearchMotionProps) {
                 />
               </motion.div>
 
+              {/* singer */}
               <div className="container mt-4 flex w-full gap-4 overflow-x-auto">
-                {MUSICSSINGER.filter((music) => {
-                  if (value == "") return;
+                {singers
+                  .filter((singer) => {
+                    if (value == "") return;
 
-                  const searchWords = value.toLowerCase().trim().split(" ");
-                  const titleWordsRemoveVietnameseTones = removeVietnameseTones(
-                    music.singer
-                  ).toLowerCase();
-                  const titleWords = music.singer.toLowerCase();
+                    const searchWords = value.toLowerCase().trim().split(" ");
+                    const titleWordsRemoveVietnameseTones =
+                      removeVietnameseTones(singer.singer).toLowerCase();
+                    const titleWords = singer.singer.toLowerCase();
 
-                  return searchWords.every(
-                    (word) =>
-                      titleWordsRemoveVietnameseTones.includes(word) ||
-                      titleWords.includes(word)
-                  );
-                })
+                    return searchWords.every(
+                      (word) =>
+                        titleWordsRemoveVietnameseTones.includes(word) ||
+                        titleWords.includes(word)
+                    );
+                  })
                   .slice(0, 5)
                   .map((item) => (
                     <motion.div
@@ -96,30 +118,32 @@ export function SearchMotion({ onQueryChange }: SearchMotionProps) {
                       <SingerItem
                         music={item}
                         onClick={() => {
-                          router.push(`/music/singer/${item.id}`);
+                          router.push(
+                            `${withLocale("/music/singer")}/${item.id}`
+                          );
                         }}
                       />
                     </motion.div>
                   ))}
               </div>
-              {/* singer */}
 
+              {/* music */}
               <div className="container mt-4 h-screen space-y-4 overflow-y-auto bg-zinc-50 dark:bg-black">
-                {MUSICS.filter((music) => {
-                  if (value == "") return null;
+                {data
+                  .filter((music) => {
+                    if (value == "") return null;
 
-                  const searchWords = value.toLowerCase().trim().split(" ");
-                  const titleWordsRemoveVietnameseTones = removeVietnameseTones(
-                    music.title
-                  ).toLowerCase();
-                  const titleWords = music.title.toLowerCase();
+                    const searchWords = value.toLowerCase().trim().split(" ");
+                    const titleWordsRemoveVietnameseTones =
+                      removeVietnameseTones(music.title).toLowerCase();
+                    const titleWords = music.title.toLowerCase();
 
-                  return searchWords.every(
-                    (word) =>
-                      titleWordsRemoveVietnameseTones.includes(word) ||
-                      titleWords.includes(word)
-                  );
-                })
+                    return searchWords.every(
+                      (word) =>
+                        titleWordsRemoveVietnameseTones.includes(word) ||
+                        titleWords.includes(word)
+                    );
+                  })
                   .slice(0, 3)
                   .map((item) => (
                     <motion.div
@@ -135,6 +159,7 @@ export function SearchMotion({ onQueryChange }: SearchMotionProps) {
                           music={item}
                           handlePlay={() => handlePlayAudio(item)}
                           className="w-full"
+                          border
                         />
                       </Link>
                     </motion.div>

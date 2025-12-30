@@ -368,7 +368,7 @@ const LyricPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
     onToggleFavorites: handleToggleFavorites,
     onToggleKaraoke: handleToggleKaraoke,
     onShare: handleShare,
-    onOpenFavorites: () => router.push("/music/library/favorites"),
+    onOpenFavorites: () => router.push("/en/music/library/favorites"),
   });
 
   return (
@@ -943,7 +943,7 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
     onToggleFavorites: handleToggleFavorites,
     onToggleKaraoke: handleToggleKaraoke,
     onShare: handleShare,
-    onOpenFavorites: () => router.push("/music/library/favorites"),
+    onOpenFavorites: () => router.push("en/music/library/favorites"),
   });
 
   return (
@@ -1072,7 +1072,7 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                 </div>
 
                 <div className="mt-4">
-                  <div className="font-semibold text-white">Random Music</div>
+                  <div className="font-semibold text-white">Continue Music</div>
 
                   {isLoadingRandom && (
                     <div className="mt-2 text-xs text-zinc-400">
@@ -1301,7 +1301,7 @@ export function PlayerPage({ setIsClick }: IProp) {
     onToggleFavorites: handleToggleFavorites,
     onToggleKaraoke: handleToggleKaraoke,
     onShare: handleShare,
-    onOpenFavorites: () => router.push("/music/library/favorites"),
+    onOpenFavorites: () => router.push("/en/music/library/favorites"),
   });
 
   const handleClosePlayer = () => {

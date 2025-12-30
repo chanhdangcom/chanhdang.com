@@ -18,8 +18,10 @@ export function AudioSingerItem({ music }: IProp) {
   return (
     <div>
       <div className="space-y-4">
-        {music.musics?.map((song) => (
-          <div key={song.id}>
+        {music.musics?.map((song, index) => (
+          <div key={song.id} className="flex items-center gap-4 font-apple">
+            <div className="font-medium text-zinc-500">{index + 1}</div>
+
             <AudioItemOrder
               music={song}
               handlePlay={() => handlePlayAudio(song)}

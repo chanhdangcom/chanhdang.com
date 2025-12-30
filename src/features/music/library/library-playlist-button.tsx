@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Heart } from "lucide-react";
 import { IPlaylistItem } from "../type/playlist";
+import { Plus } from "@phosphor-icons/react/dist/ssr";
 
 type LibraryPlaylistButtonProps = {
   playlist: IPlaylistItem;
@@ -90,7 +90,7 @@ export function LibraryPlaylistButton({
   const sizeClasses = {
     sm: "w-4 h-4",
     md: "w-5 h-5",
-    lg: "w-6 h-6",
+    lg: "size-6",
   };
 
   return (
@@ -98,7 +98,7 @@ export function LibraryPlaylistButton({
       type="button"
       onClick={handleToggleLibrary}
       disabled={isLoading}
-      className={`rounded-full p-2 backdrop-blur-sm transition-all duration-200 hover:scale-110 dark:bg-zinc-900/60 ${
+      className={`flex items-center ${
         isInLibrary
           ? "text-red-500 hover:text-red-600"
           : "text-zinc-50 hover:text-red-500"
@@ -107,9 +107,11 @@ export function LibraryPlaylistButton({
         isInLibrary ? "Gỡ playlist khỏi Library" : "Thêm playlist vào Library"
       }
     >
-      <Heart
+      <Plus
+        size={25}
+        weight="bold"
         className={sizeClasses[size]}
-        fill={isInLibrary ? "currentColor" : "none"}
+        fill={isInLibrary ? "currentColor" : "red"}
       />
     </button>
   );
