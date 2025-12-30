@@ -29,7 +29,7 @@ export async function CarouselTopic() {
                   <CaretRight
                     size={20}
                     weight="bold"
-                    className="text-zinc-500 md:mt-1"
+                    className="mt-2 text-zinc-500"
                   />
                 </Link>
               </>
