@@ -164,7 +164,7 @@ export function GitHubHeatmap() {
     );
   }
 
-  if (error || !data) {
+  if (error || !data || !data.user || !data.user.contributionsCollection) {
     return (
       <div className="flex h-40 items-center justify-center font-mono text-sm">
         Không tải được dữ liệu GitHub.
@@ -173,6 +173,14 @@ export function GitHubHeatmap() {
   }
 
   const calendar = data.user.contributionsCollection.contributionCalendar;
+  
+  if (!calendar || !calendar.weeks) {
+    return (
+      <div className="flex h-40 items-center justify-center font-mono text-sm">
+        Không tải được dữ liệu GitHub.
+      </div>
+    );
+  }
   const weeks = calendar.weeks;
 
   // Flatten contributionDays

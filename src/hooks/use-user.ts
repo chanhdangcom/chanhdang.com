@@ -22,12 +22,16 @@ export function useUser() {
   // Load local user từ localStorage (login thường)
   useEffect(() => {
     try {
-      const stored = localStorage.getItem("user");
-      if (stored) {
-        setLocalUser(JSON.parse(stored) as User);
+      if (typeof window !== "undefined" && localStorage) {
+        const stored = localStorage.getItem("user");
+        if (stored) {
+          setLocalUser(JSON.parse(stored) as User);
+        }
       }
     } catch {
-      localStorage.removeItem("user");
+      if (typeof window !== "undefined" && localStorage) {
+        localStorage.removeItem("user");
+      }
     } finally {
       setIsLoadingLocal(false);
     }
@@ -62,7 +66,9 @@ export function useUser() {
     if (userData) {
       // Login thường: lưu vào localStorage
       setLocalUser(userData);
-      localStorage.setItem("user", JSON.stringify(userData));
+      if (typeof window !== "undefined" && localStorage) {
+        localStorage.setItem("user", JSON.stringify(userData));
+      }
     } else {
       // Login Google: dùng NextAuth
       signIn("google");
@@ -85,7 +91,9 @@ export function useUser() {
     } finally {
       // Always clear local user data
       setLocalUser(null);
-      localStorage.removeItem("user");
+      if (typeof window !== "undefined" && localStorage) {
+        localStorage.removeItem("user");
+      }
     }
   };
 

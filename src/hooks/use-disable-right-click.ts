@@ -2,6 +2,8 @@ import { useEffect } from "react";
 
 export const useDisableRightClick = () => {
   useEffect(() => {
+    if (typeof window === "undefined" || !document) return;
+
     const handleContextMenu = (e: MouseEvent) => {
       e.preventDefault();
       return false;
