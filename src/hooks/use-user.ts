@@ -3,12 +3,15 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
 
+export type UserRole = "guest" | "user" | "admin";
+
 interface User {
   id: string;
   username: string;
   displayName?: string;
   avatarUrl?: string;
   email?: string;
+  role?: UserRole;
 }
 
 export function useUser() {
@@ -38,6 +41,7 @@ export function useUser() {
         displayName: session.user.name,
         avatarUrl: session.user.image || undefined,
         email: session.user.email || undefined,
+        role: ((session.user as { role?: string }).role || "user") as UserRole,
       }
     : null;
 

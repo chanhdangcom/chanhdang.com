@@ -1,13 +1,29 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { normalizeDocument } from "@/lib/mongodb-helpers";
+import { ObjectId } from "mongodb";
 
 export async function GET() {
   try {
     const client = await clientPromise;
     const db = client.db("musicdb");
     const singers = await db.collection("singers").find({}).toArray();
-    const normalized = singers.map((s) => normalizeDocument(s));
+    const normalized = singers.map((s) => {
+      const normalizedDoc = normalizeDocument(s);
+      // Normalize addedBy field if it exists (could be ObjectId)
+      if (s.addedBy) {
+        const addedBy = s.addedBy;
+        if (addedBy instanceof ObjectId) {
+          return { ...normalizedDoc, addedBy: addedBy.toString() };
+        }
+        // Handle case where addedBy might be in the normalized doc already
+        if (normalizedDoc.addedBy instanceof ObjectId) {
+          return { ...normalizedDoc, addedBy: normalizedDoc.addedBy.toString() };
+        }
+        return { ...normalizedDoc, addedBy: String(addedBy) };
+      }
+      return normalizedDoc;
+    });
     return NextResponse.json(normalized);
   } catch (error) {
     console.error("Error fetching singers:", error);
@@ -20,6 +36,19 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    // Check authentication and permissions
+    const { getUserRole, getUserId } = await import("@/lib/auth-helpers");
+    const role = await getUserRole(request);
+    
+    // Only admin can add singers freely
+    // Users can create their own artist profile (we'll handle this separately)
+    if (!role || role !== "admin") {
+      return NextResponse.json(
+        { error: "Chỉ admin mới có quyền thêm ca sĩ. Người dùng có thể tạo profile ca sĩ của chính mình." },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
 
     if (!body.singer || !body.cover) {
@@ -40,9 +69,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Singer already exists" }, { status: 400 });
     }
 
+    const userId = await getUserId(request);
     const result = await db.collection("singers").insertOne({
       ...body,
       musics: [],
+      addedBy: userId || null,
       createdAt: new Date(),
     });
 

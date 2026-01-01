@@ -1,6 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 
 type ContributionDay = {
@@ -43,15 +44,23 @@ const LOADING_DAYS = 7;
 
 export function GitHubHeatmap() {
   const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
   const { data, isLoading, error } = useSWR<ApiResponse>(
     "/api/github-contributions",
     fetcher
   );
 
-  const COLORS = resolvedTheme === "light" ? COLORS_LIGHT : COLORS_DARK;
+  // Ensure we only render theme-dependent content after hydration
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  // Loading skeleton: lưới màu nhấp nháy random
+  // Use a default theme during SSR to avoid hydration mismatch
+  const theme = mounted ? resolvedTheme : "dark";
+  const COLORS = theme === "light" ? COLORS_LIGHT : COLORS_DARK;
+
+  // Loading skeleton: lưới màu nhấp nháy deterministic
   if (isLoading) {
     const monthNamesSkeleton = [
       "Jan",
@@ -80,6 +89,13 @@ export function GitHubHeatmap() {
       }
     );
 
+    // Deterministic pseudo-random function using index as seed
+    const getDeterministicLevel = (weekIdx: number, dayIdx: number) => {
+      const seed = weekIdx * LOADING_DAYS + dayIdx;
+      // Simple hash function for deterministic "random" values
+      return seed % COLORS_DARK.length;
+    };
+
     return (
       <div className="p-4 font-mono text-[10px]">
         {/* Month labels skeleton */}
@@ -97,7 +113,7 @@ export function GitHubHeatmap() {
           </div>
         </div>
 
-        {/* Weekday labels + random grid */}
+        {/* Weekday labels + deterministic grid */}
         <div className="overflow-x-auto">
           <div className="flex justify-center">
             <div className="mr-2 flex w-8 flex-col justify-between py-[2px] text-[10px] text-zinc-500">
@@ -110,13 +126,8 @@ export function GitHubHeatmap() {
               {Array.from({ length: LOADING_WEEKS }).map((_, weekIdx) => (
                 <div key={weekIdx} className="flex flex-col gap-[3px]">
                   {Array.from({ length: LOADING_DAYS }).map((_, dayIdx) => {
-                    const level = Math.floor(
-                      Math.random() * COLORS_DARK.length
-                    );
-                    const color =
-                      resolvedTheme === "light"
-                        ? COLORS_LIGHT[level]
-                        : COLORS_DARK[level];
+                    const level = getDeterministicLevel(weekIdx, dayIdx);
+                    const color = COLORS[level];
 
                     return (
                       <div

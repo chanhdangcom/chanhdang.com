@@ -38,6 +38,17 @@ export async function POST(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Check authentication and permissions
+    const { getUserRole, getUserId } = await import("@/lib/auth-helpers");
+    const role = await getUserRole(request);
+    
+    if (!role || (role !== "user" && role !== "admin")) {
+      return NextResponse.json(
+        { error: "Bạn cần đăng nhập để thêm bài hát" },
+        { status: 401 }
+      );
+    }
+
     const { id } = await context.params;
     const body = await request.json();
 
@@ -60,9 +71,20 @@ export async function POST(
       return NextResponse.json({ error: "Singer not found" }, { status: 404 });
     }
 
+    // Check if user owns this singer profile (for regular users)
+    // Admin can add to any singer
+    const userId = await getUserId(request);
+    if (role === "user" && singer.addedBy && singer.addedBy !== userId) {
+      return NextResponse.json(
+        { error: "Bạn chỉ có thể thêm bài hát vào profile ca sĩ của chính mình" },
+        { status: 403 }
+      );
+    }
+
     const newMusic = {
       ...body,
       singer: singer.singer,
+      addedBy: userId || null,
       createdAt: new Date(),
     };
 

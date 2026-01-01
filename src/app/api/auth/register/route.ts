@@ -70,12 +70,13 @@ export async function POST(request: Request) {
     // Hash password
     const hash = await bcrypt.hash(password, 12);
 
-    // Create user
+    // Create user with default role "user"
     const result = await db.collection("users").insertOne({
       username,
       email: email || null,
       password: hash,
       displayName: username,
+      role: "user", // Default role for new users
       createdAt: new Date(),
       updatedAt: new Date(),
     });

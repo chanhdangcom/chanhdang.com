@@ -2,11 +2,14 @@
 
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { useUser } from "@/hooks/use-user";
+import { usePermissions } from "@/hooks/use-permissions";
 import {
   BookBookmark,
   House,
   MicrophoneStage,
   MusicNotesSimple,
+  ShieldCheck,
+  UserCircle,
 } from "@phosphor-icons/react/dist/ssr";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
@@ -18,6 +21,8 @@ export function MenuBar() {
   const params = useParams();
   const locale = (params?.locale as string) || "vi";
   const { isAuthenticated } = useUser();
+  const { canAddMusic, canAddSinger, canManageSystem, role } = usePermissions();
+  const isRegularUser = role === "user";
 
   return (
     <div className="fixed left-4 top-4 z-30 hidden font-apple md:flex">
@@ -61,7 +66,7 @@ export function MenuBar() {
               <div className="font-medium text-red-500">Home</div>
             </div>
 
-            {isAuthenticated ? (
+            {canAddMusic ? (
               <Link
                 href={`/${locale}/music/add-music`}
                 className="flex items-center gap-2 rounded-2xl p-2"
@@ -71,7 +76,6 @@ export function MenuBar() {
                   weight="bold"
                   className="text-red-500"
                 />
-
                 <div className="font-medium">Add New Music</div>
               </Link>
             ) : (
@@ -85,7 +89,7 @@ export function MenuBar() {
               </div>
             )}
 
-            {isAuthenticated ? (
+            {canAddSinger ? (
               <Link
                 href={`/${locale}/music/add-singer`}
                 className="flex items-center gap-2 rounded-2xl p-2"
@@ -97,15 +101,26 @@ export function MenuBar() {
                 />
                 <div className="font-medium">Add Artists</div>
               </Link>
-            ) : (
-              <div className="pointer-events-none flex items-center gap-2 p-2 opacity-30">
-                <MicrophoneStage
-                  size={25}
-                  weight="fill"
-                  className="text-red-500"
-                />
-                <div className="font-medium">Add Artists</div>
-              </div>
+            ) : null}
+
+            {isRegularUser && (
+              <Link
+                href={`/${locale}/music/my-music`}
+                className="flex items-center gap-2 rounded-2xl p-2"
+              >
+                <UserCircle size={25} weight="fill" className="text-red-500" />
+                <div className="font-medium">My Music</div>
+              </Link>
+            )}
+
+            {canManageSystem && (
+              <Link
+                href={`/${locale}/music/admin`}
+                className="flex items-center gap-2 rounded-2xl p-2"
+              >
+                <ShieldCheck size={25} weight="fill" className="text-red-500" />
+                <div className="font-medium">Admin Panel</div>
+              </Link>
             )}
 
             {isAuthenticated ? (

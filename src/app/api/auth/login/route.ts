@@ -123,6 +123,7 @@ export async function POST(request: Request) {
         displayName: user.displayName || user.username,
         avatarUrl: user.avatarUrl,
         email: user.email,
+        role: user.role || "user", // Default to "user" if role not set
       },
       rememberMe,
     });

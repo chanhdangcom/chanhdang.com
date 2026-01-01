@@ -10,6 +10,7 @@ import React, {
 
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { useUser } from "@/hooks/use-user";
+import { usePermissions } from "@/hooks/use-permissions";
 import { AdModal } from "@/features/music/component/ad-modal";
 
 // ----------------------------
@@ -240,6 +241,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { isAuthenticated, user } = useUser();
+  const { canListenWithoutAds } = usePermissions();
 
   // ----------------------------
   // Load subtitles for the current track from cloud/raw
@@ -625,8 +627,8 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         audioRef.current.currentTime = 0;
         audioRef.current.play();
       } else {
-        // Kiểm tra nếu user chưa đăng nhập, hiển thị quảng cáo
-        if (!isAuthenticated) {
+        // Kiểm tra nếu user không có quyền nghe không quảng cáo, hiển thị quảng cáo
+        if (!canListenWithoutAds) {
           setPendingNextTrack(() => handlePlayRandomAudio);
           setShowAd(true);
         } else {
@@ -647,7 +649,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     handlePlayRandomAudio,
     isRepeat,
     isPlayerPageOpen,
-    isAuthenticated,
+    canListenWithoutAds,
   ]);
 
   // Handle ad modal close/continue

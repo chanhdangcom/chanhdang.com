@@ -69,21 +69,24 @@ const handler = NextAuth({
         // Lưu/cập nhật avatar Google vào DB
         if (account?.provider === "google" && profile && user.email) {
           const picture = (profile as { picture?: string }).picture;
-          if (picture) {
-            await db.collection("users").updateOne(
-              { email: user.email },
-              {
-                $set: {
-                  image: picture,
-                  avatarUrl: picture,
-                  name: user.name,
-                  updatedAt: new Date(),
-                },
-                $setOnInsert: { createdAt: new Date() },
+          await db.collection("users").updateOne(
+            { email: user.email },
+            {
+              $set: {
+                image: picture,
+                avatarUrl: picture,
+                name: user.name,
+                updatedAt: new Date(),
               },
-              { upsert: true }
-            );
-          }
+              $setOnInsert: {
+                createdAt: new Date(),
+                role: "user", // Default role for new Google users
+                username: user.email?.split("@")[0] || user.name || "user",
+                displayName: user.name,
+              },
+            },
+            { upsert: true }
+          );
         }
 
         return true;
@@ -101,6 +104,23 @@ const handler = NextAuth({
         token.name = p.name ?? token.name;
         token.picture = p.picture ?? token.picture;
         token.email = p.email ?? token.email;
+        
+        // Fetch role from database
+        if (p.email) {
+          try {
+            const client = await clientPromise;
+            const db = client.db("musicdb");
+            const dbUser = await db.collection("users").findOne({ email: p.email });
+            if (dbUser?.role) {
+              token.role = dbUser.role;
+            } else {
+              token.role = "user"; // Default role
+            }
+          } catch (error) {
+            console.error("Error fetching user role:", error);
+            token.role = "user"; // Default on error
+          }
+        }
       }
       // Giữ lại picture từ token (cho các request tiếp theo)
       // Nếu không có, thử lấy từ user object (từ adapter)
@@ -116,6 +136,8 @@ const handler = NextAuth({
         session.user.email = token.email ?? session.user.email;
         // Ưu tiên picture từ token, fallback về image từ session
         session.user.image = (token.picture as string) || session.user.image || null;
+        // Add role to session
+        (session.user as any).role = (token.role as string) || "user";
       }
       return session;
     },

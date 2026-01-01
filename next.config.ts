@@ -6,7 +6,7 @@ const withNextIntl = createNextIntlPlugin();
 const nextConfig: NextConfig = {
   reactStrictMode: false,
   images: {
-    domains: ["cdn.chanhdang.com"],
+    domains: ["cdn.chanhdang.com", "lh3.googleusercontent.com"],
     remotePatterns: [
       {
         protocol: "https",

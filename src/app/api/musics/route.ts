@@ -36,10 +36,30 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    // Check authentication and permissions
+    const { getUserRole, getUserId } = await import("@/lib/auth-helpers");
+    const role = await getUserRole(request);
+    
+    if (!role || (role !== "user" && role !== "admin")) {
+      return NextResponse.json(
+        { error: "Bạn cần đăng nhập để thêm bài hát" },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const client = await clientPromise;
     const db = client.db("musicdb");
-    const result = await db.collection("musics").insertOne(body);
+    
+    // Add userId to track who added the music
+    const userId = await getUserId(request);
+    const musicData = {
+      ...body,
+      addedBy: userId || null,
+      createdAt: new Date(),
+    };
+    
+    const result = await db.collection("musics").insertOne(musicData);
     return NextResponse.json({ success: true, insertedId: result.insertedId });
   } catch (error) {
     console.error("Error adding music:", error);
