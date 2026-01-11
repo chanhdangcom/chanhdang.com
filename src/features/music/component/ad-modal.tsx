@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
+import { BorderPro } from "./border-pro";
 
 type AdModalProps = {
   isOpen: boolean;
@@ -12,10 +13,21 @@ type AdModalProps = {
   onContinue: () => void;
 };
 
+type AdGif = {
+  id: number;
+  image: string;
+};
+
+const adGifs: AdGif[] = [
+  {
+    id: 1,
+    image:
+      "https://images.squarespace-cdn.com/content/v1/59124bd8197aeaf88cc3c03d/1653669869434-JK9OBA1EZYGYN80W65DN/Music_JP-New-Life-6-16x9-Cinemagraph-Swirl-Social_05_rev0_Video_JP-JP_TBD_AMXD0118173H_MOS.gif?format=750w",
+  },
+];
 export function AdModal({ isOpen, onClose, onContinue }: AdModalProps) {
   const [countdown, setCountdown] = useState(5);
   const [canSkip, setCanSkip] = useState(false);
-  const [selectedVideo, setSelectedVideo] = useState<string>("/ad/ad.mov");
   const params = useParams();
   const locale = (params?.locale as string) || "en";
   const withLocale = (path: string) => `/${locale}${path}`;
@@ -26,11 +38,6 @@ export function AdModal({ isOpen, onClose, onContinue }: AdModalProps) {
       setCanSkip(false);
       return;
     }
-
-    // Random chọn 1 trong 2 video khi modal mở
-    const videos = ["/ad/ad.mov", "/ad/ad2.MOV"];
-    const randomVideo = videos[Math.floor(Math.random() * videos.length)];
-    setSelectedVideo(randomVideo);
 
     // Countdown timer
     const timer = setInterval(() => {
@@ -70,7 +77,7 @@ export function AdModal({ isOpen, onClose, onContinue }: AdModalProps) {
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 20 }}
-          className="relative z-10 w-full max-w-md rounded-3xl border bg-zinc-200 p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+          className="relative z-10 w-full max-w-md rounded-3xl border bg-zinc-200 p-4 shadow-md dark:border-zinc-800 dark:bg-zinc-900"
         >
           {/* Close button */}
 
@@ -84,16 +91,24 @@ export function AdModal({ isOpen, onClose, onContinue }: AdModalProps) {
             </div>
 
             <div className="relative">
-              <video
+              {/* <video
                 key={selectedVideo}
                 src={selectedVideo}
                 autoPlay
                 loop
                 playsInline
                 className="pointer-events-none h-80 w-full select-none rounded-3xl object-cover"
-              />
+              /> */}
 
-              <ChanhdangLogotype className="absolute left-2 top-2" />
+              <BorderPro roundedSize="rounded-3xl">
+                <img
+                  src={adGifs[0].image}
+                  alt={adGifs[0].image}
+                  className="pointer-events-none h-80 w-full select-none rounded-3xl object-cover"
+                />
+              </BorderPro>
+
+              <ChanhdangLogotype className="absolute left-2 top-2 text-white" />
             </div>
 
             {/* Action Buttons */}
@@ -111,18 +126,13 @@ export function AdModal({ isOpen, onClose, onContinue }: AdModalProps) {
                 disabled={!canSkip}
                 className={`w-full rounded-full border-2 px-6 py-3 font-semibold transition-all ${
                   canSkip
-                    ? "border-white bg-transparent hover:bg-white hover:text-black dark:text-white"
+                    ? "border-white bg-transparent hover:bg-zinc-700 dark:text-white"
                     : "cursor-not-allowed border-zinc-600 bg-transparent text-zinc-600"
                 }`}
               >
                 {canSkip ? "Bỏ qua" : `Bỏ qua sau ${countdown}s`}
               </button>
             </div>
-
-            {/* Info text */}
-            <p className="text-xs dark:text-zinc-500">
-              Đăng nhập để tận hưởng trải nghiệm không quảng cáo
-            </p>
           </div>
         </motion.div>
       </div>
