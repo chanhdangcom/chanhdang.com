@@ -38,7 +38,7 @@ export default async function CarouselAudio() {
       <div className="relative w-full rounded-3xl text-black dark:text-white md:max-h-full">
         <div className="flex justify-between">
           <Link
-            href="trending-now"
+            href="/en/music/trending-now"
             className="ml-2 flex cursor-pointer items-center gap-1 px-1 text-xl font-bold text-black dark:text-white md:ml-[270px]"
           >
             <div> Trending Now </div>
