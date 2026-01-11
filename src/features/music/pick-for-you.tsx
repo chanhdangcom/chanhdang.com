@@ -22,7 +22,7 @@ export function PickForYou() {
         className="mt-2 flex w-full snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth text-white scrollbar-hide"
       >
         <div className="snap-start">
-          <div className="mx-4 mb-1 font-apple text-sm font-medium text-zinc-500">
+          <div className="mx-4 mb-1 font-apple text-sm font-medium text-zinc-500 md:ml-[270px]">
             Make for you
           </div>
 
@@ -39,7 +39,7 @@ export function PickForYou() {
                 <div className="text-3xl">Mix</div>
               </div>
 
-              <div className="rounded-b-xl bg-zinc-700/50 px-4 py-2">
+              <div className="rounded-b-xl px-4 py-4 backdrop-blur-sm">
                 <div className="line-clamp-2 text-center">
                   Ê Kê Vin, Khầy, Jack - J97, Son Tung M-TP and more
                 </div>
@@ -57,7 +57,7 @@ export function PickForYou() {
             className="relative h-72 w-56 shrink-0 overflow-hidden rounded-2xl"
             onClick={() => handlePlayRandomAudio()}
           >
-            <BorderPro roundedSize="rounded-3x">
+            <BorderPro roundedSize="rounded-x">
               <img
                 src="/img/image-3.PNG"
                 alt=""
@@ -75,7 +75,7 @@ export function PickForYou() {
                 <div className="text-xl">Mix</div>
               </div>
 
-              <div className="rounded-b-xl bg-zinc-700/50 px-4 py-2">
+              <div className="rounded-b-xl px-4 py-4 backdrop-blur-sm">
                 <div className="line-clamp-2 text-center">
                   Ê Kê Vin, Khầy, Jack - J97, Son Tung M-TP and more
                 </div>
@@ -100,7 +100,7 @@ export function PickForYou() {
                 <div className="text-4xl font-bold">Get Up!</div>
                 <div className="text-xl">Mix</div>
               </div>
-              <div className="rounded-b-xl bg-zinc-700/50 px-4 py-2">
+              <div className="rounded-b-xl px-4 py-4 backdrop-blur-sm">
                 <div className="line-clamp-2 text-center">
                   Ê Kê Vin, Khầy, Jack - J97, Son Tung M-TP and more
                 </div>
@@ -132,7 +132,7 @@ export function PickForYou() {
                 <div className="text-3xl">Mix</div>
               </div>
 
-              <div className="rounded-b-xl bg-zinc-700/50 px-4 py-2">
+              <div className="rounded-b-xl px-4 py-4 backdrop-blur-sm">
                 <div className="line-clamp-2 text-center">
                   Ê Kê Vin, Khầy, Jack - J97, Son Tung M-TP and more
                 </div>

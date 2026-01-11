@@ -48,7 +48,7 @@ export const Header = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <Link href={"/"} className="hover:underline">
-                  Daifolio
+                  Portfolio
                 </Link>
               </motion.li>
 
