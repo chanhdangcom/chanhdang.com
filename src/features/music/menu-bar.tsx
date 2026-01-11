@@ -45,7 +45,6 @@ export function MenuBar() {
                   damping: 20,
                   duration: 0.5,
                 }}
-                // layoutId="Search"
                 className="gap-4"
               >
                 <Link href={`/${locale}/music/search`}>

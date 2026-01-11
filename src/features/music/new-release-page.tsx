@@ -7,6 +7,7 @@ import { MenuBarMobile } from "./menu-bar-mobile";
 import { Footer } from "@/app/[locale]/features/profile/footer";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { NewReleaseList } from "./new-release-list";
+import { BackButton } from "./component/back-button";
 
 export async function NewReleasePage() {
   try {
@@ -40,21 +41,23 @@ export async function NewReleasePage() {
 
         <div className="mx-auto w-full">
           <div className="relative z-10">
-            <div className="z-20 md:ml-[270px]">
+            <div className="z-20 hidden md:ml-[270px] md:flex">
               <HeaderMusicPage />
             </div>
 
-            <>
-              <div className="ml-2 flex items-center gap-1 px-1 text-xl font-bold text-black dark:text-white md:ml-[270px]">
-                New Release
-              </div>
+            <BackButton />
 
+            <div className="mt-4 line-clamp-1 gap-1 px-1 text-center text-xl font-bold text-black dark:text-white md:ml-[270px]">
+              New Release
+            </div>
+
+            <div className="mt-4">
               <NewReleaseList musics={musics} />
 
               <div className="mt-8 md:ml-[60px]">
                 <Footer />
               </div>
-            </>
+            </div>
           </div>
 
           <div className="my-40">

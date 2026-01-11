@@ -8,14 +8,11 @@ import { AudioBar } from "../audio-bar";
 import { IPlaylistItem } from "../type/playlist";
 import { AudioItemOrder } from "../component/audio-item-order";
 import {
-  CaretLeft,
   DotsThree,
   DotsThreeVertical,
   Play,
   Shuffle,
 } from "@phosphor-icons/react/dist/ssr";
-import Link from "next/link";
-import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Footer } from "@/app/[locale]/features/profile/footer";
 import { HeaderMusicPage } from "../header-music-page";
@@ -23,6 +20,7 @@ import { MotionHeaderMusic } from "../component/motion-header-music";
 import { LibraryPlaylistButton } from "../library/library-playlist-button";
 import { useUser } from "@/hooks/use-user";
 import { BorderPro } from "../component/border-pro";
+import { BackButton } from "../component/back-button";
 
 type Props = {
   playlist: IPlaylistItem;
@@ -31,9 +29,6 @@ type Props = {
 export function PlaylistDetailClient({ playlist }: Props) {
   const { handlePlayAudio, handlePlayRandomAudio } = useAudio();
   const { user } = useUser();
-  const params = useParams();
-  const locale = (params?.locale as string) || "en";
-  const withLocale = (path: string) => `/${locale}${path}`;
 
   const musics = useMemo(
     () => playlist.musics?.filter((m) => m && m.id) ?? [],
@@ -89,18 +84,10 @@ export function PlaylistDetailClient({ playlist }: Props) {
           <AudioBar />
           <MenuBarMobile />
 
-          <div className="sticky top-0 z-10 m-4 flex items-center justify-between gap-1 md:hidden">
-            <Link href={withLocale("/music")}>
-              <div className="pointer-events-auto rounded-full bg-zinc-200 p-2 dark:bg-zinc-900">
-                <CaretLeft
-                  size={28}
-                  weight="regular"
-                  className="text-black dark:text-white"
-                />
-              </div>
-            </Link>
+          <BackButton className="left-3" />
 
-            <div className="flex items-center justify-center gap-6 rounded-full border border-white/10 p-2 backdrop-blur-xl">
+          <>
+            <div className="fixed right-3 top-2 z-10 flex items-center justify-end gap-6 rounded-full border border-white/10 p-2 backdrop-blur-xl">
               <div>
                 <LibraryPlaylistButton
                   playlist={playlist}
@@ -113,9 +100,9 @@ export function PlaylistDetailClient({ playlist }: Props) {
                 <DotsThree size={25} weight="bold" />
               </div>
             </div>
-          </div>
+          </>
 
-          <div className="mx-4 mb-12 md:ml-[270px]">
+          <div className="mx-4 mb-20 mt-8 md:ml-[270px]">
             <div className="items-center gap-8 md:flex">
               <BorderPro roundedSize="rounded-3xl">
                 <Image
@@ -159,7 +146,7 @@ export function PlaylistDetailClient({ playlist }: Props) {
                 <img
                   src={playlist.cover}
                   alt="cover"
-                  className="pointer-events-none absolute top-0 -z-10 h-1/3 w-[85vw] object-cover opacity-50 blur-3xl"
+                  className="pointer-events-none absolute top-0 -z-10 hidden object-cover opacity-50 blur-3xl md:flex md:h-1/3 md:w-[85vw]"
                 />
               </div>
             </div>

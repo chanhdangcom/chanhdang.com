@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { CaretLeft, Play, Shuffle } from "@phosphor-icons/react/dist/ssr";
+import { Play, Shuffle } from "@phosphor-icons/react/dist/ssr";
 
 import { AudioSingerItem } from "./component/audio-singer-item";
 
@@ -9,16 +9,11 @@ import { motion } from "motion/react";
 import { AnimatePresence } from "framer-motion";
 import { MenuBar } from "./menu-bar";
 import { HeaderMusicPage } from "./header-music-page";
-
 import { MenuBarMobile } from "./menu-bar-mobile";
-
-import Link from "next/link";
-
 import { MotionHeaderMusic } from "./component/motion-header-music";
-
 import { ISingerItem } from "./type/singer";
 import { useAudio } from "@/components/music-provider";
-import { useParams } from "next/navigation";
+import { BackButton } from "./component/back-button";
 
 type IProp = {
   singer: ISingerItem;
@@ -44,12 +39,9 @@ export function SingerPageClient({ singer }: IProp) {
     handlePlayAudio(randomMusic);
   };
 
-  const param = useParams();
-  const locale = (param?.locale as string) || "en";
-
   return (
     <>
-      <div className="bg-hoverBg md:flex">
+      <div className="bg-hoverBg mt-8 font-apple md:flex">
         <MenuBar />
 
         <MotionHeaderMusic name={singer.singer} />
@@ -64,21 +56,7 @@ export function SingerPageClient({ singer }: IProp) {
             </div>
 
             <div>
-              <div className="sticky top-0 z-20 m-4 flex items-center gap-1 md:hidden">
-                <Link href={`/${locale}/music`}>
-                  <motion.div
-                    whileTap={{ scale: 0.3 }}
-                    className="rounded-full bg-zinc-200 p-2 dark:bg-zinc-900"
-                    layout
-                  >
-                    <CaretLeft
-                      size={28}
-                      weight="regular"
-                      className="text-black dark:text-white"
-                    />
-                  </motion.div>
-                </Link>
-              </div>
+              <BackButton />
 
               <div className="mx-4 flex rounded-3xl md:ml-[270px] md:p-4">
                 <div className="w-full flex-col items-center md:flex-none">
@@ -101,7 +79,7 @@ export function SingerPageClient({ singer }: IProp) {
                       </div>
                     </div>
 
-                    <div className="text-center text-lg text-zinc-500">
+                    <div className="text-center font-apple text-sm font-semibold text-red-500">
                       ChanhDang Music
                     </div>
 

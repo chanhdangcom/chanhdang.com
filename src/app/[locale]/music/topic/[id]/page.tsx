@@ -1,5 +1,6 @@
 import { Footer } from "@/app/[locale]/features/profile/footer";
 import { AudioBar } from "@/features/music/audio-bar";
+import { BackButton } from "@/features/music/component/back-button";
 import { MotionHeaderMusic } from "@/features/music/component/motion-header-music";
 import { HeaderMusicPage } from "@/features/music/header-music-page";
 import { MenuBar } from "@/features/music/menu-bar";
@@ -38,33 +39,23 @@ export default async function Page({ params }: Iprop) {
 
         <div className="mx-auto w-full">
           <div className="relative z-10">
-            <div className="z-20 md:ml-[270px]">
+            <div className="z-20 hidden md:ml-[270px] md:flex">
               <HeaderMusicPage />
             </div>
 
-            <>
-              <div className="ml-2 flex items-center gap-1 px-1 text-xl font-bold text-black dark:text-white md:ml-[270px]">
-                {topic?.title}
-              </div>
+            <BackButton className="left-3" />
 
-              {/* <div>
-                {topic?.musics.map((music: IMusic) => (
-                  <div key={music.id}>
-                    <img
-                      src={music.cover}
-                      alt=""
-                      className="size-16 rounded-3xl"
-                    />
-                  </div>
-                ))}
-              </div> */}
+            <div className="mt-4 line-clamp-1 gap-1 px-1 text-center text-xl font-bold text-black dark:text-white md:ml-[270px]">
+              {topic?.title}
+            </div>
 
+            <div className="mt-4">
               <TopicList musics={topic?.musics} />
 
               <div className="mt-8 md:ml-[60px]">
                 <Footer />
               </div>
-            </>
+            </div>
           </div>
 
           <div className="my-40">
