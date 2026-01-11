@@ -1398,7 +1398,7 @@ export function PlayerPage({ setIsClick }: IProp) {
           </div>
 
           <div className="justify-cente flex items-center">
-            <div className="mx-8 flex w-full items-center justify-between text-white">
+            <div className="mx-8 mb-4 flex w-full items-center justify-between text-white">
               <motion.button
                 onClick={handAudioForward}
                 whileTap={{ scale: 0.85 }}
@@ -1438,7 +1438,7 @@ export function PlayerPage({ setIsClick }: IProp) {
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-8">
             <VolumeBar />
 
             <div className="mx-8 flex items-center justify-between text-base text-zinc-400">
