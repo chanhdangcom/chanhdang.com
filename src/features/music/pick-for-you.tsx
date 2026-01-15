@@ -61,14 +61,10 @@ export function PickForYou() {
 
       <div
         ref={useRefScroll}
-        className="mt-2 flex w-full snap-x snap-mandatory overflow-x-auto scroll-smooth text-white scrollbar-hide"
+        className="mt-2 flex w-full snap-x snap-mandatory scroll-pl-2 overflow-x-auto scroll-smooth pl-2 text-white scrollbar-hide md:scroll-pl-[270px] md:pl-[270px]"
       >
         {pickForYou.map((item) => (
-          <div
-            key={item.id}
-            ref={useRefScroll}
-            className={cn("", item.id === "1" ? "md:ml-[270px]" : "ml-1")}
-          >
+          <div key={item.id} ref={useRefScroll} className={cn("", "mr-1")}>
             <div className="snap-start pl-1">
               <div className="mx-2 mb-1 font-apple text-sm font-medium text-zinc-500">
                 Make for you
