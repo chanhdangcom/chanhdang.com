@@ -11,6 +11,9 @@ export interface UserPermissions {
   canManageSystem: boolean;
   canListenWithoutAds: boolean;
   canCreateArtistProfile: boolean;
+  canManageShopProducts: boolean;
+  canManageShopOrders: boolean;
+  canManageShopCoupons: boolean;
 }
 
 /**
@@ -25,6 +28,9 @@ export function getPermissions(role: UserRole | null | undefined): UserPermissio
         canManageSystem: true,
         canListenWithoutAds: true,
         canCreateArtistProfile: true,
+        canManageShopProducts: true,
+        canManageShopOrders: true,
+        canManageShopCoupons: true,
       };
     case "user":
       return {
@@ -33,6 +39,9 @@ export function getPermissions(role: UserRole | null | undefined): UserPermissio
         canManageSystem: false,
         canListenWithoutAds: true,
         canCreateArtistProfile: true, // Users can create their own artist profile
+        canManageShopProducts: false,
+        canManageShopOrders: false,
+        canManageShopCoupons: false,
       };
     case "guest":
     default:
@@ -42,6 +51,9 @@ export function getPermissions(role: UserRole | null | undefined): UserPermissio
         canManageSystem: false,
         canListenWithoutAds: false, // Guests hear ads
         canCreateArtistProfile: false,
+        canManageShopProducts: false,
+        canManageShopOrders: false,
+        canManageShopCoupons: false,
       };
   }
 }

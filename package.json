@@ -9,7 +9,8 @@
     "lint": "next lint",
     "prettier:check": "prettier --check ./src",
     "prettier:fix": "prettier --write ./src",
-    "registry:build": "shadcn build"
+    "registry:build": "shadcn build",
+    "admin:make": "pnpm dlx tsx scripts/make-admin.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.850.0",

@@ -323,28 +323,24 @@ export default async function RootLayout({
   ] as const;
 
   return (
-    <html
-      lang={locale}
-      className="light scroll-smooth"
-      suppressHydrationWarning
-    >
-      <body
+    <>
+      <Script
+        id="structured-data"
+        type="application/ld+json"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <div
         className={cn(
           fontBody.variable,
           fontHandWritten.variable,
           fontMono.variable
         )}
       >
-        <Script
-          id="structured-data"
-          type="application/ld+json"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Providers>{children}</Providers>
         </NextIntlClientProvider>
-      </body>
-    </html>
+      </div>
+    </>
   );
 }

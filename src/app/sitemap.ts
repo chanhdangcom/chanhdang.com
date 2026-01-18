@@ -51,6 +51,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.7,
     },
+    {
+      path: "/CuaHangPhuKien",
+      changeFrequency: "daily" as const,
+      priority: 0.9,
+    },
+    {
+      path: "/CuaHangPhuKien/cart",
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+    },
+    {
+      path: "/CuaHangPhuKien/checkout",
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+    },
+    {
+      path: "/CuaHangPhuKien/account",
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+    },
   ];
 
   mainPages.forEach((page) => {

@@ -1,11 +1,15 @@
-// Root layout - minimal wrapper
-// Main layout logic is in app/[locale]/layout.tsx
+// Root layout - provides html/body
 export default function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params?: { locale?: string };
 }>) {
-  // Layout in [locale] already has html and body tags
-  // This is just a pass-through wrapper
-  return children;
+  const lang = params?.locale || "en";
+  return (
+    <html lang={lang} className="light scroll-smooth" suppressHydrationWarning>
+      <body>{children}</body>
+    </html>
+  );
 }
