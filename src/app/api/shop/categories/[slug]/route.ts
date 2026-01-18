@@ -18,10 +18,10 @@ function buildFilter(slug: string) {
 
 export async function GET(
   _request: Request,
-  context: { params: { slug: string } }
+  context: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const slug = context.params.slug;
+    const { slug } = await context.params;
     const client = await clientPromise;
     const db = getShopDb(client);
     const category = await db.collection(COLLECTION).findOne(buildFilter(slug));
@@ -37,14 +37,14 @@ export async function GET(
 
 export async function PATCH(
   request: Request,
-  context: { params: { slug: string } }
+  context: { params: Promise<{ slug: string }> }
 ) {
   try {
     const role = await getUserRole(request);
     if (!requireAdmin(role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
-    const slug = context.params.slug;
+    const { slug } = await context.params;
     const payload = await request.json();
     const validation = validateCategoryInput({ ...payload, slug: payload.slug ?? slug });
     if (!validation.valid) {
@@ -69,14 +69,14 @@ export async function PATCH(
 
 export async function DELETE(
   request: Request,
-  context: { params: { slug: string } }
+  context: { params: Promise<{ slug: string }> }
 ) {
   try {
     const role = await getUserRole(request);
     if (!requireAdmin(role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
-    const slug = context.params.slug;
+    const { slug } = await context.params;
     const client = await clientPromise;
     const db = getShopDb(client);
     const result = await db.collection(COLLECTION).deleteOne(buildFilter(slug));

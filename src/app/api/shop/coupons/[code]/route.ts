@@ -10,13 +10,14 @@ const COLLECTION = "shop_coupons";
 
 export async function GET(
   _request: Request,
-  context: { params: { code: string } }
+  context: { params: Promise<{ code: string }> }
 ) {
   try {
-    const code = context.params.code.toUpperCase();
+    const { code } = await context.params;
+    const normalizedCode = code.toUpperCase();
     const client = await clientPromise;
     const db = getShopDb(client);
-    const coupon = await db.collection(COLLECTION).findOne({ code });
+    const coupon = await db.collection(COLLECTION).findOne({ code: normalizedCode });
     if (!coupon) {
       return NextResponse.json({ error: "Coupon not found" }, { status: 404 });
     }
@@ -29,16 +30,17 @@ export async function GET(
 
 export async function PATCH(
   request: Request,
-  context: { params: { code: string } }
+  context: { params: Promise<{ code: string }> }
 ) {
   try {
     const role = await getUserRole(request);
     if (!requireAdmin(role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
-    const code = context.params.code.toUpperCase();
+    const { code } = await context.params;
+    const normalizedCode = code.toUpperCase();
     const payload = await request.json();
-    const validation = validateCouponInput({ ...payload, code });
+    const validation = validateCouponInput({ ...payload, code: normalizedCode });
     if (!validation.valid) {
       return NextResponse.json({ error: validation.errors.join(" ") }, { status: 400 });
     }
@@ -46,7 +48,7 @@ export async function PATCH(
     const client = await clientPromise;
     const db = getShopDb(client);
     const result = await db.collection(COLLECTION).findOneAndUpdate(
-      { code },
+      { code: normalizedCode },
       { $set: { ...payload, updatedAt: new Date() } },
       { returnDocument: "after" }
     );
@@ -62,17 +64,18 @@ export async function PATCH(
 
 export async function DELETE(
   request: Request,
-  context: { params: { code: string } }
+  context: { params: Promise<{ code: string }> }
 ) {
   try {
     const role = await getUserRole(request);
     if (!requireAdmin(role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
-    const code = context.params.code.toUpperCase();
+    const { code } = await context.params;
+    const normalizedCode = code.toUpperCase();
     const client = await clientPromise;
     const db = getShopDb(client);
-    const result = await db.collection(COLLECTION).deleteOne({ code });
+    const result = await db.collection(COLLECTION).deleteOne({ code: normalizedCode });
     if (!result.deletedCount) {
       return NextResponse.json({ error: "Coupon not found" }, { status: 404 });
     }
