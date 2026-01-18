@@ -28,30 +28,37 @@ export default async function ShopPage({
   const { locale } = await params;
   const search = await searchParams;
 
-  const client = await clientPromise;
-  const db = getShopDb(client);
-  const categories = await db
-    .collection("shop_categories")
-    .find({ isActive: { $ne: false } })
-    .sort({ order: 1, name: 1 })
-    .toArray();
+  let categories: Record<string, unknown>[] = [];
+  let products: Record<string, unknown>[] = [];
 
-  const filter: Record<string, unknown> = { isActive: { $ne: false } };
-  if (search?.category) {
-    filter.categorySlug = search.category;
+  try {
+    const client = await clientPromise;
+    const db = getShopDb(client);
+    categories = await db
+      .collection("shop_categories")
+      .find({ isActive: { $ne: false } })
+      .sort({ order: 1, name: 1 })
+      .toArray();
+
+    const filter: Record<string, unknown> = { isActive: { $ne: false } };
+    if (search?.category) {
+      filter.categorySlug = search.category;
+    }
+    if (search?.search) {
+      filter.$or = [
+        { name: { $regex: search.search, $options: "i" } },
+        { description: { $regex: search.search, $options: "i" } },
+      ];
+    }
+    products = await db
+      .collection("shop_products")
+      .find(filter)
+      .sort({ createdAt: -1 })
+      .limit(12)
+      .toArray();
+  } catch (error) {
+    console.error("[CuaHangPhuKien:page]", error);
   }
-  if (search?.search) {
-    filter.$or = [
-      { name: { $regex: search.search, $options: "i" } },
-      { description: { $regex: search.search, $options: "i" } },
-    ];
-  }
-  const products = await db
-    .collection("shop_products")
-    .find(filter)
-    .sort({ createdAt: -1 })
-    .limit(12)
-    .toArray();
 
   return (
     <div className="space-y-14">
