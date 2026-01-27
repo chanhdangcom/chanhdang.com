@@ -2,14 +2,12 @@
 
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { Mail, AlertCircle, CheckCircle2, ArrowLeft } from "lucide-react";
+import { AlertCircle, CheckCircle2, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-
-import { HeaderMusicPage } from "../music/header-music-page";
-import { Footer } from "@/app/[locale]/features/profile/footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
@@ -58,22 +56,19 @@ export default function ForgotPasswordForm() {
   };
 
   return (
-    <div className="container">
-      <HeaderMusicPage name="Quên Mật Khẩu" />
-
+    <div className="mt-20 h-screen items-start justify-center md:flex">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-zinc-200 p-8 font-apple backdrop-blur-2xl dark:border-zinc-900 md:mx-auto md:w-[30vw]"
       >
-        <div className="text-center">
+        <div className="space-y-4 text-center">
+          <ChanhdangLogotype className="mx-auto h-6 w-fit" />
+
           <h1 className="bg-gradient-to-r from-zinc-900 to-zinc-700 bg-clip-text text-3xl font-bold text-transparent dark:from-white dark:to-zinc-300">
             Quên Mật Khẩu
           </h1>
-          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-            Nhập email của bạn để nhận link đặt lại mật khẩu
-          </p>
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
@@ -103,15 +98,15 @@ export default function ForgotPasswordForm() {
             <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Email
             </label>
+
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
               <Input
                 type="email"
-                placeholder="Nhập email của bạn"
+                placeholder="Nhập email của bạn để nhận link đặt lại mật khẩu"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="pl-10"
+                className="rounded-xl border dark:border-zinc-900"
                 disabled={isSubmitting}
               />
             </div>
@@ -138,8 +133,6 @@ export default function ForgotPasswordForm() {
           </div>
         </form>
       </motion.div>
-
-      <Footer />
     </div>
   );
 }

@@ -1,5 +1,4 @@
 import { HeaderMotion } from "./components/header-motion";
-import { FinalBlog } from "./final-blog";
 import { Footer } from "./footer";
 import { Header } from "./header";
 import { Overview } from "./overview";
@@ -13,6 +12,7 @@ import { TitleIntro } from "./components/title-intro";
 import { ScrollChatBot } from "@/components/scroll-chat-bot";
 import { GitHubChart } from "./github-chart";
 import { ProjectList } from "./project-list";
+import { FinalBlog } from "./final-blog";
 
 export const Profile = () => {
   return (

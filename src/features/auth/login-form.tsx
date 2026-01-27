@@ -2,22 +2,13 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import {
-  Eye,
-  EyeOff,
-  Mail,
-  Lock,
-  AlertCircle,
-  CheckCircle2,
-} from "lucide-react";
+import { Eye, EyeOff, AlertCircle, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-
 import { useUser } from "@/hooks/use-user";
-import { HeaderMusicPage } from "../music/header-music-page";
-import { Footer } from "@/app/[locale]/features/profile/footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 
 interface FormErrors {
   username?: string;
@@ -138,18 +129,20 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="container">
-      <HeaderMusicPage name="Login" />
-
+    <div className="h-screen items-center justify-center md:flex">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-zinc-200 p-8 font-apple backdrop-blur-2xl dark:border-zinc-800 md:mx-auto md:w-[30vw]"
+        className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-zinc-200 from-zinc-900 to-zinc-950 p-8 font-apple shadow-sm backdrop-blur-2xl dark:border-zinc-800 dark:bg-gradient-to-tl md:mx-auto md:w-[30vw]"
       >
         <form className="space-y-6" onSubmit={handleSubmit}>
-          <div className="text-center">
-            <h1 className="bg-gradient-to-r from-zinc-900 to-zinc-700 bg-clip-text text-3xl font-bold text-transparent dark:from-white dark:to-zinc-300">
+          <div className="space-y-4 text-center">
+            <div className="mx-auto w-fit">
+              <ChanhdangLogotype className="h-6" />
+            </div>
+
+            <h1 className="bg-gradient-to-r from-zinc-900 to-zinc-700 bg-clip-text font-apple text-3xl font-bold text-transparent dark:from-white dark:to-zinc-300">
               Đăng Nhập
             </h1>
           </div>
@@ -163,6 +156,7 @@ export default function LoginForm() {
                 className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600 dark:border-red-900 dark:bg-red-950/50 dark:text-red-400"
               >
                 <AlertCircle className="h-4 w-4" />
+
                 <span>{errors.general}</span>
               </motion.div>
             )}
@@ -183,21 +177,22 @@ export default function LoginForm() {
           <div className="space-y-4">
             {/* Username Field */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
                 Tên đăng nhập
               </label>
+
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
                 <Input
                   name="username"
                   placeholder="Nhập tên đăng nhập"
                   value={form.username}
                   onChange={handleChange}
                   required
-                  className={`rounded-2xl pl-10 ${errors.username ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                  className={`rounded-xl border dark:border-zinc-900 ${errors.username ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                   disabled={isSubmitting}
                 />
               </div>
+
               <AnimatePresence>
                 {errors.username && (
                   <motion.p
@@ -214,11 +209,11 @@ export default function LoginForm() {
 
             {/* Password Field */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
                 Mật khẩu
               </label>
+
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
                 <Input
                   name="password"
                   type={showPassword ? "text" : "password"}
@@ -226,7 +221,7 @@ export default function LoginForm() {
                   value={form.password}
                   onChange={handleChange}
                   required
-                  className={`rounded-2xl pl-10 pr-10 ${errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                  className={`rounded-xl border pr-10 dark:border-zinc-900 ${errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                   disabled={isSubmitting}
                 />
                 <button
@@ -317,8 +312,7 @@ export default function LoginForm() {
             type="button"
             onClick={() => login()}
             disabled={isLoading || isSubmitting}
-            variant="outline"
-            className="w-full rounded-xl border-2 border-zinc-200 px-4 py-3 transition-all hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900"
+            className="w-full rounded-xl border border-zinc-300 px-4 py-3 shadow-sm transition-all hover:bg-zinc-300 dark:border-zinc-800 dark:hover:bg-zinc-900"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/img/google-icon.png" alt="Google" className="h-5 w-5" />
@@ -326,8 +320,6 @@ export default function LoginForm() {
           </Button>
         </form>
       </motion.div>
-
-      <Footer />
     </div>
   );
 }

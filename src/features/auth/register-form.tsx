@@ -2,23 +2,12 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import {
-  Eye,
-  EyeOff,
-  Mail,
-  Lock,
-  User,
-  AlertCircle,
-  CheckCircle2,
-  Check,
-} from "lucide-react";
+import { Eye, EyeOff, AlertCircle, CheckCircle2, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-
-import { HeaderMusicPage } from "../music/header-music-page";
-import { Footer } from "@/app/[locale]/features/profile/footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 
 interface FormErrors {
   username?: string;
@@ -189,18 +178,18 @@ export default function RegisterForm() {
   };
 
   return (
-    <div className="container">
-      <HeaderMusicPage name="Đăng Ký" />
-
+    <div className="h-screen items-center justify-center md:flex">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-zinc-200 p-8 font-apple backdrop-blur-2xl dark:border-zinc-900 md:mx-auto md:w-[30vw]"
+        className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-zinc-200 from-zinc-950 to-zinc-900 p-8 font-apple shadow-sm backdrop-blur-2xl dark:border-zinc-800 dark:bg-gradient-to-br md:mx-auto md:w-[30vw]"
       >
         <form className="space-y-6" onSubmit={handleSubmit}>
-          <div className="text-center">
-            <h1 className="bg-gradient-to-r from-zinc-900 to-zinc-700 bg-clip-text text-3xl font-bold text-transparent dark:from-white dark:to-zinc-300">
+          <div className="space-y-4 text-center">
+            <ChanhdangLogotype className="mx-auto h-6 w-fit" />
+
+            <h1 className="bg-gradient-to-r from-zinc-900 to-zinc-700 bg-clip-text font-apple text-3xl font-bold text-transparent dark:from-white dark:to-zinc-300">
               Đăng Ký
             </h1>
             <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
@@ -237,21 +226,22 @@ export default function RegisterForm() {
           <div className="space-y-4">
             {/* Username Field */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
                 Tên đăng nhập
               </label>
+
               <div className="relative">
-                <User className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
                 <Input
                   name="username"
                   placeholder="Nhập tên đăng nhập"
                   value={form.username}
                   onChange={handleChange}
                   required
-                  className={`pl-10 ${errors.username ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                  className={`rounded-xl border dark:border-zinc-900 ${errors.username ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                   disabled={isSubmitting}
                 />
               </div>
+
               <AnimatePresence>
                 {errors.username && (
                   <motion.p
@@ -268,11 +258,11 @@ export default function RegisterForm() {
 
             {/* Email Field */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
                 Email
               </label>
+
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
                 <Input
                   name="email"
                   type="email"
@@ -280,10 +270,11 @@ export default function RegisterForm() {
                   value={form.email}
                   onChange={handleChange}
                   required
-                  className={`pl-10 ${errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                  className={`rounded-xl border dark:border-zinc-900 ${errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                   disabled={isSubmitting}
                 />
               </div>
+
               <AnimatePresence>
                 {errors.email && (
                   <motion.p
@@ -300,11 +291,11 @@ export default function RegisterForm() {
 
             {/* Password Field */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
                 Mật khẩu
               </label>
+
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
                 <Input
                   name="password"
                   type={showPassword ? "text" : "password"}
@@ -312,7 +303,7 @@ export default function RegisterForm() {
                   value={form.password}
                   onChange={handleChange}
                   required
-                  className={`pl-10 pr-10 ${errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                  className={`rounded-xl border pr-10 dark:border-zinc-900 ${errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                   disabled={isSubmitting}
                 />
                 <button
@@ -382,11 +373,11 @@ export default function RegisterForm() {
 
             {/* Confirm Password Field */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
                 Xác nhận mật khẩu
               </label>
+
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
                 <Input
                   name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
@@ -394,13 +385,14 @@ export default function RegisterForm() {
                   value={form.confirmPassword}
                   onChange={handleChange}
                   required
-                  className={`pl-10 pr-10 ${
+                  className={`rounded-xl border pr-10 dark:border-zinc-900${
                     errors.confirmPassword
                       ? "border-red-500 focus-visible:ring-red-500"
                       : ""
                   }`}
                   disabled={isSubmitting}
                 />
+
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -414,6 +406,7 @@ export default function RegisterForm() {
                   )}
                 </button>
               </div>
+
               {form.confirmPassword &&
                 form.password === form.confirmPassword && (
                   <p className="flex items-center gap-1 text-xs text-green-500">
@@ -458,8 +451,6 @@ export default function RegisterForm() {
           </div>
         </form>
       </motion.div>
-
-      <Footer />
     </div>
   );
 }

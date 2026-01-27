@@ -716,10 +716,8 @@ export default function AddMusicForm() {
           )}
 
           {isRegularUser && (
-            <div className="rounded-lg bg-green-50 p-3 text-sm text-green-800 dark:bg-green-900/20 dark:text-green-300">
-              <div className="mb-1 font-semibold">
-                🎵 Thông tin ca sĩ của bạn:
-              </div>
+            <div className="rounded-lg border border-green-400/30 bg-green-50 p-3 text-sm text-green-800 dark:border-green-300/30 dark:bg-green-900/20 dark:text-green-300">
+              <div className="mb-1 font-bold">Thông tin ca sĩ của bạn:</div>
               {isLoadingProfile ? (
                 <div>Đang tải thông tin...</div>
               ) : userArtistProfile ? (
@@ -830,7 +828,7 @@ export default function AddMusicForm() {
                       ""
                     }
                     disabled
-                    className="cursor-not-allowed rounded-xl border bg-zinc-100 px-4 py-2 text-zinc-500 shadow-sm dark:bg-zinc-900 dark:text-zinc-400"
+                    className="cursor-not-allowed rounded-xl border border-zinc-300 bg-zinc-100 px-4 py-2 text-zinc-500 shadow-sm dark:border-zinc-900 dark:bg-zinc-900 dark:text-zinc-400"
                   />
                 </div>
               )}
@@ -844,12 +842,12 @@ export default function AddMusicForm() {
               ) : (
                 <input
                   name="cover"
-                  placeholder="Link ảnh cover hoặc chọn file bên dưới"
+                  placeholder="Chọn file hình ảnh bài hát bên dưới"
                   value={form.cover}
                   onChange={handleChange}
                   required
                   disabled={isLoading}
-                  className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+                  className="pointer-events-none rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
                 />
               )}
 
@@ -871,12 +869,12 @@ export default function AddMusicForm() {
               ) : (
                 <input
                   name="audio"
-                  placeholder="Link audio (.mp3) hoặc chọn file bên dưới"
+                  placeholder="Chọn file mp3 bài hát bên dưới"
                   value={form.audio}
                   onChange={handleChange}
                   required
                   disabled={isLoading}
-                  className="rounded-xl border bg-zinc-100 px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+                  className="pointer-events-none rounded-xl border bg-zinc-50 px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
                 />
               )}
 
@@ -898,11 +896,11 @@ export default function AddMusicForm() {
               ) : (
                 <input
                   name="beat"
-                  placeholder="Link beat nhạc (tuỳ chọn) hoặc chọn file bên dưới"
+                  placeholder="Chọn file beat nhạc bên dưới"
                   value={form.beat}
                   onChange={handleChange}
                   disabled={isLoading}
-                  className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+                  className="pointer-events-none rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
                 />
               )}
 
@@ -924,11 +922,11 @@ export default function AddMusicForm() {
               ) : (
                 <input
                   name="srt"
-                  placeholder="Link file .srt (tuỳ chọn) hoặc chọn file bên dưới"
+                  placeholder="Chọn file SRT lời bài hát bên dưới"
                   value={form.srt}
                   onChange={handleChange}
                   disabled={isLoading}
-                  className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+                  className="pointer-events-none rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
                 />
               )}
 
