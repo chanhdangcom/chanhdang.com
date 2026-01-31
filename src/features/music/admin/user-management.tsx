@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Shield, ShieldCheck, User } from "lucide-react";
+import { ShieldCheck, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsAdmin } from "@/hooks/use-permissions";
 import { useRouter } from "next/navigation";
+import { Footer } from "@/app/[locale]/features/profile/footer";
 
 interface UserData {
   id: string;
@@ -94,9 +95,10 @@ export function UserManagement() {
         </div>
       )}
 
-      <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="border-b border-zinc-200 p-4 dark:border-zinc-800">
+      <div className="overflow-hidden rounded-xl border border-zinc-200 shadow-sm dark:border-zinc-800">
+        <div className="border-b border-zinc-200 bg-zinc-100 p-4 text-center dark:border-zinc-800 dark:bg-zinc-900">
           <h2 className="text-xl font-semibold">Quản lý Users</h2>
+
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
             Tổng số users: {users.length}
           </p>
@@ -115,44 +117,50 @@ export function UserManagement() {
                   <User className="h-5 w-5 text-zinc-400" />
                 )}
                 <div>
-                  <div className="font-medium">{user.displayName || user.username}</div>
+                  <div className="font-medium">
+                    {user.displayName || user.username}
+                  </div>
                   <div className="text-sm text-zinc-600 dark:text-zinc-400">
                     {user.email || user.username}
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <span
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${
+              <div className="w-28 space-y-2">
+                <Button
+                  onClick={() =>
+                    updateRole(
+                      user.id,
+                      user.role === "admin" ? "user" : "admin"
+                    )
+                  }
+                  disabled={updating === user.id}
+                  variant="outline"
+                  size="sm"
+                  className="w-full shadow-sm dark:border-zinc-800"
+                >
+                  {updating === user.id
+                    ? "Đang cập nhật..."
+                    : user.role === "admin"
+                      ? "Gỡ Admin"
+                      : "Thêm Admin"}
+                </Button>
+
+                <div
+                  className={`rounded-full px-3 py-1 text-center text-xs font-medium ${
                     user.role === "admin"
                       ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
                       : "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
                   }`}
                 >
                   {user.role === "admin" ? "Admin" : "User"}
-                </span>
-
-                <Button
-                  onClick={() =>
-                    updateRole(user.id, user.role === "admin" ? "user" : "admin")
-                  }
-                  disabled={updating === user.id}
-                  variant="outline"
-                  size="sm"
-                >
-                  {updating === user.id
-                    ? "Đang cập nhật..."
-                    : user.role === "admin"
-                    ? "Gỡ Admin"
-                    : "Thêm Admin"}
-                </Button>
+                </div>
               </div>
             </div>
           ))}
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
-

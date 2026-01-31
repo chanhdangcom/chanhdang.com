@@ -1,10 +1,6 @@
 "use client";
 
-import { SingerManagement } from "@/features/music/singer-management";
-import { AddMusicToSinger } from "@/features/music/add-music-to-singer";
 import { UserManagement } from "@/features/music/admin/user-management";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Music, Users, ShieldCheck } from "lucide-react";
 import { useIsAdmin } from "@/hooks/use-permissions";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -41,34 +37,7 @@ export default function MusicAdminPage() {
         </p>
       </div>
 
-      <Tabs defaultValue="users" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="users" className="flex items-center gap-2">
-            <ShieldCheck size={16} />
-            Quản lý Users
-          </TabsTrigger>
-          <TabsTrigger value="singers" className="flex items-center gap-2">
-            <Users size={16} />
-            Quản lý Ca sĩ
-          </TabsTrigger>
-          <TabsTrigger value="music" className="flex items-center gap-2">
-            <Music size={16} />
-            Thêm Nhạc
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="users" className="mt-6">
-          <UserManagement />
-        </TabsContent>
-
-        <TabsContent value="singers" className="mt-6">
-          <SingerManagement />
-        </TabsContent>
-
-        <TabsContent value="music" className="mt-6">
-          <AddMusicToSinger />
-        </TabsContent>
-      </Tabs>
+      <UserManagement />
     </div>
   );
 }

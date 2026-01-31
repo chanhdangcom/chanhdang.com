@@ -5,6 +5,9 @@ import { useUser } from "@/hooks/use-user";
 import { usePermissions } from "@/hooks/use-permissions";
 import {
   BookBookmark,
+  CaretDown,
+  CaretUp,
+  Crown,
   House,
   MicrophoneStage,
   MusicNotesSimple,
@@ -16,6 +19,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { MagnifyingGlass } from "phosphor-react";
 import { LogoutButton } from "./component/logout-button";
+import { useState } from "react";
 
 export function MenuBar() {
   const params = useParams();
@@ -23,6 +27,7 @@ export function MenuBar() {
   const { isAuthenticated } = useUser();
   const { canAddMusic, canAddSinger, canManageSystem, role } = usePermissions();
   const isRegularUser = role === "user";
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
     <div className="fixed left-4 top-4 z-30 hidden font-apple md:flex">
@@ -65,43 +70,6 @@ export function MenuBar() {
               <div className="font-medium text-red-500">Home</div>
             </div>
 
-            {canAddMusic ? (
-              <Link
-                href={`/${locale}/music/add-music`}
-                className="flex items-center gap-2 rounded-2xl p-2"
-              >
-                <MusicNotesSimple
-                  size={25}
-                  weight="bold"
-                  className="text-red-500"
-                />
-                <div className="font-medium">Add New Music</div>
-              </Link>
-            ) : (
-              <div className="pointer-events-none flex items-center gap-2 p-2 opacity-30">
-                <MusicNotesSimple
-                  size={25}
-                  weight="bold"
-                  className="text-red-500"
-                />
-                <div className="font-medium">Add New Music</div>
-              </div>
-            )}
-
-            {canAddSinger ? (
-              <Link
-                href={`/${locale}/music/add-singer`}
-                className="flex items-center gap-2 rounded-2xl p-2"
-              >
-                <MicrophoneStage
-                  size={25}
-                  weight="fill"
-                  className="text-red-500"
-                />
-                <div className="font-medium">Add Artists</div>
-              </Link>
-            ) : null}
-
             {isRegularUser && (
               <Link
                 href={`/${locale}/music/my-music`}
@@ -113,13 +81,83 @@ export function MenuBar() {
             )}
 
             {canManageSystem && (
-              <Link
-                href={`/${locale}/music/admin`}
-                className="flex items-center gap-2 rounded-2xl p-2"
+              <div
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="cursor-pointer"
               >
-                <ShieldCheck size={25} weight="fill" className="text-red-500" />
-                <div className="font-medium">Admin Panel</div>
-              </Link>
+                <div className="flex items-center gap-2 rounded-2xl p-2">
+                  <Crown size={25} weight="fill" className="text-red-500" />
+
+                  <div className="flex w-full items-center justify-between gap-2">
+                    <div className="font-medium">Manage</div>
+
+                    {isDropdownOpen ? (
+                      <CaretUp size={15} weight="bold" />
+                    ) : (
+                      <CaretDown size={15} weight="bold" />
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {canManageSystem && (
+              <div>
+                {isDropdownOpen && (
+                  <div className="space-y pl-4">
+                    <Link
+                      href={`/${locale}/music/admin`}
+                      className="flex items-center gap-2 p-2"
+                    >
+                      <ShieldCheck
+                        size={25}
+                        weight="fill"
+                        className="text-red-500"
+                      />
+
+                      <div className="font-medium">Admin Panel</div>
+                    </Link>
+
+                    {canAddMusic ? (
+                      <Link
+                        href={`/${locale}/music/add-music`}
+                        className="flex items-center gap-2 p-2"
+                      >
+                        <MusicNotesSimple
+                          size={25}
+                          weight="bold"
+                          className="text-red-500"
+                        />
+
+                        <div className="font-medium">Add New Music</div>
+                      </Link>
+                    ) : (
+                      <div className="pointer-events-none flex items-center gap-2 p-2 opacity-30">
+                        <MusicNotesSimple
+                          size={25}
+                          weight="bold"
+                          className="text-red-500"
+                        />
+                        <div className="font-medium">Add New Music</div>
+                      </div>
+                    )}
+
+                    {canAddSinger ? (
+                      <Link
+                        href={`/${locale}/music/add-singer`}
+                        className="flex items-center gap-2 p-2"
+                      >
+                        <MicrophoneStage
+                          size={25}
+                          weight="fill"
+                          className="text-red-500"
+                        />
+                        <div className="font-medium">Add Artists</div>
+                      </Link>
+                    ) : null}
+                  </div>
+                )}
+              </div>
             )}
 
             {isAuthenticated ? (
