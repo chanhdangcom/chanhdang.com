@@ -2,12 +2,13 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { Bookmarks, House, MagnifyingGlass } from "phosphor-react";
+import { House, MagnifyingGlass } from "phosphor-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useUser } from "@/hooks/use-user";
 import {
-  MicrophoneStage,
-  MusicNotesSimple,
+  ListHeart,
+  PlusSquare,
+  SquaresFour,
 } from "@phosphor-icons/react/dist/ssr";
 
 export function MenuBarMobile() {
@@ -97,38 +98,38 @@ export function MenuBarMobile() {
               layoutId="item"
               className="mx-8 flex items-center justify-between gap-10 rounded-full border border-transparent dark:text-white"
             >
-              <div className="flex flex-col items-center rounded-full text-red-500">
+              <Link
+                href={`/${locale}/music`}
+                className="flex flex-col items-center rounded-full text-red-500"
+              >
                 <House size={30} weight="fill" />
+
                 <div className="text-xs">Home</div>
-              </div>
+              </Link>
+
+              <Link
+                href={`/${locale}/music/new-release`}
+                className="flex flex-col items-center"
+              >
+                <SquaresFour size={30} weight="fill" />
+
+                <div className="text-xs">New</div>
+              </Link>
 
               {isAuthenticated ? (
                 <Link
                   href={`/${locale}/music/add-music`}
                   className="flex flex-col items-center"
                 >
-                  <MusicNotesSimple size={30} weight="fill" />
-                  <div className="text-xs">Music</div>
-                </Link>
-              ) : (
-                <div className="pointer-events-none flex flex-col items-center opacity-30">
-                  <MusicNotesSimple size={30} weight="fill" />
-                  <div className="text-xs">Music</div>
-                </div>
-              )}
+                  <PlusSquare size={30} weight="fill" />
 
-              {isAuthenticated ? (
-                <Link
-                  href={`/${locale}/music/add-singer`}
-                  className="flex flex-col items-center"
-                >
-                  <MicrophoneStage size={30} weight="fill" />
-                  <div className="text-xs">Artists</div>
+                  <div className="text-xs">Music</div>
                 </Link>
               ) : (
                 <div className="pointer-events-none flex flex-col items-center opacity-30">
-                  <MicrophoneStage size={30} weight="fill" />
-                  <div className="text-xs">Artists</div>
+                  <PlusSquare size={30} weight="fill" />
+
+                  <div className="text-xs">Music</div>
                 </div>
               )}
 
@@ -138,15 +139,15 @@ export function MenuBarMobile() {
                   className="flex flex-col items-center"
                 >
                   <div className="flex flex-col items-center">
-                    <Bookmarks size={30} weight="fill" />
-                    <div className="text-xs"> Library</div>
+                    <ListHeart size={30} weight="fill" />
+                    <div className="text-xs">Library</div>
                   </div>
                 </Link>
               ) : (
                 <div className="pointer-events-none flex flex-col items-center opacity-30">
                   <div className="flex flex-col items-center">
-                    <Bookmarks size={30} weight="fill" />
-                    <div className="text-xs"> Library</div>
+                    <ListHeart size={30} weight="fill" />
+                    <div className="text-xs">Library</div>
                   </div>
                 </div>
               )}

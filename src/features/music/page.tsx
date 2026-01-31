@@ -16,6 +16,7 @@ import { NewCarouselAudioPlaylist } from "./new-carousel-audio-playlist";
 import { RecentCarouselAudio } from "./recent-carousel-audio";
 import { NewCarouselAudio } from "./new-carousel-audio";
 import { CarouselTopic } from "./carousel-topic";
+import { SuggestCarouselAudio } from "./suggest-carousel-audio";
 // import { useDisableRightClick } from "../../hooks/use-disable-right-click";
 
 export function MusicPage() {
@@ -35,6 +36,10 @@ export function MusicPage() {
           <>
             <div className="mb-3">
               <PickForYou />
+            </div>
+
+            <div className="mt-4 flex justify-start">
+              <SuggestCarouselAudio />
             </div>
 
             <div className="flex justify-start">

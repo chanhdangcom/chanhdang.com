@@ -23,6 +23,7 @@ export default function AddMusicForm() {
     youtube: "",
     content: "",
     type: "",
+    topic: "",
     srt: "",
     beat: "",
   });
@@ -40,6 +41,67 @@ export default function AddMusicForm() {
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
   const [userMusics, setUserMusics] = useState<IMusic[]>([]);
   const [selectedMusicId, setSelectedMusicId] = useState<string>("");
+  const [hasManualTopic, setHasManualTopic] = useState(false);
+  const [isSuggestingTopic, setIsSuggestingTopic] = useState(false);
+  const resetFormState = useCallback(() => {
+    setForm({
+      title: "",
+      singer: "",
+      cover: "",
+      audio: "",
+      youtube: "",
+      content: "",
+      type: "",
+      topic: "",
+      srt: "",
+      beat: "",
+    });
+    setFile(null);
+    setImageFile(null);
+    setSrtFile(null);
+    setBeatFile(null);
+    setSelectedSingerId("");
+    setUseExistingSinger(false);
+    setSelectedMusicId("");
+    setHasManualTopic(false);
+    setIsSuggestingTopic(false);
+  }, []);
+
+  const fetchPresignedUrl = useCallback(async (file: File) => {
+    const presignedRes = await fetch(
+      `/api/upload-music?fileName=${encodeURIComponent(
+        file.name
+      )}&contentType=${encodeURIComponent(
+        file.type || "application/octet-stream"
+      )}`
+    );
+    if (!presignedRes.ok) {
+      const errorData = await presignedRes.json().catch(() => ({}));
+      throw new Error(errorData.error || "Unknown error");
+    }
+    const presignedData = await presignedRes.json();
+    if (presignedData.error) {
+      throw new Error(presignedData.error);
+    }
+    return presignedData as { presignedUrl: string; publicUrl: string };
+  }, []);
+
+  const uploadFileToR2 = useCallback(
+    async (file: File, errorPrefix: string) => {
+      const { presignedUrl, publicUrl } = await fetchPresignedUrl(file);
+      const uploadRes = await fetch(presignedUrl, {
+        method: "PUT",
+        headers: { "Content-Type": file.type || "application/octet-stream" },
+        body: file,
+      });
+      if (!uploadRes.ok) {
+        const errorText = await uploadRes.text();
+        throw new Error(`${errorPrefix} ${errorText}`);
+      }
+      return publicUrl;
+    },
+    [fetchPresignedUrl]
+  );
 
   const fetchUserArtistProfile = useCallback(async () => {
     if (!user?.id) return;
@@ -92,7 +154,11 @@ export default function AddMusicForm() {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+    if (name === "topic") {
+      setHasManualTopic(value.trim().length > 0);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -150,172 +216,39 @@ export default function AddMusicForm() {
       return;
     }
 
+    // Validation: require topic and type
+    if (!form.topic.trim()) {
+      setMessage("Vui lòng nhập chủ đề!");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!form.type.trim()) {
+      setMessage("Vui lòng chọn thể loại!");
+      setIsLoading(false);
+      return;
+    }
+
     try {
       let audioUrl = form.audio;
       let coverUrl = form.cover;
-
-      // Nếu có file mp3, upload lên R2 trước
-      if (file) {
-        // 1. Lấy presigned URL
-        const presignedRes = await fetch(
-          `/api/upload-music?fileName=${encodeURIComponent(file.name)}&contentType=${encodeURIComponent(file.type)}`
-        );
-
-        if (!presignedRes.ok) {
-          const errorData = await presignedRes.json().catch(() => ({}));
-          setMessage(
-            `Lỗi khi lấy presigned URL: ${errorData.error || "Unknown error"}`
-          );
-          setIsLoading(false);
-          return;
-        }
-
-        const presignedData = await presignedRes.json();
-        if (presignedData.error) {
-          setMessage(`Lỗi: ${presignedData.error}`);
-          setIsLoading(false);
-          return;
-        }
-
-        const { presignedUrl, publicUrl } = presignedData;
-
-        // 2. Upload trực tiếp lên R2
-        const uploadRes = await fetch(presignedUrl, {
-          method: "PUT",
-          headers: { "Content-Type": file.type },
-          body: file,
-        });
-
-        if (uploadRes.ok) {
-          audioUrl = publicUrl;
-        } else {
-          const errorText = await uploadRes.text();
-          setMessage(`Upload mp3 thất bại! ${errorText}`);
-          setIsLoading(false);
-          return;
-        }
-      }
-
-      // Nếu có file ảnh, upload lên R2 trước
-      if (imageFile) {
-        const presignedRes = await fetch(
-          `/api/upload-music?fileName=${encodeURIComponent(imageFile.name)}&contentType=${encodeURIComponent(imageFile.type)}`
-        );
-
-        if (!presignedRes.ok) {
-          const errorData = await presignedRes.json().catch(() => ({}));
-          setMessage(
-            `Lỗi khi lấy presigned URL: ${errorData.error || "Unknown error"}`
-          );
-          setIsLoading(false);
-          return;
-        }
-
-        const presignedData = await presignedRes.json();
-        if (presignedData.error) {
-          setMessage(`Lỗi: ${presignedData.error}`);
-          setIsLoading(false);
-          return;
-        }
-
-        const { presignedUrl, publicUrl } = presignedData;
-
-        const uploadRes = await fetch(presignedUrl, {
-          method: "PUT",
-          headers: { "Content-Type": imageFile.type },
-          body: imageFile,
-        });
-
-        if (uploadRes.ok) {
-          coverUrl = publicUrl;
-        } else {
-          const errorText = await uploadRes.text();
-          setMessage(`Upload ảnh thất bại! ${errorText}`);
-          setIsLoading(false);
-          return;
-        }
-      }
-
-      // Upload SRT nếu có
       let srtUrl = form.srt;
-      if (srtFile) {
-        const presignedRes = await fetch(
-          `/api/upload-music?fileName=${encodeURIComponent(srtFile.name)}&contentType=${encodeURIComponent(srtFile.type || "application/octet-stream")}`
-        );
+      let beatUrl = form.beat;
 
-        if (!presignedRes.ok) {
-          const errorData = await presignedRes.json().catch(() => ({}));
-          setMessage(
-            `Lỗi khi lấy presigned URL: ${errorData.error || "Unknown error"}`
-          );
-          setIsLoading(false);
-          return;
-        }
-
-        const presignedData = await presignedRes.json();
-        if (presignedData.error) {
-          setMessage(`Lỗi: ${presignedData.error}`);
-          setIsLoading(false);
-          return;
-        }
-
-        const { presignedUrl, publicUrl } = presignedData;
-        const uploadRes = await fetch(presignedUrl, {
-          method: "PUT",
-          headers: {
-            "Content-Type": srtFile.type || "application/octet-stream",
-          },
-          body: srtFile,
-        });
-        if (uploadRes.ok) {
-          srtUrl = publicUrl;
-        } else {
-          const errorText = await uploadRes.text();
-          setMessage(`Upload file SRT thất bại! ${errorText}`);
-          setIsLoading(false);
-          return;
-        }
+      if (file) {
+        audioUrl = await uploadFileToR2(file, "Upload mp3 thất bại!");
       }
 
-      // Upload BEAT nếu có
-      let beatUrl = form.beat;
+      if (imageFile) {
+        coverUrl = await uploadFileToR2(imageFile, "Upload ảnh thất bại!");
+      }
+
+      if (srtFile) {
+        srtUrl = await uploadFileToR2(srtFile, "Upload file SRT thất bại!");
+      }
+
       if (beatFile) {
-        const presignedRes = await fetch(
-          `/api/upload-music?fileName=${encodeURIComponent(beatFile.name)}&contentType=${encodeURIComponent(beatFile.type || "application/octet-stream")}`
-        );
-
-        if (!presignedRes.ok) {
-          const errorData = await presignedRes.json().catch(() => ({}));
-          setMessage(
-            `Lỗi khi lấy presigned URL: ${errorData.error || "Unknown error"}`
-          );
-          setIsLoading(false);
-          return;
-        }
-
-        const presignedData = await presignedRes.json();
-        if (presignedData.error) {
-          setMessage(`Lỗi: ${presignedData.error}`);
-          setIsLoading(false);
-          return;
-        }
-
-        const { presignedUrl, publicUrl } = presignedData;
-        const uploadRes = await fetch(presignedUrl, {
-          method: "PUT",
-          headers: {
-            "Content-Type": beatFile.type || "application/octet-stream",
-          },
-          body: beatFile,
-        });
-        if (uploadRes.ok) {
-          beatUrl = publicUrl;
-        } else {
-          const errorText = await uploadRes.text();
-          setMessage(`Upload file beat thất bại! ${errorText}`);
-          setIsLoading(false);
-          return;
-        }
+        beatUrl = await uploadFileToR2(beatFile, "Upload file beat thất bại!");
       }
 
       // For regular users: use their artist profile
@@ -416,24 +349,7 @@ export default function AddMusicForm() {
 
       if (data.success) {
         setMessage("Thêm bài hát thành công!");
-        setForm({
-          title: "",
-          singer: "",
-          cover: "",
-          audio: "",
-          youtube: "",
-          content: "",
-          type: "",
-          srt: "",
-          beat: "",
-        });
-        setFile(null);
-        setImageFile(null);
-        setSrtFile(null);
-        setBeatFile(null);
-        setSelectedSingerId("");
-        setUseExistingSinger(false);
-        setSelectedMusicId("");
+        resetFormState();
         // Refresh user musics if regular user
         if (isRegularUser && userArtistProfile) {
           await fetchUserArtistProfile();
@@ -441,8 +357,12 @@ export default function AddMusicForm() {
       } else {
         setMessage("Có lỗi xảy ra! " + (data.error || ""));
       }
-    } catch {
-      setMessage("Có lỗi xảy ra khi thêm bài hát!");
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Có lỗi xảy ra khi thêm bài hát!";
+      setMessage(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -476,6 +396,33 @@ export default function AddMusicForm() {
       fetchUserArtistProfile();
     }
   }, [isRegularUser, user?.id, fetchUserArtistProfile]);
+
+  // Auto-suggest topic from song title
+  useEffect(() => {
+    const title = form.title.trim();
+    if (!title || hasManualTopic) return;
+
+    const timeout = setTimeout(async () => {
+      setIsSuggestingTopic(true);
+      try {
+        const response = await fetch("/api/topic-suggest", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title }),
+        });
+        const data = await response.json();
+        if (response.ok && data.topic) {
+          setForm((prev) => ({ ...prev, topic: data.topic }));
+        }
+      } catch (error) {
+        console.error("Error suggesting topic:", error);
+      } finally {
+        setIsSuggestingTopic(false);
+      }
+    }, 700);
+
+    return () => clearTimeout(timeout);
+  }, [form.title, hasManualTopic]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -519,75 +466,26 @@ export default function AddMusicForm() {
         return;
       }
 
-      // Upload files if needed (similar to handleSubmit)
+      // Upload files if needed
       let audioUrl = form.audio;
       let coverUrl = form.cover;
       let srtUrl = form.srt;
       let beatUrl = form.beat;
 
-      // Handle file uploads (same logic as handleSubmit)
       if (file) {
-        const presignedRes = await fetch(
-          `/api/upload-music?fileName=${encodeURIComponent(file.name)}&contentType=${encodeURIComponent(file.type)}`
-        );
-        const presignedData = await presignedRes.json();
-        if (presignedData.presignedUrl) {
-          await fetch(presignedData.presignedUrl, {
-            method: "PUT",
-            headers: { "Content-Type": file.type },
-            body: file,
-          });
-          audioUrl = presignedData.publicUrl;
-        }
+        audioUrl = await uploadFileToR2(file, "Upload mp3 thất bại!");
       }
 
       if (imageFile) {
-        const presignedRes = await fetch(
-          `/api/upload-music?fileName=${encodeURIComponent(imageFile.name)}&contentType=${encodeURIComponent(imageFile.type)}`
-        );
-        const presignedData = await presignedRes.json();
-        if (presignedData.presignedUrl) {
-          await fetch(presignedData.presignedUrl, {
-            method: "PUT",
-            headers: { "Content-Type": imageFile.type },
-            body: imageFile,
-          });
-          coverUrl = presignedData.publicUrl;
-        }
+        coverUrl = await uploadFileToR2(imageFile, "Upload ảnh thất bại!");
       }
 
       if (srtFile) {
-        const presignedRes = await fetch(
-          `/api/upload-music?fileName=${encodeURIComponent(srtFile.name)}&contentType=${encodeURIComponent(srtFile.type || "application/octet-stream")}`
-        );
-        const presignedData = await presignedRes.json();
-        if (presignedData.presignedUrl) {
-          await fetch(presignedData.presignedUrl, {
-            method: "PUT",
-            headers: {
-              "Content-Type": srtFile.type || "application/octet-stream",
-            },
-            body: srtFile,
-          });
-          srtUrl = presignedData.publicUrl;
-        }
+        srtUrl = await uploadFileToR2(srtFile, "Upload file SRT thất bại!");
       }
 
       if (beatFile) {
-        const presignedRes = await fetch(
-          `/api/upload-music?fileName=${encodeURIComponent(beatFile.name)}&contentType=${encodeURIComponent(beatFile.type || "application/octet-stream")}`
-        );
-        const presignedData = await presignedRes.json();
-        if (presignedData.presignedUrl) {
-          await fetch(presignedData.presignedUrl, {
-            method: "PUT",
-            headers: {
-              "Content-Type": beatFile.type || "application/octet-stream",
-            },
-            body: beatFile,
-          });
-          beatUrl = presignedData.publicUrl;
-        }
+        beatUrl = await uploadFileToR2(beatFile, "Upload file beat thất bại!");
       }
 
       const response = await fetch(
@@ -609,22 +507,7 @@ export default function AddMusicForm() {
 
       if (response.ok && data.success) {
         setMessage("Sửa bài hát thành công!");
-        setForm({
-          title: "",
-          singer: "",
-          cover: "",
-          audio: "",
-          youtube: "",
-          content: "",
-          type: "",
-          srt: "",
-          beat: "",
-        });
-        setFile(null);
-        setImageFile(null);
-        setSrtFile(null);
-        setBeatFile(null);
-        setSelectedMusicId("");
+        resetFormState();
         await fetchUserArtistProfile();
       } else {
         setMessage(data.error || "Có lỗi xảy ra khi sửa!");
@@ -699,14 +582,14 @@ export default function AddMusicForm() {
           {/* Info about singer selection */}
           {isAdmin && (
             <div className="rounded-lg bg-blue-50 p-3 text-sm text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
-              <div className="mb-1 font-semibold">
-                💡 Cách thêm nhạc (Admin):
-              </div>
+              <div className="mb-1 font-semibold">Cách thêm nhạc (Admin):</div>
+
               <div className="space-y-1">
                 <div>
                   • <strong>Chọn ca sĩ có sẵn:</strong> Nhạc sẽ được thêm vào
                   danh sách của ca sĩ đó
                 </div>
+
                 <div>
                   • <strong>Nhập ca sĩ mới:</strong> Nhạc sẽ được thêm vào
                   collection musics chung
@@ -718,6 +601,7 @@ export default function AddMusicForm() {
           {isRegularUser && (
             <div className="rounded-lg border border-green-400/30 bg-green-50 p-3 text-sm text-green-800 dark:border-green-300/30 dark:bg-green-900/20 dark:text-green-300">
               <div className="mb-1 font-bold">Thông tin ca sĩ của bạn:</div>
+
               {isLoadingProfile ? (
                 <div>Đang tải thông tin...</div>
               ) : userArtistProfile ? (
@@ -725,6 +609,7 @@ export default function AddMusicForm() {
                   <div>
                     <strong>Tên ca sĩ:</strong> {userArtistProfile.singer}
                   </div>
+
                   {userArtistProfile.cover && (
                     <div className="mt-2">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -748,6 +633,10 @@ export default function AddMusicForm() {
 
           <div className="mx-auto flex w-full flex-col space-y-4">
             <div className="mx-auto flex w-full flex-col justify-between gap-4">
+              <label className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+                Tên bài hát
+              </label>
+
               <input
                 name="title"
                 placeholder="Tên bài hát"
@@ -760,7 +649,11 @@ export default function AddMusicForm() {
 
               {/* Singer selection - Only for Admin */}
               {isAdmin && (
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col space-y-2">
+                  <label className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+                    Ca sĩ
+                  </label>
+
                   <div className="flex items-center gap-2">
                     <input
                       type="checkbox"
@@ -770,6 +663,7 @@ export default function AddMusicForm() {
                       disabled={isLoading}
                       className="rounded"
                     />
+
                     <label
                       htmlFor="useExistingSinger"
                       className="text-sm font-medium"
@@ -790,6 +684,7 @@ export default function AddMusicForm() {
                       className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
                     >
                       <option value="">Chọn ca sĩ</option>
+
                       {singers.map((singer) => (
                         <option
                           key={singer._id || singer.id}
@@ -819,6 +714,7 @@ export default function AddMusicForm() {
                   <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
                     Ca sĩ (tự động từ tài khoản của bạn)
                   </label>
+
                   <input
                     type="text"
                     value={
@@ -835,6 +731,10 @@ export default function AddMusicForm() {
             </div>
 
             <div className="flex flex-col gap-2 rounded-2xl border border-zinc-300 p-1 dark:border-zinc-700">
+              <label className="px-3 pt-2 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+                Ảnh bìa
+              </label>
+
               {imageFile ? (
                 <div className="font-semibold text-green-600">
                   Đã chọn file ảnh: {imageFile.name}
@@ -862,6 +762,10 @@ export default function AddMusicForm() {
 
             {/* Nếu đã chọn file mp3 thì ẩn input nhập link audio */}
             <div className="flex flex-col gap-2 rounded-2xl border border-zinc-300 p-1 dark:border-zinc-700">
+              <label className="px-3 pt-2 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+                Audio bài hát
+              </label>
+
               {file ? (
                 <div className="font-semibold text-green-600">
                   Đã chọn file mp3: {file.name}
@@ -889,6 +793,10 @@ export default function AddMusicForm() {
 
             {/* Beat: cho phép chọn file hoặc nhập link */}
             <div className="flex flex-col gap-2 rounded-2xl border border-zinc-300 p-1 dark:border-zinc-700">
+              <label className="px-3 pt-2 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+                Beat
+              </label>
+
               {beatFile ? (
                 <div className="font-semibold text-green-600">
                   Đã chọn file beat: {beatFile.name}
@@ -915,6 +823,10 @@ export default function AddMusicForm() {
 
             {/* SRT: cho phép chọn file hoặc nhập link */}
             <div className="flex flex-col gap-2 rounded-2xl border border-zinc-300 p-1 dark:border-zinc-700">
+              <label className="px-3 pt-2 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+                Lời bài hát (SRT)
+              </label>
+
               {srtFile ? (
                 <div className="font-semibold text-green-600">
                   Đã chọn file SRT: {srtFile.name}
@@ -939,6 +851,74 @@ export default function AddMusicForm() {
               />
             </div>
 
+            <label className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+              Chủ đề
+            </label>
+
+            <input
+              name="topic"
+              placeholder="Chọn topic"
+              value={form.topic}
+              onChange={handleChange}
+              disabled={isLoading}
+              required
+              className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+            />
+            {isSuggestingTopic && (
+              <div className="ml-4 text-xs text-zinc-500">
+                Đang gợi ý chủ đề...
+              </div>
+            )}
+
+            <label className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+              Thể loại
+            </label>
+
+            <select
+              name="type"
+              value={form.type}
+              onChange={(e) => setForm({ ...form, type: e.target.value })}
+              disabled={isLoading}
+              required
+              className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+            >
+              <option value="">Thể loại</option>
+
+              <option value="pop">Pop</option>
+
+              <option value="rock">Rock</option>
+
+              <option value="hiphop">Hip Hop / Rap</option>
+
+              <option value="rnb">R&B / Soul</option>
+
+              <option value="edm">EDM / Electronic</option>
+
+              <option value="jazz">Jazz</option>
+
+              <option value="classical">Classical</option>
+
+              <option value="country">Country</option>
+
+              <option value="metal">Metal</option>
+
+              <option value="folk">Folk</option>
+
+              <option value="latin">Latin</option>
+
+              <option value="soundtrack">Soundtrack / OST</option>
+
+              <option value="world">World Music</option>
+
+              <option value="chill">Chill / Lo-fi</option>
+
+              <option value="acoustic">Acoustic</option>
+            </select>
+
+            <label className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+              Link Youtube
+            </label>
+
             <input
               name="youtube"
               placeholder="Link Youtube"
@@ -948,14 +928,9 @@ export default function AddMusicForm() {
               className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
             />
 
-            <input
-              name="type"
-              placeholder="Thể loại"
-              value={form.type}
-              onChange={handleChange}
-              disabled={isLoading}
-              className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
-            />
+            <label className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+              Nội dung
+            </label>
 
             <textarea
               name="content"

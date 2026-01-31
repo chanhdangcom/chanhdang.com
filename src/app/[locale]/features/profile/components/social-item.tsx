@@ -23,7 +23,7 @@ export function SocialItem({ scrImg, title, accountName, link }: IProp) {
       onMouseLeave={() => setIsHover(false)}
       target="_blank"
     >
-      <CardSpotlight className="border-x-none border-y">
+      <CardSpotlight className="">
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-4">
             <img src={scrImg} alt="icon" className="size-16" />

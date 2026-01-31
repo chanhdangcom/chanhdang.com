@@ -51,6 +51,7 @@ export const Profile = () => {
 
             <div className="flex-1">
               <h3 className="sr-only">Social profiles</h3>
+
               <ul className="flex flex-col" role="list">
                 <li>
                   <SocialItem
@@ -60,6 +61,7 @@ export const Profile = () => {
                     link="https://github.com/chanhdangcom"
                   />
                 </li>
+
                 <li>
                   <SocialItem
                     scrImg="img/tech-stack/youtube.webp"
@@ -68,6 +70,7 @@ export const Profile = () => {
                     link="https://www.youtube.com/@angnguyenchanh5942"
                   />
                 </li>
+
                 <li>
                   <SocialItem
                     scrImg="img/tech-stack/zalo.webp"
@@ -75,6 +78,16 @@ export const Profile = () => {
                     accountName="0799.979.382"
                   />
                 </li>
+
+                <li>
+                  <SocialItem
+                    scrImg="img/tech-stack/tiktok.webp"
+                    title="TikTok"
+                    accountName="nguyn.chnh.ang"
+                    link="https://www.tiktok.com/@nguyn.chnh.ang?_r=1&_t=ZS-93VIr5WDiwX"
+                  />
+                </li>
+
                 <li>
                   <SocialItem
                     scrImg="img/tech-stack/linkedin.webp"
@@ -82,6 +95,7 @@ export const Profile = () => {
                     accountName="@ncdang"
                   />
                 </li>
+
                 <li>
                   <SocialItem
                     scrImg="img/tech-stack/ncdangmusic.png"

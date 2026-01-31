@@ -74,7 +74,7 @@ export const Overview = () => {
   };
 
   return (
-    <div className="relative overflow-hidden border-zinc-200 font-medium shadow-sm dark:border-zinc-900 dark:text-zinc-50 md:border-x">
+    <div className="relative overflow-hidden font-medium dark:border-zinc-900 dark:text-zinc-50">
       <div className="relative aspect-3/1 overflow-hidden before:absolute before:inset-0 before:bg-[image:url(/img/cover.jpg)] before:bg-cover before:bg-center after:absolute after:bottom-0 after:left-0 after:z-[1] after:h-px after:w-full after:bg-white/20">
         <div className="relative m-2 flex justify-end">
           <div className="p-2">
@@ -103,7 +103,7 @@ export const Overview = () => {
               alt="icon"
               width={300}
               height={300}
-              className="size-8"
+              className="mt-1 size-8 md:mt-2"
             />
 
             <audio ref={audioRef}>
@@ -113,7 +113,7 @@ export const Overview = () => {
             <SpeakerHigh
               size={18}
               weight="regular"
-              className="cursor-pointer text-zinc-500"
+              className="mt-1.5 cursor-pointer text-zinc-500 md:mt-2"
               onClick={() => HandelPlayAudio()}
             />
           </div>
