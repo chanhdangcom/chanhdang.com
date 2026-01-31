@@ -15,6 +15,20 @@ type Props = {
   params: Promise<{ id: string }>;
 };
 
+const escapeRegex = (value: string) =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const normalizeObjectIds = (ids: unknown[]) =>
+  ids
+    .map((id) => {
+      if (id instanceof ObjectId) return id;
+      if (typeof id === "string" && ObjectId.isValid(id)) {
+        return new ObjectId(id);
+      }
+      return null;
+    })
+    .filter((id): id is ObjectId => Boolean(id));
+
 async function getSinger(id: string): Promise<ISingerItem | null> {
   try {
     if (!ObjectId.isValid(id)) {
@@ -31,30 +45,60 @@ async function getSinger(id: string): Promise<ISingerItem | null> {
       return null;
     }
 
-    // Chuyển đổi dữ liệu sang ISingerItem
-    const musics: IMusic[] = Array.isArray(singer.musics)
-      ? singer.musics.map((item: Record<string, unknown>) => ({
-          id:
-            typeof item.id === "string"
-              ? item.id
-              : typeof item._id === "string"
-                ? item._id
-                : (item._id?.toString() ?? ""),
-          title: String(item.title ?? ""),
-          singer: String(item.singer ?? ""),
-          cover: String(item.cover ?? ""),
-          audio: String(item.audio ?? ""),
-          youtube: String(item.youtube ?? ""),
-          content: String(item.content ?? ""),
-          type: item.type ? String(item.type) : undefined,
-          createdAt:
-            item.createdAt instanceof Date
-              ? item.createdAt
-              : item.createdAt
-                ? new Date(item.createdAt as string)
-                : undefined,
-        }))
+    const musicIds = Array.isArray(singer.musicIds)
+      ? normalizeObjectIds(singer.musicIds)
       : [];
+
+    let musicDocs: Record<string, unknown>[] = [];
+    if (musicIds.length > 0) {
+      musicDocs = await db
+        .collection("musics")
+        .find({ _id: { $in: musicIds } })
+        .toArray();
+    } else {
+      const singerName = String(singer.singer ?? "").trim();
+      if (singerName) {
+        const singerRegex = new RegExp(
+          `(^|,)\\s*${escapeRegex(singerName)}\\s*(,|$)`,
+          "i"
+        );
+        musicDocs = await db
+          .collection("musics")
+          .find({
+            $or: [
+              { singerId: singer._id },
+              { singer: singerRegex },
+              { singer: singerName },
+            ],
+          })
+          .toArray();
+      }
+    }
+
+    const musics: IMusic[] = musicDocs.map((item) => ({
+      id:
+        typeof item.id === "string"
+          ? item.id
+          : typeof item._id === "string"
+            ? item._id
+            : (item._id?.toString() ?? ""),
+      title: String(item.title ?? ""),
+      singer: String(item.singer ?? ""),
+      cover: String(item.cover ?? ""),
+      audio: String(item.audio ?? ""),
+      youtube: String(item.youtube ?? ""),
+      content: String(item.content ?? ""),
+      type: item.type ? String(item.type) : undefined,
+      topic: item.topic ? String(item.topic) : undefined,
+      srt: item.srt ? String(item.srt) : undefined,
+      beat: item.beat ? String(item.beat) : undefined,
+      createdAt:
+        item.createdAt instanceof Date
+          ? item.createdAt
+          : item.createdAt
+            ? new Date(item.createdAt as string)
+            : undefined,
+    }));
 
     return {
       id: typeof singer._id === "string" ? singer._id : singer._id?.toString(),

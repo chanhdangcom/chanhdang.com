@@ -5,6 +5,7 @@ export type ISingerItem = {
   _id?: string;
   singer: string;
   cover: string;
+  musicIds?: string[];
   musics?: IMusic[];
   addedBy?: string; // User ID who created this artist profile
   isUserProfile?: boolean; // Whether this is a user-created profile

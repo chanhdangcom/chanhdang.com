@@ -33,7 +33,14 @@ export async function PUT(
     const db = client.db("musicdb");
 
     // Find the singer
-    const singer = await db.collection("singers").findOne({
+    const singerCollection = db.collection<{
+      _id: ObjectId;
+      addedBy?: string | ObjectId;
+      singer?: string;
+      musicIds?: ObjectId[];
+    }>("singers");
+
+    const singer = await singerCollection.findOne({
       _id: new ObjectId(id),
     });
 
@@ -49,24 +56,34 @@ export async function PUT(
       );
     }
 
-    // Find the music in the singer's musics array
-    const musics = Array.isArray(singer.musics) ? singer.musics : [];
-    const musicIndex = musics.findIndex(
-      (m: Record<string, unknown>) =>
-        (m._id && String(m._id) === musicId) ||
-        (m.id && String(m.id) === musicId)
-    );
+    const musicInCollection = await db.collection("musics").findOne({
+      _id: new ObjectId(musicId),
+    });
 
-    if (musicIndex === -1) {
+    if (!musicInCollection) {
       return NextResponse.json({ error: "Music not found" }, { status: 404 });
     }
 
-    // Check if user owns this music (for regular users)
-    const existingMusic = musics[musicIndex] as Record<string, unknown>;
+    const singerName = String(singer.singer ?? "").trim().toLowerCase();
+    const musicSingerName = String(musicInCollection.singer ?? "")
+      .trim()
+      .toLowerCase();
+    const belongsToSinger =
+      (musicInCollection.singerId &&
+        String(musicInCollection.singerId) === String(singer._id)) ||
+      (singerName && singerName === musicSingerName);
+
+    if (!belongsToSinger) {
+      return NextResponse.json(
+        { error: "Music does not belong to this singer" },
+        { status: 400 }
+      );
+    }
+
     if (
       role === "user" &&
-      existingMusic.addedBy &&
-      existingMusic.addedBy !== userId
+      musicInCollection.addedBy &&
+      musicInCollection.addedBy !== userId
     ) {
       return NextResponse.json(
         { error: "Bạn chỉ có thể sửa bài hát của chính mình" },
@@ -74,41 +91,33 @@ export async function PUT(
       );
     }
 
-    // Update the music
     const updatedMusic = {
-      ...existingMusic,
+      ...musicInCollection,
       ...body,
+      singer: singer.singer,
+      singerId: singer._id,
       updatedAt: new Date(),
     };
 
-    // Update in singer's musics array
-    musics[musicIndex] = updatedMusic;
-    await db.collection("singers").updateOne(
-      { _id: new ObjectId(id) },
+    await db.collection("musics").updateOne(
+      { _id: new ObjectId(musicId) },
       {
         $set: {
-          musics: musics,
+          ...body,
+          singer: singer.singer,
+          singerId: singer._id,
           updatedAt: new Date(),
         },
       }
     );
 
-    // Also update in musics collection if exists
-    const musicInCollection = await db.collection("musics").findOne({
-      _id: new ObjectId(musicId),
-    });
-
-    if (musicInCollection) {
-      await db.collection("musics").updateOne(
-        { _id: new ObjectId(musicId) },
-        {
-          $set: {
-            ...body,
-            updatedAt: new Date(),
-          },
-        }
-      );
-    }
+    await singerCollection.updateOne(
+      { _id: new ObjectId(id) },
+      {
+        $addToSet: { musicIds: new ObjectId(musicId) },
+        $set: { updatedAt: new Date() },
+      }
+    );
 
     return NextResponse.json({
       success: true,
@@ -150,8 +159,15 @@ export async function DELETE(
     const client = await clientPromise;
     const db = client.db("musicdb");
 
+    const singerCollection = db.collection<{
+      _id: ObjectId;
+      addedBy?: string | ObjectId;
+      singer?: string;
+      musicIds?: ObjectId[];
+    }>("singers");
+
     // Find the singer
-    const singer = await db.collection("singers").findOne({
+    const singer = await singerCollection.findOne({
       _id: new ObjectId(id),
     });
 
@@ -167,24 +183,34 @@ export async function DELETE(
       );
     }
 
-    // Find and remove the music from singer's musics array
-    const musics = Array.isArray(singer.musics) ? singer.musics : [];
-    const musicIndex = musics.findIndex(
-      (m: Record<string, unknown>) =>
-        (m._id && String(m._id) === musicId) ||
-        (m.id && String(m.id) === musicId)
-    );
+    const musicInCollection = await db.collection("musics").findOne({
+      _id: new ObjectId(musicId),
+    });
 
-    if (musicIndex === -1) {
+    if (!musicInCollection) {
       return NextResponse.json({ error: "Music not found" }, { status: 404 });
     }
 
-    // Check if user owns this music (for regular users)
-    const existingMusic = musics[musicIndex] as Record<string, unknown>;
+    const singerName = String(singer.singer ?? "").trim().toLowerCase();
+    const musicSingerName = String(musicInCollection.singer ?? "")
+      .trim()
+      .toLowerCase();
+    const belongsToSinger =
+      (musicInCollection.singerId &&
+        String(musicInCollection.singerId) === String(singer._id)) ||
+      (singerName && singerName === musicSingerName);
+
+    if (!belongsToSinger) {
+      return NextResponse.json(
+        { error: "Music does not belong to this singer" },
+        { status: 400 }
+      );
+    }
+
     if (
       role === "user" &&
-      existingMusic.addedBy &&
-      existingMusic.addedBy !== userId
+      musicInCollection.addedBy &&
+      musicInCollection.addedBy !== userId
     ) {
       return NextResponse.json(
         { error: "Bạn chỉ có thể xóa bài hát của chính mình" },
@@ -192,22 +218,14 @@ export async function DELETE(
       );
     }
 
-    // Remove from singer's musics array
-    musics.splice(musicIndex, 1);
-    await db.collection("singers").updateOne(
+    await db.collection("musics").deleteOne({ _id: new ObjectId(musicId) });
+    await singerCollection.updateOne(
       { _id: new ObjectId(id) },
       {
-        $set: {
-          musics: musics,
-          updatedAt: new Date(),
-        },
+        $pull: { musicIds: new ObjectId(musicId) },
+        $set: { updatedAt: new Date() },
       }
     );
-
-    // Also delete from musics collection if exists
-    if (ObjectId.isValid(musicId)) {
-      await db.collection("musics").deleteOne({ _id: new ObjectId(musicId) });
-    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

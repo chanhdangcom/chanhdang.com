@@ -72,7 +72,7 @@ export async function POST(request: Request) {
     const userId = await getUserId(request);
     const result = await db.collection("singers").insertOne({
       ...body,
-      musics: [],
+      musicIds: [],
       addedBy: userId || null,
       createdAt: new Date(),
     });

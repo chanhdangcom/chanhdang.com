@@ -7,6 +7,7 @@ export async function GET(request: Request) {
     const url = new URL(request.url);
     const isRandom = url.searchParams.get("random");
     const limitParam = url.searchParams.get("limit");
+    const sortParam = url.searchParams.get("sort");
 
     const limit = Math.max(
       1,
@@ -21,7 +22,14 @@ export async function GET(request: Request) {
           .collection("musics")
           .aggregate([{ $sample: { size: limit } }])
           .toArray()
-      : await db.collection("musics").find({}).toArray();
+      : sortParam === "playCount"
+        ? await db
+            .collection("musics")
+            .find({})
+            .sort({ playCount: -1, updatedAt: -1 })
+            .limit(limit)
+            .toArray()
+        : await db.collection("musics").find({}).toArray();
 
     const normalized = musics.map((m) => normalizeDocument(m));
     return NextResponse.json(normalized);

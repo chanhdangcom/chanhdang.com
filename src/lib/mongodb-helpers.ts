@@ -39,6 +39,8 @@ export function normalizeMusic(music: Record<string, unknown>) {
     youtube: String(music.youtube ?? ""),
     content: String(music.content ?? ""),
     type: music.type ? String(music.type) : undefined,
+    playCount:
+      typeof music.playCount === "number" ? Number(music.playCount) : undefined,
     srt: music.srt ? String(music.srt) : undefined,
     beat: music.beat ? String(music.beat) : undefined,
     addedAt: music.addedAt

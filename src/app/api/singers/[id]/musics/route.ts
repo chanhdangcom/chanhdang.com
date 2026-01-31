@@ -3,6 +3,20 @@ import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { normalizeMusic } from "@/lib/mongodb-helpers";
 
+const escapeRegex = (value: string) =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const normalizeObjectIds = (ids: unknown[]) =>
+  ids
+    .map((id) => {
+      if (id instanceof ObjectId) return id;
+      if (typeof id === "string" && ObjectId.isValid(id)) {
+        return new ObjectId(id);
+      }
+      return null;
+    })
+    .filter((id): id is ObjectId => Boolean(id));
+
 export async function GET(
   request: Request,
   context: { params: Promise<{ id: string }> }
@@ -21,8 +35,39 @@ export async function GET(
       return NextResponse.json({ error: "Singer not found" }, { status: 404 });
     }
 
-    const musics = Array.isArray(singer.musics) ? singer.musics : [];
-    const normalized = musics.map((m: Record<string, unknown>) => normalizeMusic(m));
+    const musicIds = Array.isArray(singer.musicIds)
+      ? normalizeObjectIds(singer.musicIds)
+      : [];
+
+    let musics: Record<string, unknown>[] = [];
+    if (musicIds.length > 0) {
+      musics = await db
+        .collection("musics")
+        .find({ _id: { $in: musicIds } })
+        .toArray();
+    } else {
+      const singerName = String(singer.singer ?? "").trim();
+      if (singerName) {
+        const singerRegex = new RegExp(
+          `(^|,)\\s*${escapeRegex(singerName)}\\s*(,|$)`,
+          "i"
+        );
+        musics = await db
+          .collection("musics")
+          .find({
+            $or: [
+              { singerId: singer._id },
+              { singer: singerRegex },
+              { singer: singerName },
+            ],
+          })
+          .toArray();
+      }
+    }
+
+    const normalized = musics.map((m: Record<string, unknown>) =>
+      normalizeMusic(m)
+    );
     return NextResponse.json(normalized);
   } catch (error) {
     console.error("Error fetching singer musics:", error);
@@ -84,20 +129,22 @@ export async function POST(
     const newMusic = {
       ...body,
       singer: singer.singer,
+      singerId: singer._id,
       addedBy: userId || null,
       createdAt: new Date(),
     };
 
-    await db.collection("musics").insertOne(newMusic);
+    const insertResult = await db.collection("musics").insertOne(newMusic);
     await db.collection("singers").updateOne(
       { _id: new ObjectId(id) },
       {
-        $push: { musics: newMusic },
+        $addToSet: { musicIds: insertResult.insertedId },
         $set: { updatedAt: new Date() },
       }
     );
 
-    return NextResponse.json({ success: true, music: normalizeMusic(newMusic) });
+    const musicWithId = { ...newMusic, _id: insertResult.insertedId };
+    return NextResponse.json({ success: true, music: normalizeMusic(musicWithId) });
   } catch (error) {
     console.error("Error adding music to singer:", error);
     return NextResponse.json(

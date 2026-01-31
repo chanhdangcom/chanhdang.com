@@ -238,6 +238,8 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   const [pendingNextTrack, setPendingNextTrack] = useState<(() => void) | null>(
     null
   );
+  const playCountedRef = useRef<boolean>(false);
+  const currentMusicIdRef = useRef<string | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { isAuthenticated, user } = useUser();
@@ -326,6 +328,11 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
 
     void loadFromSrtField();
   }, [currentMusic]);
+
+  useEffect(() => {
+    currentMusicIdRef.current = currentMusic?.id ?? null;
+    playCountedRef.current = false;
+  }, [currentMusic?.id]);
   // ----------------------------
   // Audio control functions
   // ----------------------------
@@ -651,6 +658,41 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     isPlayerPageOpen,
     canListenWithoutAds,
   ]);
+
+  useEffect(() => {
+    const audioEl = audioRef.current;
+    if (!audioEl) return;
+
+    const handlePlay = () => {
+      if (audioEl.currentTime < 1) {
+        playCountedRef.current = false;
+      }
+    };
+
+    const handleTimeUpdate = () => {
+      if (playCountedRef.current) return;
+      if (audioEl.currentTime < 50) return;
+
+      const musicId = currentMusicIdRef.current;
+      if (!musicId) return;
+
+      playCountedRef.current = true;
+      fetch(`/api/musics/${musicId}/play`, {
+        method: "POST",
+        cache: "no-store",
+      }).catch((error) => {
+        console.warn("Không thể cập nhật lượt nghe:", error);
+      });
+    };
+
+    audioEl.addEventListener("play", handlePlay);
+    audioEl.addEventListener("timeupdate", handleTimeUpdate);
+
+    return () => {
+      audioEl.removeEventListener("play", handlePlay);
+      audioEl.removeEventListener("timeupdate", handleTimeUpdate);
+    };
+  }, []);
 
   // Handle ad modal close/continue
   const handleAdClose = () => {

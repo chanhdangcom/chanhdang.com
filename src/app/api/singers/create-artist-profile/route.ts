@@ -62,7 +62,7 @@ export async function POST(request: Request) {
     // Create artist profile
     const result = await db.collection("singers").insertOne({
       ...body,
-      musics: [],
+      musicIds: [],
       addedBy: userId,
       isUserProfile: true, // Mark as user-created profile
       createdAt: new Date(),

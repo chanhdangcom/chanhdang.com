@@ -10,5 +10,6 @@ export type IMusic = {
   topic?: string;
   srt?: string;
   beat?: string;
+  playCount?: number;
   createdAt?: Date;
 };
