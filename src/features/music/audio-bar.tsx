@@ -385,7 +385,7 @@ export function AudioBar() {
                 <FastForward
                   onClick={handleAudioSkip}
                   weight="fill"
-                  size={30}
+                  size={23}
                   className="cursor-pointer text-black dark:text-white"
                 />
               </motion.div>
