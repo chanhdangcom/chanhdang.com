@@ -2,9 +2,10 @@
 "use client";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { useAudio } from "@/components/music-provider";
-import { useRef } from "react";
 import { BorderPro } from "./component/border-pro";
 import { cn } from "@/utils/cn";
+import { ScrollCarouselItem } from "./component/scroll-carousel-item";
+import { useScrollCarousel } from "@/hooks/use-scroll-carousel";
 
 type IPickForYou = {
   id: string;
@@ -49,8 +50,8 @@ const pickForYou: IPickForYou[] = [
 
 export function PickForYou() {
   const { handlePlayRandomAudio } = useAudio();
-
-  const useRefScroll = useRef<HTMLDivElement>(null);
+  const { scrollRef, scrollLeft, scrollRight, canScrollLeft, canScrollRight } =
+    useScrollCarousel();
   return (
     <>
       <div className="flex text-xl font-bold">
@@ -59,47 +60,54 @@ export function PickForYou() {
         </div>
       </div>
 
-      <div
-        ref={useRefScroll}
-        className="mt-2 flex w-full snap-x snap-mandatory scroll-pl-2 overflow-x-auto scroll-smooth pl-2 text-white scrollbar-hide md:scroll-pl-[270px] md:pl-[270px]"
+      <ScrollCarouselItem
+        scrollLeft={scrollLeft}
+        scrollRight={scrollRight}
+        canScrollLeft={canScrollLeft}
+        canScrollRight={canScrollRight}
       >
-        {pickForYou.map((item) => (
-          <div key={item.id} ref={useRefScroll} className={cn("", "mr-1")}>
-            <div className="snap-start pl-1">
-              <div className="mx-2 mb-1 font-apple text-sm font-medium text-zinc-500">
-                Make for you
-              </div>
+        <div
+          ref={scrollRef}
+          className="mt-2 flex w-full snap-x snap-mandatory scroll-pl-2 overflow-x-auto scroll-smooth pl-2 text-white scrollbar-hide md:scroll-pl-[270px] md:pl-[270px]"
+        >
+          {pickForYou.map((item) => (
+            <div key={item.id} className={cn("", "mr-1")}>
+              <div className="snap-start pl-1">
+                <div className="mx-2 mb-1 font-apple text-sm font-medium text-zinc-500">
+                  Make for you
+                </div>
 
-              <div
-                className="relative h-80 w-60 shrink-0 overflow-hidden rounded-2xl"
-                onClick={() => handlePlayRandomAudio()}
-              >
-                <BorderPro roundedSize="rounded-2xl">
-                  <img
-                    src={item.image}
-                    alt=""
-                    className="h-80 w-60 shrink-0 object-cover"
-                  />
-                </BorderPro>
+                <div
+                  className="relative h-80 w-60 shrink-0 overflow-hidden rounded-2xl"
+                  onClick={() => handlePlayRandomAudio()}
+                >
+                  <BorderPro roundedSize="rounded-2xl">
+                    <img
+                      src={item.image}
+                      alt=""
+                      className="h-80 w-60 shrink-0 object-cover"
+                    />
+                  </BorderPro>
 
-                <div className="absolute inset-0 flex h-full flex-col justify-between">
-                  <div className="px-4 pb-4">
-                    <ChanhdangLogotype className="w-24 text-white" />
-                    <div className="text-4xl font-bold">New Music</div>
-                    <div className="text-3xl">Mix</div>
-                  </div>
+                  <div className="absolute inset-0 flex h-full flex-col justify-between">
+                    <div className="px-4 pb-4">
+                      <ChanhdangLogotype className="w-24 text-white" />
+                      <div className="text-4xl font-bold">New Music</div>
+                      <div className="text-3xl">Mix</div>
+                    </div>
 
-                  <div className="rounded-b-xl px-4 py-2 backdrop-blur-sm">
-                    <div className="line-clamp-2 text-center">
-                      Ê Kê Vin, Khầy, Jack - J97, Son Tung M-TP and more
+                    <div className="rounded-b-xl px-4 py-2 backdrop-blur-sm">
+                      <div className="line-clamp-2 text-center">
+                        Ê Kê Vin, Khầy, Jack - J97, Son Tung M-TP and more
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </ScrollCarouselItem>
     </>
   );
 }
