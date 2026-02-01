@@ -1,16 +1,21 @@
-import { FontStyle } from "./component/font-style";
+"use client";
+import { useEffect, useState } from "react";
 
 export default function Page() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    console.log("Count hiện tại:", count);
+  }, []);
+
   return (
     <div className="m-16 flex items-center justify-start gap-4">
-      <FontStyle title="NCDANG" />
-
-      <FontStyle
-        title="DANG"
-        className="text-sm text-red-500 hover:underline"
-      />
-
-      <FontStyle title="CHANHDANG" className="text-green-500" />
+      <div
+        className="rounded-lg border p-2 shadow-sm"
+        onClick={() => setCount(count + 1)}
+      >
+        Click : {count}
+      </div>
     </div>
   );
 }

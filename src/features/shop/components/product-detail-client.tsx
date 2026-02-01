@@ -87,7 +87,11 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         </div>
       )}
       <div className="flex flex-wrap gap-3">
-        <Button onClick={handleAddToCart} disabled={isSubmitting}>
+        <Button
+          onClick={handleAddToCart}
+          disabled={isSubmitting}
+          className="rounded-full border border-zinc-900 bg-zinc-900 px-6 text-white shadow-lg shadow-zinc-900/20 transition hover:-translate-y-0.5 hover:bg-zinc-800 dark:border-white dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100"
+        >
           {isSubmitting ? "Đang thêm..." : "Thêm vào giỏ"}
         </Button>
         <Button variant="outline" onClick={() => router.push(`/${locale}/CuaHangPhuKien/cart`)}>

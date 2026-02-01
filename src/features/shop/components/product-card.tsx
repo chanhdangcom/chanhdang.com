@@ -12,7 +12,7 @@ export function ProductCard({ product, locale }: ProductCardProps) {
   const price = product.salePrice ?? product.price;
   const productId = product.id || product._id;
   return (
-    <div className="group flex h-full flex-col rounded-3xl bg-white/80 p-5 shadow-[0_20px_60px_-40px_rgba(0,0,0,0.45)] transition hover:-translate-y-1 hover:shadow-[0_30px_80px_-40px_rgba(0,0,0,0.55)] dark:bg-zinc-950/70">
+    <div className="group flex h-full flex-col rounded-3xl border border-zinc-200/60 bg-white/80 p-5 shadow-[0_20px_60px_-45px_rgba(0,0,0,0.45)] transition duration-300 hover:-translate-y-1 hover:border-zinc-300/80 hover:shadow-[0_30px_80px_-45px_rgba(0,0,0,0.55)] dark:border-zinc-800/60 dark:bg-zinc-950/70">
       <Link
         href={`/${locale}/CuaHangPhuKien/san-pham/${productId}`}
         className="block"
@@ -25,6 +25,7 @@ export function ProductCard({ product, locale }: ProductCardProps) {
             className="object-cover transition duration-300 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, 33vw"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
         </div>
         <div className="mt-5 space-y-2">
           <h3 className="line-clamp-2 text-lg font-semibold text-zinc-900 dark:text-white">
@@ -55,7 +56,11 @@ export function ProductCard({ product, locale }: ProductCardProps) {
             Còn {product.stock ?? 0} sản phẩm
           </p>
         </div>
-        <Button size="sm" variant="outline" className="rounded-full px-4">
+        <Button
+          size="sm"
+          variant="outline"
+          className="rounded-full border-zinc-200/80 bg-white/70 px-4 text-zinc-700 transition hover:border-zinc-900 hover:bg-zinc-900 hover:text-white dark:border-zinc-800/70 dark:bg-zinc-950/60 dark:text-zinc-200 dark:hover:border-white dark:hover:bg-white dark:hover:text-zinc-900"
+        >
           Xem chi tiết
         </Button>
       </div>

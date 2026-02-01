@@ -4,11 +4,12 @@ import clientPromise from "@/lib/mongodb";
 import { getShopDb } from "@/lib/shop-db";
 import { normalizeDocument } from "@/lib/mongodb-helpers";
 import { CategoryFilter } from "@/features/shop/components/category-filter";
+import { SortFilter } from "@/features/shop/components/sort-filter";
 import { ProductCard } from "@/features/shop/components/product-card";
 import type { Category, Product } from "@/features/shop/types";
 
 export const metadata: Metadata = {
-  title: "Cửa Hàng Phụ Kiện Điện Thoại | Chánh Đang Store",
+  title: "Phước Store - DTP",
   description:
     "Mua phụ kiện điện thoại chính hãng: ốp lưng, sạc nhanh, tai nghe, kính cường lực với trải nghiệm mua sắm chuẩn quốc tế.",
   openGraph: {
@@ -23,7 +24,7 @@ export default async function ShopPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams?: Promise<{ category?: string; search?: string }>;
+  searchParams?: Promise<{ category?: string; search?: string; sort?: string }>;
 }) {
   const { locale } = await params;
   const search = await searchParams;
@@ -50,10 +51,18 @@ export default async function ShopPage({
         { description: { $regex: search.search, $options: "i" } },
       ];
     }
+    const sortParam = search?.sort ?? "newest";
+    const sortMap: Record<string, Record<string, 1 | -1>> = {
+      newest: { createdAt: -1 },
+      oldest: { createdAt: 1 },
+      "price-asc": { price: 1 },
+      "price-desc": { price: -1 },
+    };
+    const sort = sortMap[sortParam] ?? sortMap.newest;
     products = await db
       .collection("shop_products")
       .find(filter)
-      .sort({ createdAt: -1 })
+      .sort(sort)
       .limit(12)
       .toArray();
   } catch (error) {
@@ -69,7 +78,6 @@ export default async function ShopPage({
               <span className="rounded-full border border-zinc-200/70 px-3 py-1 dark:border-zinc-700/70">
                 Premium
               </span>
-              <span>Apple-grade experience</span>
             </div>
             <h1 className="text-4xl font-semibold leading-tight text-zinc-900 dark:text-white sm:text-5xl lg:text-6xl">
               Phụ kiện điện thoại tinh tế, trải nghiệm mua sắm đẳng cấp.
@@ -143,15 +151,22 @@ export default async function ShopPage({
               Tuyển chọn {products.length} phụ kiện đáng mua nhất hôm nay
             </p>
           </div>
-          <CategoryFilter
-            categories={categories.map(
-              (doc) => normalizeDocument(doc) as unknown as Category
-            )}
-            active={search?.category ?? null}
-            locale={locale}
-          />
+
+          <div className="items-center gap-3 space-y-4">
+            <CategoryFilter
+              categories={categories.map(
+                (doc) => normalizeDocument(doc) as unknown as Category
+              )}
+              active={search?.category ?? null}
+              locale={locale}
+            />
+
+            <div className="flex items-center justify-end">
+              <SortFilter />
+            </div>
+          </div>
         </div>
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
           {products.map((product) => (
             <ProductCard
               key={String(product._id)}

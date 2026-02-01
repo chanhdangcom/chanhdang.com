@@ -14,8 +14,8 @@ export function CategoryFilter({ categories, active, locale }: CategoryFilterPro
         href={`/${locale}/CuaHangPhuKien`}
         className={`rounded-full border px-4 py-2 text-sm transition ${
           !active
-            ? "border-zinc-900 bg-zinc-900 text-white"
-            : "border-zinc-200 text-zinc-600 hover:border-zinc-300 hover:text-zinc-900 dark:border-zinc-800 dark:text-zinc-300 dark:hover:border-zinc-700"
+            ? "border-zinc-900 bg-zinc-900 text-white shadow-sm shadow-zinc-900/20"
+            : "border-zinc-200/80 bg-white/70 text-zinc-600 shadow-sm shadow-black/5 hover:border-zinc-300 hover:bg-white hover:text-zinc-900 dark:border-zinc-800/70 dark:bg-zinc-950/60 dark:text-zinc-300 dark:hover:border-zinc-700"
         }`}
       >
         Tất cả
@@ -26,8 +26,8 @@ export function CategoryFilter({ categories, active, locale }: CategoryFilterPro
           href={`/${locale}/CuaHangPhuKien?category=${category.slug}`}
           className={`rounded-full border px-4 py-2 text-sm transition ${
             active === category.slug
-              ? "border-zinc-900 bg-zinc-900 text-white"
-              : "border-zinc-200 text-zinc-600 hover:border-zinc-300 hover:text-zinc-900 dark:border-zinc-800 dark:text-zinc-300 dark:hover:border-zinc-700"
+              ? "border-zinc-900 bg-zinc-900 text-white shadow-sm shadow-zinc-900/20"
+              : "border-zinc-200/80 bg-white/70 text-zinc-600 shadow-sm shadow-black/5 hover:border-zinc-300 hover:bg-white hover:text-zinc-900 dark:border-zinc-800/70 dark:bg-zinc-950/60 dark:text-zinc-300 dark:hover:border-zinc-700"
           }`}
         >
           {category.name}
