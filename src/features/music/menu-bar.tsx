@@ -79,7 +79,9 @@ export function MenuBar() {
               </div>
             </Link>
 
-            <div className="pl-2 font-medium text-zinc-500">Library </div>
+            {isAuthenticated && (
+              <div className="pl-2 font-medium text-zinc-500">Library </div>
+            )}
 
             {isAuthenticated && (
               <div>
