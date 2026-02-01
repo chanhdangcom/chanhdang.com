@@ -2,14 +2,17 @@
 import { useAudio } from "@/components/music-provider";
 import { TableRankingItem } from "./component/table-ranking-item";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { ScrollCarouselItem } from "./component/scroll-carousel-item";
+import { useScrollCarousel } from "@/hooks/use-scroll-carousel";
 
 export function TableRanking() {
   const { handlePlayAudio } = useAudio();
-  const ref = useRef<HTMLDivElement>(null);
   const [musics, setMusics] = useState<IMusic[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { scrollRef, scrollLeft, scrollRight, canScrollLeft, canScrollRight } =
+    useScrollCarousel();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -69,9 +72,14 @@ export function TableRanking() {
         </div>
       )}
 
-      {musics.length > 0 && (
+      <ScrollCarouselItem
+        scrollLeft={scrollLeft}
+        scrollRight={scrollRight}
+        canScrollLeft={canScrollLeft}
+        canScrollRight={canScrollRight}
+      >
         <div
-          ref={ref}
+          ref={scrollRef}
           className="mt-1 w-full snap-x snap-mandatory overflow-x-auto scrollbar-hide md:snap-none"
         >
           <div className="grid grid-flow-col grid-rows-4 gap-4">
@@ -87,7 +95,7 @@ export function TableRanking() {
             ))}
           </div>
         </div>
-      )}
+      </ScrollCarouselItem>
     </div>
   );
 }

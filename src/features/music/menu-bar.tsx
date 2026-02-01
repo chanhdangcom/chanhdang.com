@@ -36,11 +36,11 @@ export function MenuBar() {
       <div className="absolute h-[96vh] w-60 space-y-4 rounded-3xl bg-gradient-to-tr from-transparent to-zinc-50 px-3 pt-5 text-zinc-50 shadow-xl backdrop-blur-3xl dark:to-white/10">
         <>
           <div className="text-base text-black dark:text-white">
-            <div className="flex items-end gap-1">
+            <div className="flex items-end justify-center gap-1">
               <Link href={`/${locale}/music`} className="flex cursor-pointer">
-                <ChanhdangLogotype className="w-40" />
+                <ChanhdangLogotype className="w-full" />
 
-                <div className="my-4 flex text-sm font-semibold">Music</div>
+                <div className="my-4 flex text-xs font-semibold">Music</div>
               </Link>
             </div>
 
@@ -56,7 +56,10 @@ export function MenuBar() {
               >
                 <Link href={`/${locale}/music/search`}>
                   <div className="flex items-center gap-2 rounded-xl px-4 py-2">
-                    <MagnifyingGlass size={25} className="text-red-500" />
+                    <MagnifyingGlass
+                      size={25}
+                      className="text-red-500 dark:text-blue-500"
+                    />
                     <div className="font-medium">Search</div>
                   </div>
                 </Link>
@@ -65,7 +68,7 @@ export function MenuBar() {
 
             <Link href={`/${locale}/music`}>
               <div className="flex cursor-pointer items-center gap-2 rounded-2xl px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-800">
-                <House size={25} className="text-red-500" />
+                <House size={25} className="text-red-500 dark:text-blue-500" />
 
                 <div className="font-medium">Home</div>
               </div>
@@ -73,23 +76,29 @@ export function MenuBar() {
 
             <Link href={`/${locale}/music/new-release`}>
               <div className="flex items-center gap-2 rounded-2xl px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-800">
-                <SquaresFour size={25} className="text-red-500" />
+                <SquaresFour
+                  size={25}
+                  className="text-red-500 dark:text-blue-500"
+                />
 
                 <div className="font-medium">New</div>
               </div>
             </Link>
 
-            {isAuthenticated && (
-              <div className="pl-2 font-medium text-zinc-500">Library </div>
-            )}
+            <div className="mt-4 pl-3 text-xs font-medium text-zinc-500">
+              Library
+            </div>
 
-            {isAuthenticated && (
+            {isAuthenticated ? (
               <div>
                 <Link
                   href={`/${locale}/music/library`}
                   className="flex items-center gap-2 rounded-2xl px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-800"
                 >
-                  <Clock size={25} className="text-red-500" />
+                  <Clock
+                    size={25}
+                    className="text-red-500 dark:text-blue-500"
+                  />
 
                   <div className="font-medium">Recently Played</div>
                 </Link>
@@ -98,7 +107,36 @@ export function MenuBar() {
                   href={`/${locale}/music/library`}
                   className="flex items-center gap-2 rounded-2xl px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-800"
                 >
-                  <BookBookmark size={25} className="text-red-500" />
+                  <BookBookmark
+                    size={25}
+                    className="text-red-500 dark:text-blue-500"
+                  />
+
+                  <div className="font-medium">Library</div>
+                </Link>
+              </div>
+            ) : (
+              <div className="pointer-events-none opacity-30">
+                <Link
+                  href={`/${locale}/music/library`}
+                  className="flex items-center gap-2 px-4 py-2"
+                >
+                  <Clock
+                    size={25}
+                    className="text-red-500 dark:text-blue-500"
+                  />
+
+                  <div className="font-medium">Recently Played</div>
+                </Link>
+
+                <Link
+                  href={`/${locale}/music/library`}
+                  className="flex items-center gap-2 px-4 py-2"
+                >
+                  <BookBookmark
+                    size={25}
+                    className="text-red-500 dark:text-blue-500"
+                  />
 
                   <div className="font-medium">Library</div>
                 </Link>
@@ -110,7 +148,10 @@ export function MenuBar() {
                 href={`/${locale}/music/my-music`}
                 className="flex items-center gap-2 rounded-2xl px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-800"
               >
-                <UserCircle size={25} className="text-red-500" />
+                <UserCircle
+                  size={25}
+                  className="text-red-500 dark:text-blue-500"
+                />
 
                 <div className="font-medium">My Music</div>
               </Link>
@@ -122,7 +163,10 @@ export function MenuBar() {
                 className="cursor-pointer"
               >
                 <div className="flex items-center gap-2 rounded-2xl px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-800">
-                  <Crown size={25} className="text-red-500" />
+                  <Crown
+                    size={25}
+                    className="text-red-500 dark:text-blue-500"
+                  />
 
                   <div className="flex w-full items-center justify-between gap-2">
                     <div className="font-medium">Manage</div>
@@ -145,7 +189,10 @@ export function MenuBar() {
                       href={`/${locale}/music/admin`}
                       className="flex items-center gap-2 rounded-2xl px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-800"
                     >
-                      <ShieldCheck size={25} className="text-red-500" />
+                      <ShieldCheck
+                        size={25}
+                        className="text-red-500 dark:text-blue-500"
+                      />
 
                       <div className="font-medium">Admin Panel</div>
                     </Link>
@@ -158,7 +205,7 @@ export function MenuBar() {
                         <MusicNotesSimple
                           size={25}
                           weight="bold"
-                          className="text-red-500"
+                          className="text-red-500 dark:text-blue-500"
                         />
 
                         <div className="font-medium">Add New Music</div>
@@ -168,7 +215,7 @@ export function MenuBar() {
                         <MusicNotesSimple
                           size={25}
                           weight="bold"
-                          className="text-red-500"
+                          className="text-red-500 dark:text-blue-500"
                         />
 
                         <div className="font-medium">Add New Music</div>
@@ -180,7 +227,10 @@ export function MenuBar() {
                         href={`/${locale}/music/add-singer`}
                         className="flex items-center gap-2 rounded-2xl px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-800"
                       >
-                        <MicrophoneStage size={25} className="text-red-500" />
+                        <MicrophoneStage
+                          size={25}
+                          className="text-red-500 dark:text-blue-500"
+                        />
 
                         <div className="font-medium">Add Artists</div>
                       </Link>

@@ -25,10 +25,20 @@ export function useScrollCarousel() {
     element.addEventListener("scroll", updateScrollButtons, { passive: true });
     window.addEventListener("resize", updateScrollButtons, { passive: true });
 
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(() => updateScrollButtons())
+        : null;
+
+    if (resizeObserver) {
+      resizeObserver.observe(element);
+    }
+
     return () => {
       clearTimeout(timeoutId);
       element.removeEventListener("scroll", updateScrollButtons);
       window.removeEventListener("resize", updateScrollButtons);
+      resizeObserver?.disconnect();
     };
   }, []);
 

@@ -29,10 +29,11 @@ export async function CarouselTopic() {
                   <CaretRight
                     size={20}
                     weight="bold"
-                    className="mt-2 text-zinc-500"
+                    className="mt-1 text-zinc-500"
                   />
                 </Link>
               </>
+
               <NewAuidoListClient musics={topic.musics} />
             </div>
           ))}
