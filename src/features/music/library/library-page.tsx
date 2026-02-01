@@ -50,7 +50,7 @@ export function LibraryPage() {
               <Input
                 type="text"
                 placeholder="Music, Playlist ..."
-                className="z-10 rounded-3xl border-none bg-white shadow-lg dark:bg-zinc-800 md:w-[40vw]"
+                className="z-10 rounded-3xl border bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-800 md:w-[40vw]"
               />
             </Link>
           </div>

@@ -142,7 +142,7 @@ export function AudioBar() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5, type: "spring" }}
       className={`fixed z-50 flex justify-center md:inset-x-[25vw] md:bottom-4 ${
-        scroll ? "inset-x-2 bottom-[82px]" : "inset-x-20 bottom-6"
+        scroll ? "inset-x-4 bottom-[85px]" : "inset-x-24 bottom-6"
       }`}
     >
       <div className="relative overflow-hidden rounded-[50px] border border-white/10 bg-zinc-200/70 px-3 py-1 backdrop-blur-sm dark:bg-zinc-900/70 md:rounded-[55px]">

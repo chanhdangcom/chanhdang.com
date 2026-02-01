@@ -8,4 +8,6 @@ export const routing = defineRouting({
   defaultLocale: "en",
   // Always include locale prefix (matches app/[locale] routes)
   localePrefix: "always",
+  // Disable automatic locale detection (force default)
+  localeDetection: false,
 });
