@@ -36,8 +36,8 @@ export function ProductCard({ product, locale }: ProductCardProps) {
           </p>
         </div>
       </Link>
-      <div className="mt-auto flex items-center justify-between pt-6">
-        <div>
+      <div className="mt-auto flex flex-col gap-3 pt-6">
+        <div className="space-y-1">
           {product.salePrice ? (
             <div className="flex items-center gap-2">
               <span className="text-xl font-semibold text-zinc-900 dark:text-white">
@@ -59,7 +59,7 @@ export function ProductCard({ product, locale }: ProductCardProps) {
         <Button
           size="sm"
           variant="outline"
-          className="rounded-full border-zinc-200/80 bg-white/70 px-4 text-zinc-700 transition hover:border-zinc-900 hover:bg-zinc-900 hover:text-white dark:border-zinc-800/70 dark:bg-zinc-950/60 dark:text-zinc-200 dark:hover:border-white dark:hover:bg-white dark:hover:text-zinc-900"
+          className="w-full rounded-full border-zinc-200/80 bg-white/70 px-4 text-zinc-700 transition hover:border-zinc-900 hover:bg-zinc-900 hover:text-white dark:border-zinc-800/70 dark:bg-zinc-950/60 dark:text-zinc-200 dark:hover:border-white dark:hover:bg-white dark:hover:text-zinc-900 sm:w-auto sm:self-end"
         >
           Xem chi tiết
         </Button>

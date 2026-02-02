@@ -1,21 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Page() {
-  const [count, setCount] = useState(0);
+  const [isDang, setIsDang] = useState(true);
 
-  useEffect(() => {
-    console.log("Count hiện tại:", count);
-  }, []);
+  if (isDang) {
+    return <div onClick={() => setIsDang(false)}>Đang</div>;
+  }
 
-  return (
-    <div className="m-16 flex items-center justify-start gap-4">
-      <div
-        className="rounded-lg border p-2 shadow-sm"
-        onClick={() => setCount(count + 1)}
-      >
-        Click : {count}
-      </div>
-    </div>
-  );
+  return <div onClick={() => setIsDang(true)}>Không phải Đang</div>;
 }
