@@ -10,6 +10,7 @@ import { Footer } from "@/app/[locale]/features/profile/footer";
 import { CarouselAudioPlaylist } from "@/features/music/carousel-audio-playlist";
 import { RecentCarouselAudio } from "@/features/music/recent-carousel-audio";
 import { NewCarouselAudio } from "@/features/music/new-carousel-audio";
+import { SingerList } from "@/features/music/singer-list";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -135,9 +136,15 @@ export default async function SingerDetailPage({ params }: Props) {
   return (
     <>
       <SingerPageClient singer={singer} />
-      <RecentCarouselAudio />
-      <CarouselAudioPlaylist />
-      <NewCarouselAudio />
+      <div className="space-y-4">
+        <RecentCarouselAudio />
+
+        <CarouselAudioPlaylist />
+
+        <NewCarouselAudio />
+
+        <SingerList />
+      </div>
 
       <div className="mb-40 mt-8 md:ml-60">
         <Footer />

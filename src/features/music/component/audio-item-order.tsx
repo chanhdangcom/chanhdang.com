@@ -76,11 +76,7 @@ export function AudioItemOrder({
               <div className="text-sm text-zinc-400">{duration}</div>
             )}
 
-            {item && (
-              <div className="rounded-full bg-zinc-200 p-1 dark:bg-zinc-700">
-                {item}
-              </div>
-            )}
+            {item && <div className="">{item}</div>}
           </div>
         </div>
       </div>

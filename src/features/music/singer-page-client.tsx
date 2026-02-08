@@ -1,19 +1,24 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
-import { Play, Shuffle } from "@phosphor-icons/react/dist/ssr";
+import { CaretRight, Play } from "@phosphor-icons/react/dist/ssr";
+import { useEffect, useState } from "react";
 
 import { AudioSingerItem } from "./component/audio-singer-item";
 
 import { AudioBar } from "./audio-bar";
-import { motion } from "motion/react";
-import { AnimatePresence } from "framer-motion";
+import {
+  AnimatePresence,
+  useScroll,
+  useSpring,
+  useTransform,
+  motion,
+} from "framer-motion";
 import { MenuBar } from "./menu-bar";
-import { HeaderMusicPage } from "./header-music-page";
 import { MenuBarMobile } from "./menu-bar-mobile";
 import { MotionHeaderMusic } from "./component/motion-header-music";
 import { ISingerItem } from "./type/singer";
 import { useAudio } from "@/components/music-provider";
 import { BackButton } from "./component/back-button";
+import { useImageHoverColor } from "@/hooks/use-image-hover-color";
 
 type IProp = {
   singer: ISingerItem;
@@ -21,13 +26,7 @@ type IProp = {
 
 export function SingerPageClient({ singer }: IProp) {
   const { handlePlayAudio } = useAudio();
-
-  const handlePlayFirstAudio = () => {
-    const musics = singer.musics;
-    if (!musics?.length) return;
-
-    handlePlayAudio(musics[0]);
-  };
+  const [isMobile, setIsMobile] = useState(false);
 
   const handleRandomAudio = () => {
     const musics = singer.musics;
@@ -39,9 +38,40 @@ export function SingerPageClient({ singer }: IProp) {
     handlePlayAudio(randomMusic);
   };
 
+  const { scrollY } = useScroll();
+  const rawOpacity = useTransform(scrollY, [100, 250], [1, 0]);
+  const smoothOpacity = useSpring(rawOpacity, {
+    stiffness: 300,
+    damping: 20,
+  });
+  const rawParallax = useTransform(scrollY, [0, 450], [0, -140]);
+  const smoothParallax = useSpring(rawParallax, {
+    stiffness: 140,
+    damping: 18,
+  });
+  const rawScale = useTransform(scrollY, [0, 450], [1, 1.1]);
+  const smoothScale = useSpring(rawScale, {
+    stiffness: 140,
+    damping: 18,
+  });
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+    const update = () => setIsMobile(mediaQuery.matches);
+    update();
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", update);
+      return () => mediaQuery.removeEventListener("change", update);
+    }
+    mediaQuery.addListener(update);
+    return () => mediaQuery.removeListener(update);
+  }, []);
+
+  const hoverBg = useImageHoverColor(singer.cover, { alpha: 0.6 });
+
   return (
     <>
-      <div className="bg-hoverBg mt-8 font-apple md:flex">
+      <div className="bg-hoverBg font-apple md:flex">
         <MenuBar />
 
         <MotionHeaderMusic name={singer.singer} />
@@ -51,83 +81,69 @@ export function SingerPageClient({ singer }: IProp) {
             <AudioBar />
             <MenuBarMobile />
 
-            <div className="z-20 mt-2 hidden md:ml-[270px] md:block">
-              <HeaderMusicPage name={singer.singer} />
-            </div>
-
             <div>
               <BackButton />
 
-              <div className="mx-4 flex rounded-3xl md:ml-[270px] md:p-4">
+              <div className="flex rounded-3xl">
                 <div className="w-full flex-col items-center md:flex-none">
-                  <div>
-                    <img
-                      src={singer.cover}
-                      alt="cover"
-                      className="mx-auto my-4 size-60 rounded-3xl object-cover shadow-2xl"
+                  <div className="relative overflow-hidden">
+                    <div
+                      className="absolute left-0 -z-10 h-full w-full"
+                      style={{
+                        backgroundColor: hoverBg,
+                      }}
                     />
-                  </div>
+                    <div
+                      className="pointer-events-none absolute inset-0 -z-10"
+                      style={{
+                        backgroundImage:
+                          "linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.35) 100%)",
+                      }}
+                    />
 
-                  <div className="space-y-2 text-6xl">
-                    <div className="flex items-center justify-center gap-1">
-                      <div className="text-2xl font-semibold">
-                        Các bài hát của
-                      </div>
-
-                      <div className="text-2xl font-semibold">
-                        {singer.singer}
-                      </div>
+                    <div className="md:my-32 md:ml-[270px]">
+                      <motion.div
+                        role="img"
+                        aria-label="cover"
+                        className="mx-auto aspect-square w-full bg-contain bg-no-repeat shadow-2xl md:size-60 md:rounded-full md:bg-cover md:bg-center"
+                        style={{
+                          backgroundImage: `url(${singer.cover})`,
+                          y: isMobile ? smoothParallax : 0,
+                          scale: isMobile ? smoothScale : 1,
+                        }}
+                      />
                     </div>
 
-                    <div className="text-center font-apple text-sm font-semibold text-red-500">
-                      ChanhDang Music
-                    </div>
+                    <motion.div
+                      style={{ opacity: smoothOpacity }}
+                      className="absolute inset-x-8 bottom-6 flex items-center justify-between bg-fixed text-3xl font-semibold text-white md:ml-[270px] md:justify-start md:gap-4"
+                    >
+                      <div>{singer.singer}</div>
 
-                    <div className="space-y-4">
-                      <div className="flex w-full justify-between gap-4">
-                        <motion.div
-                          whileTap={{ scale: 0.9 }}
-                          className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-1 font-semibold text-red-500 dark:bg-zinc-900"
-                          onClick={() => handlePlayFirstAudio()}
-                        >
-                          <Play size={20} weight="fill" />
-
-                          <div className="text-xl">Play</div>
-                        </motion.div>
-
-                        <motion.div
-                          whileTap={{ scale: 0.9 }}
-                          className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-200 px-4 py-2 font-semibold text-red-500 dark:bg-zinc-900"
-                          onClick={() => handleRandomAudio()}
-                        >
-                          <Shuffle size={20} weight="fill" />
-
-                          <div className="text-xl">Mix song</div>
-                        </motion.div>
+                      <div
+                        className="rounded-full bg-red-500 p-3 dark:md:bg-blue-500"
+                        onClick={() => handleRandomAudio()}
+                      >
+                        <Play size={22} weight="fill" className="text-white" />
                       </div>
-                    </div>
-
-                    <div className="text-center text-base text-zinc-500">
-                      <div>
-                        Tận hưởng bữa tiệc âm nhạc đầy đặc sắc với{" "}
-                        {singer.singer}
-                      </div>
-                    </div>
+                    </motion.div>
                   </div>
                 </div>
               </div>
-
-              <div className="flex justify-end">
-                <img
-                  src={singer.cover}
-                  alt="cover"
-                  className="pointer-events-none absolute top-0 -z-10 h-1/3 w-full object-cover opacity-50 blur-3xl md:w-[85vw]"
-                />
-              </div>
             </div>
 
-            <div className="items-center md:mx-8 md:ml-[270px] md:flex">
-              <div className="mt-8 w-full max-w-full justify-center px-3 md:mt-0 md:max-w-full md:justify-center">
+            <div className="mx-4 items-center md:mx-8 md:ml-[270px] md:flex">
+              <div className="justify-centers mt-4 w-full max-w-full space-y-4 px-3 md:max-w-full md:justify-center">
+                <h2 className="flex items-center gap-1 px-1 text-xl font-bold text-black dark:text-white">
+                  <div>Top Songs</div>
+
+                  <CaretRight
+                    size={20}
+                    weight="bold"
+                    className="text-zinc-500 md:mt-1"
+                  />
+                </h2>
+
                 <AudioSingerItem music={singer} />
               </div>
             </div>

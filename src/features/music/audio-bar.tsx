@@ -120,7 +120,7 @@ export function AudioBar() {
   }, []);
 
   useEffect(() => {
-    if (!reactToScroll) return; // only attach on mobile
+    if (!reactToScroll) return;
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);

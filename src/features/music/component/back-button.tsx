@@ -20,7 +20,7 @@ export function BackButton({ className }: { className?: string }) {
       <Link href={`/${locale}/music`}>
         <motion.div
           whileTap={{ scale: 0.3 }}
-          className="rounded-full bg-zinc-300/60 p-2 backdrop-blur-sm dark:bg-zinc-900"
+          className="rounded-full bg-zinc-300/60 p-2 shadow-2xl backdrop-blur-sm dark:bg-zinc-900/60"
           layout
         >
           <CaretLeft
