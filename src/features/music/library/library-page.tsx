@@ -10,7 +10,6 @@ import { useParams } from "next/navigation";
 import { LibraryPlaylistsList } from "@/features/music/library/library-playlists-list";
 import { MotionHeaderMusic } from "@/features/music/component/motion-header-music";
 import { Input } from "@/components/ui/input";
-import { Footer } from "@/app/[locale]/features/profile/footer";
 import { CaretLeft, Star } from "phosphor-react";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 
