@@ -46,12 +46,14 @@ export function LibraryPage() {
             </Link>
           </div>
 
-          <div className="mx-4 md:ml-[270px]">
+          <div className="mx-4 text-4xl font-semibold">Library</div>
+
+          <div className="mx-4 md:mx-4 md:ml-[270px]">
             <Link href={withLocale("/music/search")} className="">
               <Input
                 type="text"
                 placeholder="Music, Playlist ..."
-                className="z-10 rounded-3xl border bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-800 md:w-[40vw]"
+                className="z-10 rounded-3xl border bg-white dark:border-zinc-800 dark:bg-zinc-800 md:w-[40vw]"
               />
             </Link>
           </div>
@@ -89,10 +91,6 @@ export function LibraryPage() {
         <div className="my-40">
           <AudioBar />
           <MenuBarMobile />
-        </div>
-
-        <div className="mt-8 md:ml-60">
-          <Footer />
         </div>
       </div>
     </div>
