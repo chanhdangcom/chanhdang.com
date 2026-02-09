@@ -11,7 +11,8 @@ import { LibraryPlaylistsList } from "@/features/music/library/library-playlists
 import { MotionHeaderMusic } from "@/features/music/component/motion-header-music";
 import { Input } from "@/components/ui/input";
 import { Footer } from "@/app/[locale]/features/profile/footer";
-import { CaretLeft } from "phosphor-react";
+import { CaretLeft, Star } from "phosphor-react";
+import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 
 export function LibraryPage() {
   const { user } = useUser();
@@ -56,23 +57,27 @@ export function LibraryPage() {
           </div>
 
           <div className="mx-4 md:ml-[270px]">
-            <div className="gap-4 md:flex">
-              <div className="space-y-2">
-                <Link
-                  href={withLocale("/music/library/favorites")}
-                  className=" "
-                >
+            <div className="gap-4 space-y-4">
+              <Link
+                href={withLocale("/music/library/favorites")}
+                className="flex items-center justify-between rounded-lg"
+              >
+                <div className="flex items-center gap-2">
+                  <Star weight="fill" className="text-red-500" size={10} />
+
                   <img
                     src="/img/favorites-icon.jpg"
                     alt="favorites"
-                    className="flex size-48 items-center justify-center rounded-3xl border border-zinc-200 dark:border-none"
+                    className="size-14 items-center justify-center rounded-lg border border-zinc-200 hover:scale-105 dark:border-none md:size-40"
                   />
-                </Link>
 
-                <div className="ml-2 font-semibold text-black dark:text-white">
-                  Favorite Songs
+                  <div className="ml-2 font-semibold text-black dark:text-white">
+                    Favorite Songs
+                  </div>
                 </div>
-              </div>
+
+                <CaretRight size={15} weight="bold" className="text-zinc-500" />
+              </Link>
 
               <div className="mt-4 md:mt-0">
                 <LibraryPlaylistsList userId={user?.id} />

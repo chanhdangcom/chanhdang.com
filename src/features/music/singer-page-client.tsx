@@ -39,6 +39,7 @@ export function SingerPageClient({ singer }: IProp) {
   };
 
   const { scrollY } = useScroll();
+
   const rawOpacity = useTransform(scrollY, [100, 250], [1, 0]);
   const smoothOpacity = useSpring(rawOpacity, {
     stiffness: 300,
@@ -116,12 +117,20 @@ export function SingerPageClient({ singer }: IProp) {
 
                     <motion.div
                       style={{ opacity: smoothOpacity }}
+                      whileTap={{ scale: 0.9 }}
                       className="absolute inset-x-8 bottom-6 flex items-center justify-between bg-fixed text-3xl font-semibold text-white md:ml-[270px] md:justify-start md:gap-4"
                     >
-                      <div>{singer.singer}</div>
+                      <div
+                        className="hidden rounded-full bg-red-500 p-3 md:flex dark:md:bg-blue-500"
+                        onClick={() => handleRandomAudio()}
+                      >
+                        <Play size={22} weight="fill" className="text-white" />
+                      </div>
+
+                      <div className="">{singer.singer}</div>
 
                       <div
-                        className="rounded-full bg-red-500 p-3 dark:md:bg-blue-500"
+                        className="rounded-full bg-red-500 p-3 md:hidden dark:md:bg-blue-500"
                         onClick={() => handleRandomAudio()}
                       >
                         <Play size={22} weight="fill" className="text-white" />

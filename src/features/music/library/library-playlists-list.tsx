@@ -3,8 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { LibraryPlaylistButton } from "./library-playlist-button";
+
 import { IPlaylistItem } from "../type/playlist";
+import { Star } from "phosphor-react";
+import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 
 type LibraryPlaylist = {
   _id: string;
@@ -73,7 +75,7 @@ export function LibraryPlaylistsList({ userId }: Props) {
 
   return (
     <section className="">
-      <div className="flex gap-4">
+      <div className="space-y-4">
         {playlists.map((entry) => {
           const playlist = entry.resourceData;
           const coverUrl = getCoverUrl(playlist?.cover);
@@ -82,31 +84,41 @@ export function LibraryPlaylistsList({ userId }: Props) {
             <div key={entry._id} className="">
               <Link
                 href={`/music/playlist/${playlist.id}`}
-                className="flex flex-col gap-2"
+                className="flex w-full items-center justify-between"
               >
-                <Image
-                  src={coverUrl}
-                  alt={playlist.title || "Playlist cover"}
-                  width={500}
-                  height={500}
-                  className="size-48 rounded-2xl object-cover"
-                />
+                <div className="flex items-center gap-2">
+                  <Star weight="fill" size={10} className="text-red-500" />
 
-                <div className="flex items-center justify-between">
-                  <div className="gap-1">
-                    <h3 className="text-lg font-semibold text-black dark:text-white">
+                  <Image
+                    src={coverUrl}
+                    alt={playlist.title || "Playlist cover"}
+                    width={500}
+                    height={500}
+                    className="size-14 rounded-lg object-cover hover:scale-105 md:size-40"
+                  />
+
+                  <div className="ml-2">
+                    <h3 className="font-semibold text-black dark:text-white">
                       {playlist.title || "Playlist"}
                     </h3>
 
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                    <p className="text-zinc-500 dark:text-zinc-400">
                       {playlist.singer || "ChanhDang Music"}
                     </p>
-                  </div>
 
-                  <LibraryPlaylistButton
-                    playlist={playlist}
-                    userId={userId}
-                    size="sm"
+                    {/* <LibraryPlaylistButton
+                      playlist={playlist}
+                      userId={userId}
+                      size="sm"
+                    /> */}
+                  </div>
+                </div>
+
+                <div className="">
+                  <CaretRight
+                    size={15}
+                    weight="bold"
+                    className="text-zinc-500"
                   />
                 </div>
               </Link>

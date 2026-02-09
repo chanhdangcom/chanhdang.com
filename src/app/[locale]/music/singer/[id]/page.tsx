@@ -134,6 +134,7 @@ export default async function SingerDetailPage({ params }: Props) {
   return (
     <>
       <SingerPageClient singer={singer} />
+
       <div className="space-y-4">
         <RecentCarouselAudio />
 
