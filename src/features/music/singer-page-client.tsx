@@ -44,7 +44,7 @@ export function SingerPageClient({ singer }: IProp) {
     stiffness: 300,
     damping: 20,
   });
-  const rawParallax = useTransform(scrollY, [0, 450], [0, -140]);
+  const rawParallax = useTransform(scrollY, [0, 450], [0, 100]);
   const smoothParallax = useSpring(rawParallax, {
     stiffness: 140,
     damping: 18,
@@ -105,7 +105,7 @@ export function SingerPageClient({ singer }: IProp) {
                       <motion.div
                         role="img"
                         aria-label="cover"
-                        className="mx-auto aspect-square w-full bg-contain bg-no-repeat shadow-2xl md:size-60 md:rounded-full md:bg-cover md:bg-center"
+                        className="mx-auto aspect-square w-full bg-cover bg-center bg-no-repeat shadow-2xl md:size-60 md:rounded-full"
                         style={{
                           backgroundImage: `url(${singer.cover})`,
                           y: isMobile ? smoothParallax : 0,

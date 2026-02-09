@@ -1,4 +1,5 @@
 // import { AudioBar } from "./audio-bar";
+
 import { HeaderMusicPage } from "./header-music-page";
 import { MenuBar } from "./menu-bar";
 import { TableRanking } from "./table-ranking";
@@ -17,13 +18,12 @@ import { RecentCarouselAudio } from "./recent-carousel-audio";
 import { NewCarouselAudio } from "./new-carousel-audio";
 import { CarouselTopic } from "./carousel-topic";
 import { SuggestCarouselAudio } from "./suggest-carousel-audio";
-// import { useDisableRightClick } from "../../hooks/use-disable-right-click";
+import { DisableRightClick } from "./disable-right-click";
 
 export function MusicPage() {
-  // useDisableRightClick();
-
   return (
     <div className="flex bg-zinc-100 font-apple dark:bg-zinc-950">
+      <DisableRightClick />
       <MotionHeaderMusic />
       <MenuBar />
 

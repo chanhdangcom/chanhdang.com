@@ -5,8 +5,6 @@ import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { ISingerItem } from "@/features/music/type/singer";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
-
-import { Footer } from "@/app/[locale]/features/profile/footer";
 import { CarouselAudioPlaylist } from "@/features/music/carousel-audio-playlist";
 import { RecentCarouselAudio } from "@/features/music/recent-carousel-audio";
 import { NewCarouselAudio } from "@/features/music/new-carousel-audio";
@@ -143,11 +141,13 @@ export default async function SingerDetailPage({ params }: Props) {
 
         <NewCarouselAudio />
 
-        <SingerList />
-      </div>
+        <div className="relative py-8">
+          <div className="absolute left-0 top-0 h-full w-full bg-zinc-100 dark:bg-zinc-900" />
 
-      <div className="mb-40 mt-8 md:ml-60">
-        <Footer />
+          <SingerList />
+
+          <div className="mt-8 h-32 md:ml-60" />
+        </div>
       </div>
     </>
   );
