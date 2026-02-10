@@ -3,7 +3,6 @@ import { useState, useEffect, useCallback } from "react";
 import { HeaderMusicPage } from "./header-music-page";
 import { Button } from "@/components/ui/button";
 import { MotionHeaderMusic } from "./component/motion-header-music";
-import { Footer } from "@/app/[locale]/features/profile/footer";
 import { ISingerItem } from "./type/singer";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { useUser } from "@/hooks/use-user";
@@ -982,9 +981,6 @@ export default function AddMusicForm() {
         </form>
       </div>
 
-      <div className="">
-        <Footer />
-      </div>
     </div>
   );
 }

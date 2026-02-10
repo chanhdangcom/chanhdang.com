@@ -40,7 +40,7 @@ const pickForYou: IPickForYou[] = [
   },
 
   {
-    id: "3",
+    id: "4",
     title: "Chill",
     description: " Ê Kê Vin, Khầy, Jack - J97, Son Tung M-TP and more",
     image:

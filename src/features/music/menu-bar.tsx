@@ -1,12 +1,12 @@
 "use client";
 
-import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { useUser } from "@/hooks/use-user";
 import { usePermissions } from "@/hooks/use-permissions";
 import {
   BookBookmark,
+  CardsThree,
   CaretDown,
-  CaretUp,
+  CaretRight,
   Clock,
   Crown,
   House,
@@ -22,6 +22,9 @@ import { useParams } from "next/navigation";
 import { MagnifyingGlass } from "phosphor-react";
 import { LogoutButton } from "./component/logout-button";
 import { useState } from "react";
+import { SwitchLanguageMenuBar } from "@/app/[locale]/features/profile/components/swtich-language-menu-bar";
+import { ThemeToggleMenuBar } from "@/components/theme-toggle-menubar";
+import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 
 export function MenuBar() {
   const params = useParams();
@@ -43,6 +46,12 @@ export function MenuBar() {
                 <div className="my-4 flex text-xs font-semibold">Music</div>
               </Link>
             </div>
+
+            {/* <div className="mb-4 flex items-center justify-between px-2">
+              <div className="font-medium">Edit</div>
+
+              <Browser size={22} weight="regular" className="" />
+            </div> */}
 
             <AnimatePresence>
               <motion.div
@@ -107,7 +116,7 @@ export function MenuBar() {
                   href={`/${locale}/music/library`}
                   className="flex items-center gap-2 rounded-2xl px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-800"
                 >
-                  <BookBookmark
+                  <CardsThree
                     size={25}
                     className="text-red-500 dark:text-blue-500"
                   />
@@ -160,23 +169,31 @@ export function MenuBar() {
             {canManageSystem && (
               <div
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="cursor-pointer"
+                className="flex w-full cursor-pointer items-center justify-between rounded-2xl hover:bg-zinc-200 dark:hover:bg-zinc-800"
               >
-                <div className="flex items-center gap-2 rounded-2xl px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                <div className="flex items-center gap-2 px-4 py-2">
                   <Crown
                     size={25}
                     className="text-red-500 dark:text-blue-500"
                   />
 
-                  <div className="flex w-full items-center justify-between gap-2">
-                    <div className="font-medium">Manage</div>
+                  <div className="font-medium">Manage</div>
+                </div>
 
-                    {isDropdownOpen ? (
-                      <CaretUp size={15} weight="bold" />
-                    ) : (
-                      <CaretDown size={15} weight="bold" />
-                    )}
-                  </div>
+                <div className="mr-4 flex items-center rounded-full bg-zinc-900 p-1 dark:bg-zinc-50">
+                  {isDropdownOpen ? (
+                    <CaretDown
+                      size={12}
+                      weight="bold"
+                      className="text-zinc-50 dark:text-zinc-900"
+                    />
+                  ) : (
+                    <CaretRight
+                      size={12}
+                      weight="bold"
+                      className="text-zinc-50 dark:text-zinc-900"
+                    />
+                  )}
                 </div>
               </div>
             )}
@@ -184,7 +201,13 @@ export function MenuBar() {
             {canManageSystem && (
               <div>
                 {isDropdownOpen && (
-                  <div className="space-y-2 pl-4">
+                  <motion.div
+                    className="space-y-2 pl-4"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
                     <Link
                       href={`/${locale}/music/admin`}
                       className="flex items-center gap-2 rounded-2xl px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-800"
@@ -204,7 +227,7 @@ export function MenuBar() {
                       >
                         <MusicNotesSimple
                           size={25}
-                          weight="bold"
+                          weight="regular"
                           className="text-red-500 dark:text-blue-500"
                         />
 
@@ -214,7 +237,7 @@ export function MenuBar() {
                       <div className="pointer-events-none flex items-center gap-2 px-4 py-2 opacity-30">
                         <MusicNotesSimple
                           size={25}
-                          weight="bold"
+                          weight="regular"
                           className="text-red-500 dark:text-blue-500"
                         />
 
@@ -235,10 +258,24 @@ export function MenuBar() {
                         <div className="font-medium">Add Artists</div>
                       </Link>
                     ) : null}
-                  </div>
+                  </motion.div>
                 )}
               </div>
             )}
+
+            <div className="mt-4 pl-3 text-xs font-medium text-zinc-500">
+              Settings
+            </div>
+
+            <div className="flex items-center gap-2 rounded-2xl px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+              <ThemeToggleMenuBar className="text-red-500 dark:text-blue-500" />
+
+              <div className="font-medium">Theme</div>
+            </div>
+
+            <div className="flex items-center gap-2 rounded-2xl px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+              <SwitchLanguageMenuBar className="" />
+            </div>
 
             <div className="absolute bottom-0 left-0 flex w-full justify-center">
               <LogoutButton />

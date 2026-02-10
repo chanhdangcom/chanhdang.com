@@ -7,8 +7,6 @@ import { usePermissions } from "@/hooks/use-permissions";
 import { Button } from "@/components/ui/button";
 import { MotionHeaderMusic } from "./component/motion-header-music";
 import { HeaderMusicPage } from "./header-music-page";
-import { Footer } from "@/app/[locale]/features/profile/footer";
-
 type IMusic = {
   _id?: string;
   id?: string;
@@ -417,9 +415,6 @@ export function MyMusicManagement() {
         </div>
       </div>
 
-      <div className="mt-8">
-        <Footer />
-      </div>
     </div>
   );
 }

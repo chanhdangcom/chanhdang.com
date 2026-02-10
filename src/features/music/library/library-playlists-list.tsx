@@ -74,14 +74,14 @@ export function LibraryPlaylistsList({ userId }: Props) {
   }
 
   return (
-    <section className="">
-      <div className="space-y-4">
+    <section>
+      <div className="space-y-4 md:space-y-8">
         {playlists.map((entry) => {
           const playlist = entry.resourceData;
           const coverUrl = getCoverUrl(playlist?.cover);
 
           return (
-            <div key={entry._id} className="">
+            <div key={entry._id}>
               <Link
                 href={`/music/playlist/${playlist.id}`}
                 className="flex w-full items-center justify-between"
@@ -94,7 +94,7 @@ export function LibraryPlaylistsList({ userId }: Props) {
                     alt={playlist.title || "Playlist cover"}
                     width={500}
                     height={500}
-                    className="size-14 rounded-lg object-cover hover:scale-105 md:size-40"
+                    className="size-14 rounded-xl object-cover hover:scale-105 md:size-24"
                   />
 
                   <div className="ml-2">
@@ -114,7 +114,7 @@ export function LibraryPlaylistsList({ userId }: Props) {
                   </div>
                 </div>
 
-                <div className="">
+                <div className="md:hidden">
                   <CaretRight
                     size={15}
                     weight="bold"

@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Trash2, Edit, Save, X } from "lucide-react";
 import { HeaderMusicPage } from "./header-music-page";
-import { Footer } from "@/app/[locale]/features/profile/footer";
 import { Plus } from "@phosphor-icons/react/dist/ssr";
 import { motion } from "motion/react";
 
@@ -256,9 +255,6 @@ export function SingerManagement() {
           )}
         </div>
 
-        <div className="mt-20 md:mt-40">
-          <Footer />
-        </div>
       </div>
       {/* showAddForm */}
       {showAddForm ? (

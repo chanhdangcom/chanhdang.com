@@ -1,4 +1,3 @@
-import { Footer } from "@/app/[locale]/features/profile/footer";
 import { AudioBar } from "@/features/music/audio-bar";
 import { BackButton } from "@/features/music/component/back-button";
 import { MotionHeaderMusic } from "@/features/music/component/motion-header-music";
@@ -52,9 +51,6 @@ export default async function Page({ params }: Iprop) {
             <div className="mt-4">
               <TopicList musics={topic?.musics} />
 
-              <div className="mt-8 md:ml-[60px]">
-                <Footer />
-              </div>
             </div>
           </div>
 

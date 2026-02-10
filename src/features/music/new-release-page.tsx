@@ -3,7 +3,6 @@ import { AudioBar } from "./audio-bar";
 import { MotionHeaderMusic } from "./component/motion-header-music";
 import { MenuBar } from "./menu-bar";
 import { MenuBarMobile } from "./menu-bar-mobile";
-import { Footer } from "@/app/[locale]/features/profile/footer";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { NewReleaseList } from "./new-release-list";
 import { BackButton } from "./component/back-button";
@@ -59,9 +58,6 @@ export async function NewReleasePage({ searchPage }: IProp) {
             <div className="mt-2">
               <NewReleaseList musics={musics} />
 
-              <div className="mt-8 md:ml-[60px]">
-                <Footer />
-              </div>
             </div>
           </div>
 

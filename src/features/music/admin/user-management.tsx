@@ -5,8 +5,6 @@ import { ShieldCheck, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsAdmin } from "@/hooks/use-permissions";
 import { useRouter } from "next/navigation";
-import { Footer } from "@/app/[locale]/features/profile/footer";
-
 interface UserData {
   id: string;
   username: string;
@@ -160,7 +158,6 @@ export function UserManagement() {
           ))}
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

@@ -10,8 +10,8 @@ import { useParams } from "next/navigation";
 import { LibraryPlaylistsList } from "@/features/music/library/library-playlists-list";
 import { MotionHeaderMusic } from "@/features/music/component/motion-header-music";
 import { Input } from "@/components/ui/input";
-import { CaretLeft, Star } from "phosphor-react";
-import { CaretRight } from "@phosphor-icons/react/dist/ssr";
+import { CaretRight, Star } from "@phosphor-icons/react/dist/ssr";
+import { BackButton } from "../component/back-button";
 
 export function LibraryPage() {
   const { user } = useUser();
@@ -28,26 +28,14 @@ export function LibraryPage() {
       <div className="pointer-events-none fixed bottom-0 z-50 h-16 w-full bg-gradient-to-t from-white to-transparent dark:from-black" />
 
       <div className="mx-auto w-full">
-        <div className="relative z-10 space-y-4">
+        <div className="relative z-10 mt-20 space-y-4 md:mt-0">
           <div className="my-4 hidden md:ml-[270px] md:block">
             <HeaderMusicPage name="Library" />
           </div>
 
-          <div className="sticky top-0 z-10 m-4 flex items-center gap-1 md:hidden">
-            <Link href={withLocale("/music")}>
-              <div className="pointer-events-auto rounded-full bg-zinc-200 p-2 dark:bg-zinc-900">
-                <CaretLeft
-                  size={28}
-                  weight="regular"
-                  className="text-black dark:text-white"
-                />
-              </div>
-            </Link>
-          </div>
+          <BackButton />
 
-          <div className="mx-4 text-4xl font-semibold">Library</div>
-
-          <div className="mx-4 md:mx-4 md:ml-[270px]">
+          <div className="md mx-4 md:ml-[270px]">
             <Link href={withLocale("/music/search")} className="">
               <Input
                 type="text"
@@ -58,10 +46,10 @@ export function LibraryPage() {
           </div>
 
           <div className="mx-4 md:ml-[270px]">
-            <div className="gap-4 space-y-4">
+            <div className="gap-4 space-y-4 md:space-y-8">
               <Link
                 href={withLocale("/music/library/favorites")}
-                className="flex items-center justify-between rounded-lg"
+                className="flex items-center justify-between rounded-lg md:mt-8"
               >
                 <div className="flex items-center gap-2">
                   <Star weight="fill" className="text-red-500" size={10} />
@@ -69,7 +57,7 @@ export function LibraryPage() {
                   <img
                     src="/img/favorites-icon.jpg"
                     alt="favorites"
-                    className="size-14 items-center justify-center rounded-lg border border-zinc-200 hover:scale-105 dark:border-none md:size-40"
+                    className="size-14 items-center justify-center rounded-xl border border-zinc-200 hover:scale-105 dark:border-none md:size-24"
                   />
 
                   <div className="ml-2 font-semibold text-black dark:text-white">
@@ -77,7 +65,11 @@ export function LibraryPage() {
                   </div>
                 </div>
 
-                <CaretRight size={15} weight="bold" className="text-zinc-500" />
+                <CaretRight
+                  size={15}
+                  weight="bold"
+                  className="text-zinc-500 md:hidden"
+                />
               </Link>
 
               <div className="mt-4 md:mt-0">

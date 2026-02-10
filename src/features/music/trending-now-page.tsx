@@ -6,7 +6,6 @@ import { MenuBar } from "./menu-bar";
 import { MenuBarMobile } from "./menu-bar-mobile";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { TrendingNowList } from "./trending-now-list";
-import { Footer } from "@/app/[locale]/features/profile/footer";
 import { BackButton } from "./component/back-button";
 
 export async function TrendingNowPage() {
@@ -56,9 +55,6 @@ export async function TrendingNowPage() {
             <div className="mt-4">
               <TrendingNowList musics={musics} />
 
-              <div className="mt-8 md:ml-[60px]">
-                <Footer />
-              </div>
             </div>
           </div>
 

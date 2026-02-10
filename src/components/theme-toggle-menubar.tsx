@@ -7,7 +7,7 @@ import { cn } from "@/utils/cn";
 
 type IProp = { className?: string };
 
-export function ThemeToggle({ className }: IProp) {
+export function ThemeToggleMenuBar({ className }: IProp) {
   const { resolvedTheme, setTheme } = useTheme();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -37,17 +37,14 @@ export function ThemeToggle({ className }: IProp) {
 
         handlePlayAudio();
       }}
-      className={cn(
-        "flex items-center rounded-full border border-zinc-300 p-1.5 shadow-sm backdrop-blur-sm hover:bg-zinc-200 dark:border-zinc-800 dark:hover:bg-zinc-700",
-        className
-      )}
+      className={cn("flex items-center", className)}
     >
       {/* Avoid hydration mismatch by rendering a stable fallback until mounted */}
       {mounted ? (
         resolvedTheme === "dark" ? (
-          <Sun size={18} weight="fill" />
+          <Sun size={25} />
         ) : (
-          <Moon size={18} weight="fill" />
+          <Moon size={25} />
         )
       ) : (
         <span style={{ width: 18, height: 18, display: "inline-block" }} />

@@ -7,7 +7,6 @@ import { SingerList } from "./singer-list";
 import { MenuBarMobile } from "./menu-bar-mobile";
 import { PickForYou } from "./pick-for-you";
 import { MotionHeaderMusic } from "./component/motion-header-music";
-import { Footer } from "@/app/[locale]/features/profile/footer";
 import CarouselAudio from "./carousel-audio";
 import { AudioBar } from "./audio-bar";
 
@@ -18,12 +17,10 @@ import { RecentCarouselAudio } from "./recent-carousel-audio";
 import { NewCarouselAudio } from "./new-carousel-audio";
 import { CarouselTopic } from "./carousel-topic";
 import { SuggestCarouselAudio } from "./suggest-carousel-audio";
-import { DisableRightClick } from "./disable-right-click";
 
 export function MusicPage() {
   return (
     <div className="flex bg-zinc-100 font-apple dark:bg-zinc-950">
-      <DisableRightClick />
       <MotionHeaderMusic />
       <MenuBar />
 
@@ -68,10 +65,6 @@ export function MusicPage() {
 
             <div className="mt-4">
               <SingerList />
-            </div>
-
-            <div className="md:ml-60">
-              <Footer />
             </div>
           </>
         </div>

@@ -14,7 +14,6 @@ import {
   Shuffle,
 } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
-import { Footer } from "@/app/[locale]/features/profile/footer";
 import { HeaderMusicPage } from "../header-music-page";
 import { MotionHeaderMusic } from "../component/motion-header-music";
 import { LibraryPlaylistButton } from "../library/library-playlist-button";
@@ -185,9 +184,6 @@ export function PlaylistDetailClient({ playlist }: Props) {
             </>
           </div>
 
-          <div className="mb-40 md:ml-60">
-            <Footer />
-          </div>
         </div>
       </div>
     </div>

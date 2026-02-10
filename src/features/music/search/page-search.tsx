@@ -1,4 +1,3 @@
-import { Footer } from "@/app/[locale]/features/profile/footer";
 import { AudioBar } from "../audio-bar";
 import { MenuBarMobile } from "../menu-bar-mobile";
 import { MotionHeaderMusic } from "../component/motion-header-music";
@@ -23,9 +22,6 @@ export function PageSearch() {
 
               <SearchClient />
 
-              <div className="md:ml-60">
-                <Footer />
-              </div>
             </>
           </div>
 

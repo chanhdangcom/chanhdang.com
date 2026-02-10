@@ -1,12 +1,20 @@
+import { cn } from "@/utils/cn";
 import { useLocale } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 
-export function SwitchLanguage() {
+type IProp = { className?: string };
+
+export function SwitchLanguage({ className }: IProp) {
   const locale = useLocale();
 
   return (
-    <div className="rounded-3xl border p-1 pr-2 font-mono dark:border-zinc-800">
+    <div
+      className={cn(
+        "rounded-3xl border p-1 pr-2 font-mono dark:border-zinc-800",
+        className
+      )}
+    >
       {locale == "en" ? (
         <Link href={"/vi"} className="flex items-center gap-1">
           <Image

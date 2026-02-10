@@ -6,14 +6,21 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User, UserCircle } from "phosphor-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-
 import { useUser } from "@/hooks/use-user";
-import { LibraryCount } from "../library/library-count";
 import { motion } from "framer-motion";
 import { BorderPro } from "./border-pro";
+import {
+  CardsThree,
+  Gear,
+  MicrophoneStage,
+  MusicNotesSimple,
+  SignOut,
+  UserCircle,
+} from "@phosphor-icons/react/dist/ssr";
+import { ThemeToggleMenuBar } from "@/components/theme-toggle-menubar";
+import { SwitchLanguageMenuBar } from "@/app/[locale]/features/profile/components/swtich-language-menu-bar";
 
 export function LogoutButton() {
   const { user, logout } = useUser();
@@ -41,7 +48,7 @@ export function LogoutButton() {
           <div className="my-2 flex items-center gap-2 text-black dark:text-white">
             <UserCircle size={20} weight="fill" className="size-10" />
 
-            <div>Login</div>
+            <div className="hidden md:flex">Login</div>
           </div>
         </Link>
       ) : (
@@ -51,7 +58,7 @@ export function LogoutButton() {
               <BorderPro roundedSize="rounded-full">
                 {user?.avatarUrl ? (
                   <motion.img
-                    src={user.avatarUrl}
+                    src={user.avatarUrl || "/img/Logomark.png"}
                     alt={user.username}
                     className="size-10 rounded-full object-cover"
                     whileTap={{ scale: 0.9 }}
@@ -69,48 +76,86 @@ export function LogoutButton() {
             </div>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent className="w-52 space-y-2 rounded-xl border bg-zinc-50 text-lg dark:border-zinc-800 dark:bg-zinc-950">
-            <div className="text-md flex items-center gap-1 rounded-t-md bg-zinc-300 px-1 py-0.5 font-bold dark:bg-zinc-900">
-              <User weight="fill" />
-
-              {user.username}
+          <DropdownMenuContent className="m-2 w-60 rounded-xl border bg-zinc-50 text-lg dark:border-zinc-800 dark:bg-zinc-950">
+            <div className="text-md flex items-center gap-1 rounded-t-md bg-zinc-200 px-2.5 py-0.5 font-bold dark:bg-zinc-800">
+              <div className="line-clamp-1 w-full truncate py-1.5 text-sm md:flex">
+                {user.username}
+              </div>
             </div>
 
-            <div className="text-lg">
-              <div className="rounded-md px-1 py-0.5 hover:bg-zinc-300 dark:hover:bg-zinc-800">
-                <Link
-                  href={withLocale("/music/add-music")}
-                  className="flex items-center gap-1"
-                >
-                  <div>Add Music</div>
-                </Link>
-              </div>
-
-              <div className="rounded-md px-1 py-0.5 hover:bg-zinc-300 dark:hover:bg-zinc-800">
-                <Link
-                  href={withLocale("/music/library")}
-                  className="flex items-center gap-1"
-                >
-                  <div>Library</div>
-                  <LibraryCount userId={user?.id} />
-                </Link>
-              </div>
-
-              <div className="flex items-center gap-1 rounded-md px-1 py-0.5 hover:bg-zinc-300 dark:hover:bg-zinc-800">
-                <Link href={withLocale("/music/add-singer")}>Add Artists</Link>
-              </div>
-
-              <div className="flex items-center gap-1 rounded-md px-1 py-0.5 hover:bg-zinc-300 dark:hover:bg-zinc-800">
-                <Link href={withLocale("/music/profile-setting")}>
-                  Profile Setting
-                </Link>
-              </div>
-
-              <div
-                className="flex items-center gap-1 rounded-md px-1 py-0.5 hover:bg-zinc-300 dark:hover:bg-zinc-800"
-                onClick={handleLogout}
+            <div className="pt-1">
+              <Link
+                href={`/${locale}/music/add-music`}
+                className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
               >
-                <div>Log Out</div>
+                <MusicNotesSimple
+                  size={20}
+                  weight="bold"
+                  className="text-red-500 dark:text-blue-500"
+                />
+
+                <div className="text-sm font-medium">Add New Music</div>
+              </Link>
+
+              <Link
+                href={`/${locale}/music/library`}
+                className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+              >
+                <CardsThree
+                  size={20}
+                  className="text-red-500 dark:text-blue-500"
+                />
+
+                <div className="text-sm font-medium">Library</div>
+              </Link>
+
+              <Link
+                href={`/${locale}/music/add-singer`}
+                className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+              >
+                <MicrophoneStage
+                  size={20}
+                  className="text-red-500 dark:text-blue-500"
+                />
+
+                <div className="text-sm font-medium">Add Artists</div>
+              </Link>
+
+              <div className="pb-1">
+                <Link
+                  href={`/${locale}/music/profile-setting`}
+                  className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                >
+                  <Gear size={20} className="text-red-500 dark:text-blue-500" />
+
+                  <div className="text-sm font-medium">Profile Setting</div>
+                </Link>
+              </div>
+
+              <div className="space-y-2 border-t py-2 dark:border-zinc-800 md:hidden">
+                <div className="flex items-center gap-2 rounded-2xl px-2 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                  <ThemeToggleMenuBar className="size-5 text-sm font-medium text-red-500 dark:text-blue-500" />
+
+                  <div className="text-sm font-medium">Theme</div>
+                </div>
+
+                <div className="flex items-center gap-2 rounded-2xl px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                  <SwitchLanguageMenuBar className="text-sm font-medium" />
+                </div>
+              </div>
+
+              <div className="space-y-2 border-t pt-1 dark:border-zinc-800">
+                <div
+                  className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                  onClick={handleLogout}
+                >
+                  <SignOut
+                    size={20}
+                    className="text-red-500 dark:text-blue-500"
+                  />
+
+                  <div className="text-sm font-medium">Log Out</div>
+                </div>
               </div>
             </div>
           </DropdownMenuContent>

@@ -6,7 +6,7 @@ import { House, MagnifyingGlass } from "phosphor-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useUser } from "@/hooks/use-user";
 import {
-  ListHeart,
+  CardsThree,
   PlusSquare,
   SquaresFour,
 } from "@phosphor-icons/react/dist/ssr";
@@ -139,14 +139,14 @@ export function MenuBarMobile() {
                   className="flex flex-col items-center"
                 >
                   <div className="flex flex-col items-center">
-                    <ListHeart size={25} weight="fill" />
+                    <CardsThree size={25} weight="fill" />
                     <div className="text-xs">Library</div>
                   </div>
                 </Link>
               ) : (
                 <div className="pointer-events-none flex flex-col items-center opacity-30">
                   <div className="flex flex-col items-center">
-                    <ListHeart size={25} weight="fill" />
+                    <CardsThree size={25} weight="fill" />
                     <div className="text-xs">Library</div>
                   </div>
                 </div>

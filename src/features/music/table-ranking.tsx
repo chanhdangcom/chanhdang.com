@@ -5,6 +5,7 @@ import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { useEffect, useState } from "react";
 import { ScrollCarouselItem } from "./component/scroll-carousel-item";
 import { useScrollCarousel } from "@/hooks/use-scroll-carousel";
+import { cn } from "@/utils/cn";
 
 export function TableRanking() {
   const { handlePlayAudio } = useAudio();
@@ -51,7 +52,7 @@ export function TableRanking() {
   return (
     <div className="z-[1] rounded-3xl p-1 md:max-w-full">
       <div className="ml-2 px-1 text-xl font-semibold text-black dark:text-white md:ml-[270px]">
-        Hot Tracks
+        Top Charts
       </div>
 
       {isLoading && (
@@ -85,7 +86,23 @@ export function TableRanking() {
           <div className="grid grid-flow-col grid-rows-4 gap-4">
             {musics.map((music, index) => (
               <div key={music.id} className="snap-start p-1">
-                <div className={` ${index < 4 ? "ml-2 md:ml-[270px]" : ""}`}>
+                <div
+                  className={cn(
+                    "flex items-center gap-3",
+                    index < 4 ? "ml-2 md:ml-[270px]" : ""
+                  )}
+                >
+                  <div
+                    className={cn(
+                      "text-sm font-medium text-zinc-500",
+                      index < 4
+                        ? "text-lg font-semibold text-red-500 dark:text-blue-500"
+                        : ""
+                    )}
+                  >
+                    {index + 1}
+                  </div>
+
                   <TableRankingItem
                     music={music}
                     handlePlay={() => handlePlayAudio(music)}
