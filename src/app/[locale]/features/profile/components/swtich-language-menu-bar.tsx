@@ -16,7 +16,7 @@ export function SwitchLanguageMenuBar({ className }: IProp) {
           className="size-5 text-red-500 dark:text-blue-500 md:size-7"
         />
 
-        <div className="font-medium">Vietnamese</div>
+        <div className="text-sm font-medium">Vietnamese</div>
       </Link>
     );
   }
@@ -29,7 +29,7 @@ export function SwitchLanguageMenuBar({ className }: IProp) {
           className="size-5 text-red-500 dark:text-blue-500 md:size-7"
         />
 
-        <div className="font-medium">English</div>
+        <div className="text-sm font-medium">English</div>
       </Link>
     </div>
   );

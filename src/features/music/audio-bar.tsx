@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import {
   FastForward,
@@ -22,6 +23,7 @@ import { useAudio } from "@/components/music-provider";
 import { BorderPro } from "./component/border-pro";
 import dynamic from "next/dynamic";
 import { Drawer } from "vaul";
+import { motion } from "framer-motion";
 
 const PlayerPage = dynamic(
   () => import("./player-page").then((mod) => mod.PlayerPage),
@@ -194,7 +196,19 @@ export function AudioBar() {
       onOpenChange={setIsClick}
       shouldScaleBackground={false}
     >
-      <div
+      <motion.div
+        layout
+        initial={false}
+        animate={{ opacity: 1 }}
+        transition={{
+          layout: {
+            type: "spring",
+            stiffness: 380,
+            damping: 34,
+            mass: 0.7,
+          },
+          opacity: { duration: 0.12 },
+        }}
         className={`fixed z-50 flex justify-center md:inset-x-[25vw] md:bottom-4 ${
           scroll ? "inset-x-4 bottom-[88px]" : "inset-x-24 bottom-[32px]"
         }`}
@@ -387,16 +401,18 @@ export function AudioBar() {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-50 bg-black/80" />
+
         <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 h-screen border-none bg-transparent p-0 outline-none will-change-transform">
           <Drawer.Title className="sr-only">
             {currentMusic?.title
               ? `Now playing: ${currentMusic.title}`
               : "Music player"}
           </Drawer.Title>
+
           {hasOpenedPlayerPage ? (
             <PlayerPage setIsClick={() => setIsClick(false)} />
           ) : null}

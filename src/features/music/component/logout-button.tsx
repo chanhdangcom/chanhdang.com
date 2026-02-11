@@ -126,20 +126,23 @@ export function LogoutButton() {
                   href={`/${locale}/music/profile-setting`}
                   className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
                 >
-                  <Gear size={20} className="text-rose-500 dark:text-blue-500" />
+                  <Gear
+                    size={20}
+                    className="text-rose-500 dark:text-blue-500"
+                  />
 
                   <div className="text-sm font-medium">Profile Setting</div>
                 </Link>
               </div>
 
-              <div className="space-y-2 border-t py-2 dark:border-zinc-800 md:hidden">
-                <div className="flex items-center gap-2 rounded-2xl px-2 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+              <div className="border-t py-1 dark:border-zinc-800 md:hidden">
+                <div className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800">
                   <ThemeToggleMenuBar className="size-5 text-sm font-medium text-rose-500 dark:text-blue-500" />
 
                   <div className="text-sm font-medium">Theme</div>
                 </div>
 
-                <div className="flex items-center gap-2 rounded-2xl px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                <div className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800">
                   <SwitchLanguageMenuBar className="text-sm font-medium" />
                 </div>
               </div>
