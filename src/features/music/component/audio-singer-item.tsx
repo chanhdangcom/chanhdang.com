@@ -12,7 +12,7 @@ export function AudioSingerItem({ music }: IProp) {
   const { handlePlayAudio } = useAudio();
 
   if (!music) {
-    return <div className="text-red-500">Dữ liệu nhạc chưa sẵn sàng</div>;
+    return <div className="text-rose-500">Dữ liệu nhạc chưa sẵn sàng</div>;
   }
 
   return (

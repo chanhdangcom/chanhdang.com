@@ -71,7 +71,7 @@ export async function NewReleasePage({ searchPage }: IProp) {
   } catch (error) {
     console.error("❌ Failed to fetch musics:", error);
     return (
-      <div className="text-center text-red-500">Failed to load music data.</div>
+      <div className="text-center text-rose-500">Failed to load music data.</div>
     );
   }
 }

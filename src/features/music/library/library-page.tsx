@@ -52,7 +52,7 @@ export function LibraryPage() {
                 className="flex items-center justify-between rounded-lg md:mt-8"
               >
                 <div className="flex items-center gap-2">
-                  <Star weight="fill" className="text-red-500" size={10} />
+                  <Star weight="fill" className="text-rose-500" size={10} />
 
                   <img
                     src="/img/favorites-icon.jpg"

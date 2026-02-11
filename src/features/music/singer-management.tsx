@@ -217,7 +217,7 @@ export function SingerManagement() {
                             onClick={cancelEdit}
                             className="flex items-center gap-1 rounded-full border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
                           >
-                            <X size={20} className="text-red-400" />
+                            <X size={20} className="text-rose-400" />
                           </Button>
                         </>
                       ) : (
@@ -237,7 +237,7 @@ export function SingerManagement() {
                             }
                             className="flex items-center gap-1 rounded-full border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
                           >
-                            <Trash2 size={20} className="text-red-400" />
+                            <Trash2 size={20} className="text-rose-400" />
                           </Button>
                         </>
                       )}
@@ -316,7 +316,7 @@ export function SingerManagement() {
 
                 <Button
                   onClick={() => setShowAddForm(false)}
-                  className="flex items-center gap-1 rounded-xl border bg-zinc-50 p-2 text-red-400 dark:border-zinc-800 dark:bg-zinc-950"
+                  className="flex items-center gap-1 rounded-xl border bg-zinc-50 p-2 text-rose-400 dark:border-zinc-800 dark:bg-zinc-950"
                 >
                   Hủy
                 </Button>

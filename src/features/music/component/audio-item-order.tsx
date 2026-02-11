@@ -1,9 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 
+"use client";
+
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { IPlaylistItem } from "../type/playlist";
 import { cn } from "@/lib/utils";
 import { BorderPro } from "./border-pro";
+import { useAudio } from "@/components/music-provider";
+import { DynamicIslandWave } from "@/components/ui/dynamic-island";
+import { useTheme } from "next-themes";
 
 type IProp = {
   music: IMusic | IPlaylistItem;
@@ -25,9 +30,17 @@ export function AudioItemOrder({
   duration,
   border,
 }: IProp) {
+  const { currentMusic, isPlaying } = useAudio();
+  const { resolvedTheme } = useTheme();
+
   if (!music) {
-    return <div className="text-red-500">Dữ liệu nhạc chưa sẵn sàng</div>;
+    return <div className="text-rose-500">Dữ liệu nhạc chưa sẵn sàng</div>;
   }
+
+  const isCurrentTrack =
+    typeof (music as IMusic).audio === "string" &&
+    currentMusic?.id === music?.id;
+  const waveColor = resolvedTheme === "dark" ? "#f43f5e" : "#3b82f6";
 
   const UnClick = () => {
     return (
@@ -67,7 +80,7 @@ export function AudioItemOrder({
             </div>
 
             {date && (
-              <div className="font-apple text-xs font-medium text-zinc-400">
+              <div className="hidden font-apple text-xs font-medium text-zinc-400 md:flex">
                 {new Date(date).toLocaleDateString("vi-VN")}
               </div>
             )}
@@ -76,7 +89,15 @@ export function AudioItemOrder({
               <div className="text-sm text-zinc-400">{duration}</div>
             )}
 
-            {item && <div className="">{item}</div>}
+            {isCurrentTrack ? (
+              <DynamicIslandWave
+                isPlay={isPlaying}
+                coverUrl={music.cover}
+                color={waveColor}
+              />
+            ) : (
+              item && <div className="">{item}</div>
+            )}
           </div>
         </div>
       </div>

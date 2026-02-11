@@ -92,7 +92,7 @@ export function RecentCarouselAudio() {
       {!isLoading && !user?.id && <div />}
 
       {!isLoading && user?.id && error && (
-        <div className="ml-2 mt-2 text-sm text-red-500 md:ml-[270px]">
+        <div className="ml-2 mt-2 text-sm text-rose-500 md:ml-[270px]">
           {error}
         </div>
       )}

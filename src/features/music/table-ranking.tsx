@@ -62,7 +62,7 @@ export function TableRanking() {
       )}
 
       {!isLoading && error && (
-        <div className="ml-2 mt-2 text-sm text-red-500 md:ml-[270px]">
+        <div className="ml-2 mt-2 text-sm text-rose-500 md:ml-[270px]">
           {error}
         </div>
       )}
@@ -96,7 +96,7 @@ export function TableRanking() {
                     className={cn(
                       "text-sm font-medium text-zinc-500",
                       index < 4
-                        ? "text-lg font-semibold text-red-500 dark:text-blue-500"
+                        ? "text-lg font-semibold text-rose-500 dark:text-blue-500"
                         : ""
                     )}
                   >

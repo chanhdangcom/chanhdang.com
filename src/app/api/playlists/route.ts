@@ -1,7 +1,50 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
-import { ObjectId } from "mongodb";
-import { normalizeMusic, parseObjectIds, normalizeDocument } from "@/lib/mongodb-helpers";
+import { Db, ObjectId } from "mongodb";
+import {
+  normalizeObjectIds,
+  normalizeMusic,
+  normalizeDocument,
+} from "@/lib/mongodb-helpers";
+
+type PlaylistDocument = {
+  _id: ObjectId;
+  title?: string;
+  singer?: string;
+  cover?: string;
+  musicIds?: unknown[];
+  musics?: unknown[];
+};
+
+const escapeRegex = (value: string) =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const parseLegacyMusicIds = (musics: unknown[] = []) =>
+  normalizeObjectIds(
+    musics
+      .map((music) =>
+        typeof music === "object" && music !== null
+          ? ((music as { id?: unknown; _id?: unknown }).id ??
+            (music as { _id?: unknown })._id)
+          : null
+      )
+      .filter(Boolean)
+  );
+
+const parseMusicIdsFromPayload = (payload: unknown[] = []) => {
+  const directIds = normalizeObjectIds(payload);
+  if (directIds.length > 0) return directIds;
+  return parseLegacyMusicIds(payload);
+};
+
+const resolveMusicsByIds = async (db: Db, ids: ObjectId[]) => {
+  if (ids.length === 0) return [];
+  const found = await db
+    .collection("musics")
+    .find({ _id: { $in: ids } })
+    .toArray();
+  return found.map((m) => normalizeMusic(m as Record<string, unknown>));
+};
 
 // GET /api/playlists
 // - No query: return stored playlists
@@ -35,8 +78,33 @@ export async function GET(request: Request) {
         );
       }
 
-      const musics = Array.isArray(singer.musics) ? singer.musics : [];
-      const normalizedMusics = musics.map((m: Record<string, unknown>) => normalizeMusic(m));
+      const musicIds = Array.isArray(singer.musicIds)
+        ? normalizeObjectIds(singer.musicIds)
+        : [];
+      let normalizedMusics = await resolveMusicsByIds(db, musicIds);
+
+      if (normalizedMusics.length === 0) {
+        const singerName = String(singer.singer ?? "").trim();
+        if (singerName) {
+          const singerRegex = new RegExp(
+            `(^|,)\\s*${escapeRegex(singerName)}\\s*(,|$)`,
+            "i"
+          );
+          const fallback = await db
+            .collection("musics")
+            .find({
+              $or: [
+                { singerId: singer._id },
+                { singer: singerRegex },
+                { singer: singerName },
+              ],
+            })
+            .toArray();
+          normalizedMusics = fallback.map((m) =>
+            normalizeMusic(m as Record<string, unknown>)
+          );
+        }
+      }
       const cover =
         typeof singer.cover === "string" && singer.cover
           ? singer.cover
@@ -73,16 +141,25 @@ export async function GET(request: Request) {
     }
 
     const playlists = await db.collection("playlists").find({}).toArray();
-    const normalized = playlists.map((p) => {
-      const musics = Array.isArray(p.musics) ? p.musics : [];
-      return {
-        ...normalizeDocument(p),
-        title: String(p.title ?? ""),
-        singer: String(p.singer ?? ""),
-        cover: String(p.cover ?? ""),
-        musics: musics.map((m: Record<string, unknown>) => normalizeMusic(m)),
-      };
-    });
+    const normalized = await Promise.all(
+      (playlists as PlaylistDocument[]).map(async (playlist) => {
+        const normalizedIds = Array.isArray(playlist.musicIds)
+          ? normalizeObjectIds(playlist.musicIds)
+          : Array.isArray(playlist.musics)
+            ? parseLegacyMusicIds(playlist.musics)
+            : [];
+        const musics = await resolveMusicsByIds(db, normalizedIds);
+
+        return {
+          ...normalizeDocument(playlist),
+          title: String(playlist.title ?? ""),
+          singer: String(playlist.singer ?? ""),
+          cover: String(playlist.cover ?? ""),
+          musicIds: normalizedIds.map((id) => id.toString()),
+          musics,
+        };
+      })
+    );
 
     return NextResponse.json(normalized);
   } catch (error) {
@@ -109,23 +186,19 @@ export async function POST(request: Request) {
     const client = await clientPromise;
     const db = client.db("musicdb");
 
-    let musics: unknown[] = [];
-    if (Array.isArray(body.musicIds) && body.musicIds.length > 0) {
-      const ids = parseObjectIds(body.musicIds);
-      if (ids.length > 0) {
-        const found = await db
-          .collection("musics")
-          .find({ _id: { $in: ids } })
-          .toArray();
-        musics = found.map((m) => normalizeMusic(m as Record<string, unknown>));
-      }
-    }
+    const payload =
+      Array.isArray(body.musicIds) && body.musicIds.length > 0
+        ? body.musicIds
+        : Array.isArray(body.musics)
+          ? body.musics
+          : [];
+    const musicIds = parseMusicIdsFromPayload(payload);
 
     const doc = {
       title: String(body.title),
       singer: String(body.singer ?? ""),
       cover: String(body.cover),
-      musics,
+      musicIds,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

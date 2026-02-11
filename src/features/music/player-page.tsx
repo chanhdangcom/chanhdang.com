@@ -316,7 +316,6 @@ const LyricPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
             userId: user.id,
             resourceId: currentMusic.id,
             resourceType: "music",
-            data: currentMusic,
           }),
         });
 
@@ -891,7 +890,6 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
             userId: user.id,
             resourceId: currentMusic.id,
             resourceType: "music",
-            data: currentMusic,
           }),
         });
 
@@ -1249,7 +1247,6 @@ export function PlayerPage({ setIsClick }: IProp) {
             userId: user.id,
             resourceId: currentMusic.id,
             resourceType: "music",
-            data: currentMusic,
           }),
         });
 

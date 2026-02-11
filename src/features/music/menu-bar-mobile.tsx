@@ -100,7 +100,7 @@ export function MenuBarMobile() {
             >
               <Link
                 href={`/${locale}/music`}
-                className="flex flex-col items-center rounded-full pl-4 text-red-500"
+                className="flex flex-col items-center rounded-full pl-4 text-rose-500"
               >
                 <House size={25} weight="fill" />
 
@@ -163,7 +163,7 @@ export function MenuBarMobile() {
             layoutId="item"
             className="rounded-full border border-white/20 bg-zinc-200/80 dark:bg-black/80"
           >
-            <div className="rounded-full p-4 text-red-600">
+            <div className="rounded-full p-4 text-rose-600">
               <House size={25} weight="fill" />
             </div>
           </motion.div>

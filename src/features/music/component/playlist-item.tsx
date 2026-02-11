@@ -35,7 +35,7 @@ export function PlaylistItem({ music, onClick }: IProp) {
   const hoverBg = useImageHoverColor(coverUrl);
 
   if (!music) {
-    return <div className="text-red-500">Dữ liệu chưa sẵn sàng</div>;
+    return <div className="text-rose-500">Dữ liệu chưa sẵn sàng</div>;
   }
 
   return (

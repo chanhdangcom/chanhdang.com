@@ -91,7 +91,7 @@ export function LogoutButton() {
                 <MusicNotesSimple
                   size={20}
                   weight="bold"
-                  className="text-red-500 dark:text-blue-500"
+                  className="text-rose-500 dark:text-blue-500"
                 />
 
                 <div className="text-sm font-medium">Add New Music</div>
@@ -103,7 +103,7 @@ export function LogoutButton() {
               >
                 <CardsThree
                   size={20}
-                  className="text-red-500 dark:text-blue-500"
+                  className="text-rose-500 dark:text-blue-500"
                 />
 
                 <div className="text-sm font-medium">Library</div>
@@ -115,7 +115,7 @@ export function LogoutButton() {
               >
                 <MicrophoneStage
                   size={20}
-                  className="text-red-500 dark:text-blue-500"
+                  className="text-rose-500 dark:text-blue-500"
                 />
 
                 <div className="text-sm font-medium">Add Artists</div>
@@ -126,7 +126,7 @@ export function LogoutButton() {
                   href={`/${locale}/music/profile-setting`}
                   className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
                 >
-                  <Gear size={20} className="text-red-500 dark:text-blue-500" />
+                  <Gear size={20} className="text-rose-500 dark:text-blue-500" />
 
                   <div className="text-sm font-medium">Profile Setting</div>
                 </Link>
@@ -134,7 +134,7 @@ export function LogoutButton() {
 
               <div className="space-y-2 border-t py-2 dark:border-zinc-800 md:hidden">
                 <div className="flex items-center gap-2 rounded-2xl px-2 hover:bg-zinc-200 dark:hover:bg-zinc-800">
-                  <ThemeToggleMenuBar className="size-5 text-sm font-medium text-red-500 dark:text-blue-500" />
+                  <ThemeToggleMenuBar className="size-5 text-sm font-medium text-rose-500 dark:text-blue-500" />
 
                   <div className="text-sm font-medium">Theme</div>
                 </div>
@@ -151,7 +151,7 @@ export function LogoutButton() {
                 >
                   <SignOut
                     size={20}
-                    className="text-red-500 dark:text-blue-500"
+                    className="text-rose-500 dark:text-blue-500"
                   />
 
                   <div className="text-sm font-medium">Log Out</div>

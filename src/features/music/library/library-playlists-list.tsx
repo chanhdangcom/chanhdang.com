@@ -87,7 +87,7 @@ export function LibraryPlaylistsList({ userId }: Props) {
                 className="flex w-full items-center justify-between"
               >
                 <div className="flex items-center gap-2">
-                  <Star weight="fill" size={10} className="text-red-500" />
+                  <Star weight="fill" size={10} className="text-rose-500" />
 
                   <Image
                     src={coverUrl}
@@ -105,12 +105,6 @@ export function LibraryPlaylistsList({ userId }: Props) {
                     <p className="text-zinc-500 dark:text-zinc-400">
                       {playlist.singer || "ChanhDang Music"}
                     </p>
-
-                    {/* <LibraryPlaylistButton
-                      playlist={playlist}
-                      userId={userId}
-                      size="sm"
-                    /> */}
                   </div>
                 </div>
 

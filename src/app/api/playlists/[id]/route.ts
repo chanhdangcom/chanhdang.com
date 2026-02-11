@@ -1,7 +1,33 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
-import { normalizeDocument, normalizeMusic } from "@/lib/mongodb-helpers";
+import {
+  normalizeDocument,
+  normalizeMusic,
+  normalizeObjectIds,
+  parseObjectIds,
+} from "@/lib/mongodb-helpers";
+
+type PlaylistDocument = {
+  _id: ObjectId;
+  title?: string;
+  singer?: string;
+  cover?: string;
+  musicIds?: unknown[];
+  musics?: unknown[];
+};
+
+const parseLegacyMusicIds = (musics: unknown[] = []) =>
+  normalizeObjectIds(
+    musics
+      .map((music) =>
+        typeof music === "object" && music !== null
+          ? ((music as { id?: unknown; _id?: unknown }).id ??
+            (music as { _id?: unknown })._id)
+          : null
+      )
+      .filter(Boolean)
+  );
 
 export async function GET(
   request: Request,
@@ -15,19 +41,33 @@ export async function GET(
 
     const client = await clientPromise;
     const db = client.db("musicdb");
-    const doc = await db.collection("playlists").findOne({ _id: new ObjectId(id) });
+    const doc = (await db
+      .collection("playlists")
+      .findOne({ _id: new ObjectId(id) })) as PlaylistDocument | null;
 
     if (!doc) {
       return NextResponse.json({ error: "Playlist not found" }, { status: 404 });
     }
 
-    const musics = Array.isArray(doc.musics) ? doc.musics : [];
+    const musicIds = Array.isArray(doc.musicIds)
+      ? normalizeObjectIds(doc.musicIds)
+      : Array.isArray(doc.musics)
+        ? parseLegacyMusicIds(doc.musics)
+        : [];
+    const musicDocs =
+      musicIds.length > 0
+        ? await db
+            .collection("musics")
+            .find({ _id: { $in: musicIds } })
+            .toArray()
+        : [];
     const normalized = {
       ...normalizeDocument(doc),
       title: String(doc.title ?? ""),
       singer: String(doc.singer ?? ""),
       cover: String(doc.cover ?? ""),
-      musics: musics.map((m: Record<string, unknown>) => normalizeMusic(m)),
+      musicIds: musicIds.map((item) => item.toString()),
+      musics: musicDocs.map((music) => normalizeMusic(music as Record<string, unknown>)),
     };
 
     return NextResponse.json(normalized);
@@ -58,7 +98,11 @@ export async function PUT(
     if (typeof body.title === "string") updateDoc.title = body.title;
     if (typeof body.singer === "string") updateDoc.singer = body.singer;
     if (typeof body.cover === "string") updateDoc.cover = body.cover;
-    if (Array.isArray(body.musics)) updateDoc.musics = body.musics;
+    if (Array.isArray(body.musicIds)) {
+      updateDoc.musicIds = parseObjectIds(body.musicIds);
+    } else if (Array.isArray(body.musics)) {
+      updateDoc.musicIds = parseLegacyMusicIds(body.musics);
+    }
 
     await db.collection("playlists").updateOne(
       { _id: new ObjectId(id) },

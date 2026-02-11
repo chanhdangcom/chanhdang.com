@@ -1,19 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { IPlaylistItem } from "../type/playlist";
-import { Plus } from "@phosphor-icons/react/dist/ssr";
+import { Plus, CheckCircle } from "@phosphor-icons/react/dist/ssr";
 
 type LibraryPlaylistButtonProps = {
   playlist: IPlaylistItem;
   userId?: string;
-  size?: "sm" | "md" | "lg";
 };
 
 export function LibraryPlaylistButton({
   playlist,
   userId,
-  size = "md",
 }: LibraryPlaylistButtonProps) {
   const [isInLibrary, setIsInLibrary] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -40,7 +38,7 @@ export function LibraryPlaylistButton({
     void checkLibrary();
   }, [playlist.id, userId]);
 
-  const handleToggleLibrary = async () => {
+  const handleToggleLibrary = useCallback(async () => {
     if (!userId) {
       alert("Vui lòng đăng nhập để sử dụng tính năng này!");
       return;
@@ -69,7 +67,6 @@ export function LibraryPlaylistButton({
             userId,
             resourceId: playlist.id,
             resourceType: "playlist",
-            data: playlist,
           }),
         });
         if (response.ok) {
@@ -85,34 +82,39 @@ export function LibraryPlaylistButton({
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const sizeClasses = {
-    sm: "w-4 h-4",
-    md: "w-5 h-5",
-    lg: "size-6",
-  };
+  }, [userId, playlist, isInLibrary]);
 
   return (
     <button
       type="button"
       onClick={handleToggleLibrary}
       disabled={isLoading}
-      className={`flex items-center ${
-        isInLibrary
-          ? "text-red-500 hover:text-red-600"
-          : "text-zinc-50 hover:text-red-500"
-      } ${isLoading ? "cursor-not-allowed opacity-50" : ""}`}
-      title={
+      aria-label={
         isInLibrary ? "Gỡ playlist khỏi Library" : "Thêm playlist vào Library"
       }
+      className={`group relative flex items-center justify-center rounded-full transition-all duration-200 ease-in-out active:scale-90 ${
+        isLoading ? "pointer-events-none opacity-40" : ""
+      }`}
     >
-      <Plus
-        size={25}
-        weight="bold"
-        className={sizeClasses[size]}
-        fill={isInLibrary ? "currentColor" : "red"}
-      />
+      <span
+        className={`transition-transform duration-300 ease-in-out ${
+          isInLibrary ? "scale-100" : "scale-100"
+        }`}
+      >
+        {isInLibrary ? (
+          <CheckCircle
+            size={22}
+            weight="fill"
+            className="text-rose-500 drop-shadow-sm transition-colors duration-200 group-hover:text-rose-400"
+          />
+        ) : (
+          <Plus
+            size={22}
+            weight="bold"
+            className="text-white transition-colors duration-200 group-hover:scale-125"
+          />
+        )}
+      </span>
     </button>
   );
 }

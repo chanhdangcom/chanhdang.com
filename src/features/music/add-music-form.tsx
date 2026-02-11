@@ -968,7 +968,7 @@ export default function AddMusicForm() {
                     type="button"
                     onClick={handleDeleteMusic}
                     disabled={isLoading || !selectedMusicId}
-                    className="w-full rounded-xl border border-red-600 px-8 py-2 font-semibold text-red-600"
+                    className="w-full rounded-xl border border-rose-600 px-8 py-2 font-semibold text-rose-600"
                     variant="outline"
                   >
                     Xóa

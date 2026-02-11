@@ -45,7 +45,7 @@ export function LibraryCount({ userId }: LibraryCountProps) {
 
   return (
     <div className="flex items-center gap-1">
-      <div className="text-sm text-red-500">{count}</div>
+      <div className="text-sm text-rose-500">{count}</div>
     </div>
   );
 }

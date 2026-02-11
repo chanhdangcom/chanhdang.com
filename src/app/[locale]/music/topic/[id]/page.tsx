@@ -7,19 +7,71 @@ import { MenuBarMobile } from "@/features/music/menu-bar-mobile";
 import { TopicList } from "@/features/music/topic-list";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
+import {
+  normalizeMusic,
+  normalizeObjectIds,
+  parseObjectIds,
+} from "@/lib/mongodb-helpers";
+import { IMusic } from "@/app/[locale]/features/profile/types/music";
 
 type Iprop = {
   params: { id: string };
 };
 
+type TopicDocument = {
+  _id: ObjectId;
+  title?: string;
+  musicIds?: unknown[];
+  musics?: unknown[];
+};
+
+const parseLegacyMusicIds = (musics: unknown[] = []) =>
+  normalizeObjectIds(
+    musics
+      .map((music) =>
+        typeof music === "object" && music !== null
+          ? ((music as { id?: unknown; _id?: unknown }).id ??
+            (music as { _id?: unknown })._id)
+          : null
+      )
+      .filter(Boolean)
+  );
+
 async function GetTopic(id: string) {
+  if (!ObjectId.isValid(id)) {
+    return null;
+  }
   const client = await clientPromise;
   const db = await client.db("musicdb");
-  const topic = await db
+  const topic = (await db
     .collection("topics")
-    .findOne({ _id: new ObjectId(id) });
+    .findOne({ _id: new ObjectId(id) })) as TopicDocument | null;
 
-  return topic;
+  if (!topic) return null;
+
+  const musicIds = Array.isArray(topic.musicIds)
+    ? normalizeObjectIds(topic.musicIds)
+    : Array.isArray(topic.musics)
+      ? parseLegacyMusicIds(topic.musics)
+      : [];
+
+  const musicDocs =
+    musicIds.length > 0
+      ? await db
+          .collection("musics")
+          .find({ _id: { $in: musicIds } })
+          .toArray()
+      : [];
+  const musics = musicDocs.map((music) =>
+    normalizeMusic(music as Record<string, unknown>)
+  ) as IMusic[];
+
+  return {
+    id: topic._id.toString(),
+    title: String(topic.title ?? ""),
+    musicIds: musicIds.map((item) => item.toString()),
+    musics,
+  };
 }
 
 export default async function Page({ params }: Iprop) {

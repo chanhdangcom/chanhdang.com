@@ -2,26 +2,75 @@ import clientPromise from "@/lib/mongodb";
 import Link from "next/link";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 import { NewAuidoListClient } from "./new-audio-list-client";
+import { normalizeMusic, normalizeObjectIds } from "@/lib/mongodb-helpers";
+
+type TopicDocument = {
+  _id: { toString: () => string };
+  title?: string;
+  musicIds?: unknown[];
+  musics?: unknown[];
+};
+
+const parseLegacyMusicIds = (musics: unknown[] = []) =>
+  normalizeObjectIds(
+    musics
+      .map((music) =>
+        typeof music === "object" && music !== null
+          ? ((music as { id?: unknown; _id?: unknown }).id ??
+            (music as { _id?: unknown })._id)
+          : null
+      )
+      .filter(Boolean)
+  );
 
 export async function CarouselTopic() {
   try {
     const client = await clientPromise;
     const db = await client.db("musicdb");
-    const topics = await db.collection("topics").find().toArray();
+    const topics = (await db.collection("topics").find().toArray()) as TopicDocument[];
 
     if (!topics || topics.length === 0) {
       return null;
     }
 
+    const resolvedTopics = await Promise.all(
+      topics.map(async (topic) => {
+        const musicIds = Array.isArray(topic.musicIds)
+          ? normalizeObjectIds(topic.musicIds)
+          : Array.isArray(topic.musics)
+            ? parseLegacyMusicIds(topic.musics)
+            : [];
+        const musicDocs =
+          musicIds.length > 0
+            ? await db
+                .collection("musics")
+                .find({ _id: { $in: musicIds } })
+                .toArray()
+            : [];
+        return {
+          id: topic._id.toString(),
+          title: String(topic.title ?? ""),
+          musics: musicDocs.map((music) =>
+            normalizeMusic(music as Record<string, unknown>)
+          ),
+        };
+      })
+    );
+    const topicsWithSongs = resolvedTopics.filter((topic) => topic.musics.length > 0);
+
+    if (topicsWithSongs.length === 0) {
+      return null;
+    }
+
     return (
       <div className="w-full">
-        {topics
+        {topicsWithSongs
           .sort(() => Math.random() - 0.5)
           .map((topic) => (
-            <div key={topic._id.toString()} className="">
+            <div key={topic.id} className="">
               <>
                 <Link
-                  href={`/en/music/topic/${topic._id.toString()}`}
+                  href={`/en/music/topic/${topic.id}`}
                   className="relative ml-2 mt-4 flex w-fit items-center gap-1 px-1 text-xl font-bold text-black dark:text-white md:ml-[270px]"
                 >
                   <div className="mb-1 mt-2 line-clamp-1">{topic.title}</div>

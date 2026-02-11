@@ -58,3 +58,18 @@ export function parseObjectIds(ids: unknown[]): ObjectId[] {
     .map((id) => new ObjectId(id));
 }
 
+/**
+ * Convert mixed IDs (ObjectId|string) to ObjectIds
+ */
+export function normalizeObjectIds(ids: unknown[]): ObjectId[] {
+  return ids
+    .map((id) => {
+      if (id instanceof ObjectId) return id;
+      if (typeof id === "string" && ObjectId.isValid(id)) {
+        return new ObjectId(id);
+      }
+      return null;
+    })
+    .filter((id): id is ObjectId => Boolean(id));
+}
+

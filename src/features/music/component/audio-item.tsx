@@ -11,17 +11,27 @@ import { BorderPro } from "./border-pro";
 import { LibraryTrackButton } from "../library/library-track-button";
 import { useImageHoverColor } from "@/hooks/use-image-hover-color";
 import { cn } from "@/lib/utils";
+import { IPlaylistItem } from "../type/playlist";
+import { useAudio } from "@/components/music-provider";
+import { DynamicIslandWave } from "@/components/ui/dynamic-island";
+import { useTheme } from "next-themes";
 
 type IProp = {
-  music: IMusic;
+  music: IMusic | IPlaylistItem;
   handlePlay?: () => void;
   className?: string;
 };
 
 export function AuidoItem({ music, handlePlay, className }: IProp) {
   const { user } = useUser();
+  const { currentMusic, isPlaying } = useAudio();
+  const { resolvedTheme } = useTheme();
   const [isEnter, setIsEnter] = useState<boolean>(false);
   const hoverBg = useImageHoverColor(music?.cover);
+  const isCurrentTrack =
+    typeof (music as IMusic).audio === "string" &&
+    currentMusic?.id === music?.id;
+  const waveColor = resolvedTheme === "dark" ? "#3b82f6" : "#f43f5e";
 
   return (
     <motion.div whileTap={{ scale: 0.8 }}>
@@ -73,21 +83,35 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
               transition={{ duration: 0.2, ease: "easeIn" }}
               className="absolute right-2 top-2"
             >
-              <LibraryTrackButton music={music} userId={user?.id} size="sm" />
+              <LibraryTrackButton
+                music={music as IMusic}
+                userId={user?.id}
+                size="sm"
+              />
             </motion.div>
           )}
 
-          {isEnter && (
+          {(isEnter || isCurrentTrack) && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2, ease: "easeIn" }}
               className="absolute bottom-2 right-2"
             >
-              <Play
-                className="size-10 rounded-full bg-zinc-900/60 p-2 text-zinc-50 backdrop-blur-sm hover:text-red-500"
-                weight="fill"
-              />
+              {isCurrentTrack ? (
+                <div className="rounded-full bg-zinc-500/60 px-2 py-0.5 backdrop-blur-sm">
+                  <DynamicIslandWave
+                    isPlay={isPlaying}
+                    coverUrl={music.cover}
+                    color={waveColor}
+                  />
+                </div>
+              ) : (
+                <Play
+                  className="size-10 rounded-full bg-zinc-900/60 p-2 text-zinc-50 backdrop-blur-sm hover:text-rose-500"
+                  weight="fill"
+                />
+              )}
             </motion.div>
           )}
         </div>

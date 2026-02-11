@@ -4,14 +4,15 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { FastAverageColor } from "fast-average-color";
 
-const bars = new Array(13).fill(0);
+const bars = new Array(9).fill(0);
 
 type IPlay = {
   isPlay: boolean;
   coverUrl?: string;
+  color?: string;
 };
 
-export function DynamicIslandWave({ isPlay, coverUrl }: IPlay) {
+export function DynamicIslandWave({ isPlay, coverUrl, color }: IPlay) {
   const [waveColor, setWaveColor] = useState("");
 
   useEffect(() => {
@@ -63,16 +64,16 @@ export function DynamicIslandWave({ isPlay, coverUrl }: IPlay) {
   }, [coverUrl]);
 
   const getRandomHeight = () =>
-    Array.from({ length: 6 }, () => `${Math.random() * 60 + 20}%`);
+    Array.from({ length: 6 }, () => `${Math.random() * 45 + 20}%`);
 
   return (
-    <div className="relative flex h-6 w-fit items-center justify-center rounded-full px-1">
+    <div className="relative flex h-6 w-fit items-center justify-center rounded-full px-0.5">
       {bars.map((_, i) => (
         <motion.div
           key={`bar-${i}`}
-          className="mx-[1px] w-[2px] rounded-full"
+          className="mx-[0.8px] w-[1.6px] rounded-full"
           style={{
-            backgroundColor: waveColor,
+            backgroundColor: color || waveColor,
           }}
           animate={{
             height: isPlay

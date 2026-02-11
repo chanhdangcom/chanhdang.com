@@ -67,7 +67,7 @@ export function MenuBar() {
                   <div className="flex items-center gap-2 rounded-xl px-4 py-2">
                     <MagnifyingGlass
                       size={25}
-                      className="text-red-500 dark:text-blue-500"
+                      className="text-rose-500 dark:text-blue-500"
                     />
                     <div className="font-medium">Search</div>
                   </div>
@@ -77,7 +77,7 @@ export function MenuBar() {
 
             <Link href={`/${locale}/music`}>
               <div className="flex cursor-pointer items-center gap-2 rounded-2xl px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-800">
-                <House size={25} className="text-red-500 dark:text-blue-500" />
+                <House size={25} className="text-rose-500 dark:text-blue-500" />
 
                 <div className="font-medium">Home</div>
               </div>
@@ -87,7 +87,7 @@ export function MenuBar() {
               <div className="flex items-center gap-2 rounded-2xl px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-800">
                 <SquaresFour
                   size={25}
-                  className="text-red-500 dark:text-blue-500"
+                  className="text-rose-500 dark:text-blue-500"
                 />
 
                 <div className="font-medium">New</div>
@@ -106,7 +106,7 @@ export function MenuBar() {
                 >
                   <Clock
                     size={25}
-                    className="text-red-500 dark:text-blue-500"
+                    className="text-rose-500 dark:text-blue-500"
                   />
 
                   <div className="font-medium">Recently Played</div>
@@ -118,7 +118,7 @@ export function MenuBar() {
                 >
                   <CardsThree
                     size={25}
-                    className="text-red-500 dark:text-blue-500"
+                    className="text-rose-500 dark:text-blue-500"
                   />
 
                   <div className="font-medium">Library</div>
@@ -132,7 +132,7 @@ export function MenuBar() {
                 >
                   <Clock
                     size={25}
-                    className="text-red-500 dark:text-blue-500"
+                    className="text-rose-500 dark:text-blue-500"
                   />
 
                   <div className="font-medium">Recently Played</div>
@@ -144,7 +144,7 @@ export function MenuBar() {
                 >
                   <BookBookmark
                     size={25}
-                    className="text-red-500 dark:text-blue-500"
+                    className="text-rose-500 dark:text-blue-500"
                   />
 
                   <div className="font-medium">Library</div>
@@ -159,7 +159,7 @@ export function MenuBar() {
               >
                 <UserCircle
                   size={25}
-                  className="text-red-500 dark:text-blue-500"
+                  className="text-rose-500 dark:text-blue-500"
                 />
 
                 <div className="font-medium">My Music</div>
@@ -174,7 +174,7 @@ export function MenuBar() {
                 <div className="flex items-center gap-2 px-4 py-2">
                   <Crown
                     size={25}
-                    className="text-red-500 dark:text-blue-500"
+                    className="text-rose-500 dark:text-blue-500"
                   />
 
                   <div className="font-medium">Manage</div>
@@ -214,7 +214,7 @@ export function MenuBar() {
                     >
                       <ShieldCheck
                         size={25}
-                        className="text-red-500 dark:text-blue-500"
+                        className="text-rose-500 dark:text-blue-500"
                       />
 
                       <div className="font-medium">Admin Panel</div>
@@ -228,7 +228,7 @@ export function MenuBar() {
                         <MusicNotesSimple
                           size={25}
                           weight="regular"
-                          className="text-red-500 dark:text-blue-500"
+                          className="text-rose-500 dark:text-blue-500"
                         />
 
                         <div className="font-medium">Add New Music</div>
@@ -238,7 +238,7 @@ export function MenuBar() {
                         <MusicNotesSimple
                           size={25}
                           weight="regular"
-                          className="text-red-500 dark:text-blue-500"
+                          className="text-rose-500 dark:text-blue-500"
                         />
 
                         <div className="font-medium">Add New Music</div>
@@ -252,7 +252,7 @@ export function MenuBar() {
                       >
                         <MicrophoneStage
                           size={25}
-                          className="text-red-500 dark:text-blue-500"
+                          className="text-rose-500 dark:text-blue-500"
                         />
 
                         <div className="font-medium">Add Artists</div>
@@ -268,7 +268,7 @@ export function MenuBar() {
             </div>
 
             <div className="flex items-center gap-2 rounded-2xl px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-800">
-              <ThemeToggleMenuBar className="text-red-500 dark:text-blue-500" />
+              <ThemeToggleMenuBar className="text-rose-500 dark:text-blue-500" />
 
               <div className="font-medium">Theme</div>
             </div>

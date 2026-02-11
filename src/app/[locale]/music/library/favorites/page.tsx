@@ -99,6 +99,7 @@ export default function LibraryFavoriteSongsPage() {
           <div className="w-full flex-col items-center md:flex-none">
             <div className="relative overflow-hidden">
               <div className="absolute left-0 -z-10 h-full w-full bg-zinc-200 md:bg-zinc-700" />
+
               <div
                 className="pointer-events-none absolute inset-0 -z-10"
                 style={{

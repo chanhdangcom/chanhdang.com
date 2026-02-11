@@ -121,7 +121,7 @@ export function SingerPageClient({ singer }: IProp) {
                       className="absolute inset-x-8 bottom-6 flex items-center justify-between bg-fixed text-3xl font-semibold text-white md:ml-[270px] md:justify-start md:gap-4"
                     >
                       <div
-                        className="hidden rounded-full bg-red-500 p-3 md:flex dark:md:bg-blue-500"
+                        className="hidden rounded-full bg-rose-500 p-3 md:flex dark:md:bg-blue-500"
                         onClick={() => handleRandomAudio()}
                       >
                         <Play size={22} weight="fill" className="text-white" />
@@ -130,7 +130,7 @@ export function SingerPageClient({ singer }: IProp) {
                       <div className="">{singer.singer}</div>
 
                       <div
-                        className="rounded-full bg-red-500 p-3 md:hidden dark:md:bg-blue-500"
+                        className="rounded-full bg-rose-500 p-3 md:hidden dark:md:bg-blue-500"
                         onClick={() => handleRandomAudio()}
                       >
                         <Play size={22} weight="fill" className="text-white" />

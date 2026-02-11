@@ -149,7 +149,7 @@ export function AddTopicMusicForm() {
       const payload = {
         title,
         cover,
-        musics: selectedIds,
+        musicIds: selectedIds,
       };
       console.log("Payload:", JSON.stringify(payload, null, 2));
 

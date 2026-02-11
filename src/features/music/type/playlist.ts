@@ -5,6 +5,7 @@ export type IPlaylistItem = {
   title?: string;
   singer: string;
   cover: string;
+  musicIds?: string[];
   musics?: IMusic[];
   queueName?: string;
 };

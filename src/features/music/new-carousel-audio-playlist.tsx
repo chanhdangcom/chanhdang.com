@@ -1,15 +1,17 @@
 "use client";
 import * as React from "react";
-import { useParams, useRouter } from "next/navigation";
-import { PlaylistItem } from "./component/playlist-item";
+import { useParams } from "next/navigation";
+
 import { IPlaylistItem } from "./type/playlist";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
+import { AuidoItem } from "./component/audio-item";
+import Link from "next/link";
+import { cn } from "@/utils/cn";
 
 export function NewCarouselAudioPlaylist() {
   const ref = React.useRef<HTMLDivElement>(null);
   const [playlists, setPlaylists] = React.useState<IPlaylistItem[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
-  const router = useRouter();
   const params = useParams();
   const locale = (params?.locale as string) || "en";
   const withLocale = (path: string) => `/${locale}${path}`;
@@ -71,22 +73,24 @@ export function NewCarouselAudioPlaylist() {
 
       <div
         ref={ref}
-        className="flex snap-x snap-mandatory overflow-x-auto scrollbar-hide md:mx-auto"
+        className="flex snap-x snap-mandatory items-center overflow-x-auto scrollbar-hide md:mx-auto"
       >
         {playlists
           .slice(-8)
           .reverse()
           .map((music, index) => (
             <div key={music.id} className="shrink-0 snap-start">
-              <div className={`${index === 0 ? "ml-2 md:ml-[270px]" : ""} `}>
-                <PlaylistItem
-                  music={music}
-                  onClick={(item) => {
-                    if (!item.id) return;
-                    router.push(`${withLocale("/music/playlist")}/${item.id}`);
-                  }}
-                />
-              </div>
+              <Link href={`${withLocale("/music/playlist")}/${music.id}`}>
+                {" "}
+                <div
+                  className={cn(
+                    "",
+                    `${index === 0 ? "ml-2 md:ml-[270px]" : ""} `
+                  )}
+                >
+                  <AuidoItem music={music} />
+                </div>
+              </Link>
             </div>
           ))}
       </div>
