@@ -40,7 +40,7 @@ export function AudioItemOrder({
   const isCurrentTrack =
     typeof (music as IMusic).audio === "string" &&
     currentMusic?.id === music?.id;
-  const waveColor = resolvedTheme === "dark" ? "#f43f5e" : "#3b82f6";
+  const waveColor = resolvedTheme === "dark" ? "#3b82f6" : "#f43f5e";
 
   const UnClick = () => {
     return (
