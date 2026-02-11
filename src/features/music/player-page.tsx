@@ -348,7 +348,7 @@ const SubtitleItem = memo(
         className={`z-40 mb-6 text-balance md:mb-8 ${
           isActive
             ? "text-balance font-semibold leading-snug text-white"
-            : "leading-snug text-zinc-500"
+            : "leading-snug text-white/20"
         }`}
       >
         {text}
