@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import {
   FastForward,
@@ -260,11 +259,11 @@ export function AudioBar() {
         transition={{
           layout: {
             type: "spring",
-            stiffness: 380,
-            damping: 34,
-            mass: 0.7,
+            stiffness: 220,
+            damping: 32,
+            mass: 0.9,
           },
-          opacity: { duration: 0.12 },
+          opacity: { duration: 0.16, ease: "easeOut" },
         }}
         className={`fixed z-50 flex justify-center md:inset-x-[25vw] md:bottom-4 ${
           scroll ? "inset-x-4 bottom-[88px]" : "inset-x-24 bottom-[32px]"
@@ -409,7 +408,7 @@ export function AudioBar() {
                   </div>
                 </div>
 
-                <div className="hidden md:flex">
+                <div className="mr-4 hidden md:flex">
                   <DurationAudio />
                 </div>
               </div>

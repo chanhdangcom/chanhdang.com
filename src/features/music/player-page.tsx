@@ -470,8 +470,8 @@ const LyricPage = ({
             }`}
           >
             <div
-              className={`mt-8 h-full w-full rounded-3xl ${
-                isDesktop ? "rotate-180 scale-110 saturate-125" : "saturate-110"
+              className={`h-full w-full ${
+                isDesktop ? "saturate-125 rotate-180 scale-110" : "saturate-110"
               }`}
               style={{
                 backgroundColor: hoverBg,
@@ -661,8 +661,8 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
         <div className="w-full">
           <div className="absolute inset-0 -z-10 flex justify-center gap-8 bg-zinc-950">
             <div
-              className={`mt-8 h-full w-full rounded-3xl ${
-                isDesktop ? "rotate-180 scale-110 saturate-125" : "saturate-110"
+              className={`h-full w-full ${
+                isDesktop ? "saturate-125 rotate-180 scale-110" : "saturate-110"
               }`}
               style={{
                 backgroundColor: hoverBg,
@@ -708,17 +708,13 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                     alt="cover"
                     className="flex h-[70vh] w-full shrink-0 transform-gpu justify-center rounded-3xl object-cover [backface-visibility:hidden] md:h-[55vh] md:w-[37vw]"
                     initial={false}
-                    transition={{ layout: COVER_LAYOUT_SPRING }}
+                    animate={{ scale: isPaused ? 0.75 : 1 }}
+                    transition={{
+                      layout: COVER_LAYOUT_SPRING,
+                      scale: { duration: 0.28, ease: [0.22, 1, 0.36, 1] },
+                    }}
                     layoutId="cover-audio"
                     style={{ willChange: "transform" }}
-                  />
-
-                  <div
-                    className={
-                      isPaused
-                        ? ""
-                        : "pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/10 duration-300"
-                    }
                   />
                 </div>
               </div>
@@ -907,8 +903,8 @@ const FeaturedPage = ({
             }`}
           >
             <div
-              className={`mt-8 h-full w-full rounded-3xl ${
-                isDesktop ? "rotate-180 scale-110 saturate-125" : "saturate-110"
+              className={`h-full w-full ${
+                isDesktop ? "saturate-125 rotate-180 scale-110" : "saturate-110"
               }`}
               style={{
                 backgroundColor: hoverBg,
@@ -1026,24 +1022,26 @@ const FeaturedPage = ({
                   </div>
                 )}
 
-                {isHeavyReady && !isLoadingRandom && randomMusics.length > 0 && (
-                  <div className="relative mt-2">
-                    <div
-                      ref={randomListRef}
-                      className="h-[40vh] w-full space-y-4 overflow-y-auto pr-2 scrollbar-hide"
-                      style={{ contentVisibility: "auto" }}
-                    >
-                      {randomMusics.slice(0, 8).map((music) => (
-                        <AudioItemOrder
-                          key={music.id}
-                          music={music}
-                          handlePlay={() => handlePlayAudio(music)}
-                          border={false}
-                        />
-                      ))}
+                {isHeavyReady &&
+                  !isLoadingRandom &&
+                  randomMusics.length > 0 && (
+                    <div className="relative mt-2">
+                      <div
+                        ref={randomListRef}
+                        className="h-[40vh] w-full space-y-4 overflow-y-auto pr-2 scrollbar-hide"
+                        style={{ contentVisibility: "auto" }}
+                      >
+                        {randomMusics.slice(0, 8).map((music) => (
+                          <AudioItemOrder
+                            key={music.id}
+                            music={music}
+                            handlePlay={() => handlePlayAudio(music)}
+                            border={false}
+                          />
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
               </div>
             </div>
           </div>
