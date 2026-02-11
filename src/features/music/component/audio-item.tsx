@@ -27,7 +27,7 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
   const { currentMusic, isPlaying } = useAudio();
   const { resolvedTheme } = useTheme();
   const [isEnter, setIsEnter] = useState<boolean>(false);
-  const hoverBg = useImageHoverColor(music?.cover);
+  const hoverBg = useImageHoverColor(music?.cover, { alpha: 0.3 });
   const isCurrentTrack =
     typeof (music as IMusic).audio === "string" &&
     currentMusic?.id === music?.id;
@@ -39,7 +39,7 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
         onMouseEnter={() => setIsEnter(true)}
         onMouseLeave={() => setIsEnter(false)}
         className={cn(
-          "w-44 shrink-0 space-y-1 rounded-xl p-1 pb-1.5 text-zinc-50 md:w-52",
+          "w-44 shrink-0 space-y-1 rounded-xl p-1.5 text-zinc-50 md:w-52",
           className
         )}
         style={{
@@ -49,12 +49,12 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
       >
         <div className="relative">
           {music.cover ? (
-            <BorderPro roundedSize="rounded-xl">
+            <BorderPro roundedSize="rounded-lg">
               <img
                 src={music.cover}
                 alt="cover"
                 className={cn(
-                  "mx-auto size-44 shrink-0 cursor-pointer justify-center rounded-xl object-cover md:size-52",
+                  "mx-auto size-44 shrink-0 cursor-pointer justify-center rounded-lg object-cover md:size-52",
                   className
                 )}
                 onClick={handlePlay}
@@ -62,9 +62,9 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
             </BorderPro>
           ) : (
             <div
-              className="size-40 cursor-pointer rounded-2xl bg-zinc-800"
+              className="size-40 cursor-pointer rounded-xl bg-zinc-800"
               onClick={handlePlay}
-            ></div>
+            />
           )}
 
           {isEnter && (
@@ -73,7 +73,7 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.2, ease: "easeIn" }}
               className="pointer-events-none absolute top-0 h-20 w-full rounded-t-lg bg-gradient-to-b from-zinc-900/80 to-transparent"
-            ></motion.div>
+            />
           )}
 
           {isEnter && (
@@ -108,7 +108,7 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
                 </div>
               ) : (
                 <Play
-                  className="size-10 rounded-full bg-zinc-900/60 p-2 text-zinc-50 backdrop-blur-sm hover:text-rose-500"
+                  className="size-10 rounded-full bg-zinc-900/60 p-2 text-rose-500 backdrop-blur-sm"
                   weight="fill"
                 />
               )}
@@ -118,13 +118,13 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
 
         <div className="text-black dark:text-white">
           <div
-            className="line-clamp-1 w-32 cursor-pointer text-sm font-semibold"
+            className="line-clamp-1 w-full cursor-pointer text-sm font-semibold"
             onClick={handlePlay}
           >
             {music.title || "TITLE"}
           </div>
 
-          <div className="line-clamp-1 w-32 text-xs text-zinc-500">
+          <div className="line-clamp-1 w-full text-xs text-zinc-500">
             {music.singer || "SINGER"}
           </div>
         </div>

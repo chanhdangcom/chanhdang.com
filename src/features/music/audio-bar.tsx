@@ -30,7 +30,7 @@ const PlayerPage = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="fixed inset-0 z-50 bg-zinc-950/95 backdrop-blur-xl" />
+      <div className="fixed inset-0 z-50 bg-zinc-950/95 backdrop-blur-3xl" />
     ),
   }
 );
@@ -59,9 +59,13 @@ export function AudioBar() {
   const timeoutRef = useRef<number | null>(null);
   const ticking = useRef(false);
   const [reactToScroll, setReactToScroll] = useState(false);
-  const [hasOpenedPlayerPage, setHasOpenedPlayerPage] = useState(false);
+  const [shouldRenderPlayer, setShouldRenderPlayer] = useState(false);
   const tapFeedbackClass =
     "cursor-pointer transition-opacity duration-150 active:opacity-60";
+  const titleContainerRef = useRef<HTMLDivElement>(null);
+  const titleMeasureRef = useRef<HTMLSpanElement>(null);
+  const [shouldMarqueeTitle, setShouldMarqueeTitle] = useState(false);
+  const playerUnmountTimerRef = useRef<number | null>(null);
 
   const updateScrollVisibility = useCallback((isVisible: boolean) => {
     if (scrollStateRef.current === isVisible) return;
@@ -137,8 +141,26 @@ export function AudioBar() {
   }, [updateScrollVisibility]);
 
   useEffect(() => {
-    if (!isClick) return;
-    setHasOpenedPlayerPage(true);
+    if (isClick) {
+      if (playerUnmountTimerRef.current !== null) {
+        clearTimeout(playerUnmountTimerRef.current);
+      }
+      setShouldRenderPlayer(true);
+      return;
+    }
+
+    // Keep mounted briefly so close animation finishes before unmount.
+    playerUnmountTimerRef.current = window.setTimeout(() => {
+      setShouldRenderPlayer(false);
+      playerUnmountTimerRef.current = null;
+    }, 220);
+
+    return () => {
+      if (playerUnmountTimerRef.current !== null) {
+        clearTimeout(playerUnmountTimerRef.current);
+        playerUnmountTimerRef.current = null;
+      }
+    };
   }, [isClick]);
 
   useEffect(() => {
@@ -190,10 +212,45 @@ export function AudioBar() {
     };
   }, [handleScroll, reactToScroll]);
 
+  useEffect(() => {
+    const checkOverflow = () => {
+      const container = titleContainerRef.current;
+      const text = titleMeasureRef.current;
+      if (!container || !text) return;
+
+      setShouldMarqueeTitle(text.scrollWidth > container.clientWidth + 8);
+    };
+
+    checkOverflow();
+
+    if (typeof ResizeObserver !== "undefined") {
+      const observer = new ResizeObserver(checkOverflow);
+      if (titleContainerRef.current)
+        observer.observe(titleContainerRef.current);
+      if (titleMeasureRef.current) observer.observe(titleMeasureRef.current);
+      return () => observer.disconnect();
+    }
+
+    window.addEventListener("resize", checkOverflow);
+    return () => window.removeEventListener("resize", checkOverflow);
+  }, [currentMusic?.title, scroll]);
+
+  useEffect(() => {
+    return () => {
+      if (playerUnmountTimerRef.current !== null) {
+        clearTimeout(playerUnmountTimerRef.current);
+      }
+    };
+  }, []);
+
+  const handleDrawerOpenChange = useCallback((open: boolean) => {
+    setIsClick(open);
+  }, []);
+
   return (
     <Drawer.Root
       open={isClick}
-      onOpenChange={setIsClick}
+      onOpenChange={handleDrawerOpenChange}
       shouldScaleBackground={false}
     >
       <motion.div
@@ -213,15 +270,17 @@ export function AudioBar() {
           scroll ? "inset-x-4 bottom-[88px]" : "inset-x-24 bottom-[32px]"
         }`}
       >
-        <div className="relative overflow-hidden rounded-[50px] border border-white/10 bg-zinc-200/70 px-3 py-1 backdrop-blur-xl dark:bg-zinc-900/70 md:rounded-[55px]">
+        <div className="bg-zinc-200/72 dark:bg-zinc-900/72 relative w-full overflow-hidden rounded-[50px] border border-white/20 px-3 py-1 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset,0_-1px_0_rgba(0,0,0,0.06)_inset] backdrop-blur-lg dark:border-white/10 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset,0_-1px_0_rgba(0,0,0,0.45)_inset] md:rounded-[55px]">
+          <div className="via-white/8 dark:from-white/12 pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-b from-white/35 to-transparent dark:via-transparent dark:to-transparent" />
+          <div className="pointer-events-none absolute inset-x-6 bottom-0 h-px bg-black/10 dark:bg-white/10" />
           <div
             onClick={() => {
               if (window.innerWidth < 768) {
                 setIsClick(true);
               }
             }}
-            className={`flex items-center justify-between ${
-              scroll ? "" : "w-full cursor-pointer"
+            className={`relative z-10 flex w-full items-center justify-between ${
+              scroll ? "" : "cursor-pointer"
             }`}
           >
             <div className="hidden items-center gap-4 text-black dark:text-white md:flex">
@@ -289,7 +348,7 @@ export function AudioBar() {
               </div>
             </div>
 
-            <div className="flex w-[700px] items-center justify-start gap-2 md:ml-6 md:gap-2">
+            <div className="flex min-w-0 flex-1 items-center justify-start gap-2 pr-1 md:ml-6 md:gap-2">
               {!currentMusic?.cover ? (
                 <div className="flex size-10 items-center justify-center rounded-xl bg-zinc-500 md:rounded-lg">
                   <MusicNotes size={18} weight="fill" className="text-white" />
@@ -306,10 +365,43 @@ export function AudioBar() {
                 </div>
               )}
 
-              <div className="flex items-center gap-4">
-                <div>
-                  <div className="line-clamp-1 text-sm font-semibold text-black dark:text-white">
-                    {currentMusic?.title || "Title Song"}
+              <div className="flex min-w-0 flex-1 items-center gap-4">
+                <div className="min-w-0 flex-1">
+                  <div
+                    ref={titleContainerRef}
+                    className="relative w-full overflow-hidden whitespace-nowrap text-sm font-semibold text-black dark:text-white"
+                  >
+                    <span
+                      ref={titleMeasureRef}
+                      className="pointer-events-none invisible absolute left-0 top-0 whitespace-nowrap"
+                    >
+                      {currentMusic?.title || "Title Song"}
+                    </span>
+
+                    {shouldMarqueeTitle ? (
+                      <motion.div
+                        className="flex w-max"
+                        animate={{ x: ["0%", "-50%"] }}
+                        transition={{
+                          repeat: Infinity,
+                          repeatType: "loop",
+                          duration: 18,
+                          ease: "linear",
+                        }}
+                      >
+                        <span className="pr-4">
+                          {currentMusic?.title || "Title Song"}
+                        </span>
+
+                        <span aria-hidden="true" className="pr-4">
+                          {currentMusic?.title || "Title Song"}
+                        </span>
+                      </motion.div>
+                    ) : (
+                      <span className="block truncate">
+                        {currentMusic?.title || "Title Song"}
+                      </span>
+                    )}
                   </div>
 
                   <div className="line-clamp-1 text-sm font-medium text-zinc-500">
@@ -357,7 +449,7 @@ export function AudioBar() {
               />
             </div>
 
-            <div className="right-2 flex items-center md:hidden md:gap-4">
+            <div className="right-2 z-10 ml-0.5 flex shrink-0 items-center md:hidden md:gap-4">
               {isPlaying ? (
                 <div
                   onClick={(e) => {
@@ -404,16 +496,22 @@ export function AudioBar() {
       </motion.div>
 
       <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 z-50 bg-black/80" />
+        <Drawer.Overlay className="fixed inset-0 z-50 bg-black/65" />
 
-        <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 h-screen border-none bg-transparent p-0 outline-none will-change-transform">
+        <Drawer.Content
+          className="fixed inset-x-0 bottom-0 z-50 h-screen border-none bg-transparent p-0 outline-none"
+          style={{
+            contain: "layout paint size",
+            willChange: isClick ? "transform" : "auto",
+          }}
+        >
           <Drawer.Title className="sr-only">
             {currentMusic?.title
               ? `Now playing: ${currentMusic.title}`
               : "Music player"}
           </Drawer.Title>
 
-          {hasOpenedPlayerPage ? (
+          {shouldRenderPlayer ? (
             <PlayerPage setIsClick={() => setIsClick(false)} />
           ) : null}
         </Drawer.Content>

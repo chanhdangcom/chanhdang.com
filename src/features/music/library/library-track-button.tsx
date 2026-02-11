@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
-import { CheckCircle, Plus } from "@phosphor-icons/react/dist/ssr";
+import { CheckCircle, Star } from "@phosphor-icons/react/dist/ssr";
 
 interface LibraryTrackButtonProps {
   music: IMusic;
@@ -189,11 +189,6 @@ export function LibraryTrackButton({
       } ${isLoading ? "cursor-not-allowed opacity-50" : ""}`}
       title={isInLibrary ? "Gỡ khỏi Library" : "Thêm vào Library"}
     >
-      {/* <Heart
-        className={sizeClasses[size]}
-        fill={isInLibrary ? "currentColor" : "none"}
-      /> */}
-
       {isInLibrary ? (
         <CheckCircle
           size={iconSize[size]}
@@ -201,9 +196,9 @@ export function LibraryTrackButton({
           className="text-rose-500 drop-shadow-sm transition-colors duration-200 group-hover:text-rose-400"
         />
       ) : (
-        <Plus
+        <Star
           size={iconSize[size]}
-          weight="bold"
+          weight="regular"
           className="text-white transition-colors duration-200 group-hover:scale-125"
         />
       )}

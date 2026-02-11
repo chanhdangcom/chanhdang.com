@@ -72,7 +72,7 @@ export function PickForYou() {
         >
           {pickForYou.map((item) => (
             <div key={item.id} className={cn("", "mr-1")}>
-              <div className="snap-start pl-1">
+              <div className="snap-start p-1">
                 <div className="mx-2 mb-1 font-apple text-sm font-medium text-zinc-500">
                   Make for you
                 </div>
