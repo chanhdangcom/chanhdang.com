@@ -1,6 +1,5 @@
 import { useAudio } from "@/components/music-provider";
 import { useCallback, useEffect, useState, useRef } from "react";
-import { format } from "date-fns";
 import { FastAverageColor } from "fast-average-color";
 
 type IProp = {
@@ -9,15 +8,23 @@ type IProp = {
 
 export function AudioTimeLine({ coverUrl }: IProp) {
   const { audioRef, isPlaying } = useAudio();
-  const [duration, setDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
+  const [durationSec, setDurationSec] = useState(0);
+  const [currentTimeSec, setCurrentTimeSec] = useState(0);
+  const [progress, setProgress] = useState(0);
   const lastValidTimeRef = useRef(0);
   const lastValidDurationRef = useRef(0);
-  const [Color, setColor] = useState("");
+  const [progressColor, setProgressColor] = useState("");
+
+  const formatTime = (seconds: number) => {
+    const safeSeconds = Number.isFinite(seconds) ? Math.max(0, seconds) : 0;
+    const minute = Math.floor(safeSeconds / 60);
+    const second = Math.floor(safeSeconds % 60);
+    return `${minute}:${String(second).padStart(2, "0")}`;
+  };
 
   useEffect(() => {
     if (!coverUrl) {
-      setColor("#FFFFFF");
+      setProgressColor("#FFFFFF");
       return;
     }
 
@@ -48,22 +55,20 @@ export function AudioTimeLine({ coverUrl }: IProp) {
       fac
         .getColorAsync(img)
         .then((color) => {
-          if (!cancelled) setColor(color.hex);
+          if (!cancelled) setProgressColor(color.hex);
         })
         .catch(() => {
-          if (!cancelled) setColor(fallbackFromUrl(coverUrl));
+          if (!cancelled) setProgressColor(fallbackFromUrl(coverUrl));
         });
     };
     img.onerror = () => {
-      if (!cancelled) setColor(fallbackFromUrl(coverUrl));
+      if (!cancelled) setProgressColor(fallbackFromUrl(coverUrl));
     };
 
     return () => {
       cancelled = true;
     };
   }, [coverUrl]);
-
-  const progress = duration ? (currentTime / duration) * 100 : 0;
 
   const handleTimeUpdate = useCallback(() => {
     const el = audioRef.current;
@@ -72,22 +77,32 @@ export function AudioTimeLine({ coverUrl }: IProp) {
     const newTime = el.currentTime;
     const newDuration = el.duration;
 
-    // Chỉ update nếu giá trị hợp lệ (không phải 0 khi đang playing, hoặc duration hợp lệ)
+    let durationForCalc = lastValidDurationRef.current;
     if (newDuration > 0 && newDuration !== Infinity) {
       lastValidDurationRef.current = newDuration;
-      setDuration(newDuration);
+      durationForCalc = newDuration;
+      const durationRounded = Math.floor(newDuration);
+      setDurationSec((prev) => (prev === durationRounded ? prev : durationRounded));
     }
 
-    // Chỉ update currentTime nếu hợp lệ
+    let timeForCalc = newTime;
     if (newTime > 0 || !isPlaying) {
-      // Nếu đang playing và time > 0, hoặc đang paused, thì update
       if (newTime > 0) {
         lastValidTimeRef.current = newTime;
       }
-      setCurrentTime(newTime);
+      timeForCalc = newTime;
     } else if (isPlaying && newTime === 0 && lastValidTimeRef.current > 0) {
-      // Khi đang playing nhưng time = 0 (có thể đang load/switch source), giữ giá trị cũ
-      setCurrentTime(lastValidTimeRef.current);
+      // Khi source đang chờ load, giữ thời gian hợp lệ cũ để tránh nhảy UI
+      timeForCalc = lastValidTimeRef.current;
+    }
+
+    const currentRounded = Math.floor(timeForCalc);
+    setCurrentTimeSec((prev) => (prev === currentRounded ? prev : currentRounded));
+
+    if (durationForCalc > 0) {
+      const nextProgress = Math.min(100, Math.max(0, (timeForCalc / durationForCalc) * 100));
+      // Chỉ set khi thay đổi đủ lớn để giảm re-render dày đặc
+      setProgress((prev) => (Math.abs(prev - nextProgress) < 0.2 ? prev : nextProgress));
     }
   }, [audioRef, isPlaying]);
 
@@ -95,22 +110,22 @@ export function AudioTimeLine({ coverUrl }: IProp) {
     const el = audioRef.current;
     if (!el) return;
 
-    // Load duration ngay khi có
-    if (el.duration > 0 && el.duration !== Infinity) {
-      setDuration(el.duration);
-      lastValidDurationRef.current = el.duration;
-    }
+    const syncDuration = () => {
+      if (el.duration > 0 && el.duration !== Infinity) {
+        lastValidDurationRef.current = el.duration;
+        const durationRounded = Math.floor(el.duration);
+        setDurationSec((prev) => (prev === durationRounded ? prev : durationRounded));
+      }
+    };
+
+    syncDuration();
 
     el.addEventListener("timeupdate", handleTimeUpdate);
-    el.addEventListener("loadedmetadata", () => {
-      if (el.duration > 0 && el.duration !== Infinity) {
-        setDuration(el.duration);
-        lastValidDurationRef.current = el.duration;
-      }
-    });
+    el.addEventListener("loadedmetadata", syncDuration);
 
     return () => {
       el.removeEventListener("timeupdate", handleTimeUpdate);
+      el.removeEventListener("loadedmetadata", syncDuration);
     };
   }, [audioRef, handleTimeUpdate]);
 
@@ -119,18 +134,14 @@ export function AudioTimeLine({ coverUrl }: IProp) {
       <div className="mx-auto h-1.5 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-400">
         <div
           className="h-full bg-zinc-900 transition-all duration-300 dark:bg-zinc-50"
-          style={{ width: `${progress}%`, backgroundColor: Color }}
+          style={{ width: `${progress}%`, backgroundColor: progressColor }}
         />
       </div>
 
       <div className="mt-2 flex items-center justify-between">
-        <div className="text-sm text-zinc-400">
-          {duration ? format(new Date(currentTime * 1000), "m:ss") : "0:00"}
-        </div>
+        <div className="text-sm text-zinc-400">{formatTime(currentTimeSec)}</div>
 
-        <div className="text-sm text-zinc-400">
-          {duration ? format(new Date(duration * 1000), "m:ss") : "0:00"}
-        </div>
+        <div className="text-sm text-zinc-400">{formatTime(durationSec)}</div>
       </div>
     </div>
   );

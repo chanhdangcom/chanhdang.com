@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useAudio } from "@/components/music-provider";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
@@ -21,12 +20,10 @@ import {
   RepeatOnce,
 } from "@phosphor-icons/react/dist/ssr";
 
-import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useState, useRef, memo } from "react";
 import { useSpringScroll } from "@/hooks/use-spring-scroll";
 import { useRouter, useParams } from "next/navigation";
 import { AudioTimeLine } from "./component/audio-time-line";
-// import DynamicIslandWave from "@/components/ui/dynamic-island";
 import { BorderPro } from "./component/border-pro";
 import { ISingerItem } from "./type/singer";
 import {
@@ -41,6 +38,8 @@ import { useUser } from "@/hooks/use-user";
 import { VolumeBar } from "./volume-bar";
 import { AudioItemOrder } from "./component/audio-item-order";
 import Link from "next/link";
+import { useImageHoverColor } from "@/hooks/use-image-hover-color";
+import { motion } from "framer-motion";
 
 type IProp = {
   setIsClick: () => void;
@@ -70,7 +69,10 @@ type LibraryEntry = {
 };
 
 const FAVORITES_CACHE_TTL_MS = 45_000;
-const favoritesCache = new Map<string, { expiresAt: number; ids: Set<string> }>();
+const favoritesCache = new Map<
+  string,
+  { expiresAt: number; ids: Set<string> }
+>();
 const favoritesInFlight = new Map<string, Promise<Set<string>>>();
 
 const RANDOM_MUSIC_CACHE_TTL_MS = 30_000;
@@ -79,6 +81,26 @@ let randomMusicInFlight: Promise<IMusic[]> | null = null;
 
 let singersInFlight: Promise<ISingerItem[]> | null = null;
 const singerIdByNameCache = new Map<string, string | null>();
+const COVER_LAYOUT_SPRING = {
+  type: "spring" as const,
+  stiffness: 240,
+  damping: 30,
+  mass: 0.7,
+};
+
+const useIsDesktop = () => {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsDesktop(mediaQuery.matches);
+    update();
+    mediaQuery.addEventListener("change", update);
+    return () => mediaQuery.removeEventListener("change", update);
+  }, []);
+
+  return isDesktop;
+};
 
 const fetchFavoriteMusicIds = async (
   userId: string,
@@ -180,7 +202,9 @@ const fetchRandomMusics = async (limit = 8): Promise<IMusic[]> => {
   }
 };
 
-const findSingerIdByName = async (name?: string | null): Promise<string | null> => {
+const findSingerIdByName = async (
+  name?: string | null
+): Promise<string | null> => {
   if (!name) return null;
 
   if (singerIdByNameCache.has(name)) {
@@ -229,12 +253,9 @@ const useMusicActionsMenu = ({
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <motion.button
-            whileTap={{ scale: 0.8 }}
-            className="cursor-pointer rounded-full bg-white/10 p-0.5"
-          >
+          <button className="cursor-pointer rounded-full bg-white/10 p-0.5">
             <DotsThree size={30} weight="bold" className="text-white" />
-          </motion.button>
+          </button>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent
@@ -302,24 +323,16 @@ const useMusicActionsMenu = ({
 const SubtitleItem = memo(
   ({ id, text, isActive }: { id: number; text: string; isActive: boolean }) => {
     return (
-      <motion.p
-        layout="position"
-        initial={{ opacity: 0, y: 12, scale: 0.98 }}
-        animate={
-          isActive
-            ? { opacity: 1, y: 0, scale: 1 }
-            : { opacity: 0.35, y: 10, scale: 0.97 }
-        }
-        transition={{ type: "spring", stiffness: 220, damping: 22, mass: 0.7 }}
+      <p
         id={`subtitle-${id}`}
         className={`z-40 mb-6 text-balance md:mb-8 ${
           isActive
             ? "text-balance font-semibold leading-snug text-white"
-            : "leading-snug"
+            : "leading-snug text-zinc-500"
         }`}
       >
         {text}
-      </motion.p>
+      </p>
     );
   },
   (prevProps, nextProps) => {
@@ -352,7 +365,7 @@ const LyricPage = ({
   } = useAudio();
 
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
-  const [touchDeltaY, setTouchDeltaY] = useState(0);
+  const touchDeltaYRef = useRef(0);
   const subtitleScrollRef = useRef<HTMLDivElement>(null);
 
   // Thêm hiệu ứng scroll lò xo
@@ -423,127 +436,110 @@ const LyricPage = ({
     onOpenFavorites: sharedActions.onOpenFavorites,
   });
 
+  const hoverBg = useImageHoverColor(currentMusic?.cover, { alpha: 1 });
   return (
     <>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentMusic?.id || currentMusic?.cover || "player-lyric"}
-          layoutId="audio-bar"
-          className="fixed inset-0 z-50 flex justify-between space-y-4 px-4 md:rounded-3xl md:border md:border-white/10"
-        >
-          <div className="w-full">
-            <div className="absolute inset-0 -z-10 flex justify-center bg-zinc-950 backdrop-blur-3xl">
-              <img
-                key={currentMusic?.cover}
-                src={currentMusic?.cover || ""}
-                alt="cover"
-                className="mt-8 h-full w-full rotate-180 scale-110 opacity-70 blur-3xl md:mt-24 md:h-screen md:w-full md:blur-3xl"
-              />
-            </div>
-
-            <header
-              className="flex items-center justify-start p-1 text-white md:py-4"
-              onTouchStart={(e) => {
-                if (e.touches.length > 0) {
-                  setTouchStartY(e.touches[0].clientY);
-                  setTouchDeltaY(0);
-                }
-              }}
-              onTouchMove={(e) => {
-                if (touchStartY === null) return;
-                const currentY = e.touches[0].clientY;
-                setTouchDeltaY(currentY - touchStartY);
-              }}
-              onTouchEnd={() => {
-                // Chỉ xử lý trên mobile: kéo xuống đủ xa thì đóng player
-                if (window.innerWidth < 768 && touchDeltaY > 50) {
-                  onRequestClose();
-                }
-                setTouchStartY(null);
-                setTouchDeltaY(0);
-              }}
-            >
-              <div className="mx-auto my-4 h-1 w-16 rounded-full bg-white/20 md:hidden" />
-            </header>
-
-            <div className="absolute inset-x-4 z-50 mt-2 rounded-2xl p-1">
-              <div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    {currentMusic?.cover ? (
-                      <motion.div
-                        layoutId="Cover"
-                        key={currentMusic?.cover}
-                        className="flex justify-center gap-8"
-                      >
-                        <BorderPro roundedSize="rounded-xl">
-                          <motion.img
-                            src={currentMusic?.cover}
-                            alt="cover"
-                            transition={{
-                              duration: 0.2,
-                              ease: "easeInOut",
-                              type: "spring",
-                              damping: 15,
-                            }}
-                            onClick={onRequestClose}
-                            className="flex size-16 shrink-0 justify-center rounded-xl object-cover"
-                          />
-                        </BorderPro>
-                      </motion.div>
-                    ) : (
-                      <div className="flex h-[45vh] w-full shrink-0 justify-center rounded-xl bg-zinc-700" />
-                    )}
-
-                    <AnimatePresence>
-                      <motion.div
-                        id="info-song"
-                        layoutId="info-song"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className=""
-                      >
-                        <div className="line-clamp-1 font-semibold text-white">
-                          {currentMusic?.title || "TITLE SONG"}
-                        </div>
-
-                        <div className="line-clamp-1 text-zinc-300">
-                          {currentMusic?.singer || "SINGER"}
-                        </div>
-                      </motion.div>
-                    </AnimatePresence>
-                  </div>
-
-                  <MusicActionsMenu />
-                </div>
-              </div>
-            </div>
-
+      <div className="fixed inset-0 z-50 flex justify-between space-y-4 px-4 md:rounded-3xl md:border md:border-white/10">
+        <div className="w-full">
+          <div className="absolute inset-0 -z-10 flex justify-center bg-zinc-950 backdrop-blur-xl md:backdrop-blur-3xl">
             <div
-              ref={subtitleScrollRef}
-              className="scroll-spring pointer-events-none relative h-full overflow-y-auto scrollbar-hide"
+              className="saturate-125 mt-8 h-full w-full rotate-180 scale-110 rounded-3xl"
               style={{
-                scrollBehavior: "smooth",
-                WebkitOverflowScrolling: "touch",
-                overscrollBehaviorY: "auto",
+                backgroundColor: hoverBg,
+                backgroundImage: `radial-gradient(120% 95% at 50% 0%, ${hoverBg} 0%, rgba(39, 39, 42, 0.28) 58%, rgba(9, 9, 11, 0.52) 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 44%)`,
               }}
-            >
-              <div className="px-2 pt-32 font-apple text-3xl font-bold leading-loose text-zinc-300">
-                {subtitles.map((line) => (
-                  <SubtitleItem
-                    key={line.id}
-                    id={line.id}
-                    text={line.text}
-                    isActive={currentSubtitleId === line.id}
-                  />
-                ))}
+            />
+          </div>
+
+          <header
+            className="flex items-center justify-start p-1 text-white md:py-4"
+            onTouchStart={(e) => {
+              if (e.touches.length > 0) {
+                setTouchStartY(e.touches[0].clientY);
+                touchDeltaYRef.current = 0;
+              }
+            }}
+            onTouchMove={(e) => {
+              if (touchStartY === null) return;
+              const currentY = e.touches[0].clientY;
+              touchDeltaYRef.current = currentY - touchStartY;
+            }}
+            onTouchEnd={() => {
+              // Chỉ xử lý trên mobile: kéo xuống đủ xa thì đóng player
+              if (window.innerWidth < 768 && touchDeltaYRef.current > 50) {
+                onRequestClose();
+              }
+              setTouchStartY(null);
+              touchDeltaYRef.current = 0;
+            }}
+          >
+            <div className="mx-auto my-4 h-1 w-16 rounded-full bg-white/20 md:hidden" />
+          </header>
+
+          <div className="absolute inset-x-4 z-50 mt-2 rounded-2xl p-1">
+            <div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {currentMusic?.cover ? (
+                    <div
+                      key={currentMusic?.cover}
+                      className="flex justify-center gap-8"
+                    >
+                      <BorderPro roundedSize="rounded-xl">
+                        <motion.img
+                          src={currentMusic?.cover}
+                          alt="cover"
+                          onClick={onRequestClose}
+                          className="flex size-16 shrink-0 justify-center rounded-xl object-cover"
+                          initial={false}
+                          transition={{ layout: COVER_LAYOUT_SPRING }}
+                          layoutId="cover-audio"
+                          style={{ willChange: "transform" }}
+                        />
+                      </BorderPro>
+                    </div>
+                  ) : (
+                    <div className="flex h-[45vh] w-full shrink-0 justify-center rounded-xl bg-zinc-700" />
+                  )}
+
+                  <div id="info-song" className="">
+                    <div className="line-clamp-1 font-semibold text-white">
+                      {currentMusic?.title || "TITLE SONG"}
+                    </div>
+
+                    <div className="line-clamp-1 text-zinc-300">
+                      {currentMusic?.singer || "SINGER"}
+                    </div>
+                  </div>
+                </div>
+
+                <MusicActionsMenu />
               </div>
             </div>
           </div>
-        </motion.div>
-      </AnimatePresence>
+
+          <div
+            ref={subtitleScrollRef}
+            className="scroll-spring pointer-events-none relative h-full overflow-y-auto scrollbar-hide"
+            style={{
+              scrollBehavior: "smooth",
+              WebkitOverflowScrolling: "touch",
+              overscrollBehaviorY: "auto",
+            }}
+          >
+            <div className="px-2 pt-32 font-apple text-3xl font-bold leading-loose text-zinc-300">
+              {subtitles.map((line) => (
+                <SubtitleItem
+                  key={line.id}
+                  id={line.id}
+                  text={line.text}
+                  isActive={currentSubtitleId === line.id}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 };
@@ -554,16 +550,15 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
   const {
     currentMusic,
     isPaused,
-
     currentSubtitleId,
     subtitles,
-
     setIsPlayerPageOpen,
   } = useAudio();
 
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
-  const [touchDeltaY, setTouchDeltaY] = useState(0);
+  const touchDeltaYRef = useRef(0);
   const subtitleScrollRef = useRef<HTMLDivElement>(null);
+  const isDesktop = useIsDesktop();
 
   // Thêm hiệu ứng scroll lò xo
   useSpringScroll(subtitleScrollRef);
@@ -624,109 +619,82 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
 
   // Kiểm tra xem bài hát có trong Favorites hay không
 
+  const hoverBg = useImageHoverColor(currentMusic?.cover, { alpha: 15 });
+
   return (
     <>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentMusic?.id || currentMusic?.cover || "player-main"}
-          layoutId="audio-bar"
-          className="fixed inset-0 z-50 flex justify-between space-y-4 md:z-50 md:rounded-3xl md:border-white/10"
-        >
-          <div className="w-full">
-            <div className="absolute inset-0 -z-10 flex justify-center gap-8 bg-zinc-950">
-              <img
-                key={currentMusic?.cover}
-                src={currentMusic?.cover || ""}
-                alt="cover"
-                className="0 mt-8 h-full w-full rotate-180 blur-3xl md:mt-24 md:h-screen"
-              />
-            </div>
-
-            <header
-              className="flex items-center justify-start p-1 text-white md:py-4"
-              onTouchStart={(e) => {
-                if (e.touches.length > 0) {
-                  setTouchStartY(e.touches[0].clientY);
-                  setTouchDeltaY(0);
-                }
+      <div className="fixed inset-0 z-50 flex justify-between space-y-4 md:z-50 md:rounded-3xl md:border-white/10">
+        <div className="w-full">
+          <div className="absolute inset-0 -z-10 flex justify-center gap-8 bg-zinc-950">
+            <div
+              className="saturate-125 mt-8 h-full w-full rotate-180 scale-110 rounded-3xl"
+              style={{
+                backgroundColor: hoverBg,
+                backgroundImage: `radial-gradient(120% 95% at 50% 0%, ${hoverBg} 0%, rgba(39, 39, 42, 0.28) 58%, rgba(9, 9, 11, 0.52) 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 44%)`,
               }}
-              onTouchMove={(e) => {
-                if (touchStartY === null) return;
-                const currentY = e.touches[0].clientY;
-                setTouchDeltaY(currentY - touchStartY);
-              }}
-              onTouchEnd={() => {
-                // Chỉ xử lý trên mobile: kéo xuống đủ xa thì đóng player
-                if (window.innerWidth < 768 && touchDeltaY > 50) {
-                  onRequestClose();
-                }
-                setTouchStartY(null);
-                setTouchDeltaY(0);
-              }}
-            >
-              <CaretDown
-                size={20}
-                className="ml-4 hidden cursor-pointer md:flex"
-                onClick={onRequestClose}
-              />
-
-              <div className="mx-auto mb-8 mt-4 h-1 w-16 rounded-full bg-white/20 md:hidden" />
-            </header>
-
-            <div className="relative mx-3 space-y-4 md:space-y-10">
-              {currentMusic?.cover ? (
-                <motion.div
-                  layoutId="Cover"
-                  key={currentMusic?.cover}
-                  className="flex justify-center md:mx-2 md:justify-start"
-                >
-                  <div className="relative">
-                    <motion.img
-                      src={currentMusic?.cover}
-                      alt="cover"
-                      animate={{ scale: isPaused ? 0.8 : 1 }}
-                      transition={{
-                        duration: 0.2,
-                        ease: "easeInOut",
-                        type: "spring",
-                        damping: 15,
-                      }}
-                      className="flex h-[70vh] w-full shrink-0 justify-center rounded-3xl object-cover md:h-[55vh] md:w-[37vw]"
-                    />
-
-                    <div
-                      className={
-                        isPaused
-                          ? ""
-                          : "pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/10 duration-300"
-                      }
-                    />
-                  </div>
-                </motion.div>
-              ) : (
-                <div className="flex h-[40vh] w-full shrink-0 justify-center rounded-2xl bg-zinc-700" />
-              )}
-
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                layoutId="footer-audio"
-                transition={{
-                  duration: 0.2,
-                  ease: "easeInOut",
-                  type: "spring",
-                  damping: 15,
-                  stiffness: 150,
-                  mass: 0.6,
-                }}
-                className="mx-auto space-y-8 rounded-3xl md:inset-x-8 md:-bottom-20 md:w-[60vh]"
-              >
-                <div className="absolute bottom-0 left-0 -z-10 hidden h-[30vh] w-[75vh] bg-black/60 text-sm blur-3xl md:flex" />
-              </motion.div>
-            </div>
+            />
           </div>
 
+          <header
+            className="flex items-center justify-start p-1 text-white md:py-4"
+            onTouchStart={(e) => {
+              if (e.touches.length > 0) {
+                setTouchStartY(e.touches[0].clientY);
+                touchDeltaYRef.current = 0;
+              }
+            }}
+            onTouchMove={(e) => {
+              if (touchStartY === null) return;
+              const currentY = e.touches[0].clientY;
+              touchDeltaYRef.current = currentY - touchStartY;
+            }}
+          >
+            <CaretDown
+              size={20}
+              className="ml-4 hidden cursor-pointer md:flex"
+              onClick={onRequestClose}
+            />
+
+            <div className="mx-auto mb-8 mt-4 h-1 w-16 rounded-full bg-white/20 md:hidden" />
+          </header>
+
+          <div className="relative mx-3 space-y-4 md:space-y-10">
+            {currentMusic?.cover ? (
+              <div
+                key={currentMusic?.cover}
+                className="flex justify-center md:mx-2 md:justify-start"
+              >
+                <div className="relative">
+                  <motion.img
+                    src={currentMusic?.cover}
+                    alt="cover"
+                    className="flex h-[70vh] w-full shrink-0 transform-gpu justify-center rounded-3xl object-cover [backface-visibility:hidden] md:h-[55vh] md:w-[37vw]"
+                    initial={false}
+                    transition={{ layout: COVER_LAYOUT_SPRING }}
+                    layoutId="cover-audio"
+                    style={{ willChange: "transform" }}
+                  />
+
+                  <div
+                    className={
+                      isPaused
+                        ? ""
+                        : "pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/10 duration-300"
+                    }
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="flex h-[40vh] w-full shrink-0 justify-center rounded-2xl bg-zinc-700" />
+            )}
+
+            <div className="mx-auto space-y-8 rounded-3xl md:inset-x-8 md:-bottom-20 md:w-[60vh]">
+              <div className="absolute bottom-0 left-0 -z-10 hidden h-[30vh] w-[75vh] bg-black/60 text-sm blur-3xl md:flex" />
+            </div>
+          </div>
+        </div>
+
+        {isDesktop ? (
           <div
             ref={subtitleScrollRef}
             className="scroll-spring pointer-events-none ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block"
@@ -747,8 +715,8 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
               ))}
             </div>
           </div>
-        </motion.div>
-      </AnimatePresence>
+        ) : null}
+      </div>
     </>
   );
 };
@@ -776,11 +744,12 @@ const FeaturedPage = ({
   } = useAudio();
 
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
-  const [touchDeltaY, setTouchDeltaY] = useState(0);
+  const touchDeltaYRef = useRef(0);
   const [randomMusics, setRandomMusics] = useState<IMusic[]>([]);
   const [isLoadingRandom, setIsLoadingRandom] = useState(false);
   const randomListRef = useRef<HTMLDivElement | null>(null);
   const subtitleScrollRef = useRef<HTMLDivElement>(null);
+  const isDesktop = useIsDesktop();
 
   // Thêm hiệu ứng scroll lò xo
   useSpringScroll(subtitleScrollRef);
@@ -884,161 +853,145 @@ const FeaturedPage = ({
     onOpenFavorites: sharedActions.onOpenFavorites,
   });
 
+  const hoverBg = useImageHoverColor(currentMusic?.cover, { alpha: 15 });
+
   return (
     <>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentMusic?.id || currentMusic?.cover || "player-lyric"}
-          layoutId="audio-bar"
-          className="fixed inset-0 z-50 flex justify-between space-y-4 px-4 md:rounded-3xl md:border md:border-white/10"
-        >
-          <div className="flex w-full">
-            <div className="absolute inset-0 -z-10 flex justify-center bg-zinc-950 backdrop-blur-3xl">
-              <img
-                key={currentMusic?.cover}
-                src={currentMusic?.cover || ""}
-                alt="cover"
-                className="mt-8 h-full w-full rotate-180 scale-110 opacity-70 blur-3xl md:mt-24 md:h-screen md:w-full md:blur-3xl"
-              />
-            </div>
-
-            <header
-              className="absolute inset-x-0 flex items-center p-1 text-black dark:text-white md:py-4"
-              onTouchStart={(e) => {
-                if (e.touches.length > 0) {
-                  setTouchStartY(e.touches[0].clientY);
-                  setTouchDeltaY(0);
-                }
+      <div className="fixed inset-0 z-50 flex justify-between space-y-4 px-4 md:rounded-3xl md:border md:border-white/10">
+        <div className="flex w-full">
+          <div className="absolute inset-0 -z-10 flex justify-center bg-zinc-950 backdrop-blur-xl md:backdrop-blur-3xl">
+            <div
+              className="saturate-125 mt-8 h-full w-full rotate-180 scale-110 rounded-3xl"
+              style={{
+                backgroundColor: hoverBg,
+                backgroundImage: `radial-gradient(120% 95% at 50% 0%, ${hoverBg} 0%, rgba(39, 39, 42, 0.28) 58%, rgba(9, 9, 11, 0.52) 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 44%)`,
               }}
-              onTouchMove={(e) => {
-                if (touchStartY === null) return;
-                const currentY = e.touches[0].clientY;
-                setTouchDeltaY(currentY - touchStartY);
-              }}
-              onTouchEnd={() => {
-                // Chỉ xử lý trên mobile: kéo xuống đủ xa thì đóng player
-                if (window.innerWidth < 768 && touchDeltaY > 50) {
-                  onRequestClose();
-                }
-                setTouchStartY(null);
-                setTouchDeltaY(0);
-              }}
-            >
-              <div className="mx-auto my-4 h-1 w-16 rounded-full bg-white/20 md:hidden" />
-            </header>
+            />
+          </div>
 
-            <div className="absolute inset-x-4 z-50 mt-8 rounded-2xl p-1">
-              <div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    {currentMusic?.cover ? (
-                      <motion.div
-                        layoutId="Cover"
-                        key={currentMusic?.cover}
-                        className="flex justify-center gap-8"
-                      >
-                        <BorderPro roundedSize="rounded-xl">
-                          <motion.img
-                            src={currentMusic?.cover}
-                            alt="cover"
-                            transition={{
-                              duration: 0.2,
-                              ease: "easeInOut",
-                              type: "spring",
-                              damping: 15,
-                            }}
-                            onClick={onRequestClose}
-                            className="flex size-16 shrink-0 justify-center rounded-xl object-cover"
-                          />
-                        </BorderPro>
-                      </motion.div>
-                    ) : (
-                      <div className="flex h-[45vh] w-full shrink-0 justify-center rounded-xl bg-zinc-700" />
-                    )}
+          <header
+            className="absolute inset-x-0 flex items-center p-1 text-black dark:text-white md:py-4"
+            onTouchStart={(e) => {
+              if (e.touches.length > 0) {
+                setTouchStartY(e.touches[0].clientY);
+                touchDeltaYRef.current = 0;
+              }
+            }}
+            onTouchMove={(e) => {
+              if (touchStartY === null) return;
+              const currentY = e.touches[0].clientY;
+              touchDeltaYRef.current = currentY - touchStartY;
+            }}
+            onTouchEnd={() => {
+              // Chỉ xử lý trên mobile: kéo xuống đủ xa thì đóng player
+              if (window.innerWidth < 768 && touchDeltaYRef.current > 50) {
+                onRequestClose();
+              }
+              setTouchStartY(null);
+              touchDeltaYRef.current = 0;
+            }}
+          >
+            <div className="mx-auto my-4 h-1 w-16 rounded-full bg-white/20 md:hidden" />
+          </header>
 
-                    <AnimatePresence>
-                      <motion.div
-                        id="info-song"
-                        layoutId="info-song"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className=""
-                      >
-                        <div className="line-clamp-1 font-semibold text-white">
-                          {currentMusic?.title || "TITLE SONG"}
-                        </div>
-                        <div className="line-clamp-1 text-zinc-300">
-                          {currentMusic?.singer || "SINGER"}
-                        </div>
-                      </motion.div>
-                    </AnimatePresence>
-                  </div>
+          <div className="absolute inset-x-4 z-50 mt-8 rounded-2xl p-1">
+            <div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {currentMusic?.cover ? (
+                    <div
+                      key={currentMusic?.cover}
+                      className="flex justify-center gap-8"
+                    >
+                      <BorderPro roundedSize="rounded-xl">
+                        <motion.img
+                          src={currentMusic?.cover}
+                          alt="cover"
+                          onClick={onRequestClose}
+                          className="flex size-16 shrink-0 justify-center rounded-xl object-cover"
+                          initial={false}
+                          transition={{ layout: COVER_LAYOUT_SPRING }}
+                          layoutId="cover-audio"
+                          style={{ willChange: "transform" }}
+                        />
+                      </BorderPro>
+                    </div>
+                  ) : (
+                    <div className="flex h-[45vh] w-full shrink-0 justify-center rounded-xl bg-zinc-700" />
+                  )}
 
-                  <MusicActionsMenu />
-                </div>
-
-                <div className="mt-4 flex items-center justify-between md:justify-start md:gap-16">
-                  <motion.div
-                    className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white"
-                    onClick={() => handlePlayRandomAudio()}
-                    whileTap={{ scale: 0.8 }}
-                  >
-                    <Shuffle size={25} weight="regular" />
-                  </motion.div>
-
-                  <motion.div
-                    className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white"
-                    onClick={() => handleToggleRepeat()}
-                    whileTap={{ scale: 0.8 }}
-                  >
-                    {!isRepeat ? (
-                      <Repeat size={25} weight="regular" />
-                    ) : (
-                      <RepeatOnce size={25} weight="regular" />
-                    )}
-                  </motion.div>
-
-                  <div className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white">
-                    <Infinity size={25} weight="regular" />
-                  </div>
-
-                  <div className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white">
-                    <Exclude size={25} weight="fill" />
+                  <div id="info-song" className="">
+                    <div className="line-clamp-1 font-semibold text-white">
+                      {currentMusic?.title || "TITLE SONG"}
+                    </div>
+                    <div className="line-clamp-1 text-zinc-300">
+                      {currentMusic?.singer || "SINGER"}
+                    </div>
                   </div>
                 </div>
 
-                <div className="mt-4">
-                  <div className="font-semibold text-white">Continue Music</div>
+                <MusicActionsMenu />
+              </div>
 
-                  {isLoadingRandom && (
-                    <div className="mt-2 text-xs text-zinc-400">
-                      Đang tải nhạc...
-                    </div>
-                  )}
+              <div className="mt-4 flex items-center justify-between md:justify-start md:gap-16">
+                <div
+                  className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white"
+                  onClick={() => handlePlayRandomAudio()}
+                >
+                  <Shuffle size={25} weight="regular" />
+                </div>
 
-                  {!isLoadingRandom && randomMusics.length > 0 && (
-                    <div className="relative mt-2">
-                      <div
-                        ref={randomListRef}
-                        className="h-[40vh] w-full space-y-4 overflow-y-auto pr-2 scrollbar-hide"
-                      >
-                        {randomMusics.slice(0, 8).map((music) => (
-                          <AudioItemOrder
-                            key={music.id}
-                            music={music}
-                            handlePlay={() => handlePlayAudio(music)}
-                            border={false}
-                          />
-                        ))}
-                      </div>
-                    </div>
+                <div
+                  className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white"
+                  onClick={() => handleToggleRepeat()}
+                >
+                  {!isRepeat ? (
+                    <Repeat size={25} weight="regular" />
+                  ) : (
+                    <RepeatOnce size={25} weight="regular" />
                   )}
+                </div>
+
+                <div className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white">
+                  <Infinity size={25} weight="regular" />
+                </div>
+
+                <div className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white">
+                  <Exclude size={25} weight="fill" />
                 </div>
               </div>
-            </div>
 
+              <div className="mt-4">
+                <div className="font-semibold text-white">Continue Music</div>
+
+                {isLoadingRandom && (
+                  <div className="mt-2 text-xs text-zinc-400">
+                    Đang tải nhạc...
+                  </div>
+                )}
+
+                {!isLoadingRandom && randomMusics.length > 0 && (
+                  <div className="relative mt-2">
+                    <div
+                      ref={randomListRef}
+                      className="h-[40vh] w-full space-y-4 overflow-y-auto pr-2 scrollbar-hide"
+                    >
+                      {randomMusics.slice(0, 8).map((music) => (
+                        <AudioItemOrder
+                          key={music.id}
+                          music={music}
+                          handlePlay={() => handlePlayAudio(music)}
+                          border={false}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {isDesktop ? (
             <div
               ref={subtitleScrollRef}
               className="scroll-spring pointer-events-none ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block"
@@ -1059,9 +1012,9 @@ const FeaturedPage = ({
                 ))}
               </div>
             </div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
+          ) : null}
+        </div>
+      </div>
     </>
   );
 };
@@ -1076,11 +1029,12 @@ export function PlayerPage({ setIsClick }: IProp) {
     isKaraokeMode,
     handleToggleKaraoke,
     setIsPlayerPageOpen,
+    isPlaying,
+    isPaused,
+    handleAudioSkip,
   } = useAudio();
 
   const [isClickLyric, setIsClickLyric] = useState(false);
-  const { isPlaying, isPaused } = useAudio();
-  const { handleAudioSkip } = useAudio();
   const { user } = useUser();
   const router = useRouter();
   const params = useParams();
@@ -1274,38 +1228,24 @@ export function PlayerPage({ setIsClick }: IProp) {
 
       <>
         <div className="fixed bottom-0 z-50 w-full space-y-6 px-8 pb-8 md:bottom-8 md:w-[40vw]">
-          <img
-            alt="cover"
-            src={currentMusic?.cover || ""}
-            className="pointer-events-none absolute -bottom-16 left-0 -z-10 h-[40vh] w-full scale-150 blur-3xl brightness-0 md:w-[35vw]"
-          />
+          <div className="pointer-events-none absolute -bottom-16 left-0 -z-10 h-[40vh] w-full scale-150 bg-black blur-3xl brightness-0 md:w-[35vw]" />
 
           {isClickLyric && (
             <>
               {!isKaraokeMode ? (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  whileTap={{ scale: 0.85 }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                <div
                   onClick={() => handleToggleKaraoke()}
                   className="absolute -top-16 right-8 cursor-pointer rounded-full bg-white/10 p-1"
                 >
                   <MagicWand size={28} className="text-white" />
-                </motion.div>
+                </div>
               ) : (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  whileTap={{ scale: 0.85 }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                <div
                   onClick={() => handleToggleKaraoke()}
                   className="absolute -top-16 right-8 cursor-pointer rounded-full bg-white/10 p-1"
                 >
                   <MagicWand size={28} weight="fill" />
-                </motion.div>
+                </div>
               )}
             </>
           )}
@@ -1313,33 +1253,24 @@ export function PlayerPage({ setIsClick }: IProp) {
           {!isClickLyric && !isClickFeatured && (
             <div>
               <div className="flex items-center justify-between">
-                <AnimatePresence>
-                  <motion.div
-                    id="info-song"
-                    layoutId="info-song"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                  >
-                    <div className="line-clamp-1 text-xl font-semibold text-white">
-                      {currentMusic?.title || "TITLE SONG"}
-                    </div>
+                <div id="info-song">
+                  <div className="line-clamp-1 text-xl font-semibold text-white">
+                    {currentMusic?.title || "TITLE SONG"}
+                  </div>
 
-                    {singerId ? (
-                      <Link
-                        href={`/${locale}/music/singer/${singerId}`}
-                        className="text-lg text-zinc-300 hover:underline"
-                      >
-                        {currentMusic?.singer || "SINGER"}
-                      </Link>
-                    ) : (
-                      <span className="text-lg text-zinc-300">
-                        {currentMusic?.singer || "SINGER"}
-                      </span>
-                    )}
-                  </motion.div>
-                </AnimatePresence>
+                  {singerId ? (
+                    <Link
+                      href={`/${locale}/music/singer/${singerId}`}
+                      className="text-lg text-zinc-300 hover:underline"
+                    >
+                      {currentMusic?.singer || "SINGER"}
+                    </Link>
+                  ) : (
+                    <span className="text-lg text-zinc-300">
+                      {currentMusic?.singer || "SINGER"}
+                    </span>
+                  )}
+                </div>
 
                 <MusicActionsMenu />
               </div>
@@ -1352,18 +1283,14 @@ export function PlayerPage({ setIsClick }: IProp) {
 
           <div className="justify-cente flex items-center">
             <div className="mx-8 mb-4 flex w-full items-center justify-between text-white">
-              <motion.button
+              <button
                 onClick={handAudioForward}
-                whileTap={{ scale: 0.85 }}
-                transition={{ duration: 0.15 }}
                 className="flex h-12 w-12 cursor-pointer items-center justify-center"
               >
                 <Rewind size={40} weight="fill" />
-              </motion.button>
+              </button>
 
-              <motion.button
-                whileTap={{ scale: 0.8 }}
-                transition={{ duration: 0.15 }}
+              <button
                 onClick={
                   isPlaying
                     ? handlePauseAudio
@@ -1378,16 +1305,14 @@ export function PlayerPage({ setIsClick }: IProp) {
                 ) : (
                   <Play size={45} weight="fill" />
                 )}
-              </motion.button>
+              </button>
 
-              <motion.button
+              <button
                 onClick={handleAudioSkip}
-                whileTap={{ scale: 0.85 }}
-                transition={{ duration: 0.15 }}
                 className="flex h-12 w-12 cursor-pointer items-center justify-center"
               >
                 <FastForward size={40} weight="fill" />
-              </motion.button>
+              </button>
             </div>
           </div>
 
@@ -1395,29 +1320,23 @@ export function PlayerPage({ setIsClick }: IProp) {
             <VolumeBar />
 
             <div className="mx-8 flex items-center justify-between text-base text-zinc-400">
-              <motion.div
-                whileTap={{ scale: 0.8 }}
-                onClick={() => setIsClickLyric(!isClickLyric)}
-              >
+              <div onClick={() => setIsClickLyric(!isClickLyric)}>
                 {!isClickLyric ? (
                   <ChatTeardropDots size={25} />
                 ) : (
                   <ChatTeardropDots size={25} weight="fill" />
                 )}
-              </motion.div>
+              </div>
 
               <ShareNetwork size={25} weight="fill" />
 
-              <motion.div
-                whileTap={{ scale: 0.8 }}
-                onClick={() => setIsClickFeatured(!isClickFeatured)}
-              >
+              <div onClick={() => setIsClickFeatured(!isClickFeatured)}>
                 {!isClickFeatured ? (
                   <ListBullets size={28} weight="bold" />
                 ) : (
                   <ListStar size={28} weight="bold" />
                 )}
-              </motion.div>
+              </div>
             </div>
           </div>
         </div>

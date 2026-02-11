@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import {
   FastForward,
@@ -10,7 +9,6 @@ import {
   Shuffle,
 } from "phosphor-react";
 
-import { motion } from "motion/react";
 import { DurationAudio } from "./component/duration-audio";
 import {
   Control,
@@ -23,7 +21,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useAudio } from "@/components/music-provider";
 import { BorderPro } from "./component/border-pro";
 import dynamic from "next/dynamic";
-import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
+import { Drawer } from "vaul";
 
 const PlayerPage = dynamic(
   () => import("./player-page").then((mod) => mod.PlayerPage),
@@ -60,7 +58,8 @@ export function AudioBar() {
   const ticking = useRef(false);
   const [reactToScroll, setReactToScroll] = useState(false);
   const [hasOpenedPlayerPage, setHasOpenedPlayerPage] = useState(false);
-  const tapFeedbackClass = "cursor-pointer transition-opacity duration-150 active:opacity-60";
+  const tapFeedbackClass =
+    "cursor-pointer transition-opacity duration-150 active:opacity-60";
 
   const updateScrollVisibility = useCallback((isVisible: boolean) => {
     if (scrollStateRef.current === isVisible) return;
@@ -190,18 +189,12 @@ export function AudioBar() {
   }, [handleScroll, reactToScroll]);
 
   return (
-    <Drawer
+    <Drawer.Root
       open={isClick}
       onOpenChange={setIsClick}
       shouldScaleBackground={false}
     >
-      <motion.div
-        layoutId="audio-bar"
-        layout
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.5, type: "spring" }}
+      <div
         className={`fixed z-50 flex justify-center md:inset-x-[25vw] md:bottom-4 ${
           scroll ? "inset-x-4 bottom-[88px]" : "inset-x-24 bottom-[32px]"
         }`}
@@ -217,188 +210,198 @@ export function AudioBar() {
               scroll ? "" : "w-full cursor-pointer"
             }`}
           >
-          <div className="hidden items-center gap-4 text-black dark:text-white md:flex">
-            <Shuffle
-              onClick={(e) => {
-                if (!scroll) e.stopPropagation();
-                handlePlayRandomAudio();
-              }}
-              size={18}
-              weight="bold"
-              className={`${tapFeedbackClass} text-zinc-500`}
-            />
-
-            <Rewind
-              size={20}
-              onClick={(e) => {
-                if (!scroll) e.stopPropagation();
-                handAudioForward();
-              }}
-              weight="fill"
-              className={tapFeedbackClass}
-            />
-
-            {isPlaying ? (
-              <Pause
+            <div className="hidden items-center gap-4 text-black dark:text-white md:flex">
+              <Shuffle
                 onClick={(e) => {
                   if (!scroll) e.stopPropagation();
-                  handlePauseAudio();
+                  handlePlayRandomAudio();
                 }}
-                weight="fill"
-                size={25}
-                className={tapFeedbackClass}
+                size={18}
+                weight="bold"
+                className={`${tapFeedbackClass} text-zinc-500`}
               />
-            ) : (
-              <Play
+
+              <Rewind
+                size={20}
                 onClick={(e) => {
                   if (!scroll) e.stopPropagation();
-                  handleResumeAudio();
+                  handAudioForward();
                 }}
                 weight="fill"
-                size={25}
                 className={tapFeedbackClass}
               />
-            )}
 
-            <FastForward
-              onClick={(e) => {
-                if (!scroll) e.stopPropagation();
-                handleAudioSkip();
-              }}
-              weight="fill"
-              size={20}
-              className={tapFeedbackClass}
-            />
-
-            <div onClick={handleToggleRepeat} className={`${tapFeedbackClass} text-zinc-500`}>
-              {isRepeat ? (
-                <RepeatOnce size={18} weight="bold" />
+              {isPlaying ? (
+                <Pause
+                  onClick={(e) => {
+                    if (!scroll) e.stopPropagation();
+                    handlePauseAudio();
+                  }}
+                  weight="fill"
+                  size={25}
+                  className={tapFeedbackClass}
+                />
               ) : (
-                <Repeat size={18} weight="bold" />
+                <Play
+                  onClick={(e) => {
+                    if (!scroll) e.stopPropagation();
+                    handleResumeAudio();
+                  }}
+                  weight="fill"
+                  size={25}
+                  className={tapFeedbackClass}
+                />
+              )}
+
+              <FastForward
+                onClick={(e) => {
+                  if (!scroll) e.stopPropagation();
+                  handleAudioSkip();
+                }}
+                weight="fill"
+                size={20}
+                className={tapFeedbackClass}
+              />
+
+              <div
+                onClick={handleToggleRepeat}
+                className={`${tapFeedbackClass} text-zinc-500`}
+              >
+                {isRepeat ? (
+                  <RepeatOnce size={18} weight="bold" />
+                ) : (
+                  <Repeat size={18} weight="bold" />
+                )}
+              </div>
+            </div>
+
+            <div className="flex w-[700px] items-center justify-start gap-2 md:ml-6 md:gap-2">
+              {!currentMusic?.cover ? (
+                <div className="flex size-10 items-center justify-center rounded-xl bg-zinc-500 md:rounded-lg">
+                  <MusicNotes size={18} weight="fill" className="text-white" />
+                </div>
+              ) : (
+                <div className="shrink-0">
+                  <BorderPro roundedSize="rounded-lg">
+                    <img
+                      src={currentMusic?.cover}
+                      alt="cover"
+                      className="flex size-8 transform-gpu items-center justify-center rounded-lg object-cover [backface-visibility:hidden] md:rounded-lg"
+                    />
+                  </BorderPro>
+                </div>
+              )}
+
+              <div className="flex items-center gap-4">
+                <div>
+                  <div className="line-clamp-1 text-sm font-semibold text-black dark:text-white">
+                    {currentMusic?.title || "Title Song"}
+                  </div>
+
+                  <div className="line-clamp-1 text-sm font-medium text-zinc-500">
+                    {currentMusic?.singer || "Singer"}
+                  </div>
+                </div>
+
+                <div className="hidden md:flex">
+                  <DurationAudio />
+                </div>
+              </div>
+            </div>
+
+            <div className="hidden items-center gap-4 text-black dark:text-white md:flex">
+              {isMuted ? (
+                <SpeakerSlash
+                  size={20}
+                  weight="fill"
+                  onClick={(e) => {
+                    if (!scroll) e.stopPropagation();
+                    handleMute();
+                  }}
+                  className={tapFeedbackClass}
+                />
+              ) : (
+                <SpeakerHigh
+                  size={20}
+                  weight="fill"
+                  onClick={(e) => {
+                    if (!scroll) e.stopPropagation();
+                    handleMute();
+                  }}
+                  className={tapFeedbackClass}
+                />
+              )}
+
+              <Control
+                size={20}
+                weight="fill"
+                className={`mt-1.5 ${tapFeedbackClass}`}
+                onClick={(e) => {
+                  if (!scroll) e.stopPropagation();
+                  setIsClick(true);
+                }}
+              />
+            </div>
+
+            <div className="right-2 flex items-center md:hidden md:gap-4">
+              {isPlaying ? (
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePauseAudio();
+                  }}
+                  className={`mr-2 ${tapFeedbackClass}`}
+                >
+                  <Pause
+                    weight="fill"
+                    size={23}
+                    className="text-black dark:text-white"
+                  />
+                </div>
+              ) : (
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleResumeAudio();
+                  }}
+                  className={`mr-2 ${tapFeedbackClass}`}
+                >
+                  <Play
+                    weight="fill"
+                    size={23}
+                    className="text-black dark:text-white"
+                  />
+                </div>
+              )}
+
+              {scroll && (
+                <div className={tapFeedbackClass}>
+                  <FastForward
+                    onClick={handleAudioSkip}
+                    weight="fill"
+                    size={23}
+                    className="text-black dark:text-white"
+                  />
+                </div>
               )}
             </div>
           </div>
-
-          <div className="flex w-[700px] items-center justify-start gap-2 md:ml-6 md:gap-2">
-            {!currentMusic?.cover ? (
-              <div className="flex size-10 items-center justify-center rounded-xl bg-zinc-500 md:rounded-lg">
-                <MusicNotes size={18} weight="fill" className="text-white" />
-              </div>
-            ) : (
-              <div className="shrink-0">
-                <BorderPro roundedSize="rounded-lg">
-                  <img
-                    src={currentMusic?.cover}
-                    alt="cover"
-                    className="flex size-8 items-center justify-center rounded-lg object-cover md:rounded-lg"
-                  />
-                </BorderPro>
-              </div>
-            )}
-
-            <div className="flex items-center gap-4">
-              <div>
-                <div className="line-clamp-1 text-sm font-semibold text-black dark:text-white">
-                  {currentMusic?.title || "Title Song"}
-                </div>
-
-                <div className="line-clamp-1 text-sm font-medium text-zinc-500">
-                  {currentMusic?.singer || "Singer"}
-                </div>
-              </div>
-
-              <div className="hidden md:flex">
-                <DurationAudio />
-              </div>
-            </div>
-          </div>
-
-          <div className="hidden items-center gap-4 text-black dark:text-white md:flex">
-            {isMuted ? (
-              <SpeakerSlash
-                size={20}
-                weight="fill"
-                onClick={(e) => {
-                  if (!scroll) e.stopPropagation();
-                  handleMute();
-                }}
-                className={tapFeedbackClass}
-              />
-            ) : (
-              <SpeakerHigh
-                size={20}
-                weight="fill"
-                onClick={(e) => {
-                  if (!scroll) e.stopPropagation();
-                  handleMute();
-                }}
-                className={tapFeedbackClass}
-              />
-            )}
-
-            <Control
-              size={20}
-              weight="fill"
-              className={`mt-1.5 ${tapFeedbackClass}`}
-              onClick={(e) => {
-                if (!scroll) e.stopPropagation();
-                setIsClick(true);
-              }}
-            />
-          </div>
-
-          <div className="right-2 flex items-center md:hidden md:gap-4">
-            {isPlaying ? (
-              <div
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handlePauseAudio();
-                }}
-                className={`mr-2 ${tapFeedbackClass}`}
-              >
-                <Pause
-                  weight="fill"
-                  size={23}
-                  className="text-black dark:text-white"
-                />
-              </div>
-            ) : (
-              <div
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleResumeAudio();
-                }}
-                className={`mr-2 ${tapFeedbackClass}`}
-              >
-                <Play
-                  weight="fill"
-                  size={23}
-                  className="text-black dark:text-white"
-                />
-              </div>
-            )}
-
-            {scroll && (
-              <div className={tapFeedbackClass}>
-                <FastForward
-                  onClick={handleAudioSkip}
-                  weight="fill"
-                  size={23}
-                  className="text-black dark:text-white"
-                />
-              </div>
-            )}
-          </div>
-          </div>
         </div>
-      </motion.div>
+      </div>
 
-      <DrawerContent className="h-screen border-none bg-transparent p-0 will-change-transform [&>div:first-child]:hidden">
-        <DrawerTitle className="sr-only">
-          {currentMusic?.title ? `Now playing: ${currentMusic.title}` : "Music player"}
-        </DrawerTitle>
-        {hasOpenedPlayerPage ? <PlayerPage setIsClick={() => setIsClick(false)} /> : null}
-      </DrawerContent>
-    </Drawer>
+      <Drawer.Portal>
+        <Drawer.Overlay className="fixed inset-0 z-50 bg-black/80" />
+        <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 h-screen border-none bg-transparent p-0 outline-none will-change-transform">
+          <Drawer.Title className="sr-only">
+            {currentMusic?.title
+              ? `Now playing: ${currentMusic.title}`
+              : "Music player"}
+          </Drawer.Title>
+          {hasOpenedPlayerPage ? (
+            <PlayerPage setIsClick={() => setIsClick(false)} />
+          ) : null}
+        </Drawer.Content>
+      </Drawer.Portal>
+    </Drawer.Root>
   );
 }
