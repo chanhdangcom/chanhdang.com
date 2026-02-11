@@ -259,11 +259,11 @@ export function AudioBar() {
         transition={{
           layout: {
             type: "spring",
-            stiffness: 220,
-            damping: 32,
-            mass: 0.9,
+            stiffness: 420,
+            damping: 34,
+            mass: 0.58,
           },
-          opacity: { duration: 0.16, ease: "easeOut" },
+          opacity: { duration: 0.1, ease: "easeOut" },
         }}
         className={`fixed z-50 flex justify-center md:inset-x-[25vw] md:bottom-4 ${
           scroll ? "inset-x-4 bottom-[88px]" : "inset-x-24 bottom-[32px]"

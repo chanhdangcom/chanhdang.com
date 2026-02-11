@@ -10,6 +10,7 @@ export default function MusicLayout({ children }: Props) {
   return (
     <>
       <DisableRightClick />
+
       {children}
     </>
   );
