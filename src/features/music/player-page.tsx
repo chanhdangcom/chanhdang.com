@@ -102,6 +102,26 @@ const useIsDesktop = () => {
   return isDesktop;
 };
 
+const useDeferredRender = (isDesktop: boolean, delayMs = 220) => {
+  const [isReady, setIsReady] = useState(isDesktop);
+
+  useEffect(() => {
+    if (isDesktop) {
+      setIsReady(true);
+      return;
+    }
+
+    setIsReady(false);
+    const timeoutId = window.setTimeout(() => {
+      setIsReady(true);
+    }, delayMs);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [delayMs, isDesktop]);
+
+  return isReady;
+};
+
 const fetchFavoriteMusicIds = async (
   userId: string,
   force = false
@@ -367,6 +387,7 @@ const LyricPage = ({
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const touchDeltaYRef = useRef(0);
   const subtitleScrollRef = useRef<HTMLDivElement>(null);
+  const isDesktop = useIsDesktop();
 
   // Thêm hiệu ứng scroll lò xo
   useSpringScroll(subtitleScrollRef);
@@ -436,17 +457,27 @@ const LyricPage = ({
     onOpenFavorites: sharedActions.onOpenFavorites,
   });
 
-  const hoverBg = useImageHoverColor(currentMusic?.cover, { alpha: 1 });
+  const hoverBg = useImageHoverColor(currentMusic?.cover, {
+    alpha: isDesktop ? 1 : 0.72,
+  });
   return (
     <>
       <div className="fixed inset-0 z-50 flex justify-between space-y-4 px-4 md:rounded-3xl md:border md:border-white/10">
         <div className="w-full">
-          <div className="absolute inset-0 -z-10 flex justify-center bg-zinc-950 backdrop-blur-xl md:backdrop-blur-3xl">
+          <div
+            className={`absolute inset-0 -z-10 flex justify-center bg-zinc-950 ${
+              isDesktop ? "backdrop-blur-3xl" : "backdrop-blur-md"
+            }`}
+          >
             <div
-              className="saturate-125 mt-8 h-full w-full rotate-180 scale-110 rounded-3xl"
+              className={`mt-8 h-full w-full rounded-3xl ${
+                isDesktop ? "rotate-180 scale-110 saturate-125" : "saturate-110"
+              }`}
               style={{
                 backgroundColor: hoverBg,
-                backgroundImage: `radial-gradient(120% 95% at 50% 0%, ${hoverBg} 0%, rgba(39, 39, 42, 0.28) 58%, rgba(9, 9, 11, 0.52) 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 44%)`,
+                backgroundImage: isDesktop
+                  ? `radial-gradient(120% 95% at 50% 0%, ${hoverBg} 0%, rgba(39, 39, 42, 0.28) 58%, rgba(9, 9, 11, 0.52) 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 44%)`
+                  : `linear-gradient(180deg, ${hoverBg} 0%, rgba(9, 9, 11, 0.84) 72%)`,
               }}
             />
           </div>
@@ -559,6 +590,7 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
   const touchDeltaYRef = useRef(0);
   const subtitleScrollRef = useRef<HTMLDivElement>(null);
   const isDesktop = useIsDesktop();
+  const isHeavyReady = useDeferredRender(isDesktop, 180);
 
   // Thêm hiệu ứng scroll lò xo
   useSpringScroll(subtitleScrollRef);
@@ -619,7 +651,9 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
 
   // Kiểm tra xem bài hát có trong Favorites hay không
 
-  const hoverBg = useImageHoverColor(currentMusic?.cover, { alpha: 15 });
+  const hoverBg = useImageHoverColor(currentMusic?.cover, {
+    alpha: isDesktop ? 1 : 0.72,
+  });
 
   return (
     <>
@@ -627,10 +661,14 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
         <div className="w-full">
           <div className="absolute inset-0 -z-10 flex justify-center gap-8 bg-zinc-950">
             <div
-              className="saturate-125 mt-8 h-full w-full rotate-180 scale-110 rounded-3xl"
+              className={`mt-8 h-full w-full rounded-3xl ${
+                isDesktop ? "rotate-180 scale-110 saturate-125" : "saturate-110"
+              }`}
               style={{
                 backgroundColor: hoverBg,
-                backgroundImage: `radial-gradient(120% 95% at 50% 0%, ${hoverBg} 0%, rgba(39, 39, 42, 0.28) 58%, rgba(9, 9, 11, 0.52) 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 44%)`,
+                backgroundImage: isDesktop
+                  ? `radial-gradient(120% 95% at 50% 0%, ${hoverBg} 0%, rgba(39, 39, 42, 0.28) 58%, rgba(9, 9, 11, 0.52) 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 44%)`
+                  : `linear-gradient(180deg, ${hoverBg} 0%, rgba(9, 9, 11, 0.84) 72%)`,
               }}
             />
           </div>
@@ -694,7 +732,7 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
           </div>
         </div>
 
-        {isDesktop ? (
+        {isDesktop && isHeavyReady ? (
           <div
             ref={subtitleScrollRef}
             className="scroll-spring pointer-events-none ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block"
@@ -750,6 +788,7 @@ const FeaturedPage = ({
   const randomListRef = useRef<HTMLDivElement | null>(null);
   const subtitleScrollRef = useRef<HTMLDivElement>(null);
   const isDesktop = useIsDesktop();
+  const isHeavyReady = useDeferredRender(isDesktop, 220);
 
   // Thêm hiệu ứng scroll lò xo
   useSpringScroll(subtitleScrollRef);
@@ -812,6 +851,7 @@ const FeaturedPage = ({
 
   // Lấy danh sách nhạc random
   useEffect(() => {
+    if (!isHeavyReady) return;
     let isMounted = true;
 
     const loadRandomMusics = async () => {
@@ -840,7 +880,7 @@ const FeaturedPage = ({
     return () => {
       isMounted = false;
     };
-  }, [currentMusic?.id]);
+  }, [currentMusic?.id, isHeavyReady]);
 
   const MusicActionsMenu = useMusicActionsMenu({
     isInFavorites: sharedActions.isInFavorites,
@@ -853,18 +893,28 @@ const FeaturedPage = ({
     onOpenFavorites: sharedActions.onOpenFavorites,
   });
 
-  const hoverBg = useImageHoverColor(currentMusic?.cover, { alpha: 15 });
+  const hoverBg = useImageHoverColor(currentMusic?.cover, {
+    alpha: isDesktop ? 1 : 0.72,
+  });
 
   return (
     <>
       <div className="fixed inset-0 z-50 flex justify-between space-y-4 px-4 md:rounded-3xl md:border md:border-white/10">
         <div className="flex w-full">
-          <div className="absolute inset-0 -z-10 flex justify-center bg-zinc-950 backdrop-blur-xl md:backdrop-blur-3xl">
+          <div
+            className={`absolute inset-0 -z-10 flex justify-center bg-zinc-950 ${
+              isDesktop ? "backdrop-blur-3xl" : "backdrop-blur-md"
+            }`}
+          >
             <div
-              className="saturate-125 mt-8 h-full w-full rotate-180 scale-110 rounded-3xl"
+              className={`mt-8 h-full w-full rounded-3xl ${
+                isDesktop ? "rotate-180 scale-110 saturate-125" : "saturate-110"
+              }`}
               style={{
                 backgroundColor: hoverBg,
-                backgroundImage: `radial-gradient(120% 95% at 50% 0%, ${hoverBg} 0%, rgba(39, 39, 42, 0.28) 58%, rgba(9, 9, 11, 0.52) 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 44%)`,
+                backgroundImage: isDesktop
+                  ? `radial-gradient(120% 95% at 50% 0%, ${hoverBg} 0%, rgba(39, 39, 42, 0.28) 58%, rgba(9, 9, 11, 0.52) 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 44%)`
+                  : `linear-gradient(180deg, ${hoverBg} 0%, rgba(9, 9, 11, 0.84) 72%)`,
               }}
             />
           </div>
@@ -964,17 +1014,24 @@ const FeaturedPage = ({
               <div className="mt-4">
                 <div className="font-semibold text-white">Continue Music</div>
 
+                {!isHeavyReady && (
+                  <div className="mt-2 text-xs text-zinc-400">
+                    Đang tối ưu nội dung cho mobile...
+                  </div>
+                )}
+
                 {isLoadingRandom && (
                   <div className="mt-2 text-xs text-zinc-400">
                     Đang tải nhạc...
                   </div>
                 )}
 
-                {!isLoadingRandom && randomMusics.length > 0 && (
+                {isHeavyReady && !isLoadingRandom && randomMusics.length > 0 && (
                   <div className="relative mt-2">
                     <div
                       ref={randomListRef}
                       className="h-[40vh] w-full space-y-4 overflow-y-auto pr-2 scrollbar-hide"
+                      style={{ contentVisibility: "auto" }}
                     >
                       {randomMusics.slice(0, 8).map((music) => (
                         <AudioItemOrder
@@ -991,7 +1048,7 @@ const FeaturedPage = ({
             </div>
           </div>
 
-          {isDesktop ? (
+          {isDesktop && isHeavyReady ? (
             <div
               ref={subtitleScrollRef}
               className="scroll-spring pointer-events-none ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block"
@@ -1228,7 +1285,7 @@ export function PlayerPage({ setIsClick }: IProp) {
 
       <>
         <div className="fixed bottom-0 z-50 w-full space-y-6 px-8 pb-8 md:bottom-8 md:w-[40vw]">
-          <div className="pointer-events-none absolute -bottom-16 left-0 -z-10 h-[40vh] w-full scale-150 bg-black blur-3xl brightness-0 md:w-[35vw]" />
+          <div className="pointer-events-none absolute -bottom-16 left-0 -z-10 h-[40vh] w-full scale-150 bg-black blur-xl brightness-0 md:w-[35vw] md:blur-3xl" />
 
           {isClickLyric && (
             <>

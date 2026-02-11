@@ -6,6 +6,7 @@ import { BorderPro } from "./component/border-pro";
 import { cn } from "@/utils/cn";
 import { ScrollCarouselItem } from "./component/scroll-carousel-item";
 import { useScrollCarousel } from "@/hooks/use-scroll-carousel";
+import { useEffect, useRef, useState } from "react";
 
 type IPickForYou = {
   id: string;
@@ -48,6 +49,55 @@ const pickForYou: IPickForYou[] = [
   },
 ];
 
+function LazyGifImage({ src, alt }: { src: string; alt: string }) {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    const target = rootRef.current;
+    if (!target) return;
+
+    if (typeof IntersectionObserver === "undefined") {
+      setShouldLoad(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setShouldLoad(true);
+            observer.disconnect();
+          }
+        });
+      },
+      {
+        rootMargin: "180px",
+        threshold: 0.01,
+      }
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={rootRef} className="h-80 w-60 shrink-0">
+      {shouldLoad ? (
+        <img
+          src={src}
+          alt={alt}
+          className="h-80 w-60 shrink-0 object-cover"
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <div className="h-80 w-60 shrink-0 bg-zinc-700/40" />
+      )}
+    </div>
+  );
+}
+
 export function PickForYou() {
   const { handlePlayRandomAudio } = useAudio();
   const { scrollRef, scrollLeft, scrollRight, canScrollLeft, canScrollRight } =
@@ -82,11 +132,7 @@ export function PickForYou() {
                   onClick={() => handlePlayRandomAudio()}
                 >
                   <BorderPro roundedSize="rounded-2xl">
-                    <img
-                      src={item.image}
-                      alt=""
-                      className="h-80 w-60 shrink-0 object-cover"
-                    />
+                    <LazyGifImage src={item.image} alt={item.title} />
                   </BorderPro>
 
                   <div className="absolute inset-0 flex h-full flex-col justify-between">

@@ -30,7 +30,7 @@ const PlayerPage = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="fixed inset-0 z-50 bg-zinc-950/95 backdrop-blur-3xl" />
+      <div className="fixed inset-0 z-50 bg-zinc-950/95 backdrop-blur-md md:backdrop-blur-3xl" />
     ),
   }
 );
