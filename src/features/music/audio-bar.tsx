@@ -142,10 +142,10 @@ export function AudioBar() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5, type: "spring" }}
       className={`fixed z-50 flex justify-center md:inset-x-[25vw] md:bottom-4 ${
-        scroll ? "inset-x-4 bottom-[85px]" : "inset-x-24 bottom-6"
+        scroll ? "inset-x-4 bottom-[88px]" : "inset-x-24 bottom-[32px]"
       }`}
     >
-      <div className="relative overflow-hidden rounded-[50px] border border-white/10 bg-zinc-200/70 px-3 py-1 backdrop-blur-sm dark:bg-zinc-900/70 md:rounded-[55px]">
+      <div className="relative overflow-hidden rounded-[50px] border border-white/10 bg-zinc-200/70 px-3 py-1 backdrop-blur-xl dark:bg-zinc-900/70 md:rounded-[55px]">
         <div
           onClick={() => {
             if (window.innerWidth < 768) {
@@ -177,7 +177,7 @@ export function AudioBar() {
               transition={{ duration: 0.15 }}
             >
               <Rewind
-                size={25}
+                size={20}
                 onClick={(e) => {
                   if (!scroll) e.stopPropagation();
                   handAudioForward();
@@ -186,6 +186,7 @@ export function AudioBar() {
                 className="cursor-pointer"
               />
             </motion.div>
+
             {isPlaying ? (
               <motion.div
                 whileTap={{ opacity: 0.6 }}
@@ -197,7 +198,7 @@ export function AudioBar() {
                     handlePauseAudio();
                   }}
                   weight="fill"
-                  size={30}
+                  size={25}
                   className="cursor-pointer"
                 />
               </motion.div>
@@ -217,6 +218,7 @@ export function AudioBar() {
                 />
               </motion.div>
             )}
+
             <motion.div
               whileTap={{ opacity: 0.6 }}
               transition={{ duration: 0.15 }}
@@ -227,28 +229,32 @@ export function AudioBar() {
                   handleAudioSkip();
                 }}
                 weight="fill"
-                size={25}
+                size={20}
                 className="cursor-pointer"
               />
             </motion.div>
 
-            <div onClick={handleToggleRepeat}>
-              {isRepeat ? <RepeatOnce size={18} /> : <Repeat size={18} />}
+            <div onClick={handleToggleRepeat} className="text-zinc-500">
+              {isRepeat ? (
+                <RepeatOnce size={18} weight="bold" />
+              ) : (
+                <Repeat size={18} weight="bold" />
+              )}
             </div>
           </div>
 
           <div className="flex w-[700px] items-center justify-start gap-2 md:ml-6 md:gap-2">
             {!currentMusic?.cover ? (
-              <div className="flex size-10 items-center justify-center rounded-xl bg-zinc-900 md:rounded-lg">
-                <MusicNotes size={20} weight="fill" className="text-white" />
+              <div className="flex size-10 items-center justify-center rounded-xl bg-zinc-500 md:rounded-lg">
+                <MusicNotes size={18} weight="fill" className="text-white" />
               </div>
             ) : (
               <div className="shrink-0">
-                <BorderPro roundedSize="rounded-xl">
+                <BorderPro roundedSize="rounded-lg">
                   <img
                     src={currentMusic?.cover}
                     alt="cover"
-                    className="flex size-10 items-center justify-center rounded-xl object-cover md:rounded-lg"
+                    className="flex size-8 items-center justify-center rounded-lg object-cover md:rounded-lg"
                   />
                 </BorderPro>
               </div>

@@ -65,7 +65,7 @@ export function DurationAudio() {
   }, [currentTime, duration]);
 
   return (
-    <div className="flex gap-2 text-sm text-zinc-700 dark:text-zinc-50">
+    <div className="flex gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-50">
       <div>{formattedTime.current}</div>/<div>{formattedTime.total}</div>
     </div>
   );

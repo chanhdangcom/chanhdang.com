@@ -86,7 +86,7 @@ export function MenuBarMobile() {
     <div className="fixed inset-x-4 bottom-6 z-10 flex items-center justify-between sm:hidden">
       <AnimatePresence>
         {show ? (
-          <div className="relative overflow-hidden rounded-[50px] border border-white/10 bg-zinc-200/70 py-1.5 pr-4 backdrop-blur-sm dark:bg-zinc-900/70">
+          <div className="relative overflow-hidden rounded-[50px] border border-white/10 bg-zinc-200/70 py-1.5 pr-2 backdrop-blur-sm dark:bg-zinc-900/70">
             <div className="absolute inset-y-1 left-0 -z-10 ml-1 w-20 shrink-0 rounded-full bg-zinc-400 opacity-80 dark:bg-zinc-700" />
 
             <motion.div
@@ -102,7 +102,7 @@ export function MenuBarMobile() {
                 href={`/${locale}/music`}
                 className="flex flex-col items-center rounded-full pl-4 text-rose-500"
               >
-                <House size={25} weight="fill" />
+                <House size={30} weight="fill" />
 
                 <div className="text-xs">Home</div>
               </Link>
@@ -111,7 +111,7 @@ export function MenuBarMobile() {
                 href={`/${locale}/music/new-release`}
                 className="flex flex-col items-center"
               >
-                <SquaresFour size={25} weight="fill" />
+                <SquaresFour size={30} weight="fill" />
 
                 <div className="text-xs">New</div>
               </Link>
@@ -121,13 +121,13 @@ export function MenuBarMobile() {
                   href={`/${locale}/music/add-music`}
                   className="flex flex-col items-center"
                 >
-                  <PlusSquare size={25} weight="fill" />
+                  <PlusSquare size={30} weight="fill" />
 
                   <div className="text-xs">Music</div>
                 </Link>
               ) : (
                 <div className="pointer-events-none flex flex-col items-center opacity-25">
-                  <PlusSquare size={25} weight="fill" />
+                  <PlusSquare size={30} weight="fill" />
 
                   <div className="text-xs">Music</div>
                 </div>
@@ -139,14 +139,14 @@ export function MenuBarMobile() {
                   className="flex flex-col items-center"
                 >
                   <div className="flex flex-col items-center">
-                    <CardsThree size={25} weight="fill" />
+                    <CardsThree size={30} weight="fill" />
                     <div className="text-xs">Library</div>
                   </div>
                 </Link>
               ) : (
                 <div className="pointer-events-none flex flex-col items-center opacity-30">
                   <div className="flex flex-col items-center">
-                    <CardsThree size={25} weight="fill" />
+                    <CardsThree size={30} weight="fill" />
                     <div className="text-xs">Library</div>
                   </div>
                 </div>
@@ -161,11 +161,11 @@ export function MenuBarMobile() {
               type: "spring",
             }}
             layoutId="item"
-            className="rounded-full border border-white/20 bg-zinc-200/80 dark:bg-black/80"
+            className="rounded-full border border-white/20 bg-zinc-200/80 p-4 dark:bg-black/80"
           >
-            <div className="rounded-full p-4 text-rose-600">
-              <House size={25} weight="fill" />
-            </div>
+            <Link href={`/${locale}/music/`}>
+              <House size={30} weight="fill" className="text-rose-600" />
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>
@@ -180,11 +180,11 @@ export function MenuBarMobile() {
               duration: 1,
               ease: "easeInOut",
             }}
-            className="rounded-full border border-white/20 bg-zinc-200/80 p-4 dark:bg-black/90"
+            className="rounded-full border border-white/20 bg-zinc-200/80 p-4 dark:bg-black/80"
           >
             <Link href={`/${locale}/music/search`}>
               <MagnifyingGlass
-                size={25}
+                size={30}
                 weight="bold"
                 className="text-black dark:text-white"
               />
@@ -202,7 +202,7 @@ export function MenuBarMobile() {
           >
             <Link href={`/${locale}/music/search`}>
               <MagnifyingGlass
-                size={25}
+                size={30}
                 weight="bold"
                 className="text-black dark:text-white"
               />

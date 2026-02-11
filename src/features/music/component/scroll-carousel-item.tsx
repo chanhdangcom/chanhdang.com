@@ -21,7 +21,7 @@ export function ScrollCarouselItem({
       {canScrollLeft && (
         <div
           onClick={scrollLeft}
-          className="group absolute left-1 top-1/2 z-40 flex h-20 -translate-y-1/2 cursor-pointer items-center justify-center rounded-lg bg-zinc-400/50 backdrop-blur-md hover:scale-105 md:left-[260px]"
+          className="group absolute left-1 top-1/2 z-40 flex h-16 -translate-y-1/2 cursor-pointer items-center justify-center rounded-3xl bg-zinc-500/50 opacity-0 backdrop-blur-xl transition-all duration-200 hover:scale-105 group-hover/carousel:opacity-100 xl:left-[260px]"
         >
           <CaretLeft
             size={32}
@@ -35,7 +35,7 @@ export function ScrollCarouselItem({
       {canScrollRight && (
         <div
           onClick={scrollRight}
-          className="group absolute right-1 top-1/2 z-40 flex h-20 -translate-y-1/2 cursor-pointer items-center justify-center rounded-lg bg-zinc-400/60 backdrop-blur-md hover:scale-105"
+          className="group absolute right-1 top-1/2 z-40 flex h-16 -translate-y-1/2 cursor-pointer items-center justify-center rounded-3xl bg-zinc-500/60 opacity-0 backdrop-blur-md transition-all duration-200 hover:scale-105 group-hover/carousel:opacity-100"
         >
           <CaretRight
             size={32}

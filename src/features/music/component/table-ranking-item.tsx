@@ -2,7 +2,7 @@
 import { useAudio } from "@/components/music-provider";
 import { AudioItemOrder } from "./audio-item-order";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
-import { DotsThreeVertical } from "@phosphor-icons/react/dist/ssr";
+import { DotsThree } from "@phosphor-icons/react/dist/ssr";
 
 type Iprop = {
   music: IMusic;
@@ -19,10 +19,10 @@ export function TableRankingItem({ music, handlePlay }: Iprop) {
     >
       <div className="flex items-center justify-between">
         <AudioItemOrder
-          className="w-[60vw] md:w-[20vw]"
+          className="w-[70vw] md:w-[30vw]"
           music={music}
           handlePlay={() => handlePlayAudio}
-          item={<DotsThreeVertical size={20} weight="bold" />}
+          item={<DotsThree size={20} weight="bold" />}
           border={true}
         />
       </div>

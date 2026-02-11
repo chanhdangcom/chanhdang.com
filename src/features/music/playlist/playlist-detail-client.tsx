@@ -8,9 +8,9 @@ import { IPlaylistItem } from "../type/playlist";
 import { AudioItemOrder } from "../component/audio-item-order";
 import {
   DotsThree,
-  DotsThreeVertical,
   Play,
   Shuffle,
+  WaveSine,
 } from "@phosphor-icons/react/dist/ssr";
 import { MotionHeaderMusic } from "../component/motion-header-music";
 import { LibraryPlaylistButton } from "../library/library-playlist-button";
@@ -108,7 +108,7 @@ export function PlaylistDetailClient({ playlist }: Props) {
 
           <div className="flex rounded-3xl">
             <div className="w-full flex-col items-center md:flex-none">
-              <div className="relative overflow-hidden">
+              <div className="relative overflow-hidden md:flex md:items-center md:gap-4">
                 <div
                   className="pointer-events-none absolute inset-0 -z-10"
                   style={{
@@ -116,11 +116,11 @@ export function PlaylistDetailClient({ playlist }: Props) {
                   }}
                 />
 
-                <div className="md:my-36 md:ml-[270px]">
+                <div className="md:my-20 md:ml-[270px]">
                   <motion.div
                     role="img"
                     aria-label="cover"
-                    className="mx-auto aspect-square w-full bg-cover bg-center bg-no-repeat shadow-2xl md:size-60 md:rounded-3xl"
+                    className="mx-auto aspect-square w-full bg-cover bg-center bg-no-repeat shadow-2xl md:mx-4 md:size-80 md:rounded-3xl"
                     style={{
                       backgroundImage: `url(${playlist.cover})`,
                       y: isMobile ? smoothParallax : 0,
@@ -129,22 +129,30 @@ export function PlaylistDetailClient({ playlist }: Props) {
                   />
                 </div>
 
-                <div className="absolute inset-x-4 bottom-8 space-y-4">
+                <div className="absolute inset-x-4 bottom-8 space-y-4 md:static md:space-y-28">
                   <motion.div
-                    className="stext-center gap-2 font-semibold text-black md:ml-[270px]"
+                    className="stext-center gap-2 font-semibold text-black md:space-y-2"
                     style={{ opacity: smoothOpacity }}
                   >
-                    <div className="text-4xl text-white">
+                    <div className="text-4xl text-white md:text-6xl">
                       {playlist.title || "Playlist"}
                     </div>
 
-                    <div className="text-white">
+                    <div className="text-rose-500 dark:text-blue-500 md:text-3xl">
                       {playlist.singer || "ChanhDang Music"}
+                    </div>
+
+                    <div className="hidden items-center gap-2 text-zinc-400 md:flex">
+                      <div>Chanh Dang Music 2026</div>
+
+                      <WaveSine size={20} weight="bold" />
+
+                      <div>Lossless</div>
                     </div>
                   </motion.div>
 
                   <motion.div
-                    className="flex justify-between gap-4 md:ml-[270px]"
+                    className="flex justify-between gap-4 md:w-80"
                     style={{ opacity: smoothOpacity }}
                   >
                     <motion.div
@@ -154,7 +162,7 @@ export function PlaylistDetailClient({ playlist }: Props) {
                     >
                       <Play size={20} weight="fill" />
 
-                      <div className="text-xl">Play</div>
+                      <div className="text-md">Play</div>
                     </motion.div>
 
                     <motion.div
@@ -164,7 +172,7 @@ export function PlaylistDetailClient({ playlist }: Props) {
                     >
                       <Shuffle size={20} weight="fill" />
 
-                      <div className="text-xl">Mix song</div>
+                      <div className="text-md">Mix song</div>
                     </motion.div>
                   </motion.div>
                 </div>
@@ -197,7 +205,7 @@ export function PlaylistDetailClient({ playlist }: Props) {
                           ? new Date(music.createdAt as Date).toISOString()
                           : undefined
                       }
-                      item={<DotsThreeVertical size={20} weight="bold" />}
+                      item={<DotsThree size={22} weight="bold" />}
                     />
                   </div>
                 ))
