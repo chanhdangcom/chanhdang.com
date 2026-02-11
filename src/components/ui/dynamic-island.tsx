@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { FastAverageColor } from "fast-average-color";
 
-const bars = new Array(9).fill(0);
+const bars = new Array(6).fill(0);
 
 type IPlay = {
   isPlay: boolean;
@@ -71,7 +71,7 @@ export function DynamicIslandWave({ isPlay, coverUrl, color }: IPlay) {
       {bars.map((_, i) => (
         <motion.div
           key={`bar-${i}`}
-          className="mx-[0.8px] w-[1.6px] rounded-full"
+          className="mx-[0.8px] w-[1.8px] rounded-full"
           style={{
             backgroundColor: color || waveColor,
           }}
