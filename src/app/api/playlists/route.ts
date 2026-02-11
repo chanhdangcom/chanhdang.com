@@ -41,7 +41,25 @@ const resolveMusicsByIds = async (db: Db, ids: ObjectId[]) => {
   if (ids.length === 0) return [];
   const found = await db
     .collection("musics")
-    .find({ _id: { $in: ids } })
+    .find(
+      { _id: { $in: ids } },
+      {
+        projection: {
+          title: 1,
+          singer: 1,
+          cover: 1,
+          audio: 1,
+          youtube: 1,
+          content: 1,
+          type: 1,
+          topic: 1,
+          srt: 1,
+          beat: 1,
+          createdAt: 1,
+          playCount: 1,
+        },
+      }
+    )
     .toArray();
   return found.map((m) => normalizeMusic(m as Record<string, unknown>));
 };
@@ -55,6 +73,11 @@ export async function GET(request: Request) {
     const url = new URL(request.url);
     const genre = url.searchParams.get("genre");
     const singerId = url.searchParams.get("singerId");
+    const lite = url.searchParams.get("lite") === "1";
+    const limitParam = Number(url.searchParams.get("limit") ?? "0");
+    const limit = Number.isFinite(limitParam) && limitParam > 0
+      ? Math.min(limitParam, 50)
+      : 0;
 
     const client = await clientPromise;
     const db = client.db("musicdb");
@@ -140,7 +163,36 @@ export async function GET(request: Request) {
       return NextResponse.json([playlist]);
     }
 
-    const playlists = await db.collection("playlists").find({}).toArray();
+    const cursor = db.collection("playlists").find(
+      {},
+      {
+        projection: lite
+          ? {
+              title: 1,
+              singer: 1,
+              cover: 1,
+              musicIds: 1,
+              createdAt: 1,
+              updatedAt: 1,
+            }
+          : undefined,
+      }
+    );
+    if (limit > 0) {
+      cursor.limit(limit);
+    }
+    const playlists = await cursor.toArray();
+
+    if (lite) {
+      const lightweight = (playlists as PlaylistDocument[]).map((playlist) => ({
+        ...normalizeDocument(playlist),
+        title: String(playlist.title ?? ""),
+        singer: String(playlist.singer ?? ""),
+        cover: String(playlist.cover ?? ""),
+      }));
+      return NextResponse.json(lightweight);
+    }
+
     const normalized = await Promise.all(
       (playlists as PlaylistDocument[]).map(async (playlist) => {
         const normalizedIds = Array.isArray(playlist.musicIds)

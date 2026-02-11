@@ -10,8 +10,30 @@ export default async function CarouselAudio() {
     const client = await clientPromise;
     const db = client.db("musicdb");
 
-    // ✅ Lấy toàn bộ dữ liệu
-    const data = await db.collection("musics").find({}).toArray();
+    // ✅ Chỉ lấy dữ liệu cần cho carousel để tải nhanh khi chuyển trang
+    const data = await db
+      .collection("musics")
+      .find(
+        {},
+        {
+          projection: {
+            title: 1,
+            singer: 1,
+            cover: 1,
+            audio: 1,
+            youtube: 1,
+            content: 1,
+            type: 1,
+            srt: 1,
+            beat: 1,
+            createdAt: 1,
+            playCount: 1,
+          },
+        }
+      )
+      .sort({ playCount: -1, createdAt: -1 })
+      .limit(24)
+      .toArray();
 
     // ✅ Chuyển đổi dữ liệu an toàn
     const musics: IMusic[] = Array.isArray(data)

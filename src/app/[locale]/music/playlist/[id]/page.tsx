@@ -14,6 +14,27 @@ type PlaylistDocument = {
   musics?: unknown[];
 };
 
+const playlistProjection = {
+  title: 1,
+  singer: 1,
+  cover: 1,
+  musicIds: 1,
+  musics: 1,
+} as const;
+
+const musicProjection = {
+  title: 1,
+  singer: 1,
+  cover: 1,
+  audio: 1,
+  youtube: 1,
+  content: 1,
+  type: 1,
+  srt: 1,
+  beat: 1,
+  createdAt: 1,
+} as const;
+
 const parseLegacyMusicIds = (musics: unknown[] = []) =>
   normalizeObjectIds(
     musics
@@ -39,7 +60,7 @@ async function getPlaylist(id: string): Promise<IPlaylistItem | null> {
   const db = client.db("musicdb");
   const doc = (await db
     .collection("playlists")
-    .findOne({ _id: new ObjectId(id) })) as PlaylistDocument | null;
+    .findOne({ _id: new ObjectId(id) }, { projection: playlistProjection })) as PlaylistDocument | null;
   if (!doc) return null;
 
   const musicIds = Array.isArray(doc.musicIds)
@@ -51,9 +72,20 @@ async function getPlaylist(id: string): Promise<IPlaylistItem | null> {
     musicIds.length > 0
       ? await db
           .collection("musics")
-          .find({ _id: { $in: musicIds } })
+          .find({ _id: { $in: musicIds } }, { projection: musicProjection })
           .toArray()
       : [];
+
+  // Keep display order stable based on playlist.musicIds
+  if (musicIds.length > 0) {
+    const order = new Map(musicIds.map((item, index) => [item.toString(), index]));
+    musicDocs.sort((a, b) => {
+      const aId = a._id?.toString?.() ?? "";
+      const bId = b._id?.toString?.() ?? "";
+      return (order.get(aId) ?? Number.MAX_SAFE_INTEGER) -
+        (order.get(bId) ?? Number.MAX_SAFE_INTEGER);
+    });
+  }
   const musics = musicDocs.map((music) =>
     normalizeMusic(music as Record<string, unknown>)
   );

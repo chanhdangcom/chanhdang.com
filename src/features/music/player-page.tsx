@@ -57,6 +57,164 @@ type MusicActionsMenuProps = {
   onOpenFavorites: () => void;
 };
 
+type SharedMusicActionsProps = {
+  isInFavorites: boolean;
+  isLoadingFavorite: boolean;
+  onToggleFavorites: () => void;
+  onShare: () => void;
+  onOpenFavorites: () => void;
+};
+
+type LibraryEntry = {
+  resourceId: string;
+};
+
+const FAVORITES_CACHE_TTL_MS = 45_000;
+const favoritesCache = new Map<string, { expiresAt: number; ids: Set<string> }>();
+const favoritesInFlight = new Map<string, Promise<Set<string>>>();
+
+const RANDOM_MUSIC_CACHE_TTL_MS = 30_000;
+let randomMusicCache: { expiresAt: number; items: IMusic[] } | null = null;
+let randomMusicInFlight: Promise<IMusic[]> | null = null;
+
+let singersInFlight: Promise<ISingerItem[]> | null = null;
+const singerIdByNameCache = new Map<string, string | null>();
+
+const fetchFavoriteMusicIds = async (
+  userId: string,
+  force = false
+): Promise<Set<string>> => {
+  const cached = favoritesCache.get(userId);
+  if (!force && cached && cached.expiresAt > Date.now()) {
+    return cached.ids;
+  }
+
+  if (!force && favoritesInFlight.has(userId)) {
+    return favoritesInFlight.get(userId)!;
+  }
+
+  const request = (async () => {
+    const response = await fetch(`/api/library?userId=${userId}&type=music`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch favorite musics");
+    }
+
+    const entries = (await response.json()) as LibraryEntry[];
+    const ids = new Set(
+      Array.isArray(entries)
+        ? entries.map((entry) => entry.resourceId).filter(Boolean)
+        : []
+    );
+
+    favoritesCache.set(userId, {
+      ids,
+      expiresAt: Date.now() + FAVORITES_CACHE_TTL_MS,
+    });
+
+    return ids;
+  })();
+
+  favoritesInFlight.set(userId, request);
+  try {
+    return await request;
+  } finally {
+    favoritesInFlight.delete(userId);
+  }
+};
+
+const updateFavoriteMusicCache = (
+  userId: string,
+  musicId: string,
+  isFavorite: boolean
+) => {
+  const cached = favoritesCache.get(userId);
+  if (!cached) return;
+
+  if (isFavorite) {
+    cached.ids.add(musicId);
+  } else {
+    cached.ids.delete(musicId);
+  }
+
+  favoritesCache.set(userId, {
+    ids: cached.ids,
+    expiresAt: Date.now() + FAVORITES_CACHE_TTL_MS,
+  });
+};
+
+const fetchRandomMusics = async (limit = 8): Promise<IMusic[]> => {
+  if (randomMusicCache && randomMusicCache.expiresAt > Date.now()) {
+    return randomMusicCache.items;
+  }
+
+  if (randomMusicInFlight) {
+    return randomMusicInFlight;
+  }
+
+  randomMusicInFlight = (async () => {
+    const res = await fetch(`/api/musics?random=1&limit=${limit}`, {
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch random musics");
+    }
+
+    const data = (await res.json()) as IMusic[];
+    const parsed = Array.isArray(data)
+      ? data.filter((music): music is IMusic => Boolean(music?.id))
+      : [];
+
+    randomMusicCache = {
+      items: parsed,
+      expiresAt: Date.now() + RANDOM_MUSIC_CACHE_TTL_MS,
+    };
+
+    return parsed;
+  })();
+
+  try {
+    return await randomMusicInFlight;
+  } finally {
+    randomMusicInFlight = null;
+  }
+};
+
+const findSingerIdByName = async (name?: string | null): Promise<string | null> => {
+  if (!name) return null;
+
+  if (singerIdByNameCache.has(name)) {
+    return singerIdByNameCache.get(name) ?? null;
+  }
+
+  if (!singersInFlight) {
+    singersInFlight = fetch("/api/singers")
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch singers");
+        }
+        return (await response.json()) as ISingerItem[];
+      })
+      .finally(() => {
+        singersInFlight = null;
+      });
+  }
+
+  try {
+    const singers = await singersInFlight;
+    singers.forEach((singer) => {
+      if (singer.singer) {
+        singerIdByNameCache.set(singer.singer, singer.id || singer._id || null);
+      }
+    });
+  } catch {
+    singerIdByNameCache.set(name, null);
+    return null;
+  }
+
+  return singerIdByNameCache.get(name) ?? null;
+};
+
 const useMusicActionsMenu = ({
   isInFavorites,
   isLoadingFavorite,
@@ -176,7 +334,13 @@ const SubtitleItem = memo(
 
 SubtitleItem.displayName = "SubtitleItem";
 
-const LyricPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
+const LyricPage = ({
+  onRequestClose,
+  sharedActions,
+}: {
+  onRequestClose: () => void;
+  sharedActions: SharedMusicActionsProps;
+}) => {
   const {
     currentMusic,
 
@@ -187,10 +351,6 @@ const LyricPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
     setIsPlayerPageOpen,
   } = useAudio();
 
-  const { user } = useUser();
-  const router = useRouter();
-  const [isInFavorites, setIsInFavorites] = useState(false);
-  const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const [touchDeltaY, setTouchDeltaY] = useState(0);
   const subtitleScrollRef = useRef<HTMLDivElement>(null);
@@ -252,122 +412,15 @@ const LyricPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
     return () => clearTimeout(timeoutId);
   }, [currentSubtitleId]);
 
-  // Kiểm tra xem bài hát có trong Favorites hay không
-  useEffect(() => {
-    if (!user?.id || !currentMusic?.id) {
-      setIsInFavorites(false);
-      return;
-    }
-
-    const checkFavorites = async () => {
-      try {
-        const response = await fetch(
-          `/api/library?userId=${user.id}&type=music`
-        );
-        if (!response.ok) return;
-        const entries = await response.json();
-        const isFav = entries.some(
-          (entry: { resourceId: string }) =>
-            entry.resourceId === currentMusic.id
-        );
-        setIsInFavorites(isFav);
-      } catch (error) {
-        console.error("Error checking favorites:", error);
-      }
-    };
-
-    checkFavorites();
-  }, [user?.id, currentMusic?.id]);
-
-  // Xử lý thêm/xóa khỏi Favorites
-  const handleToggleFavorites = async () => {
-    if (!user?.id) {
-      alert("Vui lòng đăng nhập để sử dụng tính năng này!");
-      return;
-    }
-
-    if (!currentMusic) return;
-
-    setIsLoadingFavorite(true);
-    try {
-      if (isInFavorites) {
-        // Xóa khỏi Favorites
-        const response = await fetch(
-          `/api/library?userId=${user.id}&resourceId=${currentMusic.id}&type=music`,
-          {
-            method: "DELETE",
-          }
-        );
-
-        if (response.ok) {
-          setIsInFavorites(false);
-        } else {
-          const error = await response.json();
-          alert(error.error || "Có lỗi xảy ra!");
-        }
-      } else {
-        // Thêm vào Favorites
-        const response = await fetch("/api/library", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: user.id,
-            resourceId: currentMusic.id,
-            resourceType: "music",
-          }),
-        });
-
-        if (response.ok) {
-          setIsInFavorites(true);
-        } else {
-          const error = await response.json();
-          alert(error.error || "Có lỗi xảy ra!");
-        }
-      }
-    } catch (error) {
-      console.error("Error toggling favorites:", error);
-      alert("Có lỗi xảy ra!");
-    } finally {
-      setIsLoadingFavorite(false);
-    }
-  };
-
-  // Xử lý Share
-  const handleShare = async () => {
-    if (!currentMusic) return;
-
-    const shareData = {
-      title: currentMusic.title || "Bài hát",
-      text: `${currentMusic.title} - ${currentMusic.singer}`,
-      url: window.location.href,
-    };
-
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else {
-        // Fallback: copy to clipboard
-        await navigator.clipboard.writeText(
-          `${shareData.text}\n${shareData.url}`
-        );
-        alert("Đã sao chép link vào clipboard!");
-      }
-    } catch (error) {
-      console.error("Error sharing:", error);
-    }
-  };
-
   const MusicActionsMenu = useMusicActionsMenu({
-    isInFavorites,
-    isLoadingFavorite,
+    isInFavorites: sharedActions.isInFavorites,
+    isLoadingFavorite: sharedActions.isLoadingFavorite,
     isKaraokeMode,
     hasBeat: !!currentMusic?.beat,
-    onToggleFavorites: handleToggleFavorites,
+    onToggleFavorites: sharedActions.onToggleFavorites,
     onToggleKaraoke: handleToggleKaraoke,
-    onShare: handleShare,
-    onOpenFavorites: () => router.push("/en/music/library/favorites"),
+    onShare: sharedActions.onShare,
+    onOpenFavorites: sharedActions.onOpenFavorites,
   });
 
   return (
@@ -702,7 +755,13 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
 
 // ----
 
-const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
+const FeaturedPage = ({
+  onRequestClose,
+  sharedActions,
+}: {
+  onRequestClose: () => void;
+  sharedActions: SharedMusicActionsProps;
+}) => {
   const {
     currentMusic,
     handleToggleKaraoke,
@@ -716,10 +775,6 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
     subtitles,
   } = useAudio();
 
-  const { user } = useUser();
-  const router = useRouter();
-  const [isInFavorites, setIsInFavorites] = useState(false);
-  const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const [touchDeltaY, setTouchDeltaY] = useState(0);
   const [randomMusics, setRandomMusics] = useState<IMusic[]>([]);
@@ -786,162 +841,47 @@ const FeaturedPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
     return () => clearTimeout(timeoutId);
   }, [currentSubtitleId]);
 
-  // Kiểm tra xem bài hát có trong Favorites hay không
-  useEffect(() => {
-    if (!user?.id || !currentMusic?.id) {
-      setIsInFavorites(false);
-      return;
-    }
-
-    const checkFavorites = async () => {
-      try {
-        const response = await fetch(
-          `/api/library?userId=${user.id}&type=music`
-        );
-        if (!response.ok) return;
-        const entries = await response.json();
-        const isFav = entries.some(
-          (entry: { resourceId: string }) =>
-            entry.resourceId === currentMusic.id
-        );
-        setIsInFavorites(isFav);
-      } catch (error) {
-        console.error("Error checking favorites:", error);
-      }
-    };
-
-    checkFavorites();
-  }, [user?.id, currentMusic?.id]);
-
   // Lấy danh sách nhạc random
   useEffect(() => {
-    const controller = new AbortController();
+    let isMounted = true;
 
-    const fetchRandomMusics = async () => {
+    const loadRandomMusics = async () => {
       setIsLoadingRandom(true);
       try {
-        const res = await fetch(`/api/musics?random=1&limit=8`, {
-          cache: "no-store",
-          signal: controller.signal,
-        });
-
-        if (!res.ok) return;
-
-        const data = (await res.json()) as IMusic[];
-
-        const parsed = Array.isArray(data)
-          ? data.filter((music): music is IMusic => Boolean(music?.id))
-          : [];
-
+        const parsed = await fetchRandomMusics(8);
         // Loại bỏ bài hát hiện tại nếu có
         const filtered = parsed.filter(
           (music) => music.id !== currentMusic?.id
         );
-        setRandomMusics(filtered);
+        if (isMounted) {
+          setRandomMusics(filtered);
+        }
       } catch (error) {
-        if (controller.signal.aborted) return;
+        if (!isMounted) return;
         console.error("Error fetching random musics:", error);
       } finally {
-        if (!controller.signal.aborted) {
+        if (isMounted) {
           setIsLoadingRandom(false);
         }
       }
     };
 
-    fetchRandomMusics();
+    loadRandomMusics();
 
-    return () => controller.abort();
+    return () => {
+      isMounted = false;
+    };
   }, [currentMusic?.id]);
 
-  // Xử lý thêm/xóa khỏi Favorites
-  const handleToggleFavorites = async () => {
-    if (!user?.id) {
-      alert("Vui lòng đăng nhập để sử dụng tính năng này!");
-      return;
-    }
-
-    if (!currentMusic) return;
-
-    setIsLoadingFavorite(true);
-    try {
-      if (isInFavorites) {
-        // Xóa khỏi Favorites
-        const response = await fetch(
-          `/api/library?userId=${user.id}&resourceId=${currentMusic.id}&type=music`,
-          {
-            method: "DELETE",
-          }
-        );
-
-        if (response.ok) {
-          setIsInFavorites(false);
-        } else {
-          const error = await response.json();
-          alert(error.error || "Có lỗi xảy ra!");
-        }
-      } else {
-        // Thêm vào Favorites
-        const response = await fetch("/api/library", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: user.id,
-            resourceId: currentMusic.id,
-            resourceType: "music",
-          }),
-        });
-
-        if (response.ok) {
-          setIsInFavorites(true);
-        } else {
-          const error = await response.json();
-          alert(error.error || "Có lỗi xảy ra!");
-        }
-      }
-    } catch (error) {
-      console.error("Error toggling favorites:", error);
-      alert("Có lỗi xảy ra!");
-    } finally {
-      setIsLoadingFavorite(false);
-    }
-  };
-
-  // Xử lý Share
-  const handleShare = async () => {
-    if (!currentMusic) return;
-
-    const shareData = {
-      title: currentMusic.title || "Bài hát",
-      text: `${currentMusic.title} - ${currentMusic.singer}`,
-      url: window.location.href,
-    };
-
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else {
-        // Fallback: copy to clipboard
-        await navigator.clipboard.writeText(
-          `${shareData.text}\n${shareData.url}`
-        );
-        alert("Đã sao chép link vào clipboard!");
-      }
-    } catch (error) {
-      console.error("Error sharing:", error);
-    }
-  };
-
   const MusicActionsMenu = useMusicActionsMenu({
-    isInFavorites,
-    isLoadingFavorite,
+    isInFavorites: sharedActions.isInFavorites,
+    isLoadingFavorite: sharedActions.isLoadingFavorite,
     isKaraokeMode,
     hasBeat: !!currentMusic?.beat,
-    onToggleFavorites: handleToggleFavorites,
+    onToggleFavorites: sharedActions.onToggleFavorites,
     onToggleKaraoke: handleToggleKaraoke,
-    onShare: handleShare,
-    onOpenFavorites: () => router.push("en/music/library/favorites"),
+    onShare: sharedActions.onShare,
+    onOpenFavorites: sharedActions.onOpenFavorites,
   });
 
   return (
@@ -1156,28 +1096,27 @@ export function PlayerPage({ setIsClick }: IProp) {
       return;
     }
 
+    let isMounted = true;
     const checkFavorites = async () => {
       try {
-        const response = await fetch(
-          `/api/library?userId=${user.id}&type=music`
-        );
-        if (!response.ok) return;
-        const entries = await response.json();
-        const isFav = entries.some(
-          (entry: { resourceId: string }) =>
-            entry.resourceId === currentMusic.id
-        );
-        setIsInFavorites(isFav);
+        const ids = await fetchFavoriteMusicIds(user.id);
+        if (isMounted) {
+          setIsInFavorites(ids.has(currentMusic.id));
+        }
       } catch (error) {
         console.error("Error checking favorites:", error);
       }
     };
 
     checkFavorites();
+    return () => {
+      isMounted = false;
+    };
   }, [user?.id, currentMusic?.id]);
 
   // Tìm singerId từ tên singer
   useEffect(() => {
+    let isMounted = true;
     const findSingerId = async () => {
       if (!currentMusic?.singer) {
         setSingerId(null);
@@ -1185,29 +1124,22 @@ export function PlayerPage({ setIsClick }: IProp) {
       }
 
       try {
-        const response = await fetch("/api/singers");
-        if (!response.ok) {
-          console.error("Failed to fetch singers");
-          return;
-        }
-
-        const singers: ISingerItem[] = await response.json();
-        const matchedSinger = singers.find(
-          (singer) => singer.singer === currentMusic.singer
-        );
-
-        if (matchedSinger) {
-          setSingerId(matchedSinger.id || matchedSinger._id || null);
-        } else {
-          setSingerId(null);
+        const id = await findSingerIdByName(currentMusic.singer);
+        if (isMounted) {
+          setSingerId(id);
         }
       } catch (error) {
         console.error("Error finding singer ID:", error);
-        setSingerId(null);
+        if (isMounted) {
+          setSingerId(null);
+        }
       }
     };
 
     findSingerId();
+    return () => {
+      isMounted = false;
+    };
   }, [currentMusic?.singer]);
 
   // Xử lý thêm/xóa khỏi Favorites
@@ -1219,7 +1151,10 @@ export function PlayerPage({ setIsClick }: IProp) {
 
     if (!currentMusic) return;
 
+    const nextIsFavorite = !isInFavorites;
     setIsLoadingFavorite(true);
+    setIsInFavorites(nextIsFavorite);
+    updateFavoriteMusicCache(user.id, currentMusic.id, nextIsFavorite);
     try {
       if (isInFavorites) {
         // Xóa khỏi Favorites
@@ -1230,11 +1165,12 @@ export function PlayerPage({ setIsClick }: IProp) {
           }
         );
 
-        if (response.ok) {
-          setIsInFavorites(false);
-        } else {
+        if (!response.ok) {
+          setIsInFavorites(true);
+          updateFavoriteMusicCache(user.id, currentMusic.id, true);
           const error = await response.json();
           alert(error.error || "Có lỗi xảy ra!");
+          return;
         }
       } else {
         // Thêm vào Favorites
@@ -1250,15 +1186,21 @@ export function PlayerPage({ setIsClick }: IProp) {
           }),
         });
 
-        if (response.ok) {
-          setIsInFavorites(true);
-        } else {
+        if (!response.ok) {
+          setIsInFavorites(false);
+          updateFavoriteMusicCache(user.id, currentMusic.id, false);
           const error = await response.json();
           alert(error.error || "Có lỗi xảy ra!");
+          return;
         }
       }
+
+      const ids = await fetchFavoriteMusicIds(user.id, true);
+      setIsInFavorites(ids.has(currentMusic.id));
     } catch (error) {
       console.error("Error toggling favorites:", error);
+      setIsInFavorites(isInFavorites);
+      updateFavoriteMusicCache(user.id, currentMusic.id, isInFavorites);
       alert("Có lỗi xảy ra!");
     } finally {
       setIsLoadingFavorite(false);
@@ -1298,8 +1240,16 @@ export function PlayerPage({ setIsClick }: IProp) {
     onToggleFavorites: handleToggleFavorites,
     onToggleKaraoke: handleToggleKaraoke,
     onShare: handleShare,
-    onOpenFavorites: () => router.push("/en/music/library/favorites"),
+    onOpenFavorites: () => router.push(`/${locale}/music/library/favorites`),
   });
+
+  const sharedActions: SharedMusicActionsProps = {
+    isInFavorites,
+    isLoadingFavorite,
+    onToggleFavorites: handleToggleFavorites,
+    onShare: handleShare,
+    onOpenFavorites: () => router.push(`/${locale}/music/library/favorites`),
+  };
 
   const handleClosePlayer = () => {
     setIsPlayerPageOpen(false);
@@ -1309,9 +1259,15 @@ export function PlayerPage({ setIsClick }: IProp) {
   return (
     <div>
       {isClickFeatured ? (
-        <FeaturedPage onRequestClose={handleClosePlayer} />
+        <FeaturedPage
+          onRequestClose={handleClosePlayer}
+          sharedActions={sharedActions}
+        />
       ) : isClickLyric ? (
-        <LyricPage onRequestClose={handleClosePlayer} />
+        <LyricPage
+          onRequestClose={handleClosePlayer}
+          sharedActions={sharedActions}
+        />
       ) : (
         <ContentPage onRequestClose={handleClosePlayer} />
       )}

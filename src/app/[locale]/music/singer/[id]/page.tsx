@@ -9,6 +9,7 @@ import { CarouselAudioPlaylist } from "@/features/music/carousel-audio-playlist"
 import { RecentCarouselAudio } from "@/features/music/recent-carousel-audio";
 import { NewCarouselAudio } from "@/features/music/new-carousel-audio";
 import { SingerList } from "@/features/music/singer-list";
+import { Suspense } from "react";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -38,6 +39,12 @@ async function getSinger(id: string): Promise<ISingerItem | null> {
     const db = client.db("musicdb");
     const singer = await db.collection("singers").findOne({
       _id: new ObjectId(id),
+    }, {
+      projection: {
+        singer: 1,
+        cover: 1,
+        musicIds: 1,
+      },
     });
 
     if (!singer) {
@@ -52,8 +59,34 @@ async function getSinger(id: string): Promise<ISingerItem | null> {
     if (musicIds.length > 0) {
       musicDocs = await db
         .collection("musics")
-        .find({ _id: { $in: musicIds } })
+        .find(
+          { _id: { $in: musicIds } },
+          {
+            projection: {
+              title: 1,
+              singer: 1,
+              cover: 1,
+              audio: 1,
+              youtube: 1,
+              content: 1,
+              type: 1,
+              topic: 1,
+              srt: 1,
+              beat: 1,
+              createdAt: 1,
+            },
+          }
+        )
         .toArray();
+
+      // Keep playlist order from singer.musicIds
+      const idOrder = new Map(musicIds.map((item, index) => [item.toString(), index]));
+      musicDocs.sort((a, b) => {
+        const aId = a._id?.toString?.() ?? "";
+        const bId = b._id?.toString?.() ?? "";
+        return (idOrder.get(aId) ?? Number.MAX_SAFE_INTEGER) -
+          (idOrder.get(bId) ?? Number.MAX_SAFE_INTEGER);
+      });
     } else {
       const singerName = String(singer.singer ?? "").trim();
       if (singerName) {
@@ -63,13 +96,31 @@ async function getSinger(id: string): Promise<ISingerItem | null> {
         );
         musicDocs = await db
           .collection("musics")
-          .find({
-            $or: [
-              { singerId: singer._id },
-              { singer: singerRegex },
-              { singer: singerName },
-            ],
-          })
+          .find(
+            {
+              $or: [
+                { singerId: singer._id },
+                { singer: singerRegex },
+                { singer: singerName },
+              ],
+            },
+            {
+              projection: {
+                title: 1,
+                singer: 1,
+                cover: 1,
+                audio: 1,
+                youtube: 1,
+                content: 1,
+                type: 1,
+                topic: 1,
+                srt: 1,
+                beat: 1,
+                createdAt: 1,
+              },
+            }
+          )
+          .limit(80)
           .toArray();
       }
     }
@@ -112,6 +163,16 @@ async function getSinger(id: string): Promise<ISingerItem | null> {
   }
 }
 
+function RelatedSectionsSkeleton() {
+  return (
+    <div className="space-y-4 px-2 md:px-0">
+      <div className="h-36 animate-pulse rounded-2xl bg-zinc-200/60 md:ml-[270px] dark:bg-zinc-800/60" />
+      <div className="h-52 animate-pulse rounded-2xl bg-zinc-200/60 md:ml-[270px] dark:bg-zinc-800/60" />
+      <div className="h-44 animate-pulse rounded-2xl bg-zinc-200/60 md:ml-[270px] dark:bg-zinc-800/60" />
+    </div>
+  );
+}
+
 export default async function SingerDetailPage({ params }: Props) {
   const { id } = await params;
   const singer = await getSinger(id);
@@ -135,21 +196,23 @@ export default async function SingerDetailPage({ params }: Props) {
     <>
       <SingerPageClient singer={singer} />
 
-      <div className="space-y-4">
-        <RecentCarouselAudio />
+      <Suspense fallback={<RelatedSectionsSkeleton />}>
+        <div className="space-y-4">
+          <RecentCarouselAudio />
 
-        <CarouselAudioPlaylist />
+          <CarouselAudioPlaylist />
 
-        <NewCarouselAudio />
+          <NewCarouselAudio />
 
-        <div className="relative py-8">
-          <div className="absolute left-0 top-0 h-full w-full bg-zinc-100 dark:bg-zinc-900" />
+          <div className="relative py-8">
+            <div className="absolute left-0 top-0 h-full w-full bg-zinc-100 dark:bg-zinc-900" />
 
-          <SingerList />
+            <SingerList />
 
-          <div className="mt-8 h-32 md:ml-60" />
+            <div className="mt-8 h-32 md:ml-60" />
+          </div>
         </div>
-      </div>
+      </Suspense>
     </>
   );
 }

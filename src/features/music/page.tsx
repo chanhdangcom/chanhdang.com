@@ -17,6 +17,13 @@ import { RecentCarouselAudio } from "./recent-carousel-audio";
 import { NewCarouselAudio } from "./new-carousel-audio";
 import { CarouselTopic } from "./carousel-topic";
 import { SuggestCarouselAudio } from "./suggest-carousel-audio";
+import { Suspense } from "react";
+
+function SectionSkeleton() {
+  return (
+    <div className="mx-2 h-44 animate-pulse rounded-2xl bg-zinc-200/70 dark:bg-zinc-800/60 md:mx-0 md:ml-[270px]" />
+  );
+}
 
 export function MusicPage() {
   return (
@@ -36,11 +43,15 @@ export function MusicPage() {
             </div>
 
             <div className="mt-4 flex justify-start">
-              <SuggestCarouselAudio />
+              <Suspense fallback={<SectionSkeleton />}>
+                <SuggestCarouselAudio />
+              </Suspense>
             </div>
 
             <div className="flex justify-start">
-              <CarouselTopic />
+              <Suspense fallback={<SectionSkeleton />}>
+                <CarouselTopic />
+              </Suspense>
             </div>
 
             <div className="mt-4 flex justify-start">
@@ -48,7 +59,9 @@ export function MusicPage() {
             </div>
 
             <div className="mt-4 flex justify-start">
-              <NewCarouselAudio />
+              <Suspense fallback={<SectionSkeleton />}>
+                <NewCarouselAudio />
+              </Suspense>
             </div>
 
             <div className="mt-4 flex justify-start">
@@ -56,7 +69,9 @@ export function MusicPage() {
             </div>
 
             <div className="mt-4 flex justify-start">
-              <CarouselAudio />
+              <Suspense fallback={<SectionSkeleton />}>
+                <CarouselAudio />
+              </Suspense>
             </div>
 
             <div className="mt-4">
@@ -64,7 +79,9 @@ export function MusicPage() {
             </div>
 
             <div className="mt-4">
-              <SingerList />
+              <Suspense fallback={<SectionSkeleton />}>
+                <SingerList />
+              </Suspense>
             </div>
           </>
         </div>

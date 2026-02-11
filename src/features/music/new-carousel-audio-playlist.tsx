@@ -21,7 +21,7 @@ export function NewCarouselAudioPlaylist() {
     (async () => {
       try {
         setLoading(true);
-        const res = await fetch("/api/playlists", { cache: "no-store" });
+        const res = await fetch("/api/playlists?lite=1&limit=24");
         if (res.ok) {
           const data = (await res.json()) as IPlaylistItem[];
           if (isMounted) setPlaylists(data);

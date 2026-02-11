@@ -10,8 +10,29 @@ export async function NewCarouselAudio() {
     const client = await clientPromise;
     const db = client.db("musicdb");
 
-    // ✅ Lấy toàn bộ dữ liệu
-    const data = await db.collection("musics").find({}).toArray();
+    // ✅ Chỉ lấy dữ liệu cần hiển thị để giảm thời gian load
+    const data = await db
+      .collection("musics")
+      .find(
+        {},
+        {
+          projection: {
+            title: 1,
+            singer: 1,
+            cover: 1,
+            audio: 1,
+            youtube: 1,
+            content: 1,
+            type: 1,
+            srt: 1,
+            beat: 1,
+            createdAt: 1,
+          },
+        }
+      )
+      .sort({ createdAt: -1 })
+      .limit(24)
+      .toArray();
 
     // ✅ Chuyển đổi dữ liệu an toàn
     const musics: IMusic[] = Array.isArray(data)

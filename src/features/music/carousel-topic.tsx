@@ -27,35 +27,78 @@ export async function CarouselTopic() {
   try {
     const client = await clientPromise;
     const db = await client.db("musicdb");
-    const topics = (await db.collection("topics").find().toArray()) as TopicDocument[];
+    const topics = (await db
+      .collection("topics")
+      .find(
+        {},
+        {
+          projection: {
+            title: 1,
+            musicIds: 1,
+            musics: 1,
+          },
+        }
+      )
+      .toArray()) as TopicDocument[];
 
     if (!topics || topics.length === 0) {
       return null;
     }
 
-    const resolvedTopics = await Promise.all(
-      topics.map(async (topic) => {
-        const musicIds = Array.isArray(topic.musicIds)
-          ? normalizeObjectIds(topic.musicIds)
-          : Array.isArray(topic.musics)
-            ? parseLegacyMusicIds(topic.musics)
-            : [];
-        const musicDocs =
-          musicIds.length > 0
-            ? await db
-                .collection("musics")
-                .find({ _id: { $in: musicIds } })
-                .toArray()
-            : [];
-        return {
-          id: topic._id.toString(),
-          title: String(topic.title ?? ""),
-          musics: musicDocs.map((music) =>
-            normalizeMusic(music as Record<string, unknown>)
-          ),
-        };
-      })
+    const topicMusicIds = topics.map((topic) =>
+      Array.isArray(topic.musicIds)
+        ? normalizeObjectIds(topic.musicIds)
+        : Array.isArray(topic.musics)
+          ? parseLegacyMusicIds(topic.musics)
+          : []
     );
+    const uniqueIdMap = new Map<string, ReturnType<typeof normalizeObjectIds>[number]>();
+    topicMusicIds.flat().forEach((id) => {
+      uniqueIdMap.set(id.toString(), id);
+    });
+    const uniqueIds = [...uniqueIdMap.values()];
+    const musicDocs =
+      uniqueIds.length > 0
+        ? await db
+            .collection("musics")
+            .find(
+              { _id: { $in: uniqueIds } },
+              {
+                projection: {
+                  title: 1,
+                  singer: 1,
+                  cover: 1,
+                  audio: 1,
+                  youtube: 1,
+                  content: 1,
+                  type: 1,
+                  topic: 1,
+                  srt: 1,
+                  beat: 1,
+                  createdAt: 1,
+                },
+              }
+            )
+            .toArray()
+        : [];
+    const musicById = new Map(
+      musicDocs.map((music) => [
+        (music._id?.toString?.() ?? "") as string,
+        normalizeMusic(music as Record<string, unknown>),
+      ])
+    );
+
+    const resolvedTopics = topics.map((topic, index) => {
+      const ids = topicMusicIds[index] ?? [];
+      const musics = ids
+        .map((id) => musicById.get(id.toString()))
+        .filter((item): item is ReturnType<typeof normalizeMusic> => Boolean(item));
+      return {
+        id: topic._id.toString(),
+        title: String(topic.title ?? ""),
+        musics,
+      };
+    });
     const topicsWithSongs = resolvedTopics.filter((topic) => topic.musics.length > 0);
 
     if (topicsWithSongs.length === 0) {
