@@ -1282,7 +1282,7 @@ export function PlayerPage({ setIsClick }: IProp) {
       )}
 
       <>
-        <div className="fixed bottom-0 z-50 w-full space-y-0 px-8 pb-6 md:bottom-8 md:w-[40vw]">
+        <div className="fixed bottom-0 z-50 w-full space-y-0 px-8 pb-6 md:bottom-8 md:w-[40vw] md:space-y-4">
           <div className="pointer-events-none absolute -bottom-16 left-0 -z-10 h-[40vh] w-full scale-150 bg-black blur-xl brightness-0 md:w-[35vw] md:blur-3xl" />
 
           {isClickLyric && (
@@ -1334,6 +1334,12 @@ export function PlayerPage({ setIsClick }: IProp) {
                 <AudioTimeLine coverUrl={currentMusic?.cover || ""} />
               </div>
             </>
+          )}
+
+          {(isClickLyric || isClickFeatured) && (
+            <div className="flex items-center justify-center">
+              <AudioTimeLine coverUrl={currentMusic?.cover || ""} />
+            </div>
           )}
 
           <div className="justify-cente flex items-center">
