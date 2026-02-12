@@ -251,7 +251,7 @@ export function AudioTimeLine({ coverUrl }: IProp) {
           onChangeCommitted={handleSeekCommit}
           sx={{
             color: progressColor || defaultProgressColor,
-            height: 24,
+            height: 0,
             py: 0,
             px: 0,
             touchAction: "none",
@@ -285,7 +285,7 @@ export function AudioTimeLine({ coverUrl }: IProp) {
         />
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="-mt-4 flex items-center justify-between">
         <div className="text-sm font-medium text-zinc-400">
           {formatTime(currentTimeSec)}
         </div>

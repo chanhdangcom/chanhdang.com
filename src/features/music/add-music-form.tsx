@@ -7,6 +7,7 @@ import { ISingerItem } from "./type/singer";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { useUser } from "@/hooks/use-user";
 import { usePermissions } from "@/hooks/use-permissions";
+import { MenuBar } from "./menu-bar";
 
 export default function AddMusicForm() {
   const { user } = useUser();
@@ -177,10 +178,10 @@ export default function AddMusicForm() {
     setMessage("");
     setIsLoading(true);
 
-    // For regular users: ensure they have an artist profile
+    // For regular users: ensure they have a singer profile
     let finalUserArtistProfile = userArtistProfile;
     if (isRegularUser && !userArtistProfile) {
-      // Try to create artist profile automatically
+      // Try to create singer profile automatically
       try {
         const profileRes = await fetch("/api/singers/create-artist-profile", {
           method: "POST",
@@ -200,42 +201,43 @@ export default function AddMusicForm() {
           // If it's an existing profile, silently continue (no error message)
         } else {
           setMessage(
-            profileData.error || "Lỗi khi tạo profile ca sĩ. Vui lòng thử lại!"
+            profileData.error ||
+              "Failed to create singer profile. Please try again!"
           );
           setIsLoading(false);
           return;
         }
       } catch (error) {
-        console.error("Error creating artist profile:", error);
-        setMessage("Lỗi khi tạo profile ca sĩ. Vui lòng thử lại!");
+        console.error("Error creating singer profile:", error);
+        setMessage("Failed to create singer profile. Please try again!");
         setIsLoading(false);
         return;
       }
     }
 
-    // Admin validation: nếu chọn ca sĩ có sẵn thì phải chọn một ca sĩ
+    // Admin validation: if using an existing singer, one singer must be selected
     if (isAdmin && useExistingSinger && !selectedSingerId) {
-      setMessage("Vui lòng chọn một ca sĩ từ danh sách!");
+      setMessage("Please select a singer from the list!");
       setIsLoading(false);
       return;
     }
 
-    // Admin validation: nếu không chọn ca sĩ có sẵn thì phải nhập tên ca sĩ
+    // Admin validation: if not using an existing singer, singer name is required
     if (isAdmin && !useExistingSinger && !form.singer) {
-      setMessage("Vui lòng nhập tên ca sĩ!");
+      setMessage("Please enter the singer name!");
       setIsLoading(false);
       return;
     }
 
-    // Validation: require topic and type
+    // Validation: topic and genre are required
     if (!form.topic.trim()) {
-      setMessage("Vui lòng nhập chủ đề!");
+      setMessage("Please enter a topic!");
       setIsLoading(false);
       return;
     }
 
     if (!form.type.trim()) {
-      setMessage("Vui lòng chọn thể loại!");
+      setMessage("Please select a genre!");
       setIsLoading(false);
       return;
     }
@@ -247,34 +249,34 @@ export default function AddMusicForm() {
       let beatUrl = form.beat;
 
       if (file) {
-        audioUrl = await uploadFileToR2(file, "Upload mp3 thất bại!");
+        audioUrl = await uploadFileToR2(file, "Failed to upload mp3!");
       }
 
       if (imageFile) {
-        coverUrl = await uploadFileToR2(imageFile, "Upload ảnh thất bại!");
+        coverUrl = await uploadFileToR2(imageFile, "Failed to upload image!");
       }
 
       if (srtFile) {
-        srtUrl = await uploadFileToR2(srtFile, "Upload file SRT thất bại!");
+        srtUrl = await uploadFileToR2(srtFile, "Failed to upload SRT file!");
       }
 
       if (beatFile) {
-        beatUrl = await uploadFileToR2(beatFile, "Upload file beat thất bại!");
+        beatUrl = await uploadFileToR2(beatFile, "Failed to upload beat file!");
       }
 
-      // For regular users: use their artist profile
+      // For regular users: use their singer profile
       let targetSingerId: string | null = null;
 
       if (isRegularUser) {
         if (!finalUserArtistProfile) {
-          setMessage("Không tìm thấy profile ca sĩ của bạn. Vui lòng thử lại!");
+          setMessage("Your singer profile was not found. Please try again!");
           setIsLoading(false);
           return;
         }
         targetSingerId =
           finalUserArtistProfile._id || finalUserArtistProfile.id || null;
         if (!targetSingerId) {
-          setMessage("Lỗi: Không tìm thấy ID profile ca sĩ!");
+          setMessage("Error: singer profile ID not found!");
           setIsLoading(false);
           return;
         }
@@ -284,13 +286,15 @@ export default function AddMusicForm() {
           useExistingSinger &&
           (!selectedSingerId || selectedSingerId.trim() === "")
         ) {
-          setMessage("Vui lòng chọn ca sĩ từ danh sách!");
+          setMessage("Please select a singer from the list!");
           setIsLoading(false);
           return;
         }
 
         if (!useExistingSinger && !form.singer.trim()) {
-          setMessage("Vui lòng nhập tên ca sĩ hoặc chọn ca sĩ có sẵn!");
+          setMessage(
+            "Please enter a singer name or choose an existing singer!"
+          );
           setIsLoading(false);
           return;
         }
@@ -300,7 +304,7 @@ export default function AddMusicForm() {
         }
       }
 
-      // Gửi thông tin bài hát
+      // Submit song data
       const bodyData = {
         ...form,
         audio: audioUrl,
@@ -316,12 +320,12 @@ export default function AddMusicForm() {
 
       let res, data;
 
-      // Regular users: always add to their artist profile
-      // Admin: add to selected singer or to general musics collection
+      // Regular users: always add to their singer profile
+      // Admin: add to selected singer or the general musics collection
       if (targetSingerId) {
-        // Thêm vào singer profile
+        // Add to singer profile
         console.log(
-          "Gửi lên API /api/singers/" + targetSingerId + "/musics:",
+          "Sending to API /api/singers/" + targetSingerId + "/musics:",
           bodyData
         );
 
@@ -331,48 +335,52 @@ export default function AddMusicForm() {
           body: JSON.stringify(bodyData),
         });
         data = await res.json();
-        console.log("Kết quả trả về từ /api/singers/[id]/musics:", data);
+        console.log("Response from /api/singers/[id]/musics:", data);
 
-        // Kiểm tra nếu response không thành công
+        // Check if response is unsuccessful
         if (!res.ok) {
-          setMessage("Có lỗi xảy ra! " + (data.error || "Unknown error"));
+          setMessage(
+            "Something went wrong! " + (data.error || "Unknown error")
+          );
           setIsLoading(false);
           return;
         }
       } else {
-        // Admin: Thêm vào collection musics chung (khi không chọn ca sĩ)
-        console.log("Gửi lên API /api/musics:", bodyData);
+        // Admin: Add to general musics collection (when no singer is selected)
+        console.log("Sending to API /api/musics:", bodyData);
         res = await fetch("/api/musics", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(bodyData),
         });
         data = await res.json();
-        console.log("Kết quả trả về từ /api/musics:", data);
+        console.log("Response from /api/musics:", data);
 
-        // Kiểm tra nếu response không thành công
+        // Check if response is unsuccessful
         if (!res.ok) {
-          setMessage("Có lỗi xảy ra! " + (data.error || "Unknown error"));
+          setMessage(
+            "Something went wrong! " + (data.error || "Unknown error")
+          );
           setIsLoading(false);
           return;
         }
       }
 
       if (data.success) {
-        setMessage("Thêm bài hát thành công!");
+        setMessage("Song added successfully!");
         resetFormState();
-        // Refresh user musics if regular user
+        // Refresh user songs if regular user
         if (isRegularUser && userArtistProfile) {
           await fetchUserArtistProfile();
         }
       } else {
-        setMessage("Có lỗi xảy ra! " + (data.error || ""));
+        setMessage("Something went wrong! " + (data.error || ""));
       }
     } catch (error) {
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Có lỗi xảy ra khi thêm bài hát!";
+          : "An error occurred while adding the song!";
       setMessage(errorMessage);
     } finally {
       setIsLoading(false);
@@ -460,10 +468,10 @@ export default function AddMusicForm() {
     }
   };
 
-  // Handle edit music
+  // Handle edit song
   const handleEditMusic = async () => {
     if (!selectedMusicId) {
-      setMessage("Vui lòng chọn bài hát cần sửa!");
+      setMessage("Please select a song to edit!");
       return;
     }
 
@@ -478,19 +486,19 @@ export default function AddMusicForm() {
       let beatUrl = form.beat;
 
       if (file) {
-        audioUrl = await uploadFileToR2(file, "Upload mp3 thất bại!");
+        audioUrl = await uploadFileToR2(file, "Failed to upload mp3!");
       }
 
       if (imageFile) {
-        coverUrl = await uploadFileToR2(imageFile, "Upload ảnh thất bại!");
+        coverUrl = await uploadFileToR2(imageFile, "Failed to upload image!");
       }
 
       if (srtFile) {
-        srtUrl = await uploadFileToR2(srtFile, "Upload file SRT thất bại!");
+        srtUrl = await uploadFileToR2(srtFile, "Failed to upload SRT file!");
       }
 
       if (beatFile) {
-        beatUrl = await uploadFileToR2(beatFile, "Upload file beat thất bại!");
+        beatUrl = await uploadFileToR2(beatFile, "Failed to upload beat file!");
       }
 
       const selectedSinger = singers.find(
@@ -518,7 +526,7 @@ export default function AddMusicForm() {
       } else {
         const singerId = userArtistProfile?._id || userArtistProfile?.id;
         if (!singerId) {
-          setMessage("Không tìm thấy profile ca sĩ!");
+          setMessage("Singer profile not found!");
           setIsLoading(false);
           return;
         }
@@ -541,7 +549,7 @@ export default function AddMusicForm() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        setMessage("Sửa bài hát thành công!");
+        setMessage("Song updated successfully!");
         resetFormState();
         if (isAdmin) {
           await fetchAdminMusics();
@@ -549,24 +557,24 @@ export default function AddMusicForm() {
           await fetchUserArtistProfile();
         }
       } else {
-        setMessage(data.error || "Có lỗi xảy ra khi sửa!");
+        setMessage(data.error || "An error occurred while editing!");
       }
     } catch (error) {
       console.error("Error editing music:", error);
-      setMessage("Có lỗi xảy ra khi sửa!");
+      setMessage("An error occurred while editing!");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Handle delete music
+  // Handle delete song
   const handleDeleteMusic = async () => {
     if (!selectedMusicId) {
-      setMessage("Vui lòng chọn bài hát cần xóa!");
+      setMessage("Please select a song to delete!");
       return;
     }
 
-    if (!confirm("Bạn có chắc muốn xóa bài hát này?")) return;
+    if (!confirm("Are you sure you want to delete this song?")) return;
 
     setIsLoading(true);
     setMessage("");
@@ -580,7 +588,7 @@ export default function AddMusicForm() {
       } else {
         const singerId = userArtistProfile?._id || userArtistProfile?.id;
         if (!singerId) {
-          setMessage("Không tìm thấy profile ca sĩ!");
+          setMessage("Singer profile not found!");
           setIsLoading(false);
           return;
         }
@@ -595,7 +603,7 @@ export default function AddMusicForm() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        setMessage("Xóa bài hát thành công!");
+        setMessage("Song deleted successfully!");
         setSelectedMusicId("");
         if (isAdmin) {
           await fetchAdminMusics();
@@ -603,11 +611,11 @@ export default function AddMusicForm() {
           await fetchUserArtistProfile();
         }
       } else {
-        setMessage(data.error || "Có lỗi xảy ra khi xóa!");
+        setMessage(data.error || "An error occurred while deleting!");
       }
     } catch (error) {
       console.error("Error deleting music:", error);
-      setMessage("Có lỗi xảy ra khi xóa!");
+      setMessage("An error occurred while deleting!");
     } finally {
       setIsLoading(false);
     }
@@ -678,27 +686,31 @@ export default function AddMusicForm() {
         <HeaderMusicPage name="New Music" />
       </div>
 
+      <MenuBar />
+
       <div className="">
         <form
-          className="left-6 z-30 mx-4 space-y-4 rounded-3xl border border-zinc-300 bg-gradient-to-tr from-transparent to-black/10 p-4 font-apple backdrop-blur-2xl dark:border-zinc-700 dark:to-white/10 md:mx-72"
+          className="left-6 z-30 mx-4 space-y-4 rounded-3xl border border-zinc-300 p-4 font-apple backdrop-blur-2xl dark:border-zinc-700 dark:to-white/10 md:ml-[270px]"
           onSubmit={handleSubmit}
         >
-          <div className="text-center text-2xl font-bold">Thêm bài hát mới</div>
+          <div className="text-center text-2xl font-bold"> New Song</div>
 
           {/* Info about singer selection */}
           {isAdmin && (
-            <div className="rounded-lg bg-blue-50 p-3 text-sm text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
-              <div className="mb-1 font-semibold">Cách thêm nhạc (Admin):</div>
+            <div className="rounded-xl border border-blue-400/30 bg-blue-50 p-3 text-sm text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
+              <div className="mb-1 font-semibold">
+                How to add music (Admin):
+              </div>
 
               <div className="space-y-1">
                 <div>
-                  • <strong>Chọn ca sĩ có sẵn:</strong> Nhạc sẽ được thêm vào
-                  danh sách của ca sĩ đó
+                  • <strong>Choose existing singer:</strong> Song will be added
+                  to that singer&apos;s list
                 </div>
 
                 <div>
-                  • <strong>Nhập ca sĩ mới:</strong> Nhạc sẽ được thêm vào
-                  collection musics chung
+                  • <strong>Enter a new singer:</strong> Song will be added to
+                  the general musics collection
                 </div>
               </div>
             </div>
@@ -706,14 +718,14 @@ export default function AddMusicForm() {
 
           {isRegularUser && (
             <div className="rounded-lg border border-green-400/30 bg-green-50 p-3 text-sm text-green-800 dark:border-green-300/30 dark:bg-green-900/20 dark:text-green-300">
-              <div className="mb-1 font-bold">Thông tin ca sĩ của bạn:</div>
+              <div className="mb-1 font-bold">Your singer profile info:</div>
 
               {isLoadingProfile ? (
-                <div>Đang tải thông tin...</div>
+                <div>Loading profile...</div>
               ) : userArtistProfile ? (
                 <div className="space-y-1">
                   <div>
-                    <strong>Tên ca sĩ:</strong> {userArtistProfile.singer}
+                    <strong>Singer name:</strong> {userArtistProfile.singer}
                   </div>
 
                   {userArtistProfile.cover && (
@@ -729,8 +741,8 @@ export default function AddMusicForm() {
                 </div>
               ) : (
                 <div>
-                  Profile ca sĩ sẽ được tạo tự động khi bạn thêm bài hát đầu
-                  tiên với thông tin:{" "}
+                  Singer profile will be created automatically when you add your
+                  first song with info:{" "}
                   <strong>{user?.displayName || user?.username}</strong>
                 </div>
               )}
@@ -738,9 +750,9 @@ export default function AddMusicForm() {
           )}
 
           {isAdmin && adminMusics.length > 0 && (
-            <div className="rounded-lg border border-blue-400/30 bg-blue-50 p-3 dark:border-blue-300/30 dark:bg-blue-900/20">
+            <div className="rounded-xl border border-blue-400/30 bg-blue-50 p-3 dark:border-blue-300/30 dark:bg-blue-900/20">
               <label className="mb-2 block text-sm font-semibold text-blue-700 dark:text-blue-300">
-                Chọn bài hát cần sửa / xóa (toàn hệ thống)
+                Select song to edit / delete (system-wide)
               </label>
               <select
                 value={selectedMusicId}
@@ -748,7 +760,7 @@ export default function AddMusicForm() {
                 disabled={isLoading}
                 className="w-full rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
               >
-                <option value="">-- Chọn bài hát --</option>
+                <option value=""> Select a song</option>
                 {adminMusics.map((music) => {
                   const id = music._id || music.id || "";
                   return (
@@ -761,15 +773,15 @@ export default function AddMusicForm() {
             </div>
           )}
 
-          <div className="mx-auto flex w-full flex-col space-y-4">
+          <div className="flex w-full flex-col space-y-4">
             <div className="mx-auto flex w-full flex-col justify-between gap-4">
               <label className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-                Tên bài hát
+                Song title
               </label>
 
               <input
                 name="title"
-                placeholder="Tên bài hát"
+                placeholder="Song title"
                 value={form.title}
                 onChange={handleChange}
                 required
@@ -777,11 +789,11 @@ export default function AddMusicForm() {
                 className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
               />
 
-              {/* Singer selection - Only for Admin */}
+              {/* Singer selection - only for admin */}
               {isAdmin && (
                 <div className="flex flex-col space-y-2">
                   <label className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-                    Ca sĩ
+                    Singer
                   </label>
 
                   <div className="flex items-center gap-2">
@@ -798,7 +810,7 @@ export default function AddMusicForm() {
                       htmlFor="useExistingSinger"
                       className="text-sm font-medium"
                     >
-                      Chọn ca sĩ có sẵn
+                      Use existing singer
                     </label>
                   </div>
 
@@ -823,7 +835,7 @@ export default function AddMusicForm() {
                       required={useExistingSinger}
                       className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
                     >
-                      <option value="">Chọn ca sĩ</option>
+                      <option value="">Select singer</option>
 
                       {singers.map((singer) => (
                         <option
@@ -837,7 +849,7 @@ export default function AddMusicForm() {
                   ) : (
                     <input
                       name="singer"
-                      placeholder="Nhập tên ca sĩ mới"
+                      placeholder="Enter new singer name"
                       value={form.singer}
                       onChange={handleChange}
                       required={!useExistingSinger}
@@ -848,11 +860,11 @@ export default function AddMusicForm() {
                 </div>
               )}
 
-              {/* For regular users: show their artist name (read-only) */}
+              {/* For regular users: show their singer name (read-only) */}
               {isRegularUser && (
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    Ca sĩ (tự động từ tài khoản của bạn)
+                    Singer (auto from your account)
                   </label>
 
                   <input
@@ -872,17 +884,17 @@ export default function AddMusicForm() {
 
             <div className="flex flex-col gap-2 rounded-2xl border border-zinc-300 p-1 dark:border-zinc-700">
               <label className="px-3 pt-2 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-                Ảnh bìa
+                Cover image
               </label>
 
               {imageFile ? (
                 <div className="font-semibold text-green-600">
-                  Đã chọn file ảnh: {imageFile.name}
+                  Selected image file: {imageFile.name}
                 </div>
               ) : (
                 <input
                   name="cover"
-                  placeholder="Chọn file hình ảnh bài hát bên dưới"
+                  placeholder="Select song image file below"
                   value={form.cover}
                   onChange={handleChange}
                   required
@@ -900,20 +912,20 @@ export default function AddMusicForm() {
               />
             </div>
 
-            {/* Nếu đã chọn file mp3 thì ẩn input nhập link audio */}
+            {/* If an mp3 file is selected, hide audio link input */}
             <div className="flex flex-col gap-2 rounded-2xl border border-zinc-300 p-1 dark:border-zinc-700">
               <label className="px-3 pt-2 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-                Audio bài hát
+                Song audio
               </label>
 
               {file ? (
                 <div className="font-semibold text-green-600">
-                  Đã chọn file mp3: {file.name}
+                  Selected mp3 file: {file.name}
                 </div>
               ) : (
                 <input
                   name="audio"
-                  placeholder="Chọn file mp3 bài hát bên dưới"
+                  placeholder="Select song mp3 file below"
                   value={form.audio}
                   onChange={handleChange}
                   required
@@ -931,7 +943,7 @@ export default function AddMusicForm() {
               />
             </div>
 
-            {/* Beat: cho phép chọn file hoặc nhập link */}
+            {/* Beat: allow selecting a file or entering a link */}
             <div className="flex flex-col gap-2 rounded-2xl border border-zinc-300 p-1 dark:border-zinc-700">
               <label className="px-3 pt-2 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
                 Beat
@@ -939,12 +951,12 @@ export default function AddMusicForm() {
 
               {beatFile ? (
                 <div className="font-semibold text-green-600">
-                  Đã chọn file beat: {beatFile.name}
+                  Selected beat file: {beatFile.name}
                 </div>
               ) : (
                 <input
                   name="beat"
-                  placeholder="Chọn file beat nhạc bên dưới"
+                  placeholder="Select beat file below"
                   value={form.beat}
                   onChange={handleChange}
                   disabled={isLoading}
@@ -961,20 +973,20 @@ export default function AddMusicForm() {
               />
             </div>
 
-            {/* SRT: cho phép chọn file hoặc nhập link */}
+            {/* SRT: allow selecting a file or entering a link */}
             <div className="flex flex-col gap-2 rounded-2xl border border-zinc-300 p-1 dark:border-zinc-700">
               <label className="px-3 pt-2 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-                Lời bài hát (SRT)
+                Lyrics (SRT)
               </label>
 
               {srtFile ? (
                 <div className="font-semibold text-green-600">
-                  Đã chọn file SRT: {srtFile.name}
+                  Selected SRT file: {srtFile.name}
                 </div>
               ) : (
                 <input
                   name="srt"
-                  placeholder="Chọn file SRT lời bài hát bên dưới"
+                  placeholder="Select lyrics SRT file below"
                   value={form.srt}
                   onChange={handleChange}
                   disabled={isLoading}
@@ -992,12 +1004,12 @@ export default function AddMusicForm() {
             </div>
 
             <label className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-              Chủ đề
+              Topic
             </label>
 
             <input
               name="topic"
-              placeholder="Chọn topic"
+              placeholder="Enter topic"
               value={form.topic}
               onChange={handleChange}
               disabled={isLoading}
@@ -1006,12 +1018,12 @@ export default function AddMusicForm() {
             />
             {isSuggestingTopic && (
               <div className="ml-4 text-xs text-zinc-500">
-                Đang gợi ý chủ đề...
+                Suggesting topic...
               </div>
             )}
 
             <label className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-              Thể loại
+              Genre
             </label>
 
             <select
@@ -1022,7 +1034,7 @@ export default function AddMusicForm() {
               required
               className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
             >
-              <option value="">Thể loại</option>
+              <option value="">Genre</option>
 
               <option value="pop">Pop</option>
 
@@ -1056,12 +1068,12 @@ export default function AddMusicForm() {
             </select>
 
             <label className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-              Link Youtube
+              YouTube link
             </label>
 
             <input
               name="youtube"
-              placeholder="Link Youtube"
+              placeholder="YouTube link"
               value={form.youtube}
               onChange={handleChange}
               disabled={isLoading}
@@ -1069,12 +1081,12 @@ export default function AddMusicForm() {
             />
 
             <label className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-              Nội dung
+              Content
             </label>
 
             <textarea
               name="content"
-              placeholder="Nội dung"
+              placeholder="Content"
               value={form.content}
               onChange={handleChange}
               disabled={isLoading}
@@ -1087,10 +1099,10 @@ export default function AddMusicForm() {
                 variant="liquid"
                 size="lg"
                 loading={isLoading}
-                loadingText="Đang thêm bài hát..."
+                loadingText="Adding song..."
                 className="w-full rounded-xl border border-zinc-800 bg-zinc-50 font-semibold text-black"
               >
-                Thêm bài hát
+                Add Song
               </Button>
 
               {isAdmin && adminMusics.length > 0 && (
@@ -1102,7 +1114,7 @@ export default function AddMusicForm() {
                     className="w-full rounded-xl border border-blue-600 px-8 py-2 font-semibold"
                     variant="outline"
                   >
-                    Sửa
+                    Edit
                   </Button>
 
                   <Button
@@ -1112,7 +1124,7 @@ export default function AddMusicForm() {
                     className="w-full rounded-xl border border-rose-600 px-8 py-2 font-semibold text-rose-600"
                     variant="outline"
                   >
-                    Xóa
+                    Delete
                   </Button>
                 </div>
               )}

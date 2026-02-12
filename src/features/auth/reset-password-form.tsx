@@ -17,6 +17,7 @@ import { HeaderMusicPage } from "../music/header-music-page";
 import { Footer } from "@/app/[locale]/features/profile/footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import AuthLightMode from "./auth-light-mode";
 
 interface FormErrors {
   password?: string;
@@ -143,11 +144,12 @@ export default function ResetPasswordForm() {
   if (isValidatingToken) {
     return (
       <div className="container">
+        <AuthLightMode />
         <HeaderMusicPage name="Đặt Lại Mật Khẩu" />
-        <div className="z-30 mx-4 my-8 flex items-center justify-center rounded-3xl border border-zinc-200 p-8 font-apple backdrop-blur-2xl dark:border-zinc-900 md:mx-auto md:w-[30vw]">
+        <div className="z-30 mx-4 my-8 flex items-center justify-center rounded-3xl border border-zinc-200 p-8 font-apple backdrop-blur-2xl md:mx-auto md:w-[30vw]">
           <div className="text-center">
-            <div className="mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-zinc-900 border-t-transparent dark:border-zinc-100" />
-            <p className="text-zinc-600 dark:text-zinc-400">Đang xác thực...</p>
+            <div className="mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-zinc-900 border-t-transparent" />
+            <p className="text-zinc-600">Đang xác thực...</p>
           </div>
         </div>
         <Footer />
@@ -158,25 +160,26 @@ export default function ResetPasswordForm() {
   if (!tokenValid) {
     return (
       <div className="container">
+        <AuthLightMode />
         <HeaderMusicPage name="Đặt Lại Mật Khẩu" />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-red-200 bg-red-50 p-8 font-apple backdrop-blur-2xl dark:border-red-900 dark:bg-red-950/50 md:mx-auto md:w-[30vw]"
+          className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-red-200 bg-red-50 p-8 font-apple backdrop-blur-2xl md:mx-auto md:w-[30vw]"
         >
           <div className="text-center">
             <AlertCircle className="mx-auto mb-4 h-12 w-12 text-red-500" />
-            <h1 className="mb-2 text-2xl font-bold text-red-600 dark:text-red-400">
+            <h1 className="mb-2 text-2xl font-bold text-red-600">
               Link không hợp lệ hoặc đã hết hạn
             </h1>
-            <p className="mb-4 text-sm text-red-600 dark:text-red-400">
+            <p className="mb-4 text-sm text-red-600">
               Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn. Vui lòng yêu
               cầu link mới.
             </p>
             <Link
               href={`/${locale}/auth/forgot-password`}
-              className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+              className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 hover:underline"
             >
               <ArrowLeft className="h-4 w-4" />
               Yêu cầu link mới
@@ -190,19 +193,20 @@ export default function ResetPasswordForm() {
 
   return (
     <div className="container">
+      <AuthLightMode />
       <HeaderMusicPage name="Đặt Lại Mật Khẩu" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-zinc-200 p-8 font-apple backdrop-blur-2xl dark:border-zinc-900 md:mx-auto md:w-[30vw]"
+        className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-zinc-200 p-8 font-apple backdrop-blur-2xl md:mx-auto md:w-[30vw]"
       >
         <div className="text-center">
-          <h1 className="bg-gradient-to-r from-zinc-900 to-zinc-700 bg-clip-text text-3xl font-bold text-transparent dark:from-white dark:to-zinc-300">
+          <h1 className="bg-gradient-to-r from-zinc-900 to-zinc-700 bg-clip-text text-3xl font-bold text-transparent">
             Đặt Lại Mật Khẩu
           </h1>
-          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+          <p className="mt-2 text-sm text-zinc-600">
             Nhập mật khẩu mới của bạn
           </p>
         </div>
@@ -214,7 +218,7 @@ export default function ResetPasswordForm() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600 dark:border-red-900 dark:bg-red-950/50 dark:text-red-400"
+                className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600"
               >
                 <AlertCircle className="h-4 w-4" />
                 <span>{errors.general}</span>
@@ -226,7 +230,7 @@ export default function ResetPasswordForm() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-600 dark:border-green-900 dark:bg-green-950/50 dark:text-green-400"
+                className="flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-600"
               >
                 <CheckCircle2 className="h-4 w-4" />
                 <span>{successMessage}</span>
@@ -237,7 +241,7 @@ export default function ResetPasswordForm() {
           <div className="space-y-4">
             {/* Password Field */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <label className="text-sm font-medium text-zinc-700">
                 Mật khẩu mới
               </label>
               <div className="relative">
@@ -255,7 +259,7 @@ export default function ResetPasswordForm() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
                   tabIndex={-1}
                 >
                   {showPassword ? (
@@ -281,7 +285,7 @@ export default function ResetPasswordForm() {
 
             {/* Confirm Password Field */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <label className="text-sm font-medium text-zinc-700">
                 Xác nhận mật khẩu
               </label>
               <div className="relative">
@@ -303,7 +307,7 @@ export default function ResetPasswordForm() {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
                   tabIndex={-1}
                 >
                   {showConfirmPassword ? (
@@ -330,7 +334,7 @@ export default function ResetPasswordForm() {
             {/* Submit Button */}
             <Button
               type="submit"
-              className="w-full rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 px-4 py-3 text-white transition-all hover:from-zinc-800 hover:to-zinc-700 dark:from-zinc-100 dark:to-zinc-200 dark:text-zinc-900 dark:hover:from-zinc-200 dark:hover:to-zinc-300"
+              className="w-full rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 px-4 py-3 text-white transition-all hover:from-zinc-800 hover:to-zinc-700"
               disabled={isSubmitting}
               loading={isSubmitting}
               loadingText="Đang đặt lại..."
@@ -342,7 +346,7 @@ export default function ResetPasswordForm() {
             <div className="text-center">
               <Link
                 href={`/${locale}/auth/login`}
-                className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+                className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 hover:underline"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Quay lại đăng nhập

@@ -17,7 +17,7 @@ export default function MusicAdminPage() {
 
   if (!isAdmin) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="mx-4 py-8 md:ml-[270px]">
         <div className="text-center">
           <h1 className="text-2xl font-bold">Không có quyền truy cập</h1>
           <p className="mt-2 text-zinc-600">
@@ -29,12 +29,9 @@ export default function MusicAdminPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
+    <div className="mx-4 py-8 md:ml-[270px]">
+      <div className="mb-4">
         <h1 className="text-3xl font-bold">Admin Panel</h1>
-        <p className="mt-2 text-zinc-600">
-          Quản lý hệ thống, ca sĩ, nhạc và users
-        </p>
       </div>
 
       <UserManagement />

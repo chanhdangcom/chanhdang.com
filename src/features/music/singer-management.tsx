@@ -5,9 +5,9 @@ import { ISingerItem } from "./type/singer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Trash2, Edit, Save, X } from "lucide-react";
-import { HeaderMusicPage } from "./header-music-page";
 import { Plus } from "@phosphor-icons/react/dist/ssr";
 import { motion } from "motion/react";
+import { MenuBar } from "./menu-bar";
 
 export function SingerManagement() {
   const [singers, setSingers] = useState<ISingerItem[]>([]);
@@ -124,7 +124,9 @@ export function SingerManagement() {
   }
 
   return (
-    <div>
+    <div className="mx-4 md:ml-[270px]">
+      <MenuBar />
+
       <div
         className={
           showAddForm
@@ -132,13 +134,9 @@ export function SingerManagement() {
             : "font-apple"
         }
       >
-        <div className="md:ml-6">
-          <HeaderMusicPage name="Add Artists" />
-        </div>
-
-        <div className="container space-y-6">
+        <div className="mt-8 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">Quản lý Ca sĩ</h2>
+            <h2 className="text-2xl font-bold">Artists Management</h2>
 
             <div
               onClick={() => setShowAddForm(true)}
@@ -154,7 +152,7 @@ export function SingerManagement() {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
             {singers.map((singer) => (
               <div key={singer._id || singer.id}>
-                <div className="rounded-3xl border border-zinc-300 bg-gradient-to-tl from-transparent to-black/10 p-4 font-apple backdrop-blur-2xl dark:border-zinc-700 dark:to-white/10">
+                <div className="rounded-3xl border px-4 py-2 shadow-sm dark:border-zinc-900">
                   <div className="flex items-center gap-4">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
@@ -254,8 +252,8 @@ export function SingerManagement() {
             </div>
           )}
         </div>
-
       </div>
+
       {/* showAddForm */}
       {showAddForm ? (
         <motion.div
@@ -263,15 +261,15 @@ export function SingerManagement() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="absolute inset-x-8 top-8 z-30 space-y-4 rounded-3xl border border-zinc-300 bg-gradient-to-tr from-transparent to-black/10 p-4 font-apple backdrop-blur-2xl dark:border-zinc-700 dark:to-white/10 md:inset-x-40 md:top-40"
+          className="absolute inset-x-8 top-8 z-30 space-y-4 rounded-3xl border border-zinc-300 bg-zinc-100 to-black/10 p-4 font-apple shadow-sm backdrop-blur-2xl dark:border-zinc-800 dark:bg-zinc-950 dark:to-white/10 md:inset-x-80 md:top-40"
         >
           <div>
-            <div className="text-xl font-bold">Thêm Ca sĩ Mới</div>
+            <div className="text-xl font-bold">New Artist</div>
           </div>
 
           <div className="rounded-lg">
             <form onSubmit={handleAddSinger} className="space-y-4">
-              <div>
+              <div className="space-y-2">
                 <label htmlFor="singer" className="text-sm font-medium">
                   Tên Ca sĩ
                 </label>
@@ -282,13 +280,13 @@ export function SingerManagement() {
                   onChange={(e) =>
                     setFormData({ ...formData, singer: e.target.value })
                   }
-                  placeholder="Nhập tên ca sĩ"
+                  placeholder="Enter artist name"
                   required
                   className="rounded-xl border bg-white px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
                 />
               </div>
 
-              <div>
+              <div className="space-y-2">
                 <label htmlFor="cover" className="text-sm font-medium">
                   URL Ảnh Bìa
                 </label>
@@ -311,14 +309,14 @@ export function SingerManagement() {
                   className="flex items-center gap-1 rounded-xl border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
                 >
                   <Save size={20} className="text-blue-400" />
-                  Lưu
+                  Save
                 </Button>
 
                 <Button
                   onClick={() => setShowAddForm(false)}
                   className="flex items-center gap-1 rounded-xl border bg-zinc-50 p-2 text-rose-400 dark:border-zinc-800 dark:bg-zinc-950"
                 >
-                  Hủy
+                  Cancel
                 </Button>
               </div>
             </form>

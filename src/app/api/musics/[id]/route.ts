@@ -4,6 +4,12 @@ import { ObjectId } from "mongodb";
 import { getUserRole } from "@/lib/auth-helpers";
 import { normalizeDocument } from "@/lib/mongodb-helpers";
 
+type MusicReferenceDocument = {
+  _id: ObjectId;
+  musicIds?: ObjectId[];
+  updatedAt?: Date;
+};
+
 export async function GET(
   request: Request,
   context: { params: Promise<{ id: string }> }
@@ -102,6 +108,7 @@ export async function DELETE(
 
     const client = await clientPromise;
     const db = client.db("musicdb");
+    const musicObjectId = new ObjectId(id);
     const music = await db.collection("musics").findOne({ _id: new ObjectId(id) });
 
     if (!music) {
@@ -109,15 +116,19 @@ export async function DELETE(
     }
 
     await db.collection("musics").deleteOne({ _id: new ObjectId(id) });
+    const pullMusicIdUpdate = {
+      $pull: { musicIds: musicObjectId },
+      $set: { updatedAt: new Date() },
+    };
     await db
-      .collection("singers")
-      .updateMany({}, { $pull: { musicIds: new ObjectId(id) } });
+      .collection<MusicReferenceDocument>("singers")
+      .updateMany({}, pullMusicIdUpdate);
     await db
-      .collection("playlists")
-      .updateMany({}, { $pull: { musicIds: new ObjectId(id) } });
+      .collection<MusicReferenceDocument>("playlists")
+      .updateMany({}, pullMusicIdUpdate);
     await db
-      .collection("topics")
-      .updateMany({}, { $pull: { musicIds: new ObjectId(id) } });
+      .collection<MusicReferenceDocument>("topics")
+      .updateMany({}, pullMusicIdUpdate);
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -5,6 +5,7 @@ import { ShieldCheck, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsAdmin } from "@/hooks/use-permissions";
 import { useRouter } from "next/navigation";
+import { MenuBar } from "../menu-bar";
 interface UserData {
   id: string;
   username: string;
@@ -86,16 +87,18 @@ export function UserManagement() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="w-full space-y-4">
       {error && (
         <div className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-rose-600 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-400">
           {error}
         </div>
       )}
 
+      <MenuBar />
+
       <div className="overflow-hidden rounded-xl border border-zinc-200 shadow-sm dark:border-zinc-800">
-        <div className="border-b border-zinc-200 bg-zinc-100 p-4 text-center dark:border-zinc-800 dark:bg-zinc-900">
-          <h2 className="text-xl font-semibold">Quản lý Users</h2>
+        <div className="border-b border-zinc-200 bg-zinc-100 p-4 dark:border-zinc-800 dark:bg-zinc-900">
+          <h2 className="text-xl font-semibold">Management Users</h2>
 
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
             Tổng số users: {users.length}
@@ -106,11 +109,11 @@ export function UserManagement() {
           {users.map((user) => (
             <div
               key={user.id}
-              className="flex items-center justify-between p-4 hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+              className="flex items-center justify-between p-4 hover:bg-zinc-100 dark:hover:bg-zinc-800/50"
             >
               <div className="flex items-center gap-3">
                 {user.role === "admin" ? (
-                  <ShieldCheck className="h-5 w-5 text-blue-500" />
+                  <ShieldCheck className="h-5 w-5 text-rose-500 dark:text-blue-500" />
                 ) : (
                   <User className="h-5 w-5 text-zinc-400" />
                 )}
@@ -125,6 +128,16 @@ export function UserManagement() {
               </div>
 
               <div className="w-28 space-y-2">
+                <div
+                  className={`rounded-full px-3 py-1 text-center text-xs font-medium ${
+                    user.role === "admin"
+                      ? "bg-rose-100 text-rose-700 dark:bg-blue-100 dark:text-blue-500"
+                      : "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
+                  }`}
+                >
+                  {user.role === "admin" ? "Admin" : "User"}
+                </div>
+
                 <Button
                   onClick={() =>
                     updateRole(
@@ -135,7 +148,7 @@ export function UserManagement() {
                   disabled={updating === user.id}
                   variant="outline"
                   size="sm"
-                  className="w-full shadow-sm dark:border-zinc-800"
+                  className="w-full rounded-full shadow-sm dark:border-zinc-800"
                 >
                   {updating === user.id
                     ? "Đang cập nhật..."
@@ -143,16 +156,6 @@ export function UserManagement() {
                       ? "Gỡ Admin"
                       : "Thêm Admin"}
                 </Button>
-
-                <div
-                  className={`rounded-full px-3 py-1 text-center text-xs font-medium ${
-                    user.role === "admin"
-                      ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
-                      : "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
-                  }`}
-                >
-                  {user.role === "admin" ? "Admin" : "User"}
-                </div>
               </div>
             </div>
           ))}

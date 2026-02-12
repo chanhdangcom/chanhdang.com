@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
+import AuthLightMode from "./auth-light-mode";
 
 interface FormErrors {
   username?: string;
@@ -179,20 +180,21 @@ export default function RegisterForm() {
 
   return (
     <div className="h-screen items-center justify-center md:flex">
+      <AuthLightMode />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-zinc-200 from-zinc-950 to-zinc-900 p-8 font-apple shadow-sm backdrop-blur-2xl dark:border-zinc-800 dark:bg-gradient-to-br md:mx-auto md:w-[30vw]"
+        className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-zinc-200 from-zinc-950 to-zinc-900 p-8 font-apple shadow-sm backdrop-blur-2xl md:mx-auto md:w-[30vw]"
       >
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4 text-center">
             <ChanhdangLogotype className="mx-auto h-6 w-fit" />
 
-            <h1 className="bg-gradient-to-r from-zinc-900 to-zinc-700 bg-clip-text font-apple text-3xl font-bold text-transparent dark:from-white dark:to-zinc-300">
+            <h1 className="bg-gradient-to-r from-zinc-900 to-zinc-700 bg-clip-text font-apple text-3xl font-bold text-transparent">
               Đăng Ký
             </h1>
-            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+            <p className="mt-2 text-sm text-zinc-600">
               Tạo tài khoản mới để bắt đầu
             </p>
           </div>
@@ -203,7 +205,7 @@ export default function RegisterForm() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600 dark:border-red-900 dark:bg-red-950/50 dark:text-red-400"
+                className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600"
               >
                 <AlertCircle className="h-4 w-4" />
                 <span>{errors.general}</span>
@@ -215,7 +217,7 @@ export default function RegisterForm() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-600 dark:border-green-900 dark:bg-green-950/50 dark:text-green-400"
+                className="flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-600"
               >
                 <CheckCircle2 className="h-4 w-4" />
                 <span>{successMessage}</span>
@@ -226,7 +228,7 @@ export default function RegisterForm() {
           <div className="space-y-4">
             {/* Username Field */}
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+              <label className="text-sm font-semibold text-zinc-700">
                 Tên đăng nhập
               </label>
 
@@ -237,7 +239,7 @@ export default function RegisterForm() {
                   value={form.username}
                   onChange={handleChange}
                   required
-                  className={`rounded-xl border dark:border-zinc-900 ${errors.username ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                  className={`rounded-xl border ${errors.username ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                   disabled={isSubmitting}
                 />
               </div>
@@ -258,7 +260,7 @@ export default function RegisterForm() {
 
             {/* Email Field */}
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+              <label className="text-sm font-semibold text-zinc-700">
                 Email
               </label>
 
@@ -270,7 +272,7 @@ export default function RegisterForm() {
                   value={form.email}
                   onChange={handleChange}
                   required
-                  className={`rounded-xl border dark:border-zinc-900 ${errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                  className={`rounded-xl border ${errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                   disabled={isSubmitting}
                 />
               </div>
@@ -291,7 +293,7 @@ export default function RegisterForm() {
 
             {/* Password Field */}
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+              <label className="text-sm font-semibold text-zinc-700">
                 Mật khẩu
               </label>
 
@@ -303,13 +305,13 @@ export default function RegisterForm() {
                   value={form.password}
                   onChange={handleChange}
                   required
-                  className={`rounded-xl border pr-10 dark:border-zinc-900 ${errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                  className={`rounded-xl border pr-10 ${errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                   disabled={isSubmitting}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
                   tabIndex={-1}
                 >
                   {showPassword ? (
@@ -330,7 +332,7 @@ export default function RegisterForm() {
                         className={`h-1 flex-1 rounded-full ${
                           level <= passwordStrength.score
                             ? getStrengthColor(passwordStrength.score)
-                            : "bg-zinc-200 dark:bg-zinc-800"
+                            : "bg-zinc-200"
                         }`}
                       />
                     ))}
@@ -373,7 +375,7 @@ export default function RegisterForm() {
 
             {/* Confirm Password Field */}
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+              <label className="text-sm font-semibold text-zinc-700">
                 Xác nhận mật khẩu
               </label>
 
@@ -385,7 +387,7 @@ export default function RegisterForm() {
                   value={form.confirmPassword}
                   onChange={handleChange}
                   required
-                  className={`rounded-xl border pr-10 dark:border-zinc-900${
+                  className={`rounded-xl border pr-10${
                     errors.confirmPassword
                       ? "border-red-500 focus-visible:ring-red-500"
                       : ""
@@ -396,7 +398,7 @@ export default function RegisterForm() {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
                   tabIndex={-1}
                 >
                   {showConfirmPassword ? (
@@ -431,7 +433,7 @@ export default function RegisterForm() {
             {/* Submit Button */}
             <Button
               type="submit"
-              className="w-full rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 px-4 py-3 text-white transition-all hover:from-zinc-800 hover:to-zinc-700 dark:from-zinc-100 dark:to-zinc-200 dark:text-zinc-900 dark:hover:from-zinc-200 dark:hover:to-zinc-300"
+              className="w-full rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 px-4 py-3 text-white transition-all hover:from-zinc-800 hover:to-zinc-700"
               disabled={isSubmitting}
               loading={isSubmitting}
               loadingText="Đang đăng ký..."
@@ -443,7 +445,7 @@ export default function RegisterForm() {
             <div className="text-center">
               <Link
                 href={`/${locale}/auth/login`}
-                className="text-sm text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+                className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
               >
                 Đã có tài khoản? Đăng nhập ngay
               </Link>
