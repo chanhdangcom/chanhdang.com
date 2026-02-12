@@ -19,6 +19,7 @@ type IProp = {
   date?: string;
   duration?: string;
   border?: boolean;
+  titleVariant?: "default" | "alwaysWhite";
 };
 
 export function AudioItemOrder({
@@ -29,6 +30,7 @@ export function AudioItemOrder({
   date,
   duration,
   border,
+  titleVariant = "default",
 }: IProp) {
   const { currentMusic, isPlaying } = useAudio();
   const { resolvedTheme } = useTheme();
@@ -69,7 +71,12 @@ export function AudioItemOrder({
           <div className="flex items-center justify-between">
             <div className="w-40">
               <div className="flex items-center gap-1 text-sm font-semibold">
-                <span className="line-clamp-1">
+                <span
+                  className={cn(
+                    "line-clamp-1",
+                    titleVariant === "alwaysWhite" && "text-white"
+                  )}
+                >
                   {music.title || "TITLE SONG"}
                 </span>
               </div>

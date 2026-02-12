@@ -1037,6 +1037,7 @@ const FeaturedPage = ({
                             music={music}
                             handlePlay={() => handlePlayAudio(music)}
                             border={false}
+                            titleVariant="alwaysWhite"
                           />
                         ))}
                       </div>
