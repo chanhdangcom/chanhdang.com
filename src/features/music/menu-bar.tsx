@@ -7,6 +7,7 @@ import {
   CardsThree,
   CaretDown,
   CaretRight,
+  ChartDonut,
   Clock,
   Crown,
   House,
@@ -46,12 +47,6 @@ export function MenuBar() {
                 <div className="my-4 flex text-xs font-semibold">Music</div>
               </Link>
             </div>
-
-            {/* <div className="mb-4 flex items-center justify-between px-2">
-              <div className="font-medium">Edit</div>
-
-              <Browser size={22} weight="regular" className="" />
-            </div> */}
 
             <AnimatePresence>
               <motion.div
@@ -208,6 +203,18 @@ export function MenuBar() {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.5 }}
                   >
+                    <Link
+                      href={`/${locale}/music/management-page`}
+                      className="flex items-center gap-2 rounded-2xl px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                    >
+                      <ChartDonut
+                        size={25}
+                        className="text-rose-500 dark:text-blue-500"
+                      />
+
+                      <div className="font-medium">Management Hub</div>
+                    </Link>
+
                     <Link
                       href={`/${locale}/music/admin`}
                       className="flex items-center gap-2 rounded-2xl px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-800"

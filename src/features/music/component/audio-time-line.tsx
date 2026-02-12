@@ -1,6 +1,7 @@
 import { useAudio } from "@/components/music-provider";
 import { useCallback, useEffect, useState, useRef } from "react";
 import { FastAverageColor } from "fast-average-color";
+import Slider from "@mui/material/Slider";
 
 type IProp = {
   coverUrl: string;
@@ -11,9 +12,13 @@ export function AudioTimeLine({ coverUrl }: IProp) {
   const [durationSec, setDurationSec] = useState(0);
   const [currentTimeSec, setCurrentTimeSec] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragProgress, setDragProgress] = useState<number | null>(null);
   const lastValidTimeRef = useRef(0);
   const lastValidDurationRef = useRef(0);
+  const lastSrcRef = useRef("");
   const [progressColor, setProgressColor] = useState("");
+  const defaultProgressColor = "#18181b";
 
   const formatTime = (seconds: number) => {
     const safeSeconds = Number.isFinite(seconds) ? Math.max(0, seconds) : 0;
@@ -76,72 +81,218 @@ export function AudioTimeLine({ coverUrl }: IProp) {
 
     const newTime = el.currentTime;
     const newDuration = el.duration;
+    const hasFiniteTime = Number.isFinite(newTime) && newTime >= 0;
+    const hasFiniteDuration =
+      Number.isFinite(newDuration) &&
+      newDuration > 0 &&
+      newDuration !== Infinity;
 
     let durationForCalc = lastValidDurationRef.current;
-    if (newDuration > 0 && newDuration !== Infinity) {
+    if (hasFiniteDuration) {
       lastValidDurationRef.current = newDuration;
       durationForCalc = newDuration;
       const durationRounded = Math.floor(newDuration);
-      setDurationSec((prev) => (prev === durationRounded ? prev : durationRounded));
+      setDurationSec((prev) =>
+        prev === durationRounded ? prev : durationRounded
+      );
     }
 
-    let timeForCalc = newTime;
-    if (newTime > 0 || !isPlaying) {
+    // While dragging, keep user-controlled preview and skip playback-driven time/progress updates.
+    if (isDragging) return;
+
+    const maxTimeBound =
+      durationForCalc > 0 ? durationForCalc + 1 : 4 * 60 * 60;
+    const isTimeReasonable = hasFiniteTime && newTime <= maxTimeBound;
+
+    let timeForCalc = 0;
+    if (isTimeReasonable) {
       if (newTime > 0) {
         lastValidTimeRef.current = newTime;
       }
       timeForCalc = newTime;
-    } else if (isPlaying && newTime === 0 && lastValidTimeRef.current > 0) {
-      // Khi source đang chờ load, giữ thời gian hợp lệ cũ để tránh nhảy UI
+    } else if (
+      isPlaying &&
+      hasFiniteTime &&
+      newTime === 0 &&
+      lastValidTimeRef.current > 0 &&
+      lastValidTimeRef.current <= maxTimeBound
+    ) {
+      // Khi source đang chờ load, giữ thời gian hợp lệ cũ để tránh nhảy UI.
       timeForCalc = lastValidTimeRef.current;
+    } else {
+      // Bỏ qua thời gian bất thường (NaN/Infinity/nhảy quá xa) để tránh hiển thị sai hàng giờ.
+      timeForCalc = Math.min(lastValidTimeRef.current, maxTimeBound);
     }
 
     const currentRounded = Math.floor(timeForCalc);
-    setCurrentTimeSec((prev) => (prev === currentRounded ? prev : currentRounded));
+    setCurrentTimeSec((prev) =>
+      prev === currentRounded ? prev : currentRounded
+    );
 
     if (durationForCalc > 0) {
-      const nextProgress = Math.min(100, Math.max(0, (timeForCalc / durationForCalc) * 100));
+      const nextProgress = Math.min(
+        100,
+        Math.max(0, (timeForCalc / durationForCalc) * 100)
+      );
       // Chỉ set khi thay đổi đủ lớn để giảm re-render dày đặc
-      setProgress((prev) => (Math.abs(prev - nextProgress) < 0.2 ? prev : nextProgress));
+      setProgress((prev) =>
+        Math.abs(prev - nextProgress) < 0.2 ? prev : nextProgress
+      );
     }
-  }, [audioRef, isPlaying]);
+  }, [audioRef, isDragging, isPlaying]);
+
+  const handleSeekChange = (_event: Event, value: number | number[]) => {
+    const nextValue = Array.isArray(value) ? value[0] : value;
+    const clamped = Math.min(100, Math.max(0, nextValue));
+    if (!isDragging) setIsDragging(true);
+    setDragProgress(clamped);
+    if (lastValidDurationRef.current > 0) {
+      const nextTime = Math.floor(
+        (clamped / 100) * lastValidDurationRef.current
+      );
+      setCurrentTimeSec((prev) => (prev === nextTime ? prev : nextTime));
+    }
+  };
+
+  const handleSeekCommit = (
+    _event: Event | React.SyntheticEvent,
+    value: number | number[]
+  ) => {
+    const el = audioRef.current;
+    const nextValue = Array.isArray(value) ? value[0] : value;
+    const clamped = Math.min(100, Math.max(0, nextValue));
+
+    setProgress(clamped);
+    setDragProgress(null);
+    setIsDragging(false);
+
+    if (!el) return;
+
+    const duration =
+      Number.isFinite(el.duration) && el.duration > 0 ? el.duration : 0;
+    if (duration <= 0) return;
+
+    const nextTime = Math.min(
+      duration,
+      Math.max(0, (clamped / 100) * duration)
+    );
+    el.currentTime = nextTime;
+    lastValidTimeRef.current = nextTime;
+    setCurrentTimeSec((prev) =>
+      prev === Math.floor(nextTime) ? prev : Math.floor(nextTime)
+    );
+  };
 
   useEffect(() => {
     const el = audioRef.current;
     if (!el) return;
 
-    const syncDuration = () => {
-      if (el.duration > 0 && el.duration !== Infinity) {
-        lastValidDurationRef.current = el.duration;
-        const durationRounded = Math.floor(el.duration);
-        setDurationSec((prev) => (prev === durationRounded ? prev : durationRounded));
+    const resetTimeline = () => {
+      lastValidTimeRef.current = 0;
+      lastValidDurationRef.current = 0;
+      setCurrentTimeSec(0);
+      setDurationSec(0);
+      setProgress(0);
+    };
+
+    const syncBySrcChange = () => {
+      const currentSrc = el.currentSrc || el.src || "";
+      if (currentSrc !== lastSrcRef.current) {
+        lastSrcRef.current = currentSrc;
+        resetTimeline();
       }
     };
 
+    const syncDuration = () => {
+      if (
+        Number.isFinite(el.duration) &&
+        el.duration > 0 &&
+        el.duration !== Infinity
+      ) {
+        lastValidDurationRef.current = el.duration;
+        const durationRounded = Math.floor(el.duration);
+        setDurationSec((prev) =>
+          prev === durationRounded ? prev : durationRounded
+        );
+      }
+    };
+    const handleEnded = () => {
+      setProgress(100);
+    };
+
+    syncBySrcChange();
     syncDuration();
 
     el.addEventListener("timeupdate", handleTimeUpdate);
     el.addEventListener("loadedmetadata", syncDuration);
+    el.addEventListener("loadstart", syncBySrcChange);
+    el.addEventListener("emptied", resetTimeline);
+    el.addEventListener("ended", handleEnded);
 
     return () => {
       el.removeEventListener("timeupdate", handleTimeUpdate);
       el.removeEventListener("loadedmetadata", syncDuration);
+      el.removeEventListener("loadstart", syncBySrcChange);
+      el.removeEventListener("emptied", resetTimeline);
+      el.removeEventListener("ended", handleEnded);
     };
   }, [audioRef, handleTimeUpdate]);
 
   return (
     <div className="w-full">
-      <div className="mx-auto h-1.5 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-400">
-        <div
-          className="h-full bg-zinc-900 transition-all duration-300 dark:bg-zinc-50"
-          style={{ width: `${progress}%`, backgroundColor: progressColor }}
+      <div className="">
+        <Slider
+          aria-label="Audio progress"
+          value={isDragging && dragProgress !== null ? dragProgress : progress}
+          min={0}
+          max={100}
+          step={0.1}
+          onChange={handleSeekChange}
+          onChangeCommitted={handleSeekCommit}
+          sx={{
+            color: progressColor || defaultProgressColor,
+            height: 24,
+            py: 0,
+            px: 0,
+            touchAction: "none",
+            "& .MuiSlider-track, & .MuiSlider-rail": {
+              top: "50%",
+              transform: "translateY(-50%)",
+            },
+            "& .MuiSlider-rail": {
+              opacity: 1,
+              height: 6,
+              borderRadius: 999,
+              backgroundColor: "rgba(255,255,255,0.28)",
+            },
+            "& .MuiSlider-track": {
+              height: 6,
+              borderRadius: 999,
+              border: "none",
+              backgroundColor: "rgba(255,255,255,0.96)",
+              transition: isDragging ? "none" : "width 200ms ease",
+            },
+            "& .MuiSlider-thumb": {
+              width: 22,
+              height: 22,
+              opacity: 0,
+              backgroundColor: "transparent",
+              boxShadow: "none",
+              "&::before": { display: "none" },
+            },
+            "& .MuiSlider-mark, & .MuiSlider-markLabel": { display: "none" },
+          }}
         />
       </div>
 
-      <div className="mt-2 flex items-center justify-between">
-        <div className="text-sm text-zinc-400">{formatTime(currentTimeSec)}</div>
+      <div className="flex items-center justify-between">
+        <div className="text-sm font-medium text-zinc-400">
+          {formatTime(currentTimeSec)}
+        </div>
 
-        <div className="text-sm text-zinc-400">{formatTime(durationSec)}</div>
+        <div className="text-sm font-medium text-zinc-400">
+          {formatTime(durationSec)}
+        </div>
       </div>
     </div>
   );

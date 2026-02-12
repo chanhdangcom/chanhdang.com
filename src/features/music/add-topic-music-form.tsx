@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useIsAdmin } from "@/hooks/use-permissions";
+import { useRouter } from "next/navigation";
 
 interface Music {
   id?: string;
@@ -9,117 +11,142 @@ interface Music {
   singer: string;
 }
 
+type TopicItem = {
+  id: string;
+  title: string;
+  cover: string;
+  musicIds: string[];
+};
+
 export function AddTopicMusicForm() {
+  const isAdmin = useIsAdmin();
+  const router = useRouter();
   const [title, setTitle] = useState("");
   const [cover, setCover] = useState("");
 
   const [musics, setMusics] = useState<Music[]>([]);
+  const [topics, setTopics] = useState<TopicItem[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [isSynchronized, setIsSynchronized] = useState(false);
+  const [isSynchronized, setIsSynchronized] = useState(true);
+  const [editingTopicId, setEditingTopicId] = useState<string | null>(null);
 
-  // 🔹 Lấy danh sách bài hát và kiểm tra đồng bộ
-  useEffect(() => {
-    fetch("/api/musics")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Raw data from API:", data);
-        console.log("First music item:", data[0]);
+  const normalizeId = (value: unknown) => {
+    if (typeof value === "string") return value;
+    if (
+      value &&
+      typeof (value as { toString?: () => string }).toString === "function"
+    ) {
+      return (value as { toString: () => string }).toString();
+    }
+    return "";
+  };
 
-        // Normalize: convert _id to id (string) nếu cần
-        const normalized = Array.isArray(data)
-          ? data.map((m: Music & { _id?: unknown }) => {
-              // Xử lý _id từ MongoDB ObjectId
-              let idValue = "";
+  const resetForm = () => {
+    setTitle("");
+    setCover("");
+    setSelectedIds([]);
+    setEditingTopicId(null);
+  };
 
-              // Kiểm tra m.id trước
-              if (m.id && typeof m.id === "string") {
-                idValue = m.id;
+  const fetchMusics = async () => {
+    const res = await fetch("/api/musics");
+    const data = await res.json();
+    const normalized = Array.isArray(data)
+      ? data.map((m: Music & { _id?: unknown }) => {
+          let idValue = "";
+          if (m.id && typeof m.id === "string") {
+            idValue = m.id;
+          } else if (m._id) {
+            if (typeof m._id === "string") {
+              idValue = m._id;
+            } else if (typeof m._id === "object" && m._id !== null) {
+              const idObj = m._id as Record<string, unknown>;
+              if (typeof idObj.toString === "function") {
+                idValue = idObj.toString();
+              } else if ("$oid" in idObj) {
+                idValue = String(idObj.$oid);
+              } else if ("_str" in idObj) {
+                idValue = String(idObj._str);
               }
-              // Kiểm tra m._id
-              else if (m._id) {
-                const idType = typeof m._id;
-                console.log("Processing _id:", {
-                  _id: m._id,
-                  type: idType,
-                  title: m.title,
-                });
+            }
+          }
+          return { ...m, id: idValue };
+        })
+      : [];
+    setMusics(normalized);
+    setIsSynchronized(true);
+  };
 
-                if (idType === "string") {
-                  idValue = m._id as string;
-                }
-                // ObjectId object có method toString()
-                else if (idType === "object" && m._id !== null) {
-                  const idObj = m._id as Record<string, unknown>;
-                  // Thử toString() nếu có
-                  if (typeof idObj.toString === "function") {
-                    idValue = idObj.toString();
-                  }
-                  // MongoDB extended JSON format { $oid: "..." }
-                  else if ("$oid" in idObj) {
-                    idValue = String(idObj.$oid);
-                  }
-                  // ObjectId có thể có các property khác
-                  else if ("_str" in idObj) {
-                    idValue = String(idObj._str);
-                  } else {
-                    // Fallback: stringify và parse lại
-                    const str = JSON.stringify(m._id);
-                    console.warn("Unknown _id format, stringified:", str);
-                    idValue = str;
-                  }
-                }
+  const fetchTopics = async () => {
+    const res = await fetch("/api/topics");
+    if (!res.ok) return;
+    const data = await res.json();
+    const mapped = Array.isArray(data)
+      ? data.map((item: Record<string, unknown>) => {
+          const rawMusicIds = Array.isArray(item.musicIds)
+            ? item.musicIds
+            : Array.isArray(item.musics)
+              ? item.musics
+              : [];
+          const musicIds = rawMusicIds
+            .map((entry) => {
+              if (typeof entry === "string") return entry;
+              if (entry && typeof entry === "object") {
+                const record = entry as Record<string, unknown>;
+                return normalizeId(record.id) || normalizeId(record._id);
               }
-
-              if (!idValue) {
-                console.error("Could not extract ID from music:", m);
-              }
-
-              const normalizedItem = {
-                ...m,
-                id: idValue,
-              };
-
-              console.log("Normalized music:", {
-                original_id: m._id,
-                normalized_id: idValue,
-                title: m.title,
-                final_item: normalizedItem,
-              });
-
-              return normalizedItem;
+              return "";
             })
-          : [];
-        console.log("Normalized musics count:", normalized.length);
-        console.log(
-          "Sample normalized IDs:",
-          normalized.slice(0, 3).map((m) => m.id)
-        );
-        setMusics(normalized);
-        setIsSynchronized(true);
-      })
-      .catch((err) => {
-        console.error("Error fetching musics:", err);
-        setMessage("❌ Không lấy được danh sách bài hát");
-        setIsSynchronized(false);
-      });
-  }, []);
+            .filter(Boolean);
+          return {
+            id: normalizeId(item.id) || normalizeId(item._id),
+            title: String(item.title ?? ""),
+            cover: String(item.cover ?? ""),
+            musicIds,
+          };
+        })
+      : [];
+    setTopics(mapped.filter((topic: TopicItem) => topic.id));
+  };
 
-  // 🔹 Check / uncheck bài hát
+  useEffect(() => {
+    if (!isAdmin) {
+      router.push("/music");
+      return;
+    }
+
+    (async () => {
+      try {
+        await Promise.all([fetchMusics(), fetchTopics()]);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setMessage("❌ Không lấy được dữ liệu");
+        setIsSynchronized(false);
+      }
+    })();
+  }, [isAdmin, router]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (!isAdmin) {
+    return (
+      <div style={{ padding: 20, maxWidth: 500 }}>
+        <h2>Không có quyền truy cập</h2>
+        <p>Chỉ admin mới có quyền quản lý topic.</p>
+      </div>
+    );
+  }
+
   const toggleMusic = (id: string) => {
-    console.log("Toggling music ID:", id);
     setSelectedIds((prev) => {
       const newIds = prev.includes(id)
         ? prev.filter((mid) => mid !== id)
         : [...prev, id];
-      console.log("Selected IDs after toggle:", newIds);
       return newIds;
     });
   };
 
-  // 🔹 Submit form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -138,39 +165,28 @@ export function AddTopicMusicForm() {
     }
 
     try {
-      console.log("=== SUBMITTING FORM ===");
-      console.log("selectedIds:", selectedIds);
-      console.log("selectedIds length:", selectedIds.length);
-      console.log(
-        "selectedIds types:",
-        selectedIds.map((id) => ({ id, type: typeof id }))
-      );
-
       const payload = {
         title,
         cover,
         musicIds: selectedIds,
       };
-      console.log("Payload:", JSON.stringify(payload, null, 2));
+      const endpoint = editingTopicId ? `/api/topics/${editingTopicId}` : "/api/topics";
+      const method = editingTopicId ? "PUT" : "POST";
 
-      const res = await fetch("/api/topics", {
-        method: "POST",
+      const res = await fetch(endpoint, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       const data = await res.json();
-      console.log("Response:", data);
 
       if (!res.ok) {
         setMessage(data.error || "Error");
       } else {
-        setMessage(
-          `✅ Tạo topic thành công (${data.musicsCount || 0} bài hát)`
-        );
-        setTitle("");
-        setCover("");
-        setSelectedIds([]);
+        setMessage(editingTopicId ? "✅ Cập nhật topic thành công" : "✅ Tạo topic thành công");
+        resetForm();
+        await fetchTopics();
       }
     } catch (err) {
       console.error("Submit error:", err);
@@ -180,9 +196,41 @@ export function AddTopicMusicForm() {
     }
   };
 
+  const handleEditTopic = (topic: TopicItem) => {
+    setEditingTopicId(topic.id);
+    setTitle(topic.title);
+    setCover(topic.cover);
+    setSelectedIds(topic.musicIds);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleDeleteTopic = async (topicId: string) => {
+    if (!confirm("Bạn có chắc muốn xóa topic này?")) return;
+    setLoading(true);
+    setMessage("");
+    try {
+      const res = await fetch(`/api/topics/${topicId}`, { method: "DELETE" });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setMessage(data.error || "❌ Xóa topic thất bại");
+      } else {
+        setMessage("✅ Xóa topic thành công");
+        if (editingTopicId === topicId) {
+          resetForm();
+        }
+        await fetchTopics();
+      }
+    } catch (err) {
+      console.error("Delete topic error:", err);
+      setMessage("❌ Không kết nối được server");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div style={{ padding: 20, maxWidth: 500 }}>
-      <h2>Tạo Topic</h2>
+      <h2>{editingTopicId ? "Sửa Topic" : "Tạo Topic"}</h2>
 
       {!isSynchronized && (
         <p style={{ color: "orange", marginBottom: 12 }}>
@@ -191,7 +239,6 @@ export function AddTopicMusicForm() {
       )}
 
       <form onSubmit={handleSubmit}>
-        {/* Title */}
         <div style={{ marginBottom: 12 }}>
           <label>Title</label>
           <input
@@ -202,7 +249,6 @@ export function AddTopicMusicForm() {
           />
         </div>
 
-        {/* Cover */}
         <div style={{ marginBottom: 12 }}>
           <label>Cover URL</label>
           <input
@@ -213,7 +259,6 @@ export function AddTopicMusicForm() {
           />
         </div>
 
-        {/* Music list */}
         <div style={{ marginBottom: 12 }}>
           <strong>Chọn bài hát</strong>
 
@@ -239,11 +284,72 @@ export function AddTopicMusicForm() {
         </div>
 
         <button type="submit" disabled={loading || !isSynchronized}>
-          {loading ? "Đang tạo..." : "Create Topic"}
+          {loading
+            ? "Đang lưu..."
+            : editingTopicId
+              ? "Lưu thay đổi"
+              : "Create Topic"}
         </button>
+        {editingTopicId && (
+          <button
+            type="button"
+            onClick={resetForm}
+            style={{ marginLeft: 8 }}
+          >
+            Hủy chỉnh sửa
+          </button>
+        )}
       </form>
 
       {message && <p style={{ marginTop: 12 }}>{message}</p>}
+
+      <div style={{ marginTop: 20 }}>
+        <h3>Danh sách topic</h3>
+        {topics.length === 0 ? (
+          <p>Chưa có topic</p>
+        ) : (
+          <ul style={{ listStyle: "none", padding: 0 }}>
+            {topics.map((topic) => (
+              <li
+                key={topic.id}
+                style={{
+                  marginBottom: 8,
+                  border: "1px solid #d4d4d8",
+                  borderRadius: 10,
+                  padding: 10,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 12,
+                }}
+              >
+                <div>
+                  <div style={{ fontWeight: 600 }}>{topic.title}</div>
+                  <div style={{ fontSize: 12, opacity: 0.7 }}>
+                    {topic.musicIds.length} bài hát
+                  </div>
+                </div>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button
+                    type="button"
+                    onClick={() => handleEditTopic(topic)}
+                    style={{ color: "#2563eb" }}
+                  >
+                    Sửa
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteTopic(topic.id)}
+                    style={{ color: "#e11d48" }}
+                  >
+                    Xóa
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

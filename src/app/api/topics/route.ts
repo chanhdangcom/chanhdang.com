@@ -1,5 +1,6 @@
 import clientPromise from "@/lib/mongodb";
 import { NextResponse } from "next/server";
+import { getUserRole } from "@/lib/auth-helpers";
 import {
   normalizeObjectIds,
   normalizeDocument,
@@ -69,6 +70,14 @@ const normalizeTopic = async (db: Db, topic: TopicDocument) => {
 
 export async function POST(request: Request) {
   try {
+    const role = await getUserRole(request);
+    if (role !== "admin") {
+      return NextResponse.json(
+        { error: "Chỉ admin mới có quyền tạo topic" },
+        { status: 403 }
+      );
+    }
+
     const body = (await request.json()) as CreateTopicBody;
 
     if (!body.title || !body.cover) {

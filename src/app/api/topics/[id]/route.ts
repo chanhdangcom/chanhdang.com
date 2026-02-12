@@ -1,6 +1,7 @@
 import clientPromise from "@/lib/mongodb";
 import { Db, ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
+import { getUserRole } from "@/lib/auth-helpers";
 import {
   normalizeDocument,
   normalizeMusic,
@@ -77,6 +78,88 @@ export async function GET(
     console.error("Error fetching topic:", error);
     return NextResponse.json(
       { error: "Failed to fetch topic" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  try {
+    const role = await getUserRole(request);
+    if (role !== "admin") {
+      return NextResponse.json(
+        { error: "Chỉ admin mới có quyền cập nhật topic" },
+        { status: 403 }
+      );
+    }
+
+    const { id } = await context.params;
+    if (!ObjectId.isValid(id)) {
+      return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+    }
+
+    const body = await request.json();
+    const client = await clientPromise;
+    const db = client.db("musicdb");
+
+    const updateDoc: Record<string, unknown> = { updatedAt: new Date() };
+    if (typeof body.title === "string") updateDoc.title = body.title;
+    if (typeof body.cover === "string") updateDoc.cover = body.cover;
+    if (Array.isArray(body.musicIds)) {
+      updateDoc.musicIds = parseObjectIds(body.musicIds);
+    } else if (Array.isArray(body.musics)) {
+      updateDoc.musicIds = parseLegacyMusicIds(body.musics);
+    }
+
+    await db.collection("topics").updateOne(
+      { _id: new ObjectId(id) },
+      { $set: updateDoc }
+    );
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Error updating topic:", error);
+    return NextResponse.json(
+      { error: "Failed to update topic" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  try {
+    const role = await getUserRole(request);
+    if (role !== "admin") {
+      return NextResponse.json(
+        { error: "Chỉ admin mới có quyền xóa topic" },
+        { status: 403 }
+      );
+    }
+
+    const { id } = await context.params;
+    if (!ObjectId.isValid(id)) {
+      return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+    }
+
+    const client = await clientPromise;
+    const db = client.db("musicdb");
+    const result = await db.collection("topics").deleteOne({ _id: new ObjectId(id) });
+
+    if (result.deletedCount === 0) {
+      return NextResponse.json({ error: "Topic not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting topic:", error);
+    return NextResponse.json(
+      { error: "Failed to delete topic" },
       { status: 500 }
     );
   }

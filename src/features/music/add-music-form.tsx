@@ -39,6 +39,7 @@ export default function AddMusicForm() {
     useState<ISingerItem | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
   const [userMusics, setUserMusics] = useState<IMusic[]>([]);
+  const [adminMusics, setAdminMusics] = useState<IMusic[]>([]);
   const [selectedMusicId, setSelectedMusicId] = useState<string>("");
   const [hasManualTopic, setHasManualTopic] = useState(false);
   const [isSuggestingTopic, setIsSuggestingTopic] = useState(false);
@@ -149,6 +150,17 @@ export default function AddMusicForm() {
       setIsLoadingProfile(false);
     }
   }, [user?.id]);
+
+  const fetchAdminMusics = useCallback(async () => {
+    try {
+      const response = await fetch("/api/musics");
+      if (!response.ok) return;
+      const musicsData = await response.json();
+      setAdminMusics(Array.isArray(musicsData) ? musicsData : []);
+    } catch (error) {
+      console.error("Error fetching admin musics:", error);
+    }
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -386,8 +398,9 @@ export default function AddMusicForm() {
   useEffect(() => {
     if (isAdmin) {
       fetchSingers();
+      fetchAdminMusics();
     }
-  }, [isAdmin]);
+  }, [isAdmin, fetchAdminMusics]);
 
   // Fetch user's artist profile (only for regular users)
   useEffect(() => {
@@ -447,9 +460,9 @@ export default function AddMusicForm() {
     }
   };
 
-  // Handle edit music (for regular users)
+  // Handle edit music
   const handleEditMusic = async () => {
-    if (!selectedMusicId || !userArtistProfile) {
+    if (!selectedMusicId) {
       setMessage("Vui lòng chọn bài hát cần sửa!");
       return;
     }
@@ -458,13 +471,6 @@ export default function AddMusicForm() {
     setMessage("");
 
     try {
-      const singerId = userArtistProfile._id || userArtistProfile.id;
-      if (!singerId) {
-        setMessage("Không tìm thấy profile ca sĩ!");
-        setIsLoading(false);
-        return;
-      }
-
       // Upload files if needed
       let audioUrl = form.audio;
       let coverUrl = form.cover;
@@ -487,27 +493,61 @@ export default function AddMusicForm() {
         beatUrl = await uploadFileToR2(beatFile, "Upload file beat thất bại!");
       }
 
-      const response = await fetch(
-        `/api/singers/${singerId}/musics/${selectedMusicId}`,
-        {
+      const selectedSinger = singers.find(
+        (singer) => String(singer._id || singer.id) === selectedSingerId
+      );
+      const adminSingerName =
+        isAdmin && useExistingSinger
+          ? (selectedSinger?.singer ?? form.singer)
+          : form.singer;
+
+      let response: Response;
+      if (isAdmin) {
+        response = await fetch(`/api/musics/${selectedMusicId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             ...form,
+            singer: adminSingerName,
             audio: audioUrl,
             cover: coverUrl,
             srt: srtUrl,
             beat: beatUrl,
           }),
+        });
+      } else {
+        const singerId = userArtistProfile?._id || userArtistProfile?.id;
+        if (!singerId) {
+          setMessage("Không tìm thấy profile ca sĩ!");
+          setIsLoading(false);
+          return;
         }
-      );
+        response = await fetch(
+          `/api/singers/${singerId}/musics/${selectedMusicId}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              ...form,
+              audio: audioUrl,
+              cover: coverUrl,
+              srt: srtUrl,
+              beat: beatUrl,
+            }),
+          }
+        );
+      }
 
       const data = await response.json();
 
       if (response.ok && data.success) {
         setMessage("Sửa bài hát thành công!");
         resetFormState();
-        await fetchUserArtistProfile();
+        if (isAdmin) {
+          await fetchAdminMusics();
+        } else {
+          await fetchUserArtistProfile();
+        }
       } else {
         setMessage(data.error || "Có lỗi xảy ra khi sửa!");
       }
@@ -519,9 +559,9 @@ export default function AddMusicForm() {
     }
   };
 
-  // Handle delete music (for regular users)
+  // Handle delete music
   const handleDeleteMusic = async () => {
-    if (!selectedMusicId || !userArtistProfile) {
+    if (!selectedMusicId) {
       setMessage("Vui lòng chọn bài hát cần xóa!");
       return;
     }
@@ -532,26 +572,36 @@ export default function AddMusicForm() {
     setMessage("");
 
     try {
-      const singerId = userArtistProfile._id || userArtistProfile.id;
-      if (!singerId) {
-        setMessage("Không tìm thấy profile ca sĩ!");
-        setIsLoading(false);
-        return;
-      }
-
-      const response = await fetch(
-        `/api/singers/${singerId}/musics/${selectedMusicId}`,
-        {
+      let response: Response;
+      if (isAdmin) {
+        response = await fetch(`/api/musics/${selectedMusicId}`, {
           method: "DELETE",
+        });
+      } else {
+        const singerId = userArtistProfile?._id || userArtistProfile?.id;
+        if (!singerId) {
+          setMessage("Không tìm thấy profile ca sĩ!");
+          setIsLoading(false);
+          return;
         }
-      );
+        response = await fetch(
+          `/api/singers/${singerId}/musics/${selectedMusicId}`,
+          {
+            method: "DELETE",
+          }
+        );
+      }
 
       const data = await response.json();
 
       if (response.ok && data.success) {
         setMessage("Xóa bài hát thành công!");
         setSelectedMusicId("");
-        await fetchUserArtistProfile();
+        if (isAdmin) {
+          await fetchAdminMusics();
+        } else {
+          await fetchUserArtistProfile();
+        }
       } else {
         setMessage(data.error || "Có lỗi xảy ra khi xóa!");
       }
@@ -560,6 +610,63 @@ export default function AddMusicForm() {
       setMessage("Có lỗi xảy ra khi xóa!");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleSelectMusicToManage = (musicId: string) => {
+    setSelectedMusicId(musicId);
+    if (!musicId) return;
+
+    const sourceMusics = isAdmin ? adminMusics : userMusics;
+    const selectedMusic = sourceMusics.find(
+      (music) => (music._id || music.id || "") === musicId
+    );
+
+    if (!selectedMusic) return;
+
+    const selectedTopic = String(
+      (selectedMusic as { topic?: unknown }).topic ?? ""
+    );
+    const selectedSingerName = String(
+      (selectedMusic as { singer?: unknown }).singer ?? ""
+    ).trim();
+    const selectedSingerIdFromMusic = String(
+      (selectedMusic as { singerId?: unknown }).singerId ?? ""
+    );
+    const matchedSinger = singers.find((singer) => {
+      const singerId = String(singer._id || singer.id || "");
+      if (selectedSingerIdFromMusic && singerId === selectedSingerIdFromMusic) {
+        return true;
+      }
+      return (
+        singer.singer.trim().toLowerCase() === selectedSingerName.toLowerCase()
+      );
+    });
+
+    setForm((prev) => ({
+      ...prev,
+      title: selectedMusic.title || "",
+      singer: selectedSingerName,
+      cover: selectedMusic.cover || "",
+      audio: selectedMusic.audio || "",
+      youtube: selectedMusic.youtube || "",
+      content: selectedMusic.content || "",
+      type: selectedMusic.type || "",
+      topic: selectedTopic,
+      srt: selectedMusic.srt || "",
+      beat: selectedMusic.beat || "",
+    }));
+    setHasManualTopic(Boolean(selectedTopic));
+    setFile(null);
+    setImageFile(null);
+    setSrtFile(null);
+    setBeatFile(null);
+    if (isAdmin && matchedSinger) {
+      setUseExistingSinger(true);
+      setSelectedSingerId(String(matchedSinger._id || matchedSinger.id || ""));
+    } else if (isAdmin) {
+      setUseExistingSinger(false);
+      setSelectedSingerId("");
     }
   };
 
@@ -630,6 +737,30 @@ export default function AddMusicForm() {
             </div>
           )}
 
+          {isAdmin && adminMusics.length > 0 && (
+            <div className="rounded-lg border border-blue-400/30 bg-blue-50 p-3 dark:border-blue-300/30 dark:bg-blue-900/20">
+              <label className="mb-2 block text-sm font-semibold text-blue-700 dark:text-blue-300">
+                Chọn bài hát cần sửa / xóa (toàn hệ thống)
+              </label>
+              <select
+                value={selectedMusicId}
+                onChange={(e) => handleSelectMusicToManage(e.target.value)}
+                disabled={isLoading}
+                className="w-full rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+              >
+                <option value="">-- Chọn bài hát --</option>
+                {adminMusics.map((music) => {
+                  const id = music._id || music.id || "";
+                  return (
+                    <option key={id} value={id}>
+                      {music.title}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          )}
+
           <div className="mx-auto flex w-full flex-col space-y-4">
             <div className="mx-auto flex w-full flex-col justify-between gap-4">
               <label className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
@@ -675,8 +806,18 @@ export default function AddMusicForm() {
                     <select
                       value={selectedSingerId}
                       onChange={(e) => {
-                        setSelectedSingerId(e.target.value);
-                        console.log("Selected singer ID:", e.target.value);
+                        const nextSingerId = e.target.value;
+                        setSelectedSingerId(nextSingerId);
+                        const nextSinger = singers.find(
+                          (singer) =>
+                            String(singer._id || singer.id) === nextSingerId
+                        );
+                        if (nextSinger) {
+                          setForm((prev) => ({
+                            ...prev,
+                            singer: nextSinger.singer,
+                          }));
+                        }
                       }}
                       disabled={isLoading}
                       required={useExistingSinger}
@@ -952,7 +1093,7 @@ export default function AddMusicForm() {
                 Thêm bài hát
               </Button>
 
-              {isRegularUser && userMusics.length > 0 && (
+              {isAdmin && adminMusics.length > 0 && (
                 <div className="flex justify-between gap-2">
                   <Button
                     type="button"
@@ -980,7 +1121,6 @@ export default function AddMusicForm() {
           </div>
         </form>
       </div>
-
     </div>
   );
 }

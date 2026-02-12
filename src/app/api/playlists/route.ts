@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { Db, ObjectId } from "mongodb";
+import { getUserRole } from "@/lib/auth-helpers";
 import {
   normalizeObjectIds,
   normalizeMusic,
@@ -227,6 +228,14 @@ export async function GET(request: Request) {
 // body: { title, singer, cover, musicIds?: string[] }
 export async function POST(request: Request) {
   try {
+    const role = await getUserRole(request);
+    if (role !== "admin") {
+      return NextResponse.json(
+        { error: "Chỉ admin mới có quyền tạo playlist" },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
     if (!body.title || !body.cover) {
       return NextResponse.json(

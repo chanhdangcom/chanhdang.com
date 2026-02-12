@@ -1282,7 +1282,7 @@ export function PlayerPage({ setIsClick }: IProp) {
       )}
 
       <>
-        <div className="fixed bottom-0 z-50 w-full space-y-6 px-8 pb-8 md:bottom-8 md:w-[40vw]">
+        <div className="fixed bottom-0 z-50 w-full space-y-0 px-8 pb-6 md:bottom-8 md:w-[40vw]">
           <div className="pointer-events-none absolute -bottom-16 left-0 -z-10 h-[40vh] w-full scale-150 bg-black blur-xl brightness-0 md:w-[35vw] md:blur-3xl" />
 
           {isClickLyric && (
@@ -1306,7 +1306,7 @@ export function PlayerPage({ setIsClick }: IProp) {
           )}
 
           {!isClickLyric && !isClickFeatured && (
-            <div>
+            <>
               <div className="flex items-center justify-between">
                 <div id="info-song">
                   <div className="line-clamp-1 text-xl font-semibold text-white">
@@ -1329,12 +1329,12 @@ export function PlayerPage({ setIsClick }: IProp) {
 
                 <MusicActionsMenu />
               </div>
-            </div>
-          )}
 
-          <div className="flex items-center justify-center">
-            <AudioTimeLine coverUrl={currentMusic?.cover || ""} />
-          </div>
+              <div className="flex items-center justify-center">
+                <AudioTimeLine coverUrl={currentMusic?.cover || ""} />
+              </div>
+            </>
+          )}
 
           <div className="justify-cente flex items-center">
             <div className="mx-8 mb-4 flex w-full items-center justify-between text-white">
@@ -1371,7 +1371,7 @@ export function PlayerPage({ setIsClick }: IProp) {
             </div>
           </div>
 
-          <div className="space-y-8">
+          <div className="space-y-4">
             <VolumeBar />
 
             <div className="mx-8 flex items-center justify-between text-base text-zinc-400">

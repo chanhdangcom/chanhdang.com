@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-import { DisableRightClick } from "@/features/music/disable-right-click";
+// import { DisableRightClick } from "@/features/music/disable-right-click";
 
 type Props = {
   children: ReactNode;
@@ -9,7 +9,7 @@ type Props = {
 export default function MusicLayout({ children }: Props) {
   return (
     <>
-      <DisableRightClick />
+      {/* <DisableRightClick /> */}
 
       {children}
     </>

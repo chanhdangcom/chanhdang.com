@@ -1,5 +1,6 @@
 export type IMusic = {
   id: string;
+  _id?: string;
   title: string;
   singer: string;
   cover: string;

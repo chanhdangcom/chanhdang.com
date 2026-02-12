@@ -564,6 +564,23 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  // Keep mute state in sync when volume/muted is changed outside handleMute
+  useEffect(() => {
+    const audioEl = audioRef.current;
+    if (!audioEl) return;
+
+    const syncMutedState = () => {
+      setIsMuted(audioEl.muted || audioEl.volume === 0);
+    };
+
+    syncMutedState();
+    audioEl.addEventListener("volumechange", syncMutedState);
+
+    return () => {
+      audioEl.removeEventListener("volumechange", syncMutedState);
+    };
+  }, []);
+
   // ----------------------------
   // Sync lyrics + auto-next
   // ----------------------------

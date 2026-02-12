@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
+import { getUserRole } from "@/lib/auth-helpers";
 import {
   normalizeDocument,
   normalizeMusic,
@@ -85,6 +86,14 @@ export async function PUT(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const role = await getUserRole(request);
+    if (role !== "admin") {
+      return NextResponse.json(
+        { error: "Chỉ admin mới có quyền cập nhật playlist" },
+        { status: 403 }
+      );
+    }
+
     const { id } = await context.params;
     if (!ObjectId.isValid(id)) {
       return NextResponse.json({ error: "Invalid id" }, { status: 400 });
@@ -124,6 +133,14 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const role = await getUserRole(request);
+    if (role !== "admin") {
+      return NextResponse.json(
+        { error: "Chỉ admin mới có quyền xóa playlist" },
+        { status: 403 }
+      );
+    }
+
     const { id } = await context.params;
     if (!ObjectId.isValid(id)) {
       return NextResponse.json({ error: "Invalid id" }, { status: 400 });
