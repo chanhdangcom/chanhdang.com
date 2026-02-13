@@ -22,7 +22,7 @@ import { useAudio } from "@/components/music-provider";
 import { BorderPro } from "./component/border-pro";
 import dynamic from "next/dynamic";
 import { Drawer } from "vaul";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const PlayerPage = dynamic(
   () => import("./player-page").then((mod) => mod.PlayerPage),
@@ -368,7 +368,7 @@ export function AudioBar() {
                 <div className="min-w-0 flex-1">
                   <div
                     ref={titleContainerRef}
-                    className="relative w-full overflow-hidden whitespace-nowrap text-sm font-semibold text-black dark:text-white"
+                    className="relative min-h-[1.25em] w-full overflow-hidden whitespace-nowrap text-sm font-semibold text-black dark:text-white"
                   >
                     <span
                       ref={titleMeasureRef}
@@ -377,34 +377,62 @@ export function AudioBar() {
                       {currentMusic?.title || "Title Song"}
                     </span>
 
-                    {shouldMarqueeTitle ? (
+                    <AnimatePresence mode="wait" initial={false}>
                       <motion.div
-                        className="flex w-max"
-                        animate={{ x: ["0%", "-50%"] }}
+                        key={currentMusic?.id ?? "title"}
+                        initial={{ x: "100%" }}
+                        animate={{ x: 0 }}
+                        exit={{ x: "-100%" }}
                         transition={{
-                          repeat: Infinity,
-                          repeatType: "loop",
-                          duration: 18,
-                          ease: "linear",
+                          duration: 0.2,
+                          ease: "easeOut",
                         }}
+                        className="absolute inset-0 min-w-0 transform-gpu will-change-transform"
                       >
-                        <span className="pr-4">
-                          {currentMusic?.title || "Title Song"}
-                        </span>
+                        {shouldMarqueeTitle ? (
+                          <motion.div
+                            className="flex w-max transform-gpu will-change-transform"
+                            animate={{ x: ["0%", "-50%"] }}
+                            transition={{
+                              repeat: Infinity,
+                              repeatType: "loop",
+                              duration: 18,
+                              ease: "linear",
+                            }}
+                          >
+                            <span className="pr-4">
+                              {currentMusic?.title || "Title Song"}
+                            </span>
 
-                        <span aria-hidden="true" className="pr-4">
-                          {currentMusic?.title || "Title Song"}
-                        </span>
+                            <span aria-hidden="true" className="pr-4">
+                              {currentMusic?.title || "Title Song"}
+                            </span>
+                          </motion.div>
+                        ) : (
+                          <span className="block truncate">
+                            {currentMusic?.title || "Title Song"}
+                          </span>
+                        )}
                       </motion.div>
-                    ) : (
-                      <span className="block truncate">
-                        {currentMusic?.title || "Title Song"}
-                      </span>
-                    )}
+                    </AnimatePresence>
                   </div>
 
-                  <div className="line-clamp-1 text-sm font-medium text-zinc-500">
-                    {currentMusic?.singer || "Singer"}
+                  <div className="relative min-h-[1.25rem] overflow-hidden text-sm font-medium text-zinc-500">
+                    <AnimatePresence mode="wait" initial={false}>
+                      <motion.div
+                        key={currentMusic?.id ?? "singer"}
+                        initial={{ x: "100%" }}
+                        animate={{ x: 0 }}
+                        exit={{ x: "-100%" }}
+                        transition={{
+                          duration: 0.2,
+                          ease: "easeOut",
+                        }}
+                        className="absolute inset-0 line-clamp-1 transform-gpu will-change-transform"
+                      >
+                        {currentMusic?.singer || "Singer"}
+                      </motion.div>
+                    </AnimatePresence>
                   </div>
                 </div>
 
