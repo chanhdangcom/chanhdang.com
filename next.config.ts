@@ -5,6 +5,7 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   reactStrictMode: false,
+  transpilePackages: ["next-mdx-remote"],
   images: {
     domains: ["cdn.chanhdang.com", "lh3.googleusercontent.com"],
     remotePatterns: [
