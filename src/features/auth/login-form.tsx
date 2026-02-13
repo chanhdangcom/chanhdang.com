@@ -9,8 +9,6 @@ import { useUser } from "@/hooks/use-user";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
-import AuthLightMode from "./auth-light-mode";
-
 interface FormErrors {
   username?: string;
   password?: string;
@@ -29,7 +27,6 @@ export default function LoginForm() {
   const router = useRouter();
   const { login, user, isLoading } = useUser();
 
-  // Nếu đã đăng nhập (Google), chuyển về trang chủ locale
   useEffect(() => {
     if (user) {
       router.replace(`/${locale}/music`);
@@ -53,15 +50,15 @@ export default function LoginForm() {
     const newErrors: FormErrors = {};
 
     if (!form.username.trim()) {
-      newErrors.username = "Vui lòng nhập tên đăng nhập";
+      newErrors.username = "Please enter your username";
     } else if (form.username.length < 3) {
-      newErrors.username = "Tên đăng nhập phải có ít nhất 3 ký tự";
+      newErrors.username = "Username must be at least 3 characters";
     }
 
     if (!form.password) {
-      newErrors.password = "Vui lòng nhập mật khẩu";
+      newErrors.password = "Please enter your password";
     } else if (form.password.length < 6) {
-      newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự";
+      newErrors.password = "Password must be at least 6 characters";
     }
 
     setErrors(newErrors);
@@ -111,7 +108,7 @@ export default function LoginForm() {
           localStorage.removeItem("rememberedUsername");
         }
 
-        setSuccessMessage("Đăng nhập thành công!");
+        setSuccessMessage("Login successful!");
         login(data.user);
         setForm({ username: "", password: "" });
 
@@ -120,10 +117,10 @@ export default function LoginForm() {
           router.push(`/${locale}/music`);
         }, 1000);
       } else {
-        setErrors({ general: data.error || "Có lỗi xảy ra!" });
+        setErrors({ general: data.error || "Something went wrong!" });
       }
     } catch {
-      setErrors({ general: "Lỗi kết nối. Vui lòng thử lại sau." });
+      setErrors({ general: "Connection error. Please try again later." });
     } finally {
       setIsSubmitting(false);
     }
@@ -131,12 +128,11 @@ export default function LoginForm() {
 
   return (
     <div className="h-screen items-center justify-center md:flex">
-      <AuthLightMode />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-zinc-200 from-zinc-900 to-zinc-950 p-8 font-apple shadow-sm backdrop-blur-2xl md:mx-auto md:w-[30vw]"
+        className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-zinc-200 from-zinc-900 to-zinc-950 p-8 font-apple shadow-sm backdrop-blur-2xl dark:border-zinc-800 md:mx-auto md:w-[30vw]"
       >
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4 text-center">
@@ -144,8 +140,8 @@ export default function LoginForm() {
               <ChanhdangLogotype className="h-6" />
             </div>
 
-            <h1 className="bg-gradient-to-r from-zinc-900 to-zinc-700 bg-clip-text font-apple text-3xl font-bold text-transparent">
-              Đăng Nhập
+            <h1 className="font-apple text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+              Sign In
             </h1>
           </div>
 
@@ -180,17 +176,17 @@ export default function LoginForm() {
             {/* Username Field */}
             <div className="space-y-2">
               <label className="text-sm font-semibold text-zinc-700">
-                Tên đăng nhập
+                Username
               </label>
 
               <div className="relative">
                 <Input
                   name="username"
-                  placeholder="Nhập tên đăng nhập"
+                  placeholder="Enter your username"
                   value={form.username}
                   onChange={handleChange}
                   required
-                  className={`rounded-xl border ${errors.username ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                  className={`rounded-xl border border-zinc-300 dark:border-zinc-800 ${errors.username ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                   disabled={isSubmitting}
                 />
               </div>
@@ -212,18 +208,18 @@ export default function LoginForm() {
             {/* Password Field */}
             <div className="space-y-2">
               <label className="text-sm font-semibold text-zinc-700">
-                Mật khẩu
+                Password
               </label>
 
               <div className="relative">
                 <Input
                   name="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Nhập mật khẩu"
+                  placeholder="Enter your password"
                   value={form.password}
                   onChange={handleChange}
                   required
-                  className={`rounded-xl border pr-10 ${errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                  className={`rounded-xl border border-zinc-300 pr-10 dark:border-zinc-800 ${errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                   disabled={isSubmitting}
                 />
                 <button
@@ -260,18 +256,16 @@ export default function LoginForm() {
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500"
+                  className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500 dark:border-zinc-800"
                   disabled={isSubmitting}
                 />
-                <span className="text-sm text-zinc-600">
-                  Ghi nhớ đăng nhập
-                </span>
+                <span className="text-sm text-zinc-600">Remember me</span>
               </label>
               <Link
                 href={`/${locale}/auth/forgot-password`}
                 className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
               >
-                Quên mật khẩu?
+                Forgot password?
               </Link>
             </div>
 
@@ -281,9 +275,9 @@ export default function LoginForm() {
               className="w-full rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 px-4 py-3 text-white transition-all hover:from-zinc-800 hover:to-zinc-700"
               disabled={isSubmitting}
               loading={isSubmitting}
-              loadingText="Đang đăng nhập..."
+              loadingText="Signing in..."
             >
-              {!isSubmitting && "Đăng nhập"}
+              {!isSubmitting && "Sign In"}
             </Button>
 
             {/* Register Link */}
@@ -292,7 +286,7 @@ export default function LoginForm() {
                 href={`/${locale}/auth/register`}
                 className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
               >
-                Chưa có tài khoản? Đăng ký ngay
+                Don&apos;t have an account? Sign up
               </Link>
             </div>
           </div>
@@ -300,11 +294,12 @@ export default function LoginForm() {
           {/* Divider */}
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="h-px w-full bg-zinc-200" />
+              <div className="h-px w-full bg-zinc-200 dark:bg-zinc-800" />
             </div>
+
             <div className="relative flex justify-center text-sm">
-              <span className="bg-zinc-50 px-4 text-zinc-500">
-                Hoặc
+              <span className="bg-zinc-50 px-4 text-zinc-500 dark:bg-black">
+                Or
               </span>
             </div>
           </div>
@@ -314,11 +309,11 @@ export default function LoginForm() {
             type="button"
             onClick={() => login()}
             disabled={isLoading || isSubmitting}
-            className="w-full rounded-xl border border-zinc-300 px-4 py-3 shadow-sm transition-all hover:bg-zinc-300"
+            className="w-full rounded-xl border border-zinc-300 px-4 py-3 shadow-sm transition-all hover:bg-zinc-300 dark:border-zinc-800 dark:hover:bg-zinc-800"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/img/google-icon.png" alt="Google" className="h-5 w-5" />
-            <span>{isLoading ? "Đang xử lý..." : "Tiếp tục với Google"}</span>
+            <span>{isLoading ? "Processing..." : "Continue with Google"}</span>
           </Button>
         </form>
       </motion.div>

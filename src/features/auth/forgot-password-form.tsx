@@ -8,7 +8,6 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
-import AuthLightMode from "./auth-light-mode";
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
@@ -37,19 +36,19 @@ export default function ForgotPasswordForm() {
       if (data.success) {
         setMessage({
           type: "success",
-          text: "Email đặt lại mật khẩu đã được gửi! Vui lòng kiểm tra hộp thư của bạn.",
+          text: "Password reset email sent! Please check your inbox.",
         });
         setEmail("");
       } else {
         setMessage({
           type: "error",
-          text: data.error || "Có lỗi xảy ra. Vui lòng thử lại sau.",
+          text: data.error || "Something went wrong. Please try again.",
         });
       }
     } catch {
       setMessage({
         type: "error",
-        text: "Lỗi kết nối. Vui lòng thử lại sau.",
+        text: "Connection error. Please try again later.",
       });
     } finally {
       setIsSubmitting(false);
@@ -58,19 +57,16 @@ export default function ForgotPasswordForm() {
 
   return (
     <div className="mt-20 h-screen items-start justify-center md:flex">
-      <AuthLightMode />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-zinc-200 p-8 font-apple backdrop-blur-2xl md:mx-auto md:w-[30vw]"
+        className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-zinc-200 p-8 font-apple backdrop-blur-2xl dark:border-zinc-800 md:mx-auto md:w-[30vw]"
       >
         <div className="space-y-4 text-center">
           <ChanhdangLogotype className="mx-auto h-6 w-fit" />
 
-          <h1 className="bg-gradient-to-r from-zinc-900 to-zinc-700 bg-clip-text text-3xl font-bold text-transparent">
-            Quên Mật Khẩu
-          </h1>
+          <h1 className="text-3xl font-bold">Forgot Password</h1>
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
@@ -97,18 +93,16 @@ export default function ForgotPasswordForm() {
           </AnimatePresence>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-700">
-              Email
-            </label>
+            <label className="text-sm font-medium text-zinc-700">Email</label>
 
             <div className="relative">
               <Input
                 type="email"
-                placeholder="Nhập email của bạn để nhận link đặt lại mật khẩu"
+                placeholder="Enter your email to receive reset link"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="rounded-xl border"
+                className="rounded-xl border border-zinc-300 dark:border-zinc-800"
                 disabled={isSubmitting}
               />
             </div>
@@ -119,9 +113,9 @@ export default function ForgotPasswordForm() {
             className="w-full rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 px-4 py-3 text-white transition-all hover:from-zinc-800 hover:to-zinc-700"
             disabled={isSubmitting}
             loading={isSubmitting}
-            loadingText="Đang gửi..."
+            loadingText="Sending..."
           >
-            {!isSubmitting && "Gửi Email Đặt Lại Mật Khẩu"}
+            {!isSubmitting && "Send Reset Email"}
           </Button>
 
           <div className="text-center">
@@ -130,7 +124,7 @@ export default function ForgotPasswordForm() {
               className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 hover:underline"
             >
               <ArrowLeft className="h-4 w-4" />
-              Quay lại đăng nhập
+              Back to sign in
             </Link>
           </div>
         </form>

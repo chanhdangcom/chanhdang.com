@@ -4,8 +4,13 @@ import { useState, useEffect } from "react";
 import { ISingerItem } from "./type/singer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Trash2, Edit, Save, X } from "lucide-react";
-import { Plus } from "@phosphor-icons/react/dist/ssr";
+import {
+  FloppyDisk,
+  PencilSimple,
+  Plus,
+  Trash,
+  X,
+} from "@phosphor-icons/react/dist/ssr";
 import { motion } from "motion/react";
 import { MenuBar } from "./menu-bar";
 
@@ -140,9 +145,9 @@ export function SingerManagement() {
 
             <div
               onClick={() => setShowAddForm(true)}
-              className="flex items-center rounded-full bg-blue-400 p-2"
+              className="flex items-center rounded-full bg-blue-500 p-2"
             >
-              <Plus size={20} weight="bold" className="text-white" />
+              <Plus size={20} weight="regular" className="text-white" />
             </div>
           </div>
 
@@ -207,15 +212,22 @@ export function SingerManagement() {
                             }
                             className="flex items-center gap-1 rounded-full border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
                           >
-                            <Save size={20} className="text-blue-400" />
+                            <FloppyDisk
+                              size={20}
+                              weight="regular"
+                              className="text-blue-500"
+                            />
                           </Button>
-
                           <Button
                             variant="outline"
                             onClick={cancelEdit}
                             className="flex items-center gap-1 rounded-full border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
                           >
-                            <X size={20} className="text-rose-400" />
+                            <X
+                              size={20}
+                              weight="regular"
+                              className="text-rose-500"
+                            />
                           </Button>
                         </>
                       ) : (
@@ -225,7 +237,11 @@ export function SingerManagement() {
                             variant="destructive"
                             className="flex items-center gap-1 rounded-full border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
                           >
-                            <Edit size={20} className="text-blue-400" />
+                            <PencilSimple
+                              size={20}
+                              weight="regular"
+                              className="text-blue-500"
+                            />
                           </Button>
 
                           <Button
@@ -235,7 +251,11 @@ export function SingerManagement() {
                             }
                             className="flex items-center gap-1 rounded-full border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
                           >
-                            <Trash2 size={20} className="text-rose-400" />
+                            <Trash
+                              size={20}
+                              weight="regular"
+                              className="text-rose-500"
+                            />
                           </Button>
                         </>
                       )}
@@ -308,13 +328,17 @@ export function SingerManagement() {
                   type="submit"
                   className="flex items-center gap-1 rounded-xl border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
                 >
-                  <Save size={20} className="text-blue-400" />
+                  <FloppyDisk
+                    size={20}
+                    weight="regular"
+                    className="text-blue-500"
+                  />
                   Save
                 </Button>
 
                 <Button
                   onClick={() => setShowAddForm(false)}
-                  className="flex items-center gap-1 rounded-xl border bg-zinc-50 p-2 text-rose-400 dark:border-zinc-800 dark:bg-zinc-950"
+                  className="flex items-center gap-1 rounded-xl border bg-zinc-50 p-2 text-rose-500 dark:border-zinc-800 dark:bg-zinc-950"
                 >
                   Cancel
                 </Button>

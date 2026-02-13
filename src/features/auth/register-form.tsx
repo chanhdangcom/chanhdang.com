@@ -8,7 +8,6 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
-import AuthLightMode from "./auth-light-mode";
 
 interface FormErrors {
   username?: string;
@@ -28,19 +27,19 @@ function calculatePasswordStrength(password: string): PasswordStrength {
   let score = 0;
 
   if (password.length >= 8) score += 1;
-  else feedback.push("Ít nhất 8 ký tự");
+  else feedback.push("At least 8 characters");
 
   if (/[a-z]/.test(password)) score += 1;
-  else feedback.push("Có chữ thường");
+  else feedback.push("Lowercase letter");
 
   if (/[A-Z]/.test(password)) score += 1;
-  else feedback.push("Có chữ hoa");
+  else feedback.push("Uppercase letter");
 
   if (/[0-9]/.test(password)) score += 1;
-  else feedback.push("Có số");
+  else feedback.push("Number");
 
   if (/[^a-zA-Z0-9]/.test(password)) score += 1;
-  else feedback.push("Có ký tự đặc biệt");
+  else feedback.push("Special character");
 
   return { score, feedback };
 }
@@ -68,36 +67,35 @@ export default function RegisterForm() {
 
     // Username validation
     if (!form.username.trim()) {
-      newErrors.username = "Vui lòng nhập tên đăng nhập";
+      newErrors.username = "Please enter your username";
     } else if (form.username.length < 3) {
-      newErrors.username = "Tên đăng nhập phải có ít nhất 3 ký tự";
+      newErrors.username = "Username must be at least 3 characters";
     } else if (!/^[a-zA-Z0-9_]+$/.test(form.username)) {
       newErrors.username =
-        "Tên đăng nhập chỉ được chứa chữ, số và dấu gạch dưới";
+        "Username can only contain letters, numbers and underscore";
     }
 
     // Email validation
     if (!form.email.trim()) {
-      newErrors.email = "Vui lòng nhập email";
+      newErrors.email = "Please enter your email";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      newErrors.email = "Email không hợp lệ";
+      newErrors.email = "Invalid email address";
     }
 
     // Password validation
     if (!form.password) {
-      newErrors.password = "Vui lòng nhập mật khẩu";
+      newErrors.password = "Please enter your password";
     } else if (form.password.length < 8) {
-      newErrors.password = "Mật khẩu phải có ít nhất 8 ký tự";
+      newErrors.password = "Password must be at least 8 characters";
     } else if (passwordStrength.score < 3) {
-      newErrors.password =
-        "Mật khẩu quá yếu. Vui lòng sử dụng mật khẩu mạnh hơn.";
+      newErrors.password = "Password too weak. Please use a stronger password.";
     }
 
     // Confirm password validation
     if (!form.confirmPassword) {
-      newErrors.confirmPassword = "Vui lòng xác nhận mật khẩu";
+      newErrors.confirmPassword = "Please confirm your password";
     } else if (form.password !== form.confirmPassword) {
-      newErrors.confirmPassword = "Mật khẩu xác nhận không khớp";
+      newErrors.confirmPassword = "Passwords do not match";
     }
 
     setErrors(newErrors);
@@ -144,19 +142,17 @@ export default function RegisterForm() {
       const data = await res.json();
 
       if (data.success) {
-        setSuccessMessage(
-          "Đăng ký thành công! Đang chuyển đến trang đăng nhập..."
-        );
+        setSuccessMessage("Registration successful! Redirecting to sign in...");
         setForm({ username: "", email: "", password: "", confirmPassword: "" });
 
         setTimeout(() => {
           router.push(`/${locale}/auth/login`);
         }, 2000);
       } else {
-        setErrors({ general: data.error || "Có lỗi xảy ra!" });
+        setErrors({ general: data.error || "Something went wrong!" });
       }
     } catch {
-      setErrors({ general: "Lỗi kết nối. Vui lòng thử lại sau." });
+      setErrors({ general: "Connection error. Please try again later." });
     } finally {
       setIsSubmitting(false);
     }
@@ -171,31 +167,30 @@ export default function RegisterForm() {
   };
 
   const getStrengthText = (score: number) => {
-    if (score <= 1) return "Rất yếu";
-    if (score <= 2) return "Yếu";
-    if (score <= 3) return "Trung bình";
-    if (score <= 4) return "Mạnh";
-    return "Rất mạnh";
+    if (score <= 1) return "Very weak";
+    if (score <= 2) return "Weak";
+    if (score <= 3) return "Fair";
+    if (score <= 4) return "Strong";
+    return "Very strong";
   };
 
   return (
     <div className="h-screen items-center justify-center md:flex">
-      <AuthLightMode />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-zinc-200 from-zinc-950 to-zinc-900 p-8 font-apple shadow-sm backdrop-blur-2xl md:mx-auto md:w-[30vw]"
+        className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-zinc-200 from-zinc-950 to-zinc-900 p-8 font-apple shadow-sm backdrop-blur-2xl dark:border-zinc-800 md:mx-auto md:w-[30vw]"
       >
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4 text-center">
             <ChanhdangLogotype className="mx-auto h-6 w-fit" />
 
             <h1 className="bg-gradient-to-r from-zinc-900 to-zinc-700 bg-clip-text font-apple text-3xl font-bold text-transparent">
-              Đăng Ký
+              Sign Up
             </h1>
             <p className="mt-2 text-sm text-zinc-600">
-              Tạo tài khoản mới để bắt đầu
+              Create an account to get started
             </p>
           </div>
 
@@ -229,17 +224,17 @@ export default function RegisterForm() {
             {/* Username Field */}
             <div className="space-y-2">
               <label className="text-sm font-semibold text-zinc-700">
-                Tên đăng nhập
+                Username
               </label>
 
               <div className="relative">
                 <Input
                   name="username"
-                  placeholder="Nhập tên đăng nhập"
+                  placeholder="Enter your username"
                   value={form.username}
                   onChange={handleChange}
                   required
-                  className={`rounded-xl border ${errors.username ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                  className={`rounded-xl border border-zinc-300 dark:border-zinc-800 ${errors.username ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                   disabled={isSubmitting}
                 />
               </div>
@@ -268,11 +263,11 @@ export default function RegisterForm() {
                 <Input
                   name="email"
                   type="email"
-                  placeholder="Nhập email của bạn"
+                  placeholder="Enter your email"
                   value={form.email}
                   onChange={handleChange}
                   required
-                  className={`rounded-xl border ${errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                  className={`rounded-xl border border-zinc-300 dark:border-zinc-800 ${errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                   disabled={isSubmitting}
                 />
               </div>
@@ -294,18 +289,18 @@ export default function RegisterForm() {
             {/* Password Field */}
             <div className="space-y-2">
               <label className="text-sm font-semibold text-zinc-700">
-                Mật khẩu
+                Password
               </label>
 
               <div className="relative">
                 <Input
                   name="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Nhập mật khẩu"
+                  placeholder="Enter your password"
                   value={form.password}
                   onChange={handleChange}
                   required
-                  className={`rounded-xl border pr-10 ${errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                  className={`rounded-xl border border-zinc-300 pr-10 dark:border-zinc-800 ${errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                   disabled={isSubmitting}
                 />
                 <button
@@ -352,7 +347,7 @@ export default function RegisterForm() {
                     {passwordStrength.score >= 3 && (
                       <span className="flex items-center gap-1 text-green-500">
                         <Check className="h-3 w-3" />
-                        Mật khẩu hợp lệ
+                        Password valid
                       </span>
                     )}
                   </div>
@@ -376,18 +371,18 @@ export default function RegisterForm() {
             {/* Confirm Password Field */}
             <div className="space-y-2">
               <label className="text-sm font-semibold text-zinc-700">
-                Xác nhận mật khẩu
+                Confirm password
               </label>
 
               <div className="relative">
                 <Input
                   name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Nhập lại mật khẩu"
+                  placeholder="Enter password again"
                   value={form.confirmPassword}
                   onChange={handleChange}
                   required
-                  className={`rounded-xl border pr-10${
+                  className={`rounded-xl border border-zinc-300 pr-10 dark:border-zinc-800 ${
                     errors.confirmPassword
                       ? "border-red-500 focus-visible:ring-red-500"
                       : ""
@@ -413,7 +408,7 @@ export default function RegisterForm() {
                 form.password === form.confirmPassword && (
                   <p className="flex items-center gap-1 text-xs text-green-500">
                     <Check className="h-3 w-3" />
-                    Mật khẩu khớp
+                    Passwords match
                   </p>
                 )}
               <AnimatePresence>
@@ -436,9 +431,9 @@ export default function RegisterForm() {
               className="w-full rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 px-4 py-3 text-white transition-all hover:from-zinc-800 hover:to-zinc-700"
               disabled={isSubmitting}
               loading={isSubmitting}
-              loadingText="Đang đăng ký..."
+              loadingText="Signing up..."
             >
-              {!isSubmitting && "Đăng Ký"}
+              {!isSubmitting && "Sign Up"}
             </Button>
 
             {/* Login Link */}
@@ -447,7 +442,7 @@ export default function RegisterForm() {
                 href={`/${locale}/auth/login`}
                 className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
               >
-                Đã có tài khoản? Đăng nhập ngay
+                Already have an account? Sign in
               </Link>
             </div>
           </div>

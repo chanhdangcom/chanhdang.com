@@ -17,7 +17,6 @@ import { HeaderMusicPage } from "../music/header-music-page";
 import { Footer } from "@/app/[locale]/features/profile/footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import AuthLightMode from "./auth-light-mode";
 
 interface FormErrors {
   password?: string;
@@ -71,15 +70,15 @@ export default function ResetPasswordForm() {
     const newErrors: FormErrors = {};
 
     if (!form.password) {
-      newErrors.password = "Vui lòng nhập mật khẩu";
+      newErrors.password = "Please enter your password";
     } else if (form.password.length < 8) {
-      newErrors.password = "Mật khẩu phải có ít nhất 8 ký tự";
+      newErrors.password = "Password must be at least 8 characters";
     }
 
     if (!form.confirmPassword) {
-      newErrors.confirmPassword = "Vui lòng xác nhận mật khẩu";
+      newErrors.confirmPassword = "Please confirm your password";
     } else if (form.password !== form.confirmPassword) {
-      newErrors.confirmPassword = "Mật khẩu xác nhận không khớp";
+      newErrors.confirmPassword = "Passwords do not match";
     }
 
     setErrors(newErrors);
@@ -124,7 +123,7 @@ export default function ResetPasswordForm() {
 
       if (data.success) {
         setSuccessMessage(
-          "Đặt lại mật khẩu thành công! Đang chuyển đến trang đăng nhập..."
+          "Password reset successful! Redirecting to sign in..."
         );
         setForm({ password: "", confirmPassword: "" });
 
@@ -132,10 +131,10 @@ export default function ResetPasswordForm() {
           router.push(`/${locale}/auth/login`);
         }, 2000);
       } else {
-        setErrors({ general: data.error || "Có lỗi xảy ra!" });
+        setErrors({ general: data.error || "Something went wrong!" });
       }
     } catch {
-      setErrors({ general: "Lỗi kết nối. Vui lòng thử lại sau." });
+      setErrors({ general: "Connection error. Please try again later." });
     } finally {
       setIsSubmitting(false);
     }
@@ -144,12 +143,11 @@ export default function ResetPasswordForm() {
   if (isValidatingToken) {
     return (
       <div className="container">
-        <AuthLightMode />
-        <HeaderMusicPage name="Đặt Lại Mật Khẩu" />
-        <div className="z-30 mx-4 my-8 flex items-center justify-center rounded-3xl border border-zinc-200 p-8 font-apple backdrop-blur-2xl md:mx-auto md:w-[30vw]">
+        <HeaderMusicPage name="Reset Password" />
+        <div className="z-30 mx-4 my-8 flex items-center justify-center rounded-3xl border border-zinc-200 p-8 font-apple backdrop-blur-2xl dark:border-zinc-800 md:mx-auto md:w-[30vw]">
           <div className="text-center">
             <div className="mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-zinc-900 border-t-transparent" />
-            <p className="text-zinc-600">Đang xác thực...</p>
+            <p className="text-zinc-600">Verifying...</p>
           </div>
         </div>
         <Footer />
@@ -160,29 +158,28 @@ export default function ResetPasswordForm() {
   if (!tokenValid) {
     return (
       <div className="container">
-        <AuthLightMode />
-        <HeaderMusicPage name="Đặt Lại Mật Khẩu" />
+        <HeaderMusicPage name="Reset Password" />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-red-200 bg-red-50 p-8 font-apple backdrop-blur-2xl md:mx-auto md:w-[30vw]"
+          className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-red-200 bg-red-50 p-8 font-apple backdrop-blur-2xl dark:border-zinc-800 md:mx-auto md:w-[30vw]"
         >
           <div className="text-center">
             <AlertCircle className="mx-auto mb-4 h-12 w-12 text-red-500" />
             <h1 className="mb-2 text-2xl font-bold text-red-600">
-              Link không hợp lệ hoặc đã hết hạn
+              Invalid or expired link
             </h1>
             <p className="mb-4 text-sm text-red-600">
-              Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn. Vui lòng yêu
-              cầu link mới.
+              The password reset link is invalid or has expired. Please request
+              a new link.
             </p>
             <Link
               href={`/${locale}/auth/forgot-password`}
               className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 hover:underline"
             >
               <ArrowLeft className="h-4 w-4" />
-              Yêu cầu link mới
+              Request new link
             </Link>
           </div>
         </motion.div>
@@ -193,22 +190,19 @@ export default function ResetPasswordForm() {
 
   return (
     <div className="container">
-      <AuthLightMode />
-      <HeaderMusicPage name="Đặt Lại Mật Khẩu" />
+      <HeaderMusicPage name="Reset Password" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-zinc-200 p-8 font-apple backdrop-blur-2xl md:mx-auto md:w-[30vw]"
+        className="z-30 mx-4 my-8 space-y-6 rounded-3xl border border-zinc-200 p-8 font-apple backdrop-blur-2xl dark:border-zinc-800 md:mx-auto md:w-[30vw]"
       >
         <div className="text-center">
           <h1 className="bg-gradient-to-r from-zinc-900 to-zinc-700 bg-clip-text text-3xl font-bold text-transparent">
-            Đặt Lại Mật Khẩu
+            Reset Password
           </h1>
-          <p className="mt-2 text-sm text-zinc-600">
-            Nhập mật khẩu mới của bạn
-          </p>
+          <p className="mt-2 text-sm text-zinc-600">Enter your new password</p>
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
@@ -242,18 +236,18 @@ export default function ResetPasswordForm() {
             {/* Password Field */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-zinc-700">
-                Mật khẩu mới
+                New password
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
                 <Input
                   name="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Nhập mật khẩu mới"
+                  placeholder="Enter new password"
                   value={form.password}
                   onChange={handleChange}
                   required
-                  className={`pl-10 pr-10 ${errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                  className={`rounded-xl border border-zinc-300 pl-10 pr-10 dark:border-zinc-800 ${errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                   disabled={isSubmitting}
                 />
                 <button
@@ -286,18 +280,18 @@ export default function ResetPasswordForm() {
             {/* Confirm Password Field */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-zinc-700">
-                Xác nhận mật khẩu
+                Confirm password
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
                 <Input
                   name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Nhập lại mật khẩu"
+                  placeholder="Enter password again"
                   value={form.confirmPassword}
                   onChange={handleChange}
                   required
-                  className={`pl-10 pr-10 ${
+                  className={`rounded-xl border border-zinc-300 pl-10 pr-10 dark:border-zinc-800 ${
                     errors.confirmPassword
                       ? "border-red-500 focus-visible:ring-red-500"
                       : ""
@@ -337,9 +331,9 @@ export default function ResetPasswordForm() {
               className="w-full rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 px-4 py-3 text-white transition-all hover:from-zinc-800 hover:to-zinc-700"
               disabled={isSubmitting}
               loading={isSubmitting}
-              loadingText="Đang đặt lại..."
+              loadingText="Resetting..."
             >
-              {!isSubmitting && "Đặt Lại Mật Khẩu"}
+              {!isSubmitting && "Reset Password"}
             </Button>
 
             {/* Back to Login Link */}
@@ -349,7 +343,7 @@ export default function ResetPasswordForm() {
                 className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 hover:underline"
               >
                 <ArrowLeft className="h-4 w-4" />
-                Quay lại đăng nhập
+                Back to sign in
               </Link>
             </div>
           </div>

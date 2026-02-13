@@ -28,9 +28,7 @@ export default function ProfileSettings() {
   const { user } = useUser();
   const { data: session } = useSession();
 
-  // Tách biệt: Google login (session) vs Login thường (user từ useUser)
   const current = useMemo<CurrentUser | null>(() => {
-    // Google login: dùng session
     if (session?.user) {
       return {
         id: session.user.id || "",
@@ -41,7 +39,6 @@ export default function ProfileSettings() {
       };
     }
 
-    // Login thường: dùng user từ useUser (localStorage)
     if (!user) return null;
     const u = user as MongoUserDocish;
     const id = typeof u.id === "string" ? u.id : String(u._id || "");
@@ -91,16 +88,16 @@ export default function ProfileSettings() {
       });
       if (!putRes.ok) throw new Error("Failed to upload avatar");
       setAvatarUrl(publicUrl);
-      setMessage("Ảnh đại diện đã tải lên thành công!");
+      setMessage("Avatar uploaded successfully!");
     } catch (err) {
       console.error(err);
-      setMessage("Không thể tải ảnh lên.");
+      setMessage("Failed to upload image.");
     }
   };
 
   const handleSave = async () => {
     if (!current?.id) {
-      setMessage("Bạn cần đăng nhập lại (thiếu user id).");
+      setMessage("Please sign in again (missing user id).");
       return;
     }
 
@@ -125,13 +122,13 @@ export default function ProfileSettings() {
       const data = (await res.json()) as { success?: boolean; error?: string };
 
       if (!res.ok || !data?.success) {
-        throw new Error(data?.error || "Cập nhật thất bại");
+        throw new Error(data?.error || "Update failed");
       }
 
-      setMessage("Cập nhật hồ sơ thành công 🎉");
+      setMessage("Profile updated successfully 🎉");
     } catch (err) {
       console.error(err);
-      setMessage("Cập nhật thất bại.");
+      setMessage("Update failed.");
     } finally {
       setIsSaving(false);
     }
@@ -140,9 +137,9 @@ export default function ProfileSettings() {
   return (
     <div className="container font-apple">
       <HeaderMusicPage />
-      <div className="left-6 z-30 mx-4 space-y-4 rounded-3xl border border-zinc-300 bg-gradient-to-tr from-transparent to-black/10 p-4 font-apple backdrop-blur-2xl dark:border-zinc-700 dark:to-white/10 md:mx-72">
+      <div className="left-6 z-30 mx-4 space-y-4 rounded-3xl border border-zinc-300 dark:border-zinc-800 bg-gradient-to-tr from-transparent to-black/10 p-4 font-apple backdrop-blur-2xl dark:to-white/10 md:mx-72">
         <h3 className="mb-4 text-center text-3xl font-semibold">
-          Cập nhật hồ sơ
+          Update profile
         </h3>
 
         <div className="mb-4 space-y-4">
@@ -167,31 +164,31 @@ export default function ProfileSettings() {
           <input type="file" accept="image/*" onChange={handleAvatarChange} />
           {session?.user?.image && !avatarUrl && (
             <p className="text-xs text-zinc-500">
-              Avatar từ Google: {session.user.image.substring(0, 50)}...
+              Avatar from Google: {session.user.image.substring(0, 50)}...
             </p>
           )}
         </div>
 
         <div className="mb-3">
           <label className="mb-1 block text-sm text-zinc-500">
-            Tên hiển thị
+            Display name
           </label>
           <input
-            className="w-full rounded-xl border px-4 py-2 shadow-sm dark:border-zinc-900 dark:bg-zinc-950"
+            className="w-full rounded-xl border border-zinc-300 dark:border-zinc-800 px-4 py-2 shadow-sm dark:bg-zinc-950"
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
-            placeholder="Tên hiển thị"
+            placeholder="Display name"
           />
         </div>
 
         <div className="mb-4">
-          <label className="mb-1 block text-sm text-zinc-500">Giới thiệu</label>
+          <label className="mb-1 block text-sm text-zinc-500">Bio</label>
           <textarea
-            className="shadow-s w-full rounded-xl border px-4 py-2 dark:border-zinc-900 dark:bg-zinc-950"
+            className="shadow-s w-full rounded-xl border border-zinc-300 dark:border-zinc-800 px-4 py-2 dark:bg-zinc-950"
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             rows={4}
-            placeholder="Giới thiệu ngắn"
+            placeholder="Short bio"
           />
         </div>
 
@@ -202,7 +199,7 @@ export default function ProfileSettings() {
             isSaving ? "opacity-50" : ""
           }`}
         >
-          {isSaving ? "Đang lưu..." : "Lưu thay đổi"}
+          {isSaving ? "Saving..." : "Save changes"}
         </button>
 
         {message && <div className="mt-3 text-sm text-zinc-500">{message}</div>}

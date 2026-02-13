@@ -1,7 +1,7 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { House, MagnifyingGlass } from "phosphor-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useUser } from "@/hooks/use-user";
@@ -10,9 +10,14 @@ import {
   PlusSquare,
   SquaresFour,
 } from "@phosphor-icons/react/dist/ssr";
+import {
+  MenuBarMobileItem,
+  type MenuBarMobileItemConfig,
+} from "./component/menu-bar-mobile-item";
 
 export function MenuBarMobile() {
   const params = useParams();
+  const pathname = usePathname();
   const locale = (params?.locale as string) || "vi";
   const { isAuthenticated } = useUser();
   const [show, setShow] = useState(true);
@@ -22,6 +27,12 @@ export function MenuBarMobile() {
   const scrollDir = useRef<"up" | "down" | null>(null);
   const timeoutRef = useRef<number | null>(null);
   const ticking = useRef(false);
+  const basePath = `/${locale}/music`;
+
+  const isPathActive = (target: string, exact = false) =>
+    exact
+      ? pathname === target
+      : pathname === target || pathname.startsWith(`${target}/`);
 
   const updateShow = useCallback((isVisible: boolean) => {
     if (showStateRef.current === isVisible) return;
@@ -105,14 +116,47 @@ export function MenuBarMobile() {
     };
   }, [handleScroll, reactToScroll]);
 
+  const mainItems: MenuBarMobileItemConfig[] = [
+    {
+      key: "home",
+      label: "Home",
+      href: `${basePath}`,
+      isActive: isPathActive(basePath, true),
+      icon: <House size={30} weight="fill" />,
+    },
+    {
+      key: "new",
+      label: "New",
+      href: `${basePath}/new-release`,
+      isActive: isPathActive(`${basePath}/new-release`),
+      icon: <SquaresFour size={30} weight="fill" />,
+    },
+    {
+      key: "add-music",
+      label: "Music",
+      href: `${basePath}/add-music`,
+      isActive: isPathActive(`${basePath}/add-music`),
+      disabled: !isAuthenticated,
+      icon: <PlusSquare size={30} weight="fill" />,
+    },
+    {
+      key: "library",
+      label: "Library",
+      href: `${basePath}/library`,
+      isActive: isPathActive(`${basePath}/library`),
+      disabled: !isAuthenticated,
+      icon: <CardsThree size={30} weight="fill" />,
+    },
+  ];
+
   return (
     <div className="fixed inset-x-4 bottom-6 z-10 flex items-center justify-between sm:hidden">
       <AnimatePresence>
         {show ? (
-          <div className="bg-zinc-200/72 dark:bg-zinc-900/72 relative overflow-hidden rounded-[50px] border border-white/20 py-1.5 pr-2 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset,0_-1px_0_rgba(0,0,0,0.06)_inset] backdrop-blur-3xl dark:border-white/10 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset,0_-1px_0_rgba(0,0,0,0.45)_inset]">
+          <div className="bg-zinc-200/72 dark:bg-zinc-900/72 relative overflow-hidden rounded-[50px] border border-white/20 py-0.5 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset,0_-1px_0_rgba(0,0,0,0.06)_inset] backdrop-blur-3xl dark:border-white/10 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset,0_-1px_0_rgba(0,0,0,0.45)_inset]">
             <div className="via-white/8 dark:from-white/12 pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-b from-white/35 to-transparent dark:via-transparent dark:to-transparent" />
+
             <div className="pointer-events-none absolute inset-x-6 bottom-0 h-px bg-black/10 dark:bg-white/10" />
-            <div className="absolute inset-y-1 left-0 -z-10 ml-1 w-20 shrink-0 rounded-full bg-zinc-400 opacity-80 dark:bg-zinc-700" />
 
             <motion.div
               layout
@@ -123,61 +167,13 @@ export function MenuBarMobile() {
                 mass: 0.7,
               }}
               layoutId="item"
-              className="relative z-10 flex items-center justify-between gap-10 rounded-full border border-transparent px-1 dark:text-white"
+              className="relative z-10 flex items-center justify-between rounded-full border border-transparent px-0.5 dark:text-white"
             >
-              <Link
-                href={`/${locale}/music`}
-                className="flex flex-col items-center rounded-full pl-5 text-rose-500"
-              >
-                <House size={30} weight="fill" />
-
-                <div className="text-xs">Home</div>
-              </Link>
-
-              <Link
-                href={`/${locale}/music/new-release`}
-                className="flex flex-col items-center"
-              >
-                <SquaresFour size={30} weight="fill" />
-
-                <div className="text-xs">New</div>
-              </Link>
-
-              {isAuthenticated ? (
-                <Link
-                  href={`/${locale}/music/add-music`}
-                  className="flex flex-col items-center"
-                >
-                  <PlusSquare size={30} weight="fill" />
-
-                  <div className="text-xs">Music</div>
-                </Link>
-              ) : (
-                <div className="pointer-events-none flex flex-col items-center opacity-25">
-                  <PlusSquare size={30} weight="fill" />
-
-                  <div className="text-xs">Music</div>
+              {mainItems.map((item, index) => (
+                <div key={item.key} className={index === 0 ? "" : ""}>
+                  <MenuBarMobileItem item={item} />
                 </div>
-              )}
-
-              {isAuthenticated ? (
-                <Link
-                  href={`/${locale}/music/library`}
-                  className="flex flex-col items-center"
-                >
-                  <div className="flex flex-col items-center">
-                    <CardsThree size={30} weight="fill" />
-                    <div className="text-xs">Library</div>
-                  </div>
-                </Link>
-              ) : (
-                <div className="pointer-events-none flex flex-col items-center opacity-30">
-                  <div className="flex flex-col items-center">
-                    <CardsThree size={30} weight="fill" />
-                    <div className="text-xs">Library</div>
-                  </div>
-                </div>
-              )}
+              ))}
             </motion.div>
           </div>
         ) : (
@@ -192,8 +188,16 @@ export function MenuBarMobile() {
             layoutId="item"
             className="bg-zinc-200/72 dark:bg-zinc-900/72 rounded-full border border-white/20 p-4 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset] backdrop-blur-lg dark:border-white/10 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset]"
           >
-            <Link href={`/${locale}/music/`}>
-              <House size={30} weight="fill" className="text-rose-600" />
+            <Link href={`${basePath}`}>
+              <House
+                size={30}
+                weight="fill"
+                className={
+                  isPathActive(basePath, true)
+                    ? "text-rose-600 dark:text-blue-400"
+                    : "text-black dark:text-white"
+                }
+              />
             </Link>
           </motion.div>
         )}
@@ -212,7 +216,7 @@ export function MenuBarMobile() {
             }}
             className="bg-zinc-200/72 dark:bg-zinc-900/72 rounded-full border border-white/20 p-4 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset] backdrop-blur-lg dark:border-white/10 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset]"
           >
-            <Link href={`/${locale}/music/search`}>
+            <Link href={`${basePath}/search`}>
               <MagnifyingGlass
                 size={30}
                 weight="bold"
@@ -232,7 +236,7 @@ export function MenuBarMobile() {
             }}
             className="bg-zinc-200/72 dark:bg-zinc-900/72 rounded-full border border-white/20 p-3 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset] backdrop-blur-lg dark:border-white/10 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset]"
           >
-            <Link href={`/${locale}/music/search`}>
+            <Link href={`${basePath}/search`}>
               <MagnifyingGlass
                 size={30}
                 weight="bold"
