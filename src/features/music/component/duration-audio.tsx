@@ -1,8 +1,13 @@
 import { useAudio } from "@/components/music-provider";
 import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { format } from "date-fns";
+import { cn } from "@/utils/cn";
 
-export function DurationAudio() {
+type IProp = {
+  className?: string;
+};
+
+export function DurationAudio({ className }: IProp) {
   const { audioRef, isPlaying } = useAudio();
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
@@ -65,7 +70,12 @@ export function DurationAudio() {
   }, [currentTime, duration]);
 
   return (
-    <div className="flex gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-50">
+    <div
+      className={cn(
+        "flex gap-1 text-sm font-medium text-zinc-700 dark:text-zinc-50",
+        className
+      )}
+    >
       <div>{formattedTime.current}</div>/<div>{formattedTime.total}</div>
     </div>
   );

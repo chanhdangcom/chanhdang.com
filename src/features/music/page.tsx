@@ -7,6 +7,7 @@ import { PickForYou } from "./pick-for-you";
 import { MotionHeaderMusic } from "./component/motion-header-music";
 import CarouselAudio from "./carousel-audio";
 import { AudioBar } from "./audio-bar";
+import { LyricSidebar } from "./lyric-sidebar";
 import { NewCarouselAudioPlaylist } from "./new-carousel-audio-playlist";
 import { RecentCarouselAudio } from "./recent-carousel-audio";
 import { NewCarouselAudio } from "./new-carousel-audio";
@@ -80,6 +81,8 @@ export function MusicPage() {
             </div>
           </>
         </div>
+
+        <LyricSidebar />
 
         <div className="my-40">
           <AudioBar />

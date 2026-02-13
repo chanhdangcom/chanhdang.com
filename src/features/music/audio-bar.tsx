@@ -12,7 +12,8 @@ import {
 
 import { DurationAudio } from "./component/duration-audio";
 import {
-  Control,
+  ChatTeardropText,
+  ListBullets,
   RepeatOnce,
   SpeakerHigh,
   SpeakerSlash,
@@ -438,15 +439,41 @@ export function AudioBar() {
                 </div>
 
                 <div className="mr-4 hidden md:flex">
-                  <DurationAudio />
+                  <DurationAudio className="text-xs" />
                 </div>
               </div>
             </div>
 
             <div className="hidden items-center gap-4 text-black dark:text-white md:flex">
+              <ChatTeardropText
+                size={23}
+                weight="fill"
+                className={` ${tapFeedbackClass}`}
+                onClick={(e) => {
+                  if (!scroll) e.stopPropagation();
+
+                  if (typeof window !== "undefined") {
+                    window.dispatchEvent(new Event("toggle-lyric-sidebar"));
+                  }
+                }}
+              />
+
+              <ListBullets
+                size={23}
+                weight="bold"
+                className={` ${tapFeedbackClass}`}
+                onClick={(e) => {
+                  if (!scroll) e.stopPropagation();
+
+                  if (typeof window !== "undefined") {
+                    window.dispatchEvent(new Event("toggle-lyric-sidebar"));
+                  }
+                }}
+              />
+
               {isMuted ? (
                 <SpeakerSlash
-                  size={20}
+                  size={23}
                   weight="fill"
                   onClick={(e) => {
                     if (!scroll) e.stopPropagation();
@@ -456,7 +483,7 @@ export function AudioBar() {
                 />
               ) : (
                 <SpeakerHigh
-                  size={20}
+                  size={23}
                   weight="fill"
                   onClick={(e) => {
                     if (!scroll) e.stopPropagation();
@@ -465,16 +492,6 @@ export function AudioBar() {
                   className={tapFeedbackClass}
                 />
               )}
-
-              <Control
-                size={20}
-                weight="fill"
-                className={`mt-1.5 ${tapFeedbackClass}`}
-                onClick={(e) => {
-                  if (!scroll) e.stopPropagation();
-                  setIsClick(true);
-                }}
-              />
             </div>
 
             <div className="right-2 z-10 ml-0.5 flex shrink-0 items-center md:hidden md:gap-4">
