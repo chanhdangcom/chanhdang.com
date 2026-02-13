@@ -286,11 +286,11 @@ export function AudioTimeLine({ coverUrl }: IProp) {
       </div>
 
       <div className="-mt-4 mb-4 flex items-center justify-between md:mt-2">
-        <div className="text-sm font-medium text-zinc-400">
+        <div className="text-sm font-medium text-zinc-400 font-apple">
           {formatTime(currentTimeSec)}
         </div>
 
-        <div className="text-sm font-medium text-zinc-400">
+        <div className="text-sm font-medium text-zinc-400 font-apple">
           {formatTime(durationSec)}
         </div>
       </div>

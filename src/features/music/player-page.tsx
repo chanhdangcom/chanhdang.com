@@ -1267,7 +1267,7 @@ export function PlayerPage({ setIsClick }: IProp) {
   };
 
   return (
-    <div>
+    <div className="font-apple">
       {isClickFeatured ? (
         <FeaturedPage
           onRequestClose={handleClosePlayer}

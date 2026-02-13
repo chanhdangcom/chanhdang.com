@@ -116,15 +116,15 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
           )}
         </div>
 
-        <div className="text-black dark:text-white">
+        <div className="text-black dark:text-white font-apple">
           <div
-            className="line-clamp-1 w-full cursor-pointer text-sm font-semibold"
+            className="line-clamp-1 w-full cursor-pointer text-sm font-semibold font-apple"
             onClick={handlePlay}
           >
             {music.title || "TITLE"}
           </div>
 
-          <div className="line-clamp-1 w-full text-xs text-zinc-500">
+          <div className="line-clamp-1 w-full text-xs text-zinc-500 font-apple">
             {music.singer || "SINGER"}
           </div>
         </div>

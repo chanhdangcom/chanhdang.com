@@ -23,14 +23,14 @@ export function MenuBarMobileItem({ item }: MenuBarMobileItemProps) {
       className={cn(
         "relative z-10 flex w-full flex-col items-center rounded-full px-[21px] py-1 transition-all duration-300 ease-out",
         item.isActive
-          ? "bg-white/30 text-rose-600 dark:bg-white/20 dark:text-blue-400"
+          ? "bg-white/30 text-rose-600 dark:bg-white/20"
           : "bg-transparent text-zinc-700 dark:text-zinc-200",
         item.disabled && "pointer-events-none opacity-25"
       )}
     >
       {item.icon}
 
-      <div className="text-center text-[10px] font-medium leading-none">
+      <div className="text-center font-apple text-[10px] font-medium leading-none">
         {item.label}
       </div>
     </div>

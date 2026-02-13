@@ -149,11 +149,51 @@ export function MenuBarMobile() {
     },
   ];
 
+  // Xác định icon và href dựa trên router hiện tại
+  const getCurrentRouteIcon = () => {
+    if (isPathActive(`${basePath}/search`)) {
+      return {
+        icon: <MagnifyingGlass size={30} weight="bold" />,
+        href: `${basePath}/search`,
+        isActive: true,
+      };
+    }
+    if (isPathActive(`${basePath}/new-release`)) {
+      return {
+        icon: <SquaresFour size={30} weight="fill" />,
+        href: `${basePath}/new-release`,
+        isActive: true,
+      };
+    }
+    if (isPathActive(`${basePath}/add-music`)) {
+      return {
+        icon: <PlusSquare size={30} weight="fill" />,
+        href: `${basePath}/add-music`,
+        isActive: true,
+      };
+    }
+    if (isPathActive(`${basePath}/library`)) {
+      return {
+        icon: <CardsThree size={30} weight="fill" />,
+        href: `${basePath}/library`,
+        isActive: true,
+      };
+    }
+    // Default: Home
+    return {
+      icon: <House size={30} weight="fill" />,
+      href: `${basePath}`,
+      isActive: isPathActive(basePath, true),
+    };
+  };
+
+  const currentRoute = getCurrentRouteIcon();
+
   return (
-    <div className="fixed inset-x-4 bottom-6 z-10 flex items-center justify-between sm:hidden">
+    <div className="fixed inset-x-4 bottom-6 z-10 flex items-center justify-between font-apple sm:hidden">
       <AnimatePresence>
         {show ? (
-          <div className="bg-zinc-200/72 dark:bg-zinc-900/72 relative overflow-hidden rounded-[50px] border border-white/20 py-0.5 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset,0_-1px_0_rgba(0,0,0,0.06)_inset] backdrop-blur-3xl dark:border-white/10 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset,0_-1px_0_rgba(0,0,0,0.45)_inset]">
+          <div className="relative overflow-hidden rounded-[50px] border border-white/20 bg-zinc-300/80 px-0.5 py-1 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset,0_-1px_0_rgba(0,0,0,0.06)_inset] backdrop-blur-sm dark:border-white/10 dark:bg-zinc-950/80 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset,0_-1px_0_rgba(0,0,0,0.45)_inset]">
             <div className="via-white/8 dark:from-white/12 pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-b from-white/35 to-transparent dark:via-transparent dark:to-transparent" />
 
             <div className="pointer-events-none absolute inset-x-6 bottom-0 h-px bg-black/10 dark:bg-white/10" />
@@ -186,18 +226,18 @@ export function MenuBarMobile() {
               mass: 0.7,
             }}
             layoutId="item"
-            className="bg-zinc-200/72 dark:bg-zinc-900/72 rounded-full border border-white/20 p-4 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset] backdrop-blur-lg dark:border-white/10 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset]"
+            className="rounded-full border border-white/20 bg-zinc-300/80 p-4 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset] backdrop-blur-lg dark:border-white/10 dark:bg-zinc-950/80 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset]"
           >
-            <Link href={`${basePath}`}>
-              <House
-                size={30}
-                weight="fill"
+            <Link href={currentRoute.href}>
+              <div
                 className={
-                  isPathActive(basePath, true)
-                    ? "text-rose-600 dark:text-blue-400"
+                  currentRoute.isActive
+                    ? "text-rose-600"
                     : "text-black dark:text-white"
                 }
-              />
+              >
+                {currentRoute.icon}
+              </div>
             </Link>
           </motion.div>
         )}
@@ -214,7 +254,7 @@ export function MenuBarMobile() {
               damping: 30,
               mass: 0.7,
             }}
-            className="bg-zinc-200/72 dark:bg-zinc-900/72 rounded-full border border-white/20 p-4 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset] backdrop-blur-lg dark:border-white/10 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset]"
+            className="rounded-full border border-white/20 bg-zinc-300/80 p-4 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset] backdrop-blur-lg dark:border-white/10 dark:bg-zinc-950/80 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset]"
           >
             <Link href={`${basePath}/search`}>
               <MagnifyingGlass
@@ -234,7 +274,7 @@ export function MenuBarMobile() {
               damping: 30,
               mass: 0.7,
             }}
-            className="bg-zinc-200/72 dark:bg-zinc-900/72 rounded-full border border-white/20 p-3 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset] backdrop-blur-lg dark:border-white/10 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset]"
+            className="rounded-full border border-white/20 bg-zinc-300/80 p-3 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset] backdrop-blur-lg dark:border-white/10 dark:bg-zinc-950/80 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset]"
           >
             <Link href={`${basePath}/search`}>
               <MagnifyingGlass

@@ -36,7 +36,7 @@ export function AudioItemOrder({
   const { resolvedTheme } = useTheme();
 
   if (!music) {
-    return <div className="text-rose-500">Dữ liệu nhạc chưa sẵn sàng</div>;
+    return <div className="text-rose-500 font-apple">Dữ liệu nhạc chưa sẵn sàng</div>;
   }
 
   const isCurrentTrack =
@@ -70,7 +70,7 @@ export function AudioItemOrder({
         >
           <div className="flex items-center justify-between">
             <div className="w-40">
-              <div className="flex items-center gap-1 text-sm font-semibold">
+              <div className="flex items-center gap-1 text-sm font-semibold font-apple">
                 <span
                   className={cn(
                     "line-clamp-1",
@@ -81,7 +81,7 @@ export function AudioItemOrder({
                 </span>
               </div>
 
-              <div className="line-clamp-1 text-sm text-zinc-400">
+              <div className="line-clamp-1 text-sm text-zinc-400 font-apple">
                 {music.singer || "SINGER"}
               </div>
             </div>
@@ -93,7 +93,7 @@ export function AudioItemOrder({
             )}
 
             {duration && (
-              <div className="text-sm text-zinc-400">{duration}</div>
+              <div className="text-sm text-zinc-400 font-apple">{duration}</div>
             )}
 
             {isCurrentTrack ? (

@@ -33,7 +33,7 @@ export function MenuBarItem({ item, getItemClass }: MenuBarItemProps) {
     >
       <div className="flex items-center gap-2">
         {item.icon}
-        <div className="font-medium">{item.label}</div>
+        <div className="font-medium font-apple">{item.label}</div>
       </div>
       {item.trailing}
     </div>

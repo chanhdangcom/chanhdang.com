@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import {
   FastForward,
@@ -265,11 +266,11 @@ export function AudioBar() {
           },
           opacity: { duration: 0.1, ease: "easeOut" },
         }}
-        className={`fixed z-50 flex justify-center md:inset-x-[25vw] md:bottom-4 ${
+        className={`fixed z-50 flex justify-center font-apple md:inset-x-[25vw] md:bottom-4 ${
           scroll ? "inset-x-4 bottom-[88px]" : "inset-x-24 bottom-[32px]"
         }`}
       >
-        <div className="bg-zinc-200/72 dark:bg-zinc-900/72 relative w-full overflow-hidden rounded-[50px] border border-white/20 px-3 py-1 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset,0_-1px_0_rgba(0,0,0,0.06)_inset] backdrop-blur-lg dark:border-white/10 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset,0_-1px_0_rgba(0,0,0,0.45)_inset] md:rounded-[55px]">
+        <div className="relative w-full overflow-hidden rounded-[50px] border border-white/20 bg-zinc-300/80 px-3 py-1 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset,0_-1px_0_rgba(0,0,0,0.06)_inset] backdrop-blur-lg dark:border-white/10 dark:bg-zinc-950/80 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset,0_-1px_0_rgba(0,0,0,0.45)_inset] md:rounded-[55px]">
           <div className="via-white/8 dark:from-white/12 pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-b from-white/35 to-transparent dark:via-transparent dark:to-transparent" />
           <div className="pointer-events-none absolute inset-x-6 bottom-0 h-px bg-black/10 dark:bg-white/10" />
           <div
@@ -368,7 +369,7 @@ export function AudioBar() {
                 <div className="min-w-0 flex-1">
                   <div
                     ref={titleContainerRef}
-                    className="relative min-h-[1.25em] w-full overflow-hidden whitespace-nowrap text-sm font-semibold text-black dark:text-white"
+                    className="relative min-h-[1.25em] w-full overflow-hidden whitespace-nowrap font-apple text-sm font-semibold text-black dark:text-white"
                   >
                     <span
                       ref={titleMeasureRef}
@@ -417,7 +418,7 @@ export function AudioBar() {
                     </AnimatePresence>
                   </div>
 
-                  <div className="relative min-h-[1.25rem] overflow-hidden text-sm font-medium text-zinc-500">
+                  <div className="relative min-h-[1.25rem] overflow-hidden font-apple text-xs font-medium text-zinc-500">
                     <AnimatePresence mode="wait" initial={false}>
                       <motion.div
                         key={currentMusic?.id ?? "singer"}

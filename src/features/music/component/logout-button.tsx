@@ -45,7 +45,7 @@ export function LogoutButton() {
     <div>
       {!user ? (
         <Link href={withLocale("/auth/login")} className="size-10">
-          <div className="my-2 flex items-center gap-2 text-black dark:text-white">
+          <div className="my-2 flex items-center gap-2 text-black dark:text-white font-apple">
             <UserCircle size={20} weight="fill" className="size-10" />
 
             <div className="hidden md:flex">Login</div>
@@ -54,7 +54,7 @@ export function LogoutButton() {
       ) : (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <div className="my-2 flex items-center gap-2 font-semibold">
+            <div className="my-2 flex items-center gap-2 font-semibold font-apple">
               <BorderPro roundedSize="rounded-full">
                 {user?.avatarUrl ? (
                   <motion.img
@@ -64,21 +64,21 @@ export function LogoutButton() {
                     whileTap={{ scale: 0.9 }}
                   />
                 ) : (
-                  <div className="flex size-10 items-center justify-center rounded-full bg-zinc-200 text-sm font-bold uppercase text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
+                  <div className="flex size-10 items-center justify-center rounded-full bg-zinc-200 text-sm font-bold uppercase text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 font-apple">
                     {user?.username?.charAt(0) || <UserCircle size={20} />}
                   </div>
                 )}
               </BorderPro>
 
-              <div className="line-clamp-1 hidden max-w-[140px] truncate text-sm md:flex">
+              <div className="line-clamp-1 hidden max-w-[140px] truncate text-sm md:flex font-apple">
                 {user.username}
               </div>
             </div>
           </DropdownMenuTrigger>
 
           <DropdownMenuContent className="m-2 w-60 rounded-xl border bg-zinc-50 text-lg dark:border-zinc-800 dark:bg-zinc-950">
-            <div className="text-md flex items-center gap-1 rounded-t-md bg-zinc-200 px-2.5 py-0.5 font-bold dark:bg-zinc-800">
-              <div className="line-clamp-1 w-full truncate py-1.5 text-sm md:flex">
+            <div className="text-md flex items-center gap-1 rounded-t-md bg-zinc-200 px-2.5 py-0.5 font-bold dark:bg-zinc-800 font-apple">
+              <div className="line-clamp-1 w-full truncate py-1.5 text-sm md:flex font-apple">
                 {user.username}
               </div>
             </div>

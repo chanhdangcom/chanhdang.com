@@ -17,7 +17,7 @@ export function SingerListClient({ singers }: IProp) {
   const locale = (params?.locale as string) || "vi";
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full font-apple">
       <div className="flex gap-1 px-1 text-xl font-semibold">
         <div className="ml-2 text-black dark:text-white md:ml-[270px]">
           Popular Artists
