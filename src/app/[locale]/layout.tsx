@@ -1,33 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { Pacifico, Roboto_Condensed, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/utils/cn";
 
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { Providers } from "../Providers";
 import { setRequestLocale, getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
-// i18n provider is set in app/[locale]/layout.tsx
-
-const fontBody = Roboto_Condensed({
-  variable: "--font-body",
-  subsets: ["vietnamese"],
-  weight: ["400", "600", "700"],
-});
-
-const fontHandWritten = Pacifico({
-  variable: "--font-handwritten",
-  subsets: ["vietnamese"],
-  weight: ["400"],
-});
-
-const fontMono = JetBrains_Mono({
-  variable: "--font-mono",
-  subsets: ["vietnamese"],
-  weight: ["400", "700"],
-});
 
 export async function generateMetadata({
   params,
@@ -330,13 +309,7 @@ export default async function RootLayout({
         strategy="beforeInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <div
-        className={cn(
-          fontBody.variable,
-          fontHandWritten.variable,
-          fontMono.variable
-        )}
-      >
+      <div>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Providers>{children}</Providers>
         </NextIntlClientProvider>

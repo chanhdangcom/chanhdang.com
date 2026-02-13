@@ -7,6 +7,10 @@
    ============================================================================ */
 @layer base {
   :root {
+    /* Font families (loaded via link in root layout to avoid build-time fetch) */
+    --font-body: "Roboto Condensed", sans-serif;
+    --font-handwritten: "Pacifico", cursive;
+    --font-mono: "JetBrains Mono", monospace;
     /* Design tokens */
     --radius: 0.5rem;
     --expo-out: cubic-bezier(0.16, 1, 0.3, 1);
