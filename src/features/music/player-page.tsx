@@ -40,6 +40,7 @@ import { AudioItemOrder } from "./component/audio-item-order";
 import Link from "next/link";
 import { useImageHoverColor } from "@/hooks/use-image-hover-color";
 import { motion } from "framer-motion";
+import { cn } from "@/utils/cn";
 
 type IProp = {
   setIsClick: () => void;
@@ -1382,37 +1383,48 @@ export function PlayerPage({ setIsClick }: IProp) {
             <VolumeBar />
 
             <div className="mx-8 flex items-center justify-between text-base text-zinc-400">
-              <div onClick={() => setIsClickLyric(!isClickLyric)}>
-                {!isClickLyric ? (
-                  <ChatTeardropText size={30} weight="regular" />
-                ) : (
-                  <ChatTeardropText size={30} weight="fill" />
+              <button
+                type="button"
+                onClick={() => {
+                  setIsClickLyric(!isClickLyric);
+                  setIsClickFeatured(false);
+                }}
+                className={`flex h-12 w-12 items-center justify-center rounded-full transition-colors ${
+                  isClickLyric ? "bg-white/20" : "bg-transparent"
+                }`}
+              >
+                <ChatTeardropText
+                  size={30}
+                  weight={isClickLyric ? "fill" : "regular"}
+                />
+              </button>
+
+              <Heart
+                size={30}
+                weight={isInFavorites ? "fill" : "regular"}
+                className={cn(
+                  "cursor-pointer",
+                  isInFavorites ? "text-rose-500" : "text-zinc-400"
                 )}
-              </div>
+                onClick={handleToggleFavorites}
+              />
 
-              {isInFavorites ? (
-                <Heart
-                  size={30}
-                  weight="fill"
-                  className="text-rose-600"
-                  onClick={handleToggleFavorites}
-                />
-              ) : (
-                <Heart
-                  size={30}
-                  weight="regular"
-                  className="text-zinc-400"
-                  onClick={handleToggleFavorites}
-                />
-              )}
-
-              <div onClick={() => setIsClickFeatured(!isClickFeatured)}>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsClickFeatured(!isClickFeatured);
+                  setIsClickLyric(false);
+                }}
+                className={`flex h-12 w-12 items-center justify-center rounded-full transition-colors ${
+                  isClickFeatured ? "bg-white/20" : "bg-transparent"
+                }`}
+              >
                 {!isClickFeatured ? (
                   <ListBullets size={28} weight="bold" />
                 ) : (
                   <ListStar size={28} weight="bold" />
                 )}
-              </div>
+              </button>
             </div>
           </div>
         </div>
