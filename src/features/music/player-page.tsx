@@ -3,7 +3,6 @@ import { useAudio } from "@/components/music-provider";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import {
   CaretDown,
-  ChatTeardropDots,
   DotsThree,
   Infinity,
   FastForward,
@@ -13,11 +12,12 @@ import {
   Play,
   Repeat,
   Rewind,
-  ShareNetwork,
   Shuffle,
   Exclude,
   MagicWand,
   RepeatOnce,
+  ChatTeardropText,
+  Heart,
 } from "@phosphor-icons/react/dist/ssr";
 
 import { useCallback, useEffect, useState, useRef, memo } from "react";
@@ -288,7 +288,7 @@ const useMusicActionsMenu = ({
             className="flex items-center gap-3 text-white focus:bg-white/10"
           >
             <span className="font-semibold">
-              {isInFavorites ? "Gỡ khỏi Favorites" : "Thêm vào Favorites"}
+              {isInFavorites ? "Remove from Favorites" : "Add to Favorites"}
             </span>
           </DropdownMenuItem>
 
@@ -311,7 +311,7 @@ const useMusicActionsMenu = ({
             onClick={onShare}
             className="flex items-center gap-3 text-white focus:bg-white/10"
           >
-            <span className="font-semibold">Chia sẻ</span>
+            <span className="font-semibold">Share</span>
           </DropdownMenuItem>
 
           {isInFavorites && (
@@ -1283,7 +1283,7 @@ export function PlayerPage({ setIsClick }: IProp) {
       )}
 
       <>
-        <div className="fixed bottom-0 z-50 w-full space-y-0 px-8 pb-6 md:bottom-8 md:w-[40vw] md:space-y-4">
+        <div className="fixed bottom-0 z-50 w-full space-y-4 px-8 pb-8 md:bottom-8 md:w-[40vw] md:space-y-4">
           <div className="pointer-events-none absolute -bottom-16 left-0 -z-10 h-[40vh] w-full scale-150 bg-black blur-xl brightness-0 md:w-[35vw] md:blur-3xl" />
 
           {isClickLyric && (
@@ -1307,7 +1307,7 @@ export function PlayerPage({ setIsClick }: IProp) {
           )}
 
           {!isClickLyric && !isClickFeatured && (
-            <>
+            <div className="space-y-0">
               <div className="flex items-center justify-between">
                 <div id="info-song">
                   <div className="line-clamp-1 text-xl font-semibold text-white">
@@ -1334,7 +1334,7 @@ export function PlayerPage({ setIsClick }: IProp) {
               <div className="flex items-center justify-center">
                 <AudioTimeLine coverUrl={currentMusic?.cover || ""} />
               </div>
-            </>
+            </div>
           )}
 
           {(isClickLyric || isClickFeatured) && (
@@ -1378,19 +1378,33 @@ export function PlayerPage({ setIsClick }: IProp) {
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-8">
             <VolumeBar />
 
             <div className="mx-8 flex items-center justify-between text-base text-zinc-400">
               <div onClick={() => setIsClickLyric(!isClickLyric)}>
                 {!isClickLyric ? (
-                  <ChatTeardropDots size={25} />
+                  <ChatTeardropText size={30} weight="regular" />
                 ) : (
-                  <ChatTeardropDots size={25} weight="fill" />
+                  <ChatTeardropText size={30} weight="fill" />
                 )}
               </div>
 
-              <ShareNetwork size={25} weight="fill" />
+              {isInFavorites ? (
+                <Heart
+                  size={30}
+                  weight="fill"
+                  className="text-rose-600"
+                  onClick={handleToggleFavorites}
+                />
+              ) : (
+                <Heart
+                  size={30}
+                  weight="regular"
+                  className="text-zinc-400"
+                  onClick={handleToggleFavorites}
+                />
+              )}
 
               <div onClick={() => setIsClickFeatured(!isClickFeatured)}>
                 {!isClickFeatured ? (

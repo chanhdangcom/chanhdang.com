@@ -83,7 +83,7 @@ export function VolumeBar() {
         <SpeakerNone size={18} weight="fill" />
       </button>
 
-      <div className="mt-1 flex-1">
+      <div className="flex flex-1 items-center">
         <Slider
           aria-label="Volume"
           value={volumePercent}
