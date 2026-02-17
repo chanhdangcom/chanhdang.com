@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useUser } from "@/hooks/use-user";
 import { usePermissions } from "@/hooks/use-permissions";
 import {
@@ -39,6 +40,8 @@ export function MenuBar() {
   const isRegularUser = role === "user";
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const basePath = `/${locale}/music`;
+  const tCommon = useTranslations("music.common");
+  const tMenu = useTranslations("music.menu");
 
   const isPathActive = (target: string, exact = false) =>
     exact
@@ -76,7 +79,7 @@ export function MenuBar() {
   const topItems: MenuBarItemConfig[] = [
     {
       key: "search",
-      label: "Search",
+      label: tCommon("search"),
       href: `${basePath}/search`,
       isActive: isPathActive(`${basePath}/search`),
       icon: (
@@ -89,7 +92,7 @@ export function MenuBar() {
     },
     {
       key: "home",
-      label: "Home",
+      label: tCommon("home"),
       href: `${basePath}`,
       isActive: isPathActive(basePath, true),
       icon: (
@@ -102,7 +105,7 @@ export function MenuBar() {
     },
     {
       key: "new",
-      label: "New",
+      label: tCommon("new"),
       href: `${basePath}/new-release`,
       isActive: isPathActive(`${basePath}/new-release`),
       icon: (
@@ -119,7 +122,7 @@ export function MenuBar() {
     ? [
         {
           key: "recently-played",
-          label: "Recently Played",
+          label: tMenu("recentlyPlayed"),
           href: `${basePath}/recently-played`,
           isActive: isPathActive(`${basePath}/recently-played`),
           icon: (
@@ -134,7 +137,7 @@ export function MenuBar() {
         },
         {
           key: "library",
-          label: "Library",
+          label: tCommon("library"),
           href: `${basePath}/library`,
           isActive: isPathActive(`${basePath}/library`),
           icon: (
@@ -149,14 +152,14 @@ export function MenuBar() {
     : [
         {
           key: "recently-played-disabled",
-          label: "Recently Played",
+          label: tMenu("recentlyPlayed"),
           href: `${basePath}/recently-played`,
           disabled: true,
           icon: <Clock size={25} className="text-rose-500 dark:text-blue-500" />,
         },
         {
           key: "library-disabled",
-          label: "Library",
+          label: tCommon("library"),
           href: `${basePath}/library`,
           disabled: true,
           icon: (
@@ -168,7 +171,7 @@ export function MenuBar() {
   const manageItems: MenuBarItemConfig[] = [
     {
       key: "manage-hub",
-      label: "Management Hub",
+      label: tMenu("managementHub"),
       href: `${basePath}/management-page`,
       isActive: isManageHubActive,
       icon: (
@@ -181,7 +184,7 @@ export function MenuBar() {
     },
     {
       key: "admin-panel",
-      label: "Admin Panel",
+      label: tMenu("adminPanel"),
       href: `${basePath}/admin`,
       isActive: isAdminPanelActive,
       icon: (
@@ -194,7 +197,7 @@ export function MenuBar() {
     },
     {
       key: "add-music",
-      label: "Add New Music",
+      label: tMenu("addNewMusic"),
       href: `${basePath}/add-music`,
       isActive: isAddMusicActive,
       disabled: !canAddMusic,
@@ -208,7 +211,7 @@ export function MenuBar() {
     },
     {
       key: "add-singer",
-      label: "Add Artists",
+      label: tMenu("addArtists"),
       href: `${basePath}/add-singer`,
       isActive: isAddSingerActive,
       disabled: !canAddSinger,
@@ -227,7 +230,7 @@ export function MenuBar() {
       ? [
           {
             key: "profile",
-            label: "Profile",
+            label: tMenu("profile"),
             href: `${basePath}/profile-setting`,
             isActive: isPathActive(`${basePath}/profile-setting`),
             icon: (
@@ -244,7 +247,7 @@ export function MenuBar() {
       : []),
     {
       key: "theme",
-      label: "Theme",
+      label: tMenu("theme"),
       icon: <ThemeToggleMenuBar className="text-rose-500 dark:text-blue-500" />,
     },
     {
@@ -263,7 +266,7 @@ export function MenuBar() {
               <Link href={`/${locale}/music`} className="flex cursor-pointer">
                 <ChanhdangLogotype className="w-full" />
 
-                <div className="my-4 flex text-xs font-semibold">Music</div>
+                <div className="my-4 flex text-xs font-semibold">{tCommon("music")}</div>
               </Link>
             </div>
 
@@ -283,7 +286,7 @@ export function MenuBar() {
             </AnimatePresence>
 
             <div className="mt-4 pl-3 text-xs font-medium text-zinc-500">
-              Library
+              {tCommon("library")}
             </div>
 
             {libraryItems.map((item) => (
@@ -294,7 +297,7 @@ export function MenuBar() {
               <MenuBarItem
                 item={{
                   key: "my-music",
-                  label: "My Music",
+                  label: tMenu("myMusic"),
                   href: `${basePath}/my-music`,
                   isActive: isPathActive(`${basePath}/my-music`),
                   icon: (
@@ -315,7 +318,7 @@ export function MenuBar() {
               <MenuBarItem
                 item={{
                   key: "manage-toggle",
-                  label: "Manage",
+                  label: tMenu("manage"),
                   isActive: isManageActive,
                   onClick: () => setIsDropdownOpen(!isDropdownOpen),
                   icon: (
@@ -370,7 +373,7 @@ export function MenuBar() {
             )}
 
             <div className="mt-4 pl-3 text-xs font-medium text-zinc-500">
-              Settings
+              {tMenu("settings")}
             </div>
 
             {settingsItems.map((item) => (

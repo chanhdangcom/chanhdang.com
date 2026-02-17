@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { useIsAdmin } from "@/hooks/use-permissions";
 import { useRouter } from "next/navigation";
 
@@ -19,6 +20,8 @@ type PlaylistItem = {
 export function AddPlaylistForm() {
   const isAdmin = useIsAdmin();
   const router = useRouter();
+  const t = useTranslations("music.playlist");
+  const tError = useTranslations("music.player");
   const [title, setTitle] = useState("");
   const [cover, setCover] = useState("");
   const [singer, setSinger] = useState("");
@@ -164,18 +167,16 @@ export function AddPlaylistForm() {
       });
       if (res.ok) {
         setMessage(
-          editingPlaylistId
-            ? "Cập nhật playlist thành công"
-            : "Tạo playlist thành công"
+          editingPlaylistId ? t("updateSuccess") : t("createSuccess")
         );
         resetForm();
         await fetchPlaylists();
       } else {
         const data = await res.json().catch(() => ({}));
-        setMessage(data?.error || "Lưu playlist thất bại");
+        setMessage(data?.error || t("saveFailed"));
       }
     } catch {
-      setMessage("Có lỗi xảy ra");
+      setMessage(tError("errorOccurred"));
     } finally {
       setLoading(false);
     }
@@ -191,23 +192,23 @@ export function AddPlaylistForm() {
   };
 
   const handleDeletePlaylist = async (playlistId: string) => {
-    if (!confirm("Bạn có chắc muốn xóa playlist này?")) return;
+    if (!confirm(t("confirmDelete"))) return;
     setLoading(true);
     setMessage(null);
     try {
       const res = await fetch(`/api/playlists/${playlistId}`, { method: "DELETE" });
       if (res.ok) {
-        setMessage("Xóa playlist thành công");
+        setMessage(t("deleteSuccess"));
         if (editingPlaylistId === playlistId) {
           resetForm();
         }
         await fetchPlaylists();
       } else {
         const data = await res.json().catch(() => ({}));
-        setMessage(data?.error || "Xóa playlist thất bại");
+        setMessage(data?.error || t("deleteFailed"));
       }
     } catch {
-      setMessage("Có lỗi xảy ra");
+      setMessage(tError("errorOccurred"));
     } finally {
       setLoading(false);
     }
@@ -216,47 +217,47 @@ export function AddPlaylistForm() {
   return (
     <div className="p-4 md:ml-[270px]">
       <h1 className="mb-4 text-xl font-semibold text-black dark:text-white">
-        {editingPlaylistId ? "Sửa Playlist" : "Thêm Playlist"}
+        {editingPlaylistId ? t("editPlaylist") : t("addPlaylist")}
       </h1>
 
       <form onSubmit={onSubmit} className="max-w-xl space-y-4">
         <div>
-          <label className="block text-sm text-zinc-500">Tiêu đề</label>
+          <label className="block text-sm text-zinc-500">{t("titleLabel")}</label>
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="mt-1 w-full rounded-md border border-zinc-300 bg-transparent p-2 outline-none dark:border-zinc-800"
-            placeholder="Chill Mix, Top RAP..."
+            placeholder={t("titlePlaceholder")}
           />
         </div>
         <div>
-          <label className="block text-sm text-zinc-500">Ảnh cover (URL)</label>
+          <label className="block text-sm text-zinc-500">{t("coverLabel")}</label>
           <input
             value={cover}
             onChange={(e) => setCover(e.target.value)}
             className="mt-1 w-full rounded-md border border-zinc-300 bg-transparent p-2 outline-none dark:border-zinc-800"
-            placeholder="https://cdn.chanhdang.com/xxx.jpg"
+            placeholder={t("coverPlaceholder")}
           />
         </div>
         <div>
           <label className="block text-sm text-zinc-500">
-            Ghi chú người biên tập (tuỳ chọn)
+            {t("editorNoteLabel")}
           </label>
           <input
             value={singer}
             onChange={(e) => setSinger(e.target.value)}
             className="mt-1 w-full rounded-md border border-zinc-300 bg-transparent p-2 outline-none dark:border-zinc-800"
-            placeholder="Various, Editor note..."
+            placeholder={t("editorNotePlaceholder")}
           />
         </div>
 
         <div>
           <label className="block text-sm text-zinc-500">
-            Chọn bài hát (tuỳ chọn)
+            {t("selectSongsLabel")}
           </label>
           <div className="mt-2 max-h-64 overflow-auto rounded-lg border border-zinc-300 p-2 dark:border-zinc-800">
             {allMusics.length === 0 && (
-              <div className="text-sm text-zinc-500">Chưa có bài hát</div>
+              <div className="text-sm text-zinc-500">{t("noSongsYet")}</div>
             )}
             {allMusics.map((m) => {
               const checked = selectedIds.includes(m.id);
@@ -283,10 +284,10 @@ export function AddPlaylistForm() {
           className="rounded-2xl bg-zinc-200 px-4 py-2 font-semibold text-blue-600 disabled:opacity-50 dark:bg-zinc-900 dark:text-blue-400"
         >
           {loading
-            ? "Đang lưu..."
+            ? t("saving")
             : editingPlaylistId
-              ? "Lưu thay đổi"
-              : "Tạo Playlist"}
+              ? t("saveChanges")
+              : t("createPlaylist")}
         </button>
         {editingPlaylistId && (
           <button
@@ -294,7 +295,7 @@ export function AddPlaylistForm() {
             onClick={resetForm}
             className="ml-2 rounded-2xl border border-zinc-300 px-4 py-2 font-semibold text-zinc-600 dark:border-zinc-700 dark:text-zinc-300"
           >
-            Hủy chỉnh sửa
+            {t("cancelEdit")}
           </button>
         )}
       </form>
@@ -307,11 +308,11 @@ export function AddPlaylistForm() {
 
       <div className="mt-8 max-w-3xl">
         <h2 className="mb-3 text-lg font-semibold text-black dark:text-white">
-          Danh sách playlist
+          {t("playlistList")}
         </h2>
         <div className="space-y-2">
           {playlists.length === 0 && (
-            <div className="text-sm text-zinc-500">Chưa có playlist nào</div>
+            <div className="text-sm text-zinc-500">{t("noPlaylistsYet")}</div>
           )}
           {playlists.map((playlist) => (
             <div
@@ -321,7 +322,7 @@ export function AddPlaylistForm() {
               <div>
                 <div className="font-medium">{playlist.title}</div>
                 <div className="text-sm text-zinc-500">
-                  {playlist.musicIds.length} bài hát
+                  {t("songsCount", { count: playlist.musicIds.length })}
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -330,14 +331,14 @@ export function AddPlaylistForm() {
                   onClick={() => handleEditPlaylist(playlist)}
                   className="rounded-xl border border-blue-500 px-3 py-1 text-sm text-blue-600 dark:text-blue-400"
                 >
-                  Sửa
+                  {t("edit")}
                 </button>
                 <button
                   type="button"
                   onClick={() => handleDeletePlaylist(playlist.id)}
                   className="rounded-xl border border-rose-500 px-3 py-1 text-sm text-rose-600 dark:text-rose-400"
                 >
-                  Xóa
+                  {t("delete")}
                 </button>
               </div>
             </div>

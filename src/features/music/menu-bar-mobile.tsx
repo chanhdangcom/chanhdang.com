@@ -2,6 +2,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { House, MagnifyingGlass } from "phosphor-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useUser } from "@/hooks/use-user";
@@ -20,6 +21,8 @@ export function MenuBarMobile() {
   const pathname = usePathname();
   const locale = (params?.locale as string) || "vi";
   const { isAuthenticated } = useUser();
+  const tCommon = useTranslations("music.common");
+  const tMenu = useTranslations("music.menu");
   const [show, setShow] = useState(true);
   const showStateRef = useRef(true);
   const [reactToScroll, setReactToScroll] = useState(false);
@@ -119,21 +122,21 @@ export function MenuBarMobile() {
   const mainItems: MenuBarMobileItemConfig[] = [
     {
       key: "home",
-      label: "Home",
+      label: tCommon("home"),
       href: `${basePath}`,
       isActive: isPathActive(basePath, true),
       icon: <House size={30} weight="fill" />,
     },
     {
       key: "new",
-      label: "New",
+      label: tCommon("new"),
       href: `${basePath}/new-release`,
       isActive: isPathActive(`${basePath}/new-release`),
       icon: <SquaresFour size={30} weight="fill" />,
     },
     {
       key: "add-music",
-      label: "Music",
+      label: tCommon("music"),
       href: `${basePath}/add-music`,
       isActive: isPathActive(`${basePath}/add-music`),
       disabled: !isAuthenticated,
@@ -141,7 +144,7 @@ export function MenuBarMobile() {
     },
     {
       key: "library",
-      label: "Library",
+      label: tCommon("library"),
       href: `${basePath}/library`,
       isActive: isPathActive(`${basePath}/library`),
       disabled: !isAuthenticated,

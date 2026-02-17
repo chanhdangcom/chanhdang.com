@@ -2,6 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Eye, EyeOff, AlertCircle, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -16,6 +17,7 @@ interface FormErrors {
 }
 
 export default function LoginForm() {
+  const t = useTranslations("auth.login");
   const [form, setForm] = useState({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -50,15 +52,15 @@ export default function LoginForm() {
     const newErrors: FormErrors = {};
 
     if (!form.username.trim()) {
-      newErrors.username = "Please enter your username";
+      newErrors.username = t("errorUsernameRequired");
     } else if (form.username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters";
+      newErrors.username = t("errorUsernameMin");
     }
 
     if (!form.password) {
-      newErrors.password = "Please enter your password";
+      newErrors.password = t("errorPasswordRequired");
     } else if (form.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+      newErrors.password = t("errorPasswordMin");
     }
 
     setErrors(newErrors);
@@ -108,7 +110,7 @@ export default function LoginForm() {
           localStorage.removeItem("rememberedUsername");
         }
 
-        setSuccessMessage("Login successful!");
+        setSuccessMessage(t("success"));
         login(data.user);
         setForm({ username: "", password: "" });
 
@@ -117,10 +119,10 @@ export default function LoginForm() {
           router.push(`/${locale}/music`);
         }, 1000);
       } else {
-        setErrors({ general: data.error || "Something went wrong!" });
+        setErrors({ general: data.error || t("errorGeneric") });
       }
     } catch {
-      setErrors({ general: "Connection error. Please try again later." });
+      setErrors({ general: t("errorConnection") });
     } finally {
       setIsSubmitting(false);
     }
@@ -141,7 +143,7 @@ export default function LoginForm() {
             </div>
 
             <h1 className="font-apple text-3xl font-bold text-zinc-900 dark:text-zinc-100">
-              Sign In
+              {t("title")}
             </h1>
           </div>
 
@@ -176,13 +178,13 @@ export default function LoginForm() {
             {/* Username Field */}
             <div className="space-y-2">
               <label className="text-sm font-semibold text-zinc-700">
-                Username
+                {t("username")}
               </label>
 
               <div className="relative">
                 <Input
                   name="username"
-                  placeholder="Enter your username"
+                  placeholder={t("usernamePlaceholder")}
                   value={form.username}
                   onChange={handleChange}
                   required
@@ -208,14 +210,14 @@ export default function LoginForm() {
             {/* Password Field */}
             <div className="space-y-2">
               <label className="text-sm font-semibold text-zinc-700">
-                Password
+                {t("password")}
               </label>
 
               <div className="relative">
                 <Input
                   name="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
+                  placeholder={t("passwordPlaceholder")}
                   value={form.password}
                   onChange={handleChange}
                   required
@@ -259,13 +261,13 @@ export default function LoginForm() {
                   className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500 dark:border-zinc-800"
                   disabled={isSubmitting}
                 />
-                <span className="text-sm text-zinc-600">Remember me</span>
+                <span className="text-sm text-zinc-600">{t("rememberMe")}</span>
               </label>
               <Link
                 href={`/${locale}/auth/forgot-password`}
                 className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
               >
-                Forgot password?
+                {t("forgotPassword")}
               </Link>
             </div>
 
@@ -275,9 +277,9 @@ export default function LoginForm() {
               className="w-full rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 px-4 py-3 text-white transition-all hover:from-zinc-800 hover:to-zinc-700"
               disabled={isSubmitting}
               loading={isSubmitting}
-              loadingText="Signing in..."
+              loadingText={t("signingIn")}
             >
-              {!isSubmitting && "Sign In"}
+              {!isSubmitting && t("submit")}
             </Button>
 
             {/* Register Link */}
@@ -286,7 +288,7 @@ export default function LoginForm() {
                 href={`/${locale}/auth/register`}
                 className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
               >
-                Don&apos;t have an account? Sign up
+                {t("noAccount")}
               </Link>
             </div>
           </div>
@@ -299,7 +301,7 @@ export default function LoginForm() {
 
             <div className="relative flex justify-center text-sm">
               <span className="bg-zinc-50 px-4 text-zinc-500 dark:bg-black">
-                Or
+                {t("or")}
               </span>
             </div>
           </div>
@@ -313,7 +315,7 @@ export default function LoginForm() {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/img/google-icon.png" alt="Google" className="h-5 w-5" />
-            <span>{isLoading ? "Processing..." : "Continue with Google"}</span>
+            <span>{isLoading ? t("processing") : t("continueWithGoogle")}</span>
           </Button>
         </form>
       </motion.div>

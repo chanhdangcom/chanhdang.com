@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { LogoutButton } from "./component/logout-button";
 
 type IProp = {
@@ -7,6 +8,7 @@ type IProp = {
 };
 
 export const HeaderMusicPage = ({ name }: IProp) => {
+  const t = useTranslations("music.common");
   return (
     <div className="bt-2 sticky inset-0 top-0 z-10 rounded-b-xl pb-2 font-apple transition">
       <div className="space-y-4">
@@ -18,7 +20,7 @@ export const HeaderMusicPage = ({ name }: IProp) => {
               </div>
 
               <div className="z-20 ml-3 text-3xl font-bold md:ml-0 md:mt-4">
-                {name || "Home"}
+                {name || t("home")}
               </div>
             </>
           </div>

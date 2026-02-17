@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, memo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useAudio } from "@/components/music-provider";
 import { useSpringScroll } from "@/hooks/use-spring-scroll";
 import { useImageHoverColor } from "@/hooks/use-image-hover-color";
@@ -34,6 +35,7 @@ SubtitleItem.displayName = "LyricSidebarSubtitleItem";
 export function LyricSidebar() {
   const { currentMusic, subtitles, currentSubtitleId, setIsPlayerPageOpen } =
     useAudio();
+  const t = useTranslations("music.lyric");
 
   const [isOpen, setIsOpen] = useState(true);
 
@@ -132,7 +134,7 @@ export function LyricSidebar() {
         >
           {subtitles.length === 0 ? (
             <div className="mt-6 text-xs text-white/60">
-              Không có lyric cho bài hát này.
+              {t("noLyrics")}
             </div>
           ) : (
             <div className="mt-2 space-y-1.5 font-apple">

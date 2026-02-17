@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { usePermissions } from "@/hooks/use-permissions";
 import {
   MicrophoneStage,
@@ -16,39 +17,40 @@ export function ManagementPage() {
   const params = useParams();
   const locale = (params?.locale as string) || "vi";
   const { canAddMusic, canAddSinger, canManageSystem } = usePermissions();
+  const t = useTranslations("music.management");
 
   const managementLinks = [
     {
-      title: "Quản lý users",
-      description: "Phân quyền và cập nhật role người dùng",
+      title: t("manageUsers"),
+      description: t("manageUsersDesc"),
       href: `/${locale}/music/admin`,
       isAllowed: canManageSystem,
       icon: UsersThree,
     },
     {
-      title: "Thêm nhạc",
-      description: "Tạo bài hát mới vào hệ thống",
+      title: t("addMusic"),
+      description: t("addMusicDesc"),
       href: `/${locale}/music/add-music`,
       isAllowed: canAddMusic,
       icon: MusicNotesSimple,
     },
     {
-      title: "Thêm topic",
-      description: "Tạo topic mới và gán danh sách bài hát",
+      title: t("addTopic"),
+      description: t("addTopicDesc"),
       href: `/${locale}/music/add-topic`,
       isAllowed: canManageSystem,
       icon: Queue,
     },
     {
-      title: "Thêm playlist",
-      description: "Tạo playlist mới cho thư viện nhạc",
+      title: t("addPlaylist"),
+      description: t("addPlaylistDesc"),
       href: `/${locale}/music/add-playlist`,
       isAllowed: canManageSystem,
       icon: Queue,
     },
     {
-      title: "Thêm ca sĩ",
-      description: "Quản lý hồ sơ ca sĩ và thông tin nghệ sĩ",
+      title: t("addSinger"),
+      description: t("addSingerDesc"),
       href: `/${locale}/music/add-singer`,
       isAllowed: canAddSinger,
       icon: MicrophoneStage,
@@ -61,7 +63,7 @@ export function ManagementPage() {
 
       <div className="mx-auto w-full">
         <div className="">
-          <HeaderMusicPage name="Management Hub" />
+          <HeaderMusicPage name={t("hub")} />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
@@ -92,7 +94,7 @@ export function ManagementPage() {
                   </p>
 
                   <div className="mt-3 text-xs font-medium text-rose-600 dark:text-rose-400">
-                    Bạn chưa có quyền truy cập mục này
+                    {t("noAccess")}
                   </div>
                 </div>
               );

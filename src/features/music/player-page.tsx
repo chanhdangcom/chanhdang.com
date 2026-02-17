@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import { useAudio } from "@/components/music-provider";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import {
@@ -270,6 +271,7 @@ const useMusicActionsMenu = ({
   onShare,
   onOpenFavorites,
 }: MusicActionsMenuProps) => {
+  const t = useTranslations("music.player");
   const Menu = useCallback(() => {
     return (
       <DropdownMenu>
@@ -289,7 +291,7 @@ const useMusicActionsMenu = ({
             className="flex items-center gap-3 text-white focus:bg-white/10"
           >
             <span className="font-semibold">
-              {isInFavorites ? "Remove from Favorites" : "Add to Favorites"}
+              {isInFavorites ? t("removeFromFavorites") : t("addToFavorites")}
             </span>
           </DropdownMenuItem>
 
@@ -300,9 +302,9 @@ const useMusicActionsMenu = ({
             className="flex items-center gap-3 text-white focus:bg-white/10 disabled:opacity-50"
           >
             {isKaraokeMode ? (
-              <span className="font-semibold">Off Beat Mode</span>
+              <span className="font-semibold">{t("offBeatMode")}</span>
             ) : (
-              <span className="font-semibold">Beat Mode</span>
+              <span className="font-semibold">{t("beatMode")}</span>
             )}
           </DropdownMenuCheckboxItem>
 
@@ -312,7 +314,7 @@ const useMusicActionsMenu = ({
             onClick={onShare}
             className="flex items-center gap-3 text-white focus:bg-white/10"
           >
-            <span className="font-semibold">Share</span>
+            <span className="font-semibold">{t("share")}</span>
           </DropdownMenuItem>
 
           {isInFavorites && (
@@ -320,13 +322,14 @@ const useMusicActionsMenu = ({
               onClick={onOpenFavorites}
               className="flex items-center gap-3 text-white focus:bg-white/10"
             >
-              <span className="font-semibold">Hiển thị trong Library</span>
+              <span className="font-semibold">{t("showInLibrary")}</span>
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>
       </DropdownMenu>
     );
   }, [
+    t,
     hasBeat,
     isInFavorites,
     isKaraokeMode,
@@ -384,6 +387,8 @@ const LyricPage = ({
     isKaraokeMode,
     setIsPlayerPageOpen,
   } = useAudio();
+  const tPlayer = useTranslations("music.player");
+  const tCommon = useTranslations("music.common");
 
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const touchDeltaYRef = useRef(0);
@@ -536,11 +541,11 @@ const LyricPage = ({
 
                   <div id="info-song" className="">
                     <div className="line-clamp-1 font-semibold text-white">
-                      {currentMusic?.title || "TITLE SONG"}
+                      {currentMusic?.title || tPlayer("titleSong")}
                     </div>
 
                     <div className="line-clamp-1 text-zinc-300">
-                      {currentMusic?.singer || "SINGER"}
+                      {currentMusic?.singer || tCommon("singer")}
                     </div>
                   </div>
                 </div>
@@ -786,6 +791,8 @@ const FeaturedPage = ({
   const subtitleScrollRef = useRef<HTMLDivElement>(null);
   const isDesktop = useIsDesktop();
   const isHeavyReady = useDeferredRender(isDesktop, 220);
+  const tPlayer = useTranslations("music.player");
+  const tCommon = useTranslations("music.common");
 
   // Thêm hiệu ứng scroll lò xo
   useSpringScroll(subtitleScrollRef);
@@ -969,10 +976,10 @@ const FeaturedPage = ({
 
                   <div id="info-song" className="">
                     <div className="line-clamp-1 font-semibold text-white">
-                      {currentMusic?.title || "TITLE SONG"}
+                      {currentMusic?.title || tPlayer("titleSong")}
                     </div>
                     <div className="line-clamp-1 text-zinc-300">
-                      {currentMusic?.singer || "SINGER"}
+                      {currentMusic?.singer || tCommon("singer")}
                     </div>
                   </div>
                 </div>
@@ -1009,17 +1016,17 @@ const FeaturedPage = ({
               </div>
 
               <div className="mt-4">
-                <div className="font-semibold text-white">Continue Music</div>
+                <div className="font-semibold text-white">{tPlayer("continueMusic")}</div>
 
                 {!isHeavyReady && (
                   <div className="mt-2 text-xs text-zinc-400">
-                    Đang tối ưu nội dung cho mobile...
+                    {tPlayer("optimizingContent")}
                   </div>
                 )}
 
                 {isLoadingRandom && (
                   <div className="mt-2 text-xs text-zinc-400">
-                    Đang tải nhạc...
+                    {tPlayer("loadingMusic")}
                   </div>
                 )}
 
@@ -1090,6 +1097,8 @@ export function PlayerPage({ setIsClick }: IProp) {
     isPaused,
     handleAudioSkip,
   } = useAudio();
+  const tPlayer = useTranslations("music.player");
+  const tCommon = useTranslations("music.common");
 
   const [isClickLyric, setIsClickLyric] = useState(false);
   const { user } = useUser();
@@ -1156,7 +1165,7 @@ export function PlayerPage({ setIsClick }: IProp) {
   // Xử lý thêm/xóa khỏi Favorites
   const handleToggleFavorites = async () => {
     if (!user?.id) {
-      alert("Vui lòng đăng nhập để sử dụng tính năng này!");
+      alert(tPlayer("loginRequired"));
       return;
     }
 
@@ -1180,7 +1189,7 @@ export function PlayerPage({ setIsClick }: IProp) {
           setIsInFavorites(true);
           updateFavoriteMusicCache(user.id, currentMusic.id, true);
           const error = await response.json();
-          alert(error.error || "Có lỗi xảy ra!");
+          alert(error.error || tPlayer("errorOccurred"));
           return;
         }
       } else {
@@ -1201,7 +1210,7 @@ export function PlayerPage({ setIsClick }: IProp) {
           setIsInFavorites(false);
           updateFavoriteMusicCache(user.id, currentMusic.id, false);
           const error = await response.json();
-          alert(error.error || "Có lỗi xảy ra!");
+          alert(error.error || tPlayer("errorOccurred"));
           return;
         }
       }
@@ -1212,7 +1221,7 @@ export function PlayerPage({ setIsClick }: IProp) {
       console.error("Error toggling favorites:", error);
       setIsInFavorites(isInFavorites);
       updateFavoriteMusicCache(user.id, currentMusic.id, isInFavorites);
-      alert("Có lỗi xảy ra!");
+      alert(tPlayer("errorOccurred"));
     } finally {
       setIsLoadingFavorite(false);
     }
@@ -1223,7 +1232,7 @@ export function PlayerPage({ setIsClick }: IProp) {
     if (!currentMusic) return;
 
     const shareData = {
-      title: currentMusic.title || "Bài hát",
+      title: currentMusic.title || tPlayer("song"),
       text: `${currentMusic.title} - ${currentMusic.singer}`,
       url: window.location.href,
     };
@@ -1236,7 +1245,7 @@ export function PlayerPage({ setIsClick }: IProp) {
         await navigator.clipboard.writeText(
           `${shareData.text}\n${shareData.url}`
         );
-        alert("Đã sao chép link vào clipboard!");
+        alert(tPlayer("copyLinkSuccess"));
       }
     } catch (error) {
       console.error("Error sharing:", error);
@@ -1312,7 +1321,7 @@ export function PlayerPage({ setIsClick }: IProp) {
               <div className="flex items-center justify-between">
                 <div id="info-song">
                   <div className="line-clamp-1 text-xl font-semibold text-white">
-                    {currentMusic?.title || "TITLE SONG"}
+                    {currentMusic?.title || tPlayer("titleSong")}
                   </div>
 
                   {singerId ? (
@@ -1320,11 +1329,11 @@ export function PlayerPage({ setIsClick }: IProp) {
                       href={`/${locale}/music/singer/${singerId}`}
                       className="text-lg text-zinc-300 hover:underline"
                     >
-                      {currentMusic?.singer || "SINGER"}
+                      {currentMusic?.singer || tCommon("singer")}
                     </Link>
                   ) : (
                     <span className="text-lg text-zinc-300">
-                      {currentMusic?.singer || "SINGER"}
+                      {currentMusic?.singer || tCommon("singer")}
                     </span>
                   )}
                 </div>

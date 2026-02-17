@@ -2,6 +2,7 @@
 
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import {
   Eye,
   EyeOff,
@@ -25,6 +26,7 @@ interface FormErrors {
 }
 
 export default function ResetPasswordForm() {
+  const t = useTranslations("auth.resetPassword");
   const [form, setForm] = useState({
     password: "",
     confirmPassword: "",
@@ -70,15 +72,15 @@ export default function ResetPasswordForm() {
     const newErrors: FormErrors = {};
 
     if (!form.password) {
-      newErrors.password = "Please enter your password";
+      newErrors.password = t("errorPasswordRequired");
     } else if (form.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
+      newErrors.password = t("errorPasswordMin");
     }
 
     if (!form.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
+      newErrors.confirmPassword = t("errorConfirmRequired");
     } else if (form.password !== form.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
+      newErrors.confirmPassword = t("errorConfirmMatch");
     }
 
     setErrors(newErrors);
@@ -122,19 +124,17 @@ export default function ResetPasswordForm() {
       const data = await res.json();
 
       if (data.success) {
-        setSuccessMessage(
-          "Password reset successful! Redirecting to sign in..."
-        );
+        setSuccessMessage(t("success"));
         setForm({ password: "", confirmPassword: "" });
 
         setTimeout(() => {
           router.push(`/${locale}/auth/login`);
         }, 2000);
       } else {
-        setErrors({ general: data.error || "Something went wrong!" });
+        setErrors({ general: data.error || t("errorGeneric") });
       }
     } catch {
-      setErrors({ general: "Connection error. Please try again later." });
+      setErrors({ general: t("errorConnection") });
     } finally {
       setIsSubmitting(false);
     }
@@ -143,11 +143,11 @@ export default function ResetPasswordForm() {
   if (isValidatingToken) {
     return (
       <div className="container">
-        <HeaderMusicPage name="Reset Password" />
+        <HeaderMusicPage name={t("title")} />
         <div className="z-30 mx-4 my-8 flex items-center justify-center rounded-3xl border border-zinc-200 p-8 font-apple backdrop-blur-2xl dark:border-zinc-800 md:mx-auto md:w-[30vw]">
           <div className="text-center">
             <div className="mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-zinc-900 border-t-transparent" />
-            <p className="text-zinc-600">Verifying...</p>
+            <p className="text-zinc-600">{t("verifying")}</p>
           </div>
         </div>
         <Footer />
@@ -158,7 +158,7 @@ export default function ResetPasswordForm() {
   if (!tokenValid) {
     return (
       <div className="container">
-        <HeaderMusicPage name="Reset Password" />
+        <HeaderMusicPage name={t("title")} />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -168,18 +168,17 @@ export default function ResetPasswordForm() {
           <div className="text-center">
             <AlertCircle className="mx-auto mb-4 h-12 w-12 text-red-500" />
             <h1 className="mb-2 text-2xl font-bold text-red-600">
-              Invalid or expired link
+              {t("invalidToken")}
             </h1>
             <p className="mb-4 text-sm text-red-600">
-              The password reset link is invalid or has expired. Please request
-              a new link.
+              {t("invalidToken")}
             </p>
             <Link
               href={`/${locale}/auth/forgot-password`}
               className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 hover:underline"
             >
               <ArrowLeft className="h-4 w-4" />
-              Request new link
+              {t("requestNewLink")}
             </Link>
           </div>
         </motion.div>
@@ -190,7 +189,7 @@ export default function ResetPasswordForm() {
 
   return (
     <div className="container">
-      <HeaderMusicPage name="Reset Password" />
+      <HeaderMusicPage name={t("title")} />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -200,9 +199,9 @@ export default function ResetPasswordForm() {
       >
         <div className="text-center">
           <h1 className="bg-gradient-to-r from-zinc-900 to-zinc-700 bg-clip-text text-3xl font-bold text-transparent">
-            Reset Password
+            {t("title")}
           </h1>
-          <p className="mt-2 text-sm text-zinc-600">Enter your new password</p>
+          <p className="mt-2 text-sm text-zinc-600">{t("enterNewPassword")}</p>
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
@@ -236,14 +235,14 @@ export default function ResetPasswordForm() {
             {/* Password Field */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-zinc-700">
-                New password
+                {t("password")}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
                 <Input
                   name="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter new password"
+                  placeholder={t("passwordPlaceholder")}
                   value={form.password}
                   onChange={handleChange}
                   required
@@ -280,14 +279,14 @@ export default function ResetPasswordForm() {
             {/* Confirm Password Field */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-zinc-700">
-                Confirm password
+                {t("confirmPassword")}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
                 <Input
                   name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Enter password again"
+                  placeholder={t("confirmPlaceholder")}
                   value={form.confirmPassword}
                   onChange={handleChange}
                   required
@@ -331,9 +330,9 @@ export default function ResetPasswordForm() {
               className="w-full rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 px-4 py-3 text-white transition-all hover:from-zinc-800 hover:to-zinc-700"
               disabled={isSubmitting}
               loading={isSubmitting}
-              loadingText="Resetting..."
+              loadingText={t("resetting")}
             >
-              {!isSubmitting && "Reset Password"}
+              {!isSubmitting && t("submit")}
             </Button>
 
             {/* Back to Login Link */}
@@ -343,7 +342,7 @@ export default function ResetPasswordForm() {
                 className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 hover:underline"
               >
                 <ArrowLeft className="h-4 w-4" />
-                Back to sign in
+                {t("backToSignIn")}
               </Link>
             </div>
           </div>

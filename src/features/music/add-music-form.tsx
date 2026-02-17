@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { HeaderMusicPage } from "./header-music-page";
 import { Button } from "@/components/ui/button";
 import { MotionHeaderMusic } from "./component/motion-header-music";
@@ -10,6 +11,7 @@ import { usePermissions } from "@/hooks/use-permissions";
 import { MenuBar } from "./menu-bar";
 
 export default function AddMusicForm() {
+  const t = useTranslations("musicForm.addMusic");
   const { user } = useUser();
   const { role } = usePermissions();
   const isAdmin = role === "admin";
@@ -471,7 +473,7 @@ export default function AddMusicForm() {
   // Handle edit song
   const handleEditMusic = async () => {
     if (!selectedMusicId) {
-      setMessage("Please select a song to edit!");
+      setMessage(t("errorSelectSongEdit"));
       return;
     }
 
@@ -526,7 +528,7 @@ export default function AddMusicForm() {
       } else {
         const singerId = userArtistProfile?._id || userArtistProfile?.id;
         if (!singerId) {
-          setMessage("Singer profile not found!");
+          setMessage(t("errorSingerProfileNotFound"));
           setIsLoading(false);
           return;
         }
@@ -549,7 +551,7 @@ export default function AddMusicForm() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        setMessage("Song updated successfully!");
+        setMessage(t("successUpdate"));
         resetFormState();
         if (isAdmin) {
           await fetchAdminMusics();
@@ -557,11 +559,11 @@ export default function AddMusicForm() {
           await fetchUserArtistProfile();
         }
       } else {
-        setMessage(data.error || "An error occurred while editing!");
+        setMessage(data.error || t("errorGeneric"));
       }
     } catch (error) {
       console.error("Error editing music:", error);
-      setMessage("An error occurred while editing!");
+      setMessage(t("errorGeneric"));
     } finally {
       setIsLoading(false);
     }
@@ -570,11 +572,11 @@ export default function AddMusicForm() {
   // Handle delete song
   const handleDeleteMusic = async () => {
     if (!selectedMusicId) {
-      setMessage("Please select a song to delete!");
+      setMessage(t("errorSelectSongDelete"));
       return;
     }
 
-    if (!confirm("Are you sure you want to delete this song?")) return;
+    if (!confirm(t("confirmDeleteSong"))) return;
 
     setIsLoading(true);
     setMessage("");
@@ -588,7 +590,7 @@ export default function AddMusicForm() {
       } else {
         const singerId = userArtistProfile?._id || userArtistProfile?.id;
         if (!singerId) {
-          setMessage("Singer profile not found!");
+          setMessage(t("errorSingerProfileNotFound"));
           setIsLoading(false);
           return;
         }
@@ -603,7 +605,7 @@ export default function AddMusicForm() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        setMessage("Song deleted successfully!");
+        setMessage(t("successDelete"));
         setSelectedMusicId("");
         if (isAdmin) {
           await fetchAdminMusics();
@@ -680,10 +682,10 @@ export default function AddMusicForm() {
 
   return (
     <div>
-      <MotionHeaderMusic name="New Music" />
+      <MotionHeaderMusic name={t("title")} />
 
       <div className="md:ml-6">
-        <HeaderMusicPage name="New Music" />
+        <HeaderMusicPage name={t("title")} />
       </div>
 
       <MenuBar />
@@ -693,24 +695,22 @@ export default function AddMusicForm() {
           className="left-6 z-30 mx-4 space-y-4 rounded-3xl border border-zinc-300 p-4 font-apple backdrop-blur-2xl dark:border-zinc-700 dark:to-white/10 md:ml-[270px]"
           onSubmit={handleSubmit}
         >
-          <div className="text-center text-2xl font-bold"> New Song</div>
+          <div className="text-center text-2xl font-bold">{t("newSong")}</div>
 
           {/* Info about singer selection */}
           {isAdmin && (
             <div className="rounded-xl border border-blue-400/30 bg-blue-50 p-3 text-sm text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
               <div className="mb-1 font-semibold">
-                How to add music (Admin):
+                {t("howToAddMusicAdmin")}
               </div>
 
               <div className="space-y-1">
                 <div>
-                  • <strong>Choose existing singer:</strong> Song will be added
-                  to that singer&apos;s list
+                  • {t("chooseExistingSinger")}
                 </div>
 
                 <div>
-                  • <strong>Enter a new singer:</strong> Song will be added to
-                  the general musics collection
+                  • {t("enterNewSinger")}
                 </div>
               </div>
             </div>
@@ -718,14 +718,14 @@ export default function AddMusicForm() {
 
           {isRegularUser && (
             <div className="rounded-lg border border-green-400/30 bg-green-50 p-3 text-sm text-green-800 dark:border-green-300/30 dark:bg-green-900/20 dark:text-green-300">
-              <div className="mb-1 font-bold">Your singer profile info:</div>
+              <div className="mb-1 font-bold">{t("yourSingerProfile")}</div>
 
               {isLoadingProfile ? (
-                <div>Loading profile...</div>
+                <div>{t("loadingProfile")}</div>
               ) : userArtistProfile ? (
                 <div className="space-y-1">
                   <div>
-                    <strong>Singer name:</strong> {userArtistProfile.singer}
+                    <strong>{t("singerName")}</strong> {userArtistProfile.singer}
                   </div>
 
                   {userArtistProfile.cover && (
@@ -741,8 +741,7 @@ export default function AddMusicForm() {
                 </div>
               ) : (
                 <div>
-                  Singer profile will be created automatically when you add your
-                  first song with info:{" "}
+                  {t("singerCreatedAuto")}{" "}
                   <strong>{user?.displayName || user?.username}</strong>
                 </div>
               )}
@@ -752,7 +751,7 @@ export default function AddMusicForm() {
           {isAdmin && adminMusics.length > 0 && (
             <div className="rounded-xl border border-blue-400/30 bg-blue-50 p-3 dark:border-blue-300/30 dark:bg-blue-900/20">
               <label className="mb-2 block text-sm font-semibold text-blue-700 dark:text-blue-300">
-                Select song to edit / delete (system-wide)
+                {t("selectSongToEdit")}
               </label>
               <select
                 value={selectedMusicId}
@@ -760,7 +759,7 @@ export default function AddMusicForm() {
                 disabled={isLoading}
                 className="w-full rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
               >
-                <option value=""> Select a song</option>
+                <option value="">{t("selectASong")}</option>
                 {adminMusics.map((music) => {
                   const id = music._id || music.id || "";
                   return (
@@ -776,12 +775,12 @@ export default function AddMusicForm() {
           <div className="flex w-full flex-col space-y-4">
             <div className="mx-auto flex w-full flex-col justify-between gap-4">
               <label className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-                Song title
+                {t("songTitle")}
               </label>
 
               <input
                 name="title"
-                placeholder="Song title"
+                placeholder={t("songTitle")}
                 value={form.title}
                 onChange={handleChange}
                 required
@@ -793,7 +792,7 @@ export default function AddMusicForm() {
               {isAdmin && (
                 <div className="flex flex-col space-y-2">
                   <label className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-                    Singer
+                    {t("singer")}
                   </label>
 
                   <div className="flex items-center gap-2">
@@ -810,7 +809,7 @@ export default function AddMusicForm() {
                       htmlFor="useExistingSinger"
                       className="text-sm font-medium"
                     >
-                      Use existing singer
+                      {t("useExistingSinger")}
                     </label>
                   </div>
 
@@ -835,7 +834,7 @@ export default function AddMusicForm() {
                       required={useExistingSinger}
                       className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
                     >
-                      <option value="">Select singer</option>
+                      <option value="">{t("selectSinger")}</option>
 
                       {singers.map((singer) => (
                         <option
@@ -849,7 +848,7 @@ export default function AddMusicForm() {
                   ) : (
                     <input
                       name="singer"
-                      placeholder="Enter new singer name"
+                      placeholder={t("enterNewSingerName")}
                       value={form.singer}
                       onChange={handleChange}
                       required={!useExistingSinger}
@@ -864,7 +863,7 @@ export default function AddMusicForm() {
               {isRegularUser && (
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    Singer (auto from your account)
+                    {t("singerAutoFromAccount")}
                   </label>
 
                   <input
@@ -884,17 +883,17 @@ export default function AddMusicForm() {
 
             <div className="flex flex-col gap-2 rounded-2xl border border-zinc-300 p-1 dark:border-zinc-700">
               <label className="px-3 pt-2 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-                Cover image
+                {t("coverImage")}
               </label>
 
               {imageFile ? (
                 <div className="font-semibold text-green-600">
-                  Selected image file: {imageFile.name}
+                  {t("selectedImageFile")} {imageFile.name}
                 </div>
               ) : (
                 <input
                   name="cover"
-                  placeholder="Select song image file below"
+                  placeholder={t("selectSongImageBelow")}
                   value={form.cover}
                   onChange={handleChange}
                   required
@@ -915,17 +914,17 @@ export default function AddMusicForm() {
             {/* If an mp3 file is selected, hide audio link input */}
             <div className="flex flex-col gap-2 rounded-2xl border border-zinc-300 p-1 dark:border-zinc-700">
               <label className="px-3 pt-2 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-                Song audio
+                {t("songAudio")}
               </label>
 
               {file ? (
                 <div className="font-semibold text-green-600">
-                  Selected mp3 file: {file.name}
+                  {t("selectedMp3File")} {file.name}
                 </div>
               ) : (
                 <input
                   name="audio"
-                  placeholder="Select song mp3 file below"
+                  placeholder={t("selectSongMp3Below")}
                   value={form.audio}
                   onChange={handleChange}
                   required
@@ -946,17 +945,17 @@ export default function AddMusicForm() {
             {/* Beat: allow selecting a file or entering a link */}
             <div className="flex flex-col gap-2 rounded-2xl border border-zinc-300 p-1 dark:border-zinc-700">
               <label className="px-3 pt-2 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-                Beat
+                {t("beat")}
               </label>
 
               {beatFile ? (
                 <div className="font-semibold text-green-600">
-                  Selected beat file: {beatFile.name}
+                  {t("selectedBeatFile")} {beatFile.name}
                 </div>
               ) : (
                 <input
                   name="beat"
-                  placeholder="Select beat file below"
+                  placeholder={t("selectBeatFileBelow")}
                   value={form.beat}
                   onChange={handleChange}
                   disabled={isLoading}
@@ -976,17 +975,17 @@ export default function AddMusicForm() {
             {/* SRT: allow selecting a file or entering a link */}
             <div className="flex flex-col gap-2 rounded-2xl border border-zinc-300 p-1 dark:border-zinc-700">
               <label className="px-3 pt-2 text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-                Lyrics (SRT)
+                {t("lyricsSrt")}
               </label>
 
               {srtFile ? (
                 <div className="font-semibold text-green-600">
-                  Selected SRT file: {srtFile.name}
+                  {t("selectedSrtFile")} {srtFile.name}
                 </div>
               ) : (
                 <input
                   name="srt"
-                  placeholder="Select lyrics SRT file below"
+                  placeholder={t("selectLyricsSrtBelow")}
                   value={form.srt}
                   onChange={handleChange}
                   disabled={isLoading}
@@ -1004,12 +1003,12 @@ export default function AddMusicForm() {
             </div>
 
             <label className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-              Topic
+              {t("topic")}
             </label>
 
             <input
               name="topic"
-              placeholder="Enter topic"
+              placeholder={t("enterTopic")}
               value={form.topic}
               onChange={handleChange}
               disabled={isLoading}
@@ -1018,12 +1017,12 @@ export default function AddMusicForm() {
             />
             {isSuggestingTopic && (
               <div className="ml-4 text-xs text-zinc-500">
-                Suggesting topic...
+                {t("suggestingTopic")}
               </div>
             )}
 
             <label className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-              Genre
+              {t("genre")}
             </label>
 
             <select
@@ -1034,46 +1033,46 @@ export default function AddMusicForm() {
               required
               className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
             >
-              <option value="">Genre</option>
+              <option value="">{t("genre")}</option>
 
-              <option value="pop">Pop</option>
+              <option value="pop">{t("genrePop")}</option>
 
-              <option value="rock">Rock</option>
+              <option value="rock">{t("genreRock")}</option>
 
-              <option value="hiphop">Hip Hop / Rap</option>
+              <option value="hiphop">{t("genreHiphop")}</option>
 
-              <option value="rnb">R&B / Soul</option>
+              <option value="rnb">{t("genreRnb")}</option>
 
-              <option value="edm">EDM / Electronic</option>
+              <option value="edm">{t("genreEdm")}</option>
 
-              <option value="jazz">Jazz</option>
+              <option value="jazz">{t("genreJazz")}</option>
 
-              <option value="classical">Classical</option>
+              <option value="classical">{t("genreClassical")}</option>
 
-              <option value="country">Country</option>
+              <option value="country">{t("genreCountry")}</option>
 
-              <option value="metal">Metal</option>
+              <option value="metal">{t("genreMetal")}</option>
 
-              <option value="folk">Folk</option>
+              <option value="folk">{t("genreFolk")}</option>
 
-              <option value="latin">Latin</option>
+              <option value="latin">{t("genreLatin")}</option>
 
-              <option value="soundtrack">Soundtrack / OST</option>
+              <option value="soundtrack">{t("genreSoundtrack")}</option>
 
-              <option value="world">World Music</option>
+              <option value="world">{t("genreWorld")}</option>
 
-              <option value="chill">Chill / Lo-fi</option>
+              <option value="chill">{t("genreChill")}</option>
 
-              <option value="acoustic">Acoustic</option>
+              <option value="acoustic">{t("genreAcoustic")}</option>
             </select>
 
             <label className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-              YouTube link
+              {t("youtubeLink")}
             </label>
 
             <input
               name="youtube"
-              placeholder="YouTube link"
+              placeholder={t("youtubeLink")}
               value={form.youtube}
               onChange={handleChange}
               disabled={isLoading}
@@ -1081,12 +1080,12 @@ export default function AddMusicForm() {
             />
 
             <label className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-              Content
+              {t("content")}
             </label>
 
             <textarea
               name="content"
-              placeholder="Content"
+              placeholder={t("content")}
               value={form.content}
               onChange={handleChange}
               disabled={isLoading}
@@ -1099,10 +1098,10 @@ export default function AddMusicForm() {
                 variant="liquid"
                 size="lg"
                 loading={isLoading}
-                loadingText="Adding song..."
+                loadingText={t("addingSong")}
                 className="w-full rounded-xl border border-zinc-800 bg-zinc-50 font-semibold text-black"
               >
-                Add Song
+                {t("addSong")}
               </Button>
 
               {isAdmin && adminMusics.length > 0 && (
@@ -1114,7 +1113,7 @@ export default function AddMusicForm() {
                     className="w-full rounded-xl border border-blue-600 px-8 py-2 font-semibold"
                     variant="outline"
                   >
-                    Edit
+                    {t("edit")}
                   </Button>
 
                   <Button
@@ -1124,7 +1123,7 @@ export default function AddMusicForm() {
                     className="w-full rounded-xl border border-rose-600 px-8 py-2 font-semibold text-rose-600"
                     variant="outline"
                   >
-                    Delete
+                    {t("delete")}
                   </Button>
                 </div>
               )}

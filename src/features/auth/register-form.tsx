@@ -2,6 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Eye, EyeOff, AlertCircle, CheckCircle2, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -45,6 +46,7 @@ function calculatePasswordStrength(password: string): PasswordStrength {
 }
 
 export default function RegisterForm() {
+  const t = useTranslations("auth.register");
   const [form, setForm] = useState({
     username: "",
     email: "",
@@ -61,41 +63,43 @@ export default function RegisterForm() {
   const router = useRouter();
 
   const passwordStrength = calculatePasswordStrength(form.password);
+  const getStrengthText = (score: number) => {
+    if (score <= 1) return t("strengthVeryWeak");
+    if (score <= 2) return t("strengthWeak");
+    if (score <= 3) return t("strengthFair");
+    if (score <= 4) return t("strengthStrong");
+    return t("strengthVeryStrong");
+  };
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    // Username validation
     if (!form.username.trim()) {
-      newErrors.username = "Please enter your username";
+      newErrors.username = t("errorUsernameRequired");
     } else if (form.username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters";
+      newErrors.username = t("errorUsernameMin");
     } else if (!/^[a-zA-Z0-9_]+$/.test(form.username)) {
-      newErrors.username =
-        "Username can only contain letters, numbers and underscore";
+      newErrors.username = t("errorUsernameInvalid");
     }
 
-    // Email validation
     if (!form.email.trim()) {
-      newErrors.email = "Please enter your email";
+      newErrors.email = t("errorEmailRequired");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      newErrors.email = "Invalid email address";
+      newErrors.email = t("errorEmailInvalid");
     }
 
-    // Password validation
     if (!form.password) {
-      newErrors.password = "Please enter your password";
+      newErrors.password = t("errorPasswordRequired");
     } else if (form.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
+      newErrors.password = t("errorPasswordMin");
     } else if (passwordStrength.score < 3) {
-      newErrors.password = "Password too weak. Please use a stronger password.";
+      newErrors.password = t("errorPasswordWeak");
     }
 
-    // Confirm password validation
     if (!form.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
+      newErrors.confirmPassword = t("errorConfirmRequired");
     } else if (form.password !== form.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
+      newErrors.confirmPassword = t("errorConfirmMatch");
     }
 
     setErrors(newErrors);
@@ -142,17 +146,17 @@ export default function RegisterForm() {
       const data = await res.json();
 
       if (data.success) {
-        setSuccessMessage("Registration successful! Redirecting to sign in...");
+        setSuccessMessage(t("success"));
         setForm({ username: "", email: "", password: "", confirmPassword: "" });
 
         setTimeout(() => {
           router.push(`/${locale}/auth/login`);
         }, 2000);
       } else {
-        setErrors({ general: data.error || "Something went wrong!" });
+        setErrors({ general: data.error || t("errorGeneric") });
       }
     } catch {
-      setErrors({ general: "Connection error. Please try again later." });
+      setErrors({ general: t("errorConnection") });
     } finally {
       setIsSubmitting(false);
     }
@@ -164,14 +168,6 @@ export default function RegisterForm() {
     if (score <= 3) return "bg-yellow-500";
     if (score <= 4) return "bg-blue-500";
     return "bg-green-500";
-  };
-
-  const getStrengthText = (score: number) => {
-    if (score <= 1) return "Very weak";
-    if (score <= 2) return "Weak";
-    if (score <= 3) return "Fair";
-    if (score <= 4) return "Strong";
-    return "Very strong";
   };
 
   return (
@@ -187,10 +183,10 @@ export default function RegisterForm() {
             <ChanhdangLogotype className="mx-auto h-6 w-fit" />
 
             <h1 className="bg-gradient-to-r from-zinc-900 to-zinc-700 bg-clip-text font-apple text-3xl font-bold text-transparent">
-              Sign Up
+              {t("title")}
             </h1>
             <p className="mt-2 text-sm text-zinc-600">
-              Create an account to get started
+              {t("subtitle")}
             </p>
           </div>
 
@@ -224,13 +220,13 @@ export default function RegisterForm() {
             {/* Username Field */}
             <div className="space-y-2">
               <label className="text-sm font-semibold text-zinc-700">
-                Username
+                {t("username")}
               </label>
 
               <div className="relative">
                 <Input
                   name="username"
-                  placeholder="Enter your username"
+                  placeholder={t("usernamePlaceholder")}
                   value={form.username}
                   onChange={handleChange}
                   required
@@ -256,14 +252,14 @@ export default function RegisterForm() {
             {/* Email Field */}
             <div className="space-y-2">
               <label className="text-sm font-semibold text-zinc-700">
-                Email
+                {t("email")}
               </label>
 
               <div className="relative">
                 <Input
                   name="email"
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder={t("emailPlaceholder")}
                   value={form.email}
                   onChange={handleChange}
                   required
@@ -289,14 +285,14 @@ export default function RegisterForm() {
             {/* Password Field */}
             <div className="space-y-2">
               <label className="text-sm font-semibold text-zinc-700">
-                Password
+                {t("password")}
               </label>
 
               <div className="relative">
                 <Input
                   name="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
+                  placeholder={t("passwordPlaceholder")}
                   value={form.password}
                   onChange={handleChange}
                   required
@@ -347,7 +343,7 @@ export default function RegisterForm() {
                     {passwordStrength.score >= 3 && (
                       <span className="flex items-center gap-1 text-green-500">
                         <Check className="h-3 w-3" />
-                        Password valid
+                        {t("passwordValid")}
                       </span>
                     )}
                   </div>
@@ -371,14 +367,14 @@ export default function RegisterForm() {
             {/* Confirm Password Field */}
             <div className="space-y-2">
               <label className="text-sm font-semibold text-zinc-700">
-                Confirm password
+                {t("confirmPassword")}
               </label>
 
               <div className="relative">
                 <Input
                   name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Enter password again"
+                  placeholder={t("confirmPlaceholderAlt")}
                   value={form.confirmPassword}
                   onChange={handleChange}
                   required
@@ -408,7 +404,7 @@ export default function RegisterForm() {
                 form.password === form.confirmPassword && (
                   <p className="flex items-center gap-1 text-xs text-green-500">
                     <Check className="h-3 w-3" />
-                    Passwords match
+                    {t("passwordsMatch")}
                   </p>
                 )}
               <AnimatePresence>
@@ -431,9 +427,9 @@ export default function RegisterForm() {
               className="w-full rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 px-4 py-3 text-white transition-all hover:from-zinc-800 hover:to-zinc-700"
               disabled={isSubmitting}
               loading={isSubmitting}
-              loadingText="Signing up..."
+              loadingText={t("signingUp")}
             >
-              {!isSubmitting && "Sign Up"}
+              {!isSubmitting && t("submit")}
             </Button>
 
             {/* Login Link */}
@@ -442,7 +438,7 @@ export default function RegisterForm() {
                 href={`/${locale}/auth/login`}
                 className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
               >
-                Already have an account? Sign in
+                {t("hasAccount")}
               </Link>
             </div>
           </div>

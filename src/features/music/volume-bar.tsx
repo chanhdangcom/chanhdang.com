@@ -1,10 +1,12 @@
 import { SpeakerHigh, SpeakerNone } from "@phosphor-icons/react/dist/ssr";
 import Slider from "@mui/material/Slider";
+import { useTranslations } from "next-intl";
 import { useAudio } from "@/components/music-provider";
 import { type SyntheticEvent, useEffect, useRef, useState } from "react";
 
 export function VolumeBar() {
   const { audioRef, isMuted } = useAudio();
+  const t = useTranslations("music.volume");
   const [volumePercent, setVolumePercent] = useState(100);
   const lastNonZeroVolumeRef = useRef(100);
 
@@ -76,7 +78,7 @@ export function VolumeBar() {
     <div className="flex items-center justify-between gap-2 text-white">
       <button
         type="button"
-        aria-label={volumePercent === 0 || isMuted ? "Unmute" : "Mute"}
+        aria-label={volumePercent === 0 || isMuted ? t("unmute") : t("mute")}
         onClick={handleMinSpeakerClick}
         className="flex items-center justify-start text-zinc-200/90 transition hover:text-white"
       >
@@ -85,7 +87,7 @@ export function VolumeBar() {
 
       <div className="flex flex-1 items-center">
         <Slider
-          aria-label="Volume"
+          aria-label={t("volume")}
           value={volumePercent}
           min={0}
           max={100}

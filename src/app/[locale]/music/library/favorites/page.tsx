@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { LibraryTracksList } from "@/features/music/library/library-tracks-list";
 import { useUser } from "@/hooks/use-user";
 import { MenuBar } from "@/features/music/menu-bar";
@@ -13,6 +14,7 @@ import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { BackButton } from "@/features/music/component/back-button";
 
 export default function LibraryFavoriteSongsPage() {
+  const t = useTranslations("musicDetail.favorites");
   const { user } = useUser();
   const { handlePlayAudio } = useAudio();
   const [tracks, setTracks] = useState<IMusic[]>([]);
@@ -88,7 +90,7 @@ export default function LibraryFavoriteSongsPage() {
     <div className="font-apple">
       <MenuBar />
 
-      <MotionHeaderMusic name="Favorite Songs" />
+      <MotionHeaderMusic name={t("title")} />
 
       <div className="pointer-events-none fixed bottom-0 z-50 h-16 w-full bg-gradient-to-t from-white to-transparent dark:from-black" />
 
@@ -126,7 +128,7 @@ export default function LibraryFavoriteSongsPage() {
                   className="stext-center flex items-center justify-center gap-2 text-xl font-semibold text-black md:ml-[270px]"
                   style={{ opacity: smoothOpacity }}
                 >
-                  <div className="md:text-white"> Favourite Songs</div>
+                  <div className="md:text-white">{t("favouriteSongs")}</div>
 
                   <Star size={15} weight="fill" className="text-zinc-500" />
                 </motion.div>
@@ -142,7 +144,7 @@ export default function LibraryFavoriteSongsPage() {
                   >
                     <Play size={20} weight="fill" />
 
-                    <div className="text-xl">Play</div>
+                    <div className="text-xl">{t("play")}</div>
                   </motion.div>
 
                   <motion.div
@@ -152,7 +154,7 @@ export default function LibraryFavoriteSongsPage() {
                   >
                     <Shuffle size={20} weight="fill" />
 
-                    <div className="text-xl">Mix song</div>
+                    <div className="text-xl">{t("mixSong")}</div>
                   </motion.div>
                 </motion.div>
               </div>

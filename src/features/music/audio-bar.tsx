@@ -9,6 +9,7 @@ import {
   Rewind,
   Shuffle,
 } from "phosphor-react";
+import { useTranslations } from "next-intl";
 
 import { DurationAudio } from "./component/duration-audio";
 import {
@@ -50,6 +51,7 @@ export function AudioBar() {
     handleToggleRepeat,
     isRepeat,
   } = useAudio();
+  const t = useTranslations("music.common");
 
   const [isClick, setIsClick] = useState(false);
 
@@ -271,7 +273,7 @@ export function AudioBar() {
           scroll ? "inset-x-4 bottom-[88px]" : "inset-x-24 bottom-[32px]"
         }`}
       >
-        <div className="relative w-full overflow-hidden rounded-[50px] border border-white/20 bg-zinc-300/80 px-3 py-1 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset,0_-1px_0_rgba(0,0,0,0.06)_inset] backdrop-blur-lg dark:border-white/10 dark:bg-zinc-950/80 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset,0_-1px_0_rgba(0,0,0,0.45)_inset] md:rounded-[55px]">
+        <div className="relative w-full overflow-hidden rounded-[50px] border border-white/20 bg-zinc-300/80 px-3 py-1 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset,0_-1px_0_rgba(0,0,0,0.06)_inset] backdrop-blur-sm dark:border-white/10 dark:bg-zinc-950/80 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset,0_-1px_0_rgba(0,0,0,0.45)_inset] md:rounded-[55px]">
           <div className="via-white/8 dark:from-white/12 pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-b from-white/35 to-transparent dark:via-transparent dark:to-transparent" />
           <div className="pointer-events-none absolute inset-x-6 bottom-0 h-px bg-black/10 dark:bg-white/10" />
           <div
@@ -376,7 +378,7 @@ export function AudioBar() {
                       ref={titleMeasureRef}
                       className="pointer-events-none invisible absolute left-0 top-0 whitespace-nowrap"
                     >
-                      {currentMusic?.title || "Title Song"}
+                      {currentMusic?.title || t("titleSong")}
                     </span>
 
                     <AnimatePresence mode="wait" initial={false}>
@@ -403,16 +405,16 @@ export function AudioBar() {
                             }}
                           >
                             <span className="pr-4">
-                              {currentMusic?.title || "Title Song"}
+                              {currentMusic?.title || t("titleSong")}
                             </span>
 
                             <span aria-hidden="true" className="pr-4">
-                              {currentMusic?.title || "Title Song"}
+                              {currentMusic?.title || t("titleSong")}
                             </span>
                           </motion.div>
                         ) : (
                           <span className="block truncate">
-                            {currentMusic?.title || "Title Song"}
+                            {currentMusic?.title || t("titleSong")}
                           </span>
                         )}
                       </motion.div>
@@ -432,7 +434,7 @@ export function AudioBar() {
                         }}
                         className="absolute inset-0 line-clamp-1 transform-gpu will-change-transform"
                       >
-                        {currentMusic?.singer || "Singer"}
+                        {currentMusic?.singer || t("singer")}
                       </motion.div>
                     </AnimatePresence>
                   </div>
@@ -552,8 +554,8 @@ export function AudioBar() {
         >
           <Drawer.Title className="sr-only">
             {currentMusic?.title
-              ? `Now playing: ${currentMusic.title}`
-              : "Music player"}
+              ? t("nowPlaying", { title: currentMusic.title })
+              : t("musicPlayer")}
           </Drawer.Title>
 
           {shouldRenderPlayer ? (

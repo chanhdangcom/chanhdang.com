@@ -2,12 +2,9 @@ import { HeaderMusicPage } from "./header-music-page";
 import { MenuBar } from "./menu-bar";
 import { TableRanking } from "./table-ranking";
 import { SingerList } from "./singer-list";
-import { MenuBarMobile } from "./menu-bar-mobile";
 import { PickForYou } from "./pick-for-you";
 import { MotionHeaderMusic } from "./component/motion-header-music";
 import CarouselAudio from "./carousel-audio";
-import { AudioBar } from "./audio-bar";
-import { LyricSidebar } from "./lyric-sidebar";
 import { NewCarouselAudioPlaylist } from "./new-carousel-audio-playlist";
 import { RecentCarouselAudio } from "./recent-carousel-audio";
 import { NewCarouselAudio } from "./new-carousel-audio";
@@ -80,13 +77,6 @@ export function MusicPage() {
               </Suspense>
             </div>
           </>
-        </div>
-
-        <LyricSidebar />
-
-        <div className="my-40">
-          <AudioBar />
-          <MenuBarMobile />
         </div>
       </div>
     </div>

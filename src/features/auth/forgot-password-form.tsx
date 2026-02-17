@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { AlertCircle, CheckCircle2, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -10,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 
 export default function ForgotPasswordForm() {
+  const t = useTranslations("auth.forgotPassword");
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<{
@@ -36,19 +38,19 @@ export default function ForgotPasswordForm() {
       if (data.success) {
         setMessage({
           type: "success",
-          text: "Password reset email sent! Please check your inbox.",
+          text: t("success"),
         });
         setEmail("");
       } else {
         setMessage({
           type: "error",
-          text: data.error || "Something went wrong. Please try again.",
+          text: data.error || t("errorGeneric"),
         });
       }
     } catch {
       setMessage({
         type: "error",
-        text: "Connection error. Please try again later.",
+        text: t("errorConnection"),
       });
     } finally {
       setIsSubmitting(false);
@@ -66,7 +68,7 @@ export default function ForgotPasswordForm() {
         <div className="space-y-4 text-center">
           <ChanhdangLogotype className="mx-auto h-6 w-fit" />
 
-          <h1 className="text-3xl font-bold">Forgot Password</h1>
+          <h1 className="text-3xl font-bold">{t("title")}</h1>
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
@@ -93,12 +95,12 @@ export default function ForgotPasswordForm() {
           </AnimatePresence>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-700">Email</label>
+            <label className="text-sm font-medium text-zinc-700">{t("email")}</label>
 
             <div className="relative">
               <Input
                 type="email"
-                placeholder="Enter your email to receive reset link"
+                placeholder={t("emailPlaceholder")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -113,9 +115,9 @@ export default function ForgotPasswordForm() {
             className="w-full rounded-xl bg-gradient-to-r from-zinc-900 to-zinc-800 px-4 py-3 text-white transition-all hover:from-zinc-800 hover:to-zinc-700"
             disabled={isSubmitting}
             loading={isSubmitting}
-            loadingText="Sending..."
+            loadingText={t("sending")}
           >
-            {!isSubmitting && "Send Reset Email"}
+            {!isSubmitting && t("submit")}
           </Button>
 
           <div className="text-center">
@@ -124,7 +126,7 @@ export default function ForgotPasswordForm() {
               className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 hover:underline"
             >
               <ArrowLeft className="h-4 w-4" />
-              Back to sign in
+              {t("backToSignIn")}
             </Link>
           </div>
         </form>
