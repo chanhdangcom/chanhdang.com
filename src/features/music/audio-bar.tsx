@@ -468,7 +468,7 @@ export function AudioBar() {
                   if (!scroll) e.stopPropagation();
 
                   if (typeof window !== "undefined") {
-                    window.dispatchEvent(new Event("toggle-lyric-sidebar"));
+                    window.dispatchEvent(new Event("toggle-feature-sidebar"));
                   }
                 }}
               />

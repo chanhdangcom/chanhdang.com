@@ -27,7 +27,7 @@ export function PlaylistDetailClient({ playlist }: Props) {
   const { handlePlayAudio, handlePlayRandomAudio } = useAudio();
   const { user } = useUser();
   const [isMobile, setIsMobile] = useState(false);
-  const hoverColor = useImageHoverColor(playlist.cover, { alpha: 0.6 });
+  const hoverColor = useImageHoverColor(playlist.cover, { alpha: 0.8 });
 
   const musics = useMemo(
     () => playlist.musics?.filter((m) => m && m.id) ?? [],
@@ -120,7 +120,7 @@ export function PlaylistDetailClient({ playlist }: Props) {
                   <motion.div
                     role="img"
                     aria-label="cover"
-                    className="mx-auto aspect-square w-full bg-cover bg-center bg-no-repeat shadow-2xl md:mx-4 md:size-80 md:rounded-3xl"
+                    className="mx-auto aspect-square w-full border border-white/10 bg-cover bg-center bg-no-repeat shadow-2xl md:mx-4 md:size-80 md:rounded-3xl"
                     style={{
                       backgroundImage: `url(${playlist.cover})`,
                       y: isMobile ? smoothParallax : 0,
@@ -142,7 +142,7 @@ export function PlaylistDetailClient({ playlist }: Props) {
                       {playlist.singer || "ChanhDang Music"}
                     </div>
 
-                    <div className="hidden items-center gap-2 text-zinc-400 md:flex">
+                    <div className="hidden items-center gap-2 text-zinc-50 md:flex">
                       <div>Chanh Dang Music 2026</div>
 
                       <WaveSine size={20} weight="bold" />
@@ -157,7 +157,7 @@ export function PlaylistDetailClient({ playlist }: Props) {
                   >
                     <motion.div
                       whileTap={{ scale: 0.9 }}
-                      className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-400 px-4 py-1 font-semibold text-black"
+                      className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-400/80 px-4 py-1 font-semibold text-black"
                       onClick={() => handlePlayFirstAudio()}
                     >
                       <Play size={20} weight="fill" />
@@ -167,7 +167,7 @@ export function PlaylistDetailClient({ playlist }: Props) {
 
                     <motion.div
                       whileTap={{ scale: 0.9 }}
-                      className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-400 px-4 py-2 font-semibold text-black"
+                      className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-400/80 px-4 py-2 font-semibold text-black"
                       onClick={() => handleRandomAudio()}
                     >
                       <Shuffle size={20} weight="fill" />

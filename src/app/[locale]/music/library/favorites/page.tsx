@@ -106,7 +106,7 @@ export default function LibraryFavoriteSongsPage() {
                 className="pointer-events-none absolute inset-0 -z-10"
                 style={{
                   backgroundImage:
-                    "linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.35) 100%)",
+                    "linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.35) 300%)",
                 }}
               />
 
@@ -125,7 +125,7 @@ export default function LibraryFavoriteSongsPage() {
 
               <div className="absolute inset-x-4 bottom-8 space-y-4">
                 <motion.div
-                  className="stext-center flex items-center justify-center gap-2 text-xl font-semibold text-black md:ml-[270px]"
+                  className="stext-center flex items-center justify-center gap-2 text-xl font-semibold text-black md:ml-[270px] md:hidden"
                   style={{ opacity: smoothOpacity }}
                 >
                   <div className="md:text-white">{t("favouriteSongs")}</div>
@@ -139,7 +139,7 @@ export default function LibraryFavoriteSongsPage() {
                 >
                   <motion.div
                     whileTap={{ scale: 0.9 }}
-                    className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-400 px-4 py-1 font-semibold text-black"
+                    className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-400/20 px-4 py-1 font-semibold text-black md:hidden"
                     onClick={() => handlePlayFirstAudio()}
                   >
                     <Play size={20} weight="fill" />
@@ -149,13 +149,33 @@ export default function LibraryFavoriteSongsPage() {
 
                   <motion.div
                     whileTap={{ scale: 0.9 }}
-                    className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-400 px-4 py-2 font-semibold text-black"
+                    className="flex w-full items-center justify-center gap-2 rounded-3xl bg-zinc-400/20 px-4 py-2 font-semibold text-black md:hidden"
                     onClick={() => handleRandomAudio()}
                   >
                     <Shuffle size={20} weight="fill" />
 
                     <div className="text-xl">{t("mixSong")}</div>
                   </motion.div>
+
+                  <div className="hidden gap-4 md:flex">
+                    <div className="rounded-full bg-rose-500 p-3 dark:md:bg-blue-500">
+                      <Play
+                        size={22}
+                        weight="fill"
+                        onClick={() => handlePlayFirstAudio()}
+                        className="text-white"
+                      />
+                    </div>
+
+                    <motion.div
+                      className="stext-center flex items-center justify-center gap-2 text-3xl font-semibold text-black"
+                      style={{ opacity: smoothOpacity }}
+                    >
+                      <div className="md:text-white">{t("favouriteSongs")}</div>
+
+                      <Star size={20} weight="fill" className="text-zinc-500" />
+                    </motion.div>
+                  </div>
                 </motion.div>
               </div>
             </div>
