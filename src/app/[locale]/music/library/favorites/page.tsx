@@ -106,7 +106,7 @@ export default function LibraryFavoriteSongsPage() {
                 className="pointer-events-none absolute inset-0 -z-10"
                 style={{
                   backgroundImage:
-                    "linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.35) 300%)",
+                    "linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.35) 50%)",
                 }}
               />
 

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { IPlaylistItem } from "../type/playlist";
 import { Star } from "phosphor-react";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
+import { useParams } from "next/navigation";
 
 type LibraryPlaylist = {
   _id: string;
@@ -33,6 +34,8 @@ const getCoverUrl = (cover?: string) => {
 export function LibraryPlaylistsList({ userId }: Props) {
   const [playlists, setPlaylists] = useState<LibraryPlaylist[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const params = useParams();
+  const locale = (params?.locale as string) || "en";
 
   useEffect(() => {
     if (!userId) {
@@ -83,7 +86,7 @@ export function LibraryPlaylistsList({ userId }: Props) {
           return (
             <div key={entry._id}>
               <Link
-                href={`/music/playlist/${playlist.id}`}
+                href={`/${locale}/music/playlist/${playlist.id}`}
                 className="flex w-full items-center justify-between"
               >
                 <div className="flex items-center gap-2">
