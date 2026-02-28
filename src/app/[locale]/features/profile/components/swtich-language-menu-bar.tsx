@@ -10,26 +10,26 @@ export function SwitchLanguageMenuBar({ className }: IProp) {
 
   if (locale == "en") {
     return (
-      <Link href={"/vi/music"} className="flex items-center gap-2">
+      <Link href={"/vi/music"} className="flex items-center gap-1">
         <Translate
           size={25}
           className="size-5 text-red-500 dark:text-blue-500 md:size-7"
         />
 
-        <div className="text-sm font-medium">Vietnamese</div>
+        <div className="text-base font-medium">Vietnamese</div>
       </Link>
     );
   }
 
   return (
     <div className={cn("font-apple", className)}>
-      <Link href={"/en/music"} className="flex items-center gap-2">
+      <Link href={"/en/music"} className="flex items-center gap-1">
         <Translate
           size={25}
           className="size-5 text-red-500 dark:text-blue-500 md:size-7"
         />
 
-        <div className="text-sm font-medium">English</div>
+        <div className="text-base font-medium">English</div>
       </Link>
     </div>
   );

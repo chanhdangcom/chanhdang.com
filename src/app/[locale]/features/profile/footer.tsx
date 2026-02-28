@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
+
+import { ChanhdangLogotypeMusic } from "@/components/chanhdang-logotype-music";
 import { SwitchLanguage } from "./components/swtich-language";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -132,7 +133,7 @@ export const Footer = () => {
 
           <div className="items-center justify-center space-y-4 md:flex md:gap-4 md:space-y-0">
             <div className="flex items-center justify-center gap-4">
-              <ChanhdangLogotype className="h-6" />
+              <ChanhdangLogotypeMusic className="h-6" />
 
               <a href="https://www.dmca.com/Protection/Status.aspx?id=b2d35e52-e8ef-4f3b-81e1-5452b2c431c2&refurl=https%3a%2f%2fchanhdang.com%2f&rlo=true">
                 <svg

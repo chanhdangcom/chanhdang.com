@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
+
 import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -9,6 +9,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { ChatBox } from "./components/chat-box";
 import { motion } from "framer-motion";
 import { useParams } from "next/navigation";
+import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 
 export const Header = () => {
   const { theme } = useTheme();

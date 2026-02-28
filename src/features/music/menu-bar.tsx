@@ -27,9 +27,9 @@ import { LogoutButton } from "./component/logout-button";
 import { useEffect, useState } from "react";
 import { SwitchLanguageMenuBar } from "@/app/[locale]/features/profile/components/swtich-language-menu-bar";
 import { ThemeToggleMenuBar } from "@/components/theme-toggle-menubar";
-import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { cn } from "@/lib/utils";
 import { MenuBarItem, type MenuBarItemConfig } from "./component/menu-bar-item";
+import { ChanhdangLogotypeMusic } from "@/components/chanhdang-logotype-music";
 
 export function MenuBar() {
   const params = useParams();
@@ -131,7 +131,9 @@ export function MenuBar() {
               weight={
                 isPathActive(`${basePath}/recently-played`) ? "fill" : "regular"
               }
-              className={getIconClass(isPathActive(`${basePath}/recently-played`))}
+              className={getIconClass(
+                isPathActive(`${basePath}/recently-played`)
+              )}
             />
           ),
         },
@@ -155,7 +157,9 @@ export function MenuBar() {
           label: tMenu("recentlyPlayed"),
           href: `${basePath}/recently-played`,
           disabled: true,
-          icon: <Clock size={25} className="text-rose-500 dark:text-blue-500" />,
+          icon: (
+            <Clock size={25} className="text-rose-500 dark:text-blue-500" />
+          ),
         },
         {
           key: "library-disabled",
@@ -163,7 +167,10 @@ export function MenuBar() {
           href: `${basePath}/library`,
           disabled: true,
           icon: (
-            <BookBookmark size={25} className="text-rose-500 dark:text-blue-500" />
+            <BookBookmark
+              size={25}
+              className="text-rose-500 dark:text-blue-500"
+            />
           ),
         },
       ];
@@ -237,9 +244,13 @@ export function MenuBar() {
               <Gear
                 size={25}
                 weight={
-                  isPathActive(`${basePath}/profile-setting`) ? "fill" : "regular"
+                  isPathActive(`${basePath}/profile-setting`)
+                    ? "fill"
+                    : "regular"
                 }
-                className={getIconClass(isPathActive(`${basePath}/profile-setting`))}
+                className={getIconClass(
+                  isPathActive(`${basePath}/profile-setting`)
+                )}
               />
             ),
           } as MenuBarItemConfig,
@@ -262,11 +273,9 @@ export function MenuBar() {
       <div className="absolute h-[96vh] w-60 space-y-4 rounded-3xl bg-gradient-to-tr from-transparent to-zinc-50 px-3 pt-5 text-zinc-50 shadow-xl backdrop-blur-3xl dark:to-white/10">
         <>
           <div className="text-base text-black dark:text-white">
-            <div className="flex items-end justify-center gap-1">
+            <div className="mb-4 flex items-end justify-center gap-1">
               <Link href={`/${locale}/music`} className="flex cursor-pointer">
-                <ChanhdangLogotype className="w-full" />
-
-                <div className="my-4 flex text-xs font-semibold">{tCommon("music")}</div>
+                <ChanhdangLogotypeMusic height={28} className="w-auto" />
               </Link>
             </div>
 
@@ -280,17 +289,25 @@ export function MenuBar() {
                 }}
               >
                 {topItems.map((item) => (
-                  <MenuBarItem key={item.key} item={item} getItemClass={getItemClass} />
+                  <MenuBarItem
+                    key={item.key}
+                    item={item}
+                    getItemClass={getItemClass}
+                  />
                 ))}
               </motion.div>
             </AnimatePresence>
 
-            <div className="mt-4 pl-3 text-xs font-medium text-zinc-500">
+            <div className="mb-2 mt-4 pl-3 font-medium text-zinc-400">
               {tCommon("library")}
             </div>
 
             {libraryItems.map((item) => (
-              <MenuBarItem key={item.key} item={item} getItemClass={getItemClass} />
+              <MenuBarItem
+                key={item.key}
+                item={item}
+                getItemClass={getItemClass}
+              />
             ))}
 
             {isRegularUser && (
@@ -304,9 +321,13 @@ export function MenuBar() {
                     <UserCircle
                       size={25}
                       weight={
-                        isPathActive(`${basePath}/my-music`) ? "fill" : "regular"
+                        isPathActive(`${basePath}/my-music`)
+                          ? "fill"
+                          : "regular"
                       }
-                      className={getIconClass(isPathActive(`${basePath}/my-music`))}
+                      className={getIconClass(
+                        isPathActive(`${basePath}/my-music`)
+                      )}
                     />
                   ),
                 }}
@@ -329,19 +350,11 @@ export function MenuBar() {
                     />
                   ),
                   trailing: (
-                    <div className="mr-4 flex items-center rounded-full bg-zinc-900 p-1 dark:bg-zinc-50">
+                    <div className="">
                       {isDropdownOpen ? (
-                        <CaretDown
-                          size={12}
-                          weight="bold"
-                          className="text-zinc-50 dark:text-zinc-900"
-                        />
+                        <CaretDown size={18} weight="bold" className="" />
                       ) : (
-                        <CaretRight
-                          size={12}
-                          weight="bold"
-                          className="text-zinc-50 dark:text-zinc-900"
-                        />
+                        <CaretRight size={18} weight="bold" className="" />
                       )}
                     </div>
                   ),
@@ -354,7 +367,7 @@ export function MenuBar() {
               <div>
                 {isDropdownOpen && (
                   <motion.div
-                    className="space-y-2 pl-4"
+                    className="mt-1.5 space-y-2 pl-4"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -372,12 +385,16 @@ export function MenuBar() {
               </div>
             )}
 
-            <div className="mt-4 pl-3 text-xs font-medium text-zinc-500">
+            <div className="mb-2 mt-4 pl-3 font-medium text-zinc-400">
               {tMenu("settings")}
             </div>
 
             {settingsItems.map((item) => (
-              <MenuBarItem key={item.key} item={item} getItemClass={getItemClass} />
+              <MenuBarItem
+                key={item.key}
+                item={item}
+                getItemClass={getItemClass}
+              />
             ))}
 
             <div className="absolute bottom-0 left-0 flex w-full justify-center">

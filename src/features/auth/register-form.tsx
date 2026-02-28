@@ -185,9 +185,7 @@ export default function RegisterForm() {
             <h1 className="bg-gradient-to-r from-zinc-900 to-zinc-700 bg-clip-text font-apple text-3xl font-bold text-transparent">
               {t("title")}
             </h1>
-            <p className="mt-2 text-sm text-zinc-600">
-              {t("subtitle")}
-            </p>
+            <p className="mt-2 text-sm text-zinc-600">{t("subtitle")}</p>
           </div>
 
           <AnimatePresence>

@@ -95,7 +95,9 @@ export default function ForgotPasswordForm() {
           </AnimatePresence>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-700">{t("email")}</label>
+            <label className="text-sm font-medium text-zinc-700">
+              {t("email")}
+            </label>
 
             <div className="relative">
               <Input
