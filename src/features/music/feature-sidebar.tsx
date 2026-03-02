@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 export function FeatureSidebar() {
   const { handlePlayAudio, handlePlayRandomAudio } = useAudio();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   // Lắng nghe click từ AudioBar để bật/tắt sidebar lyric
   useEffect(() => {

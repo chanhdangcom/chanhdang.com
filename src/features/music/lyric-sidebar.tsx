@@ -37,7 +37,7 @@ export function LyricSidebar() {
     useAudio();
   const t = useTranslations("music.lyric");
 
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   useSpringScroll(scrollRef);
@@ -133,9 +133,7 @@ export function LyricSidebar() {
           }}
         >
           {subtitles.length === 0 ? (
-            <div className="mt-6 text-xs text-white/60">
-              {t("noLyrics")}
-            </div>
+            <div className="mt-6 text-xs text-white/60">{t("noLyrics")}</div>
           ) : (
             <div className="mt-2 space-y-1.5 font-apple">
               {subtitles.map((line) => (
