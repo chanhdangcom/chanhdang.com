@@ -156,7 +156,8 @@ export default function AddMusicForm() {
 
   const fetchAdminMusics = useCallback(async () => {
     try {
-      const response = await fetch("/api/musics");
+      // Admin cần thấy toàn bộ bài hát (kể cả pending/rejected) để quản lý
+      const response = await fetch("/api/musics?status=all");
       if (!response.ok) return;
       const musicsData = await response.json();
       setAdminMusics(Array.isArray(musicsData) ? musicsData : []);

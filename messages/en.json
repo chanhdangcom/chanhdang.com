@@ -65,6 +65,8 @@
       "addPlaylistDesc": "Create new playlists for the music library",
       "addSinger": "Add singer",
       "addSingerDesc": "Manage singer profiles and artist information",
+      "approveMusics": "Approve songs",
+      "approveMusicsDesc": "Review and approve songs submitted by users",
       "noAccess": "You don't have access to this section."
     },
     "menu": {

@@ -86,7 +86,7 @@ export async function POST(
     // Check authentication and permissions
     const { getUserRole, getUserId } = await import("@/lib/auth-helpers");
     const role = await getUserRole(request);
-    
+
     if (!role || (role !== "user" && role !== "admin")) {
       return NextResponse.json(
         { error: "Bạn cần đăng nhập để thêm bài hát" },
@@ -126,12 +126,19 @@ export async function POST(
       );
     }
 
+    // Người dùng thường: bài hát sẽ ở trạng thái chờ duyệt
+    // Admin: bài hát được duyệt ngay lập tức
+    const status = role === "admin" ? "approved" : "pending";
+
     const newMusic = {
       ...body,
       singer: singer.singer,
       singerId: singer._id,
       addedBy: userId || null,
       createdAt: new Date(),
+      status,
+      approvedAt: role === "admin" ? new Date() : null,
+      approvedBy: role === "admin" && userId ? userId : null,
     };
 
     const insertResult = await db.collection("musics").insertOne(newMusic);

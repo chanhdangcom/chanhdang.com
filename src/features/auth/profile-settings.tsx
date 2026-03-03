@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useUser } from "@/hooks/use-user";
 import { HeaderMusicPage } from "../music/header-music-page";
+import { MenuBar } from "../music/menu-bar";
 
 type CurrentUser = {
   id: string; // string version of MongoDB ObjectId
@@ -135,13 +136,14 @@ export default function ProfileSettings() {
   };
 
   return (
-    <div className="container font-apple">
-      <HeaderMusicPage />
-      <div className="left-6 z-30 mx-4 space-y-4 rounded-3xl border border-zinc-300 dark:border-zinc-800 bg-gradient-to-tr from-transparent to-black/10 p-4 font-apple backdrop-blur-2xl dark:to-white/10 md:mx-72">
-        <h3 className="mb-4 text-center text-3xl font-semibold">
-          Update profile
-        </h3>
+    <div className="font-apple">
+      <MenuBar />
 
+      <div className="md:hidden">
+        <HeaderMusicPage />
+      </div>
+
+      <div className="z-30 mx-4 mt-4 space-y-4 rounded-3xl border px-4 py-8 font-apple shadow-sm dark:border-zinc-800 dark:bg-zinc-900 md:ml-[270px]">
         <div className="mb-4 space-y-4">
           <div className="mx-auto size-40 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
             {avatarUrl ? (
@@ -161,7 +163,9 @@ export default function ProfileSettings() {
               </div>
             )}
           </div>
+
           <input type="file" accept="image/*" onChange={handleAvatarChange} />
+
           {session?.user?.image && !avatarUrl && (
             <p className="text-xs text-zinc-500">
               Avatar from Google: {session.user.image.substring(0, 50)}...
@@ -173,8 +177,9 @@ export default function ProfileSettings() {
           <label className="mb-1 block text-sm text-zinc-500">
             Display name
           </label>
+
           <input
-            className="w-full rounded-xl border border-zinc-300 dark:border-zinc-800 px-4 py-2 shadow-sm dark:bg-zinc-950"
+            className="w-full rounded-xl border px-4 py-2 shadow-sm dark:border-zinc-800 dark:bg-zinc-950"
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             placeholder="Display name"
@@ -183,8 +188,9 @@ export default function ProfileSettings() {
 
         <div className="mb-4">
           <label className="mb-1 block text-sm text-zinc-500">Bio</label>
+
           <textarea
-            className="shadow-s w-full rounded-xl border border-zinc-300 dark:border-zinc-800 px-4 py-2 dark:bg-zinc-950"
+            className="shadow-s w-full rounded-xl border px-4 py-2 shadow-sm dark:border-zinc-800 dark:bg-zinc-950"
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             rows={4}
@@ -195,7 +201,7 @@ export default function ProfileSettings() {
         <button
           onClick={handleSave}
           disabled={isSaving}
-          className={`rounded-md bg-black px-4 py-2 text-sm font-semibold text-white transition-opacity dark:bg-white dark:text-black ${
+          className={`rounded-xl bg-black px-4 py-2 text-sm font-semibold text-white transition-opacity dark:bg-white dark:text-black ${
             isSaving ? "opacity-50" : ""
           }`}
         >

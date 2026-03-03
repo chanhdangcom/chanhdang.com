@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
-import { getUserRole } from "@/lib/auth-helpers";
+import { getUserRole, getUserId } from "@/lib/auth-helpers";
 import { normalizeDocument } from "@/lib/mongodb-helpers";
 
 type MusicReferenceDocument = {
@@ -83,6 +83,67 @@ export async function PUT(
     console.error("Error updating music:", error);
     return NextResponse.json(
       { error: "Failed to update music" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PATCH(
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  try {
+    const role = await getUserRole(request);
+    const userId = await getUserId(request);
+
+    if (role !== "admin") {
+      return NextResponse.json(
+        { error: "Chỉ admin mới có quyền duyệt bài hát" },
+        { status: 403 }
+      );
+    }
+
+    const { id } = await context.params;
+    if (!ObjectId.isValid(id)) {
+      return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+    }
+
+    const body = (await request.json().catch(() => ({}))) as {
+      status?: string;
+    };
+
+    if (!body.status || !["pending", "approved", "rejected"].includes(body.status)) {
+      return NextResponse.json(
+        { error: "Trạng thái không hợp lệ" },
+        { status: 400 }
+      );
+    }
+
+    const client = await clientPromise;
+    const db = client.db("musicdb");
+
+    const update: Record<string, unknown> = {
+      status: body.status,
+      updatedAt: new Date(),
+    };
+
+    if (body.status === "approved") {
+      update.approvedAt = new Date();
+      update.approvedBy = userId || null;
+    }
+
+    await db.collection("musics").updateOne(
+      { _id: new ObjectId(id) },
+      {
+        $set: update,
+      }
+    );
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Error updating music status:", error);
+    return NextResponse.json(
+      { error: "Failed to update music status" },
       { status: 500 }
     );
   }

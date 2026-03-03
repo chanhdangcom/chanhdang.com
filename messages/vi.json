@@ -64,6 +64,8 @@
       "addPlaylistDesc": "Tạo playlist mới cho thư viện nhạc",
       "addSinger": "Thêm ca sĩ",
       "addSingerDesc": "Quản lý hồ sơ ca sĩ và thông tin nghệ sĩ",
+      "approveMusics": "Duyệt bài hát",
+      "approveMusicsDesc": "Xem và phê duyệt các bài hát do người dùng gửi",
       "noAccess": "Bạn chưa có quyền truy cập mục này"
     },
     "menu": {

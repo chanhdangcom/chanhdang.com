@@ -9,6 +9,7 @@ import {
   MusicNotesSimple,
   UsersThree,
   Queue,
+  SealCheck,
 } from "@phosphor-icons/react/dist/ssr";
 import { MenuBar } from "../menu-bar";
 import { HeaderMusicPage } from "../header-music-page";
@@ -54,6 +55,13 @@ export function ManagementPage() {
       href: `/${locale}/music/add-singer`,
       isAllowed: canAddSinger,
       icon: MicrophoneStage,
+    },
+    {
+      title: t("approveMusics"),
+      description: t("approveMusicsDesc"),
+      href: `/${locale}/music/pending-musics`,
+      isAllowed: canManageSystem,
+      icon: SealCheck,
     },
   ];
 

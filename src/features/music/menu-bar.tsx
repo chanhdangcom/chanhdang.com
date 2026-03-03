@@ -270,7 +270,7 @@ export function MenuBar() {
 
   return (
     <div className="fixed left-4 top-4 z-30 hidden font-apple md:flex">
-      <div className="absolute h-[96vh] w-60 space-y-4 rounded-3xl bg-gradient-to-tr from-transparent to-zinc-50 px-3 pt-5 text-zinc-50 shadow-xl backdrop-blur-3xl dark:to-white/10">
+      <div className="absolute h-[96vh] w-60 space-y-4 overflow-y-auto rounded-3xl bg-gradient-to-tr from-transparent to-zinc-50 px-3 pb-8 pt-5 text-zinc-50 shadow-xl backdrop-blur-3xl dark:to-white/10">
         <>
           <div className="text-base text-black dark:text-white">
             <div className="mb-4 flex items-end justify-center gap-1">
@@ -397,7 +397,7 @@ export function MenuBar() {
               />
             ))}
 
-            <div className="absolute bottom-0 left-0 flex w-full justify-center">
+            <div className="absolute -m-3 mt-auto flex w-full items-end justify-center pt-4">
               <LogoutButton />
             </div>
           </div>
