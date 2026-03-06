@@ -6,6 +6,7 @@ import { useIsAdmin } from "@/hooks/use-permissions";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { MenuBar } from "../menu-bar";
 import { Button } from "@/components/ui/button";
+import { useAudio } from "@/components/music-provider";
 
 type MusicWithMeta = IMusic & {
   addedBy?: string | null;
@@ -18,6 +19,7 @@ export function MusicApproval() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const { handlePlayAudio } = useAudio();
 
   useEffect(() => {
     if (!isAdmin) {
@@ -49,7 +51,10 @@ export function MusicApproval() {
     }
   };
 
-  const updateStatus = async (music: MusicWithMeta, status: "approved" | "rejected") => {
+  const updateStatus = async (
+    music: MusicWithMeta,
+    status: "approved" | "rejected"
+  ) => {
     if (status === "rejected") {
       const confirmed = window.confirm(
         `Bạn chắc chắn muốn từ chối bài "${music.title}"?`
@@ -86,7 +91,7 @@ export function MusicApproval() {
     <div className="mx-4 py-8 md:ml-[270px]">
       <MenuBar />
 
-      <div className="mx-auto w-full max-w-4xl space-y-4">
+      <div className="w-full max-w-4xl space-y-4">
         <div>
           <h1 className="text-2xl font-bold text-black dark:text-white">
             Duyệt bài hát mới
@@ -129,12 +134,23 @@ export function MusicApproval() {
                     </div>
                     {music.addedBy && (
                       <div className="mt-1 text-xs text-zinc-500">
-                        Thêm bởi user: <span className="font-mono">{music.addedBy}</span>
+                        Thêm bởi user:{" "}
+                        <span className="font-mono">{music.addedBy}</span>
                       </div>
                     )}
                   </div>
 
                   <div className="mt-2 flex gap-2 md:mt-0">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      disabled={updatingId === music.id}
+                      onClick={() => handlePlayAudio(music)}
+                      className="rounded-full border border-zinc-300 px-4 py-1 text-xs font-semibold text-zinc-700 dark:border-zinc-700 dark:text-zinc-200"
+                    >
+                      Nghe thử
+                    </Button>
                     <Button
                       type="button"
                       size="sm"
@@ -152,7 +168,9 @@ export function MusicApproval() {
                       onClick={() => updateStatus(music, "approved")}
                       className="rounded-full bg-emerald-500 px-4 py-1 text-xs font-semibold text-white hover:bg-emerald-600"
                     >
-                      {updatingId === music.id ? "Đang cập nhật..." : "Duyệt đăng"}
+                      {updatingId === music.id
+                        ? "Đang cập nhật..."
+                        : "Duyệt đăng"}
                     </Button>
                   </div>
                 </div>
@@ -168,4 +186,3 @@ export function MusicApproval() {
     </div>
   );
 }
-

@@ -39,11 +39,19 @@ export async function GET(
       ? normalizeObjectIds(singer.musicIds)
       : [];
 
+    // Chỉ hiển thị bài đã duyệt trên trang ca sĩ (công khai)
+    const publicFilter = {
+      $or: [{ status: { $exists: false } }, { status: "approved" }],
+    };
+
     let musics: Record<string, unknown>[] = [];
     if (musicIds.length > 0) {
       musics = await db
         .collection("musics")
-        .find({ _id: { $in: musicIds } })
+        .find({
+          _id: { $in: musicIds },
+          ...publicFilter,
+        })
         .toArray();
     } else {
       const singerName = String(singer.singer ?? "").trim();
@@ -55,10 +63,15 @@ export async function GET(
         musics = await db
           .collection("musics")
           .find({
-            $or: [
-              { singerId: singer._id },
-              { singer: singerRegex },
-              { singer: singerName },
+            $and: [
+              {
+                $or: [
+                  { singerId: singer._id },
+                  { singer: singerRegex },
+                  { singer: singerName },
+                ],
+              },
+              publicFilter,
             ],
           })
           .toArray();

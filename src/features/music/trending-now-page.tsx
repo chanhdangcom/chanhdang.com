@@ -13,7 +13,11 @@ export async function TrendingNowPage() {
     const client = await clientPromise;
     const db = client.db("musicdb");
 
-    const data = await db.collection("musics").find({}).toArray();
+    const publicFilter = {
+      $or: [{ status: { $exists: false } }, { status: "approved" }],
+    };
+
+    const data = await db.collection("musics").find(publicFilter).toArray();
 
     const musics: IMusic[] = Array.isArray(data)
       ? data

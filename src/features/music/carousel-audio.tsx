@@ -10,11 +10,15 @@ export default async function CarouselAudio() {
     const client = await clientPromise;
     const db = client.db("musicdb");
 
+    const publicFilter = {
+      $or: [{ status: { $exists: false } }, { status: "approved" }],
+    };
+
     // ✅ Chỉ lấy dữ liệu cần cho carousel để tải nhanh khi chuyển trang
     const data = await db
       .collection("musics")
       .find(
-        {},
+        publicFilter,
         {
           projection: {
             title: 1,

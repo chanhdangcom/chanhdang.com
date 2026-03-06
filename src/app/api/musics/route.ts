@@ -9,6 +9,7 @@ export async function GET(request: Request) {
     const limitParam = url.searchParams.get("limit");
     const sortParam = url.searchParams.get("sort");
     const statusParam = url.searchParams.get("status");
+    const addedByMe = url.searchParams.get("addedBy") === "me";
 
     const limit = Math.max(
       1,
@@ -18,13 +19,20 @@ export async function GET(request: Request) {
     const client = await clientPromise;
     const db = client.db("musicdb");
 
-    // Filter theo trạng thái:
-    // - status=all    → lấy tất cả
-    // - status=<name> → lọc theo trạng thái cụ thể
-    // - mặc định      → chỉ lấy bài đã duyệt hoặc bài cũ chưa có status
+    // addedBy=me: lấy tất cả bài user đã đăng (pending, approved, rejected) - cần đăng nhập
     let filter: Record<string, unknown> = {};
 
-    if (statusParam === "all") {
+    if (addedByMe) {
+      const { getUserId } = await import("@/lib/auth-helpers");
+      const userId = await getUserId(request);
+      if (!userId) {
+        return NextResponse.json(
+          { error: "Bạn cần đăng nhập để xem bài hát của mình" },
+          { status: 401 }
+        );
+      }
+      filter = { addedBy: userId };
+    } else if (statusParam === "all") {
       filter = {};
     } else if (statusParam) {
       filter = { status: statusParam };

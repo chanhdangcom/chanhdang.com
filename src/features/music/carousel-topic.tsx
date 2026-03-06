@@ -27,6 +27,9 @@ export async function CarouselTopic() {
   try {
     const client = await clientPromise;
     const db = await client.db("musicdb");
+    const publicFilter = {
+      $or: [{ status: { $exists: false } }, { status: "approved" }],
+    };
     const topics = (await db
       .collection("topics")
       .find(
@@ -62,7 +65,7 @@ export async function CarouselTopic() {
         ? await db
             .collection("musics")
             .find(
-              { _id: { $in: uniqueIds } },
+              { _id: { $in: uniqueIds }, ...publicFilter },
               {
                 projection: {
                   title: 1,

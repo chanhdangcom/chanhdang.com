@@ -37,6 +37,9 @@ async function getSinger(id: string): Promise<ISingerItem | null> {
 
     const client = await clientPromise;
     const db = client.db("musicdb");
+    const publicFilter = {
+      $or: [{ status: { $exists: false } }, { status: "approved" }],
+    };
     const singer = await db.collection("singers").findOne({
       _id: new ObjectId(id),
     }, {
@@ -60,7 +63,7 @@ async function getSinger(id: string): Promise<ISingerItem | null> {
       musicDocs = await db
         .collection("musics")
         .find(
-          { _id: { $in: musicIds } },
+          { _id: { $in: musicIds }, ...publicFilter },
           {
             projection: {
               title: 1,
@@ -98,10 +101,15 @@ async function getSinger(id: string): Promise<ISingerItem | null> {
           .collection("musics")
           .find(
             {
-              $or: [
-                { singerId: singer._id },
-                { singer: singerRegex },
-                { singer: singerName },
+              $and: [
+                {
+                  $or: [
+                    { singerId: singer._id },
+                    { singer: singerRegex },
+                    { singer: singerName },
+                  ],
+                },
+                publicFilter,
               ],
             },
             {

@@ -7,20 +7,42 @@ import { usePermissions } from "@/hooks/use-permissions";
 import { Button } from "@/components/ui/button";
 import { MotionHeaderMusic } from "./component/motion-header-music";
 import { HeaderMusicPage } from "./header-music-page";
-type IMusic = {
+import { MenuBar } from "./menu-bar";
+import { useAudio } from "@/components/music-provider";
+import { IMusic } from "@/app/[locale]/features/profile/types/music";
+import { Play } from "@phosphor-icons/react/dist/ssr";
+
+type IMusicWithStatus = IMusic & {
   _id?: string;
-  id?: string;
-  title: string;
-  singer: string;
-  cover: string;
-  audio: string;
-  youtube?: string;
-  content?: string;
-  type?: string;
-  srt?: string;
-  beat?: string;
-  createdAt?: Date | string;
+  status?: "pending" | "approved" | "rejected";
 };
+
+function StatusBadge({
+  status,
+}: {
+  status?: "pending" | "approved" | "rejected";
+}) {
+  if (!status) return null;
+  const config = {
+    pending: {
+      label: "Chờ duyệt",
+      className:
+        "rounded-full bg-amber-200 px-2 py-0.5 text-xs dark:bg-amber-800/50",
+    },
+    approved: {
+      label: "Đã duyệt",
+      className:
+        "rounded-full bg-emerald-200 px-2 py-0.5 text-xs dark:bg-emerald-800/50",
+    },
+    rejected: {
+      label: "Bị từ chối",
+      className:
+        "rounded-full bg-rose-200 px-2 py-0.5 text-xs dark:bg-rose-800/50",
+    },
+  };
+  const c = config[status] ?? config.pending;
+  return <span className={c.className}>{c.label}</span>;
+}
 
 export function MyMusicManagement() {
   const { user } = useUser();
@@ -29,22 +51,11 @@ export function MyMusicManagement() {
 
   const [userArtistProfile, setUserArtistProfile] =
     useState<ISingerItem | null>(null);
-  const [musics, setMusics] = useState<IMusic[]>([]);
+  const [musics, setMusics] = useState<IMusicWithStatus[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
-  const [editingMusicId, setEditingMusicId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
-
-  const [editForm, setEditForm] = useState({
-    title: "",
-    cover: "",
-    audio: "",
-    youtube: "",
-    content: "",
-    type: "",
-    srt: "",
-    beat: "",
-  });
+  const { handlePlayAudio } = useAudio();
 
   const fetchUserArtistProfile = useCallback(async () => {
     if (!user?.id) {
@@ -53,28 +64,28 @@ export function MyMusicManagement() {
 
     setIsLoadingProfile(true);
     try {
-      // Use dedicated API endpoint to get user's profile
-      const response = await fetch("/api/singers/my-profile");
+      // Lấy profile ca sĩ và danh sách bài đã gửi (pending/approved/rejected)
+      const [profileRes, musicsRes] = await Promise.all([
+        fetch("/api/singers/my-profile"),
+        fetch("/api/musics?addedBy=me", { cache: "no-store" }),
+      ]);
 
-      if (response.ok) {
-        const data = await response.json();
+      if (profileRes.ok) {
+        const data = await profileRes.json();
         if (data.success && data.singer) {
           setUserArtistProfile(data.singer);
-          // Fetch musics from the profile
-          if (data.singer._id || data.singer.id) {
-            const musicsRes = await fetch(
-              `/api/singers/${data.singer._id || data.singer.id}/musics`
-            );
-            const musicsData = await musicsRes.json();
-            setMusics(musicsData || []);
-          }
         } else {
           setUserArtistProfile(null);
-          setMusics([]);
         }
       } else {
-        // Profile not found - user hasn't created one yet
         setUserArtistProfile(null);
+      }
+
+      if (musicsRes.ok) {
+        const musicsData = await musicsRes.json();
+        const list = Array.isArray(musicsData) ? musicsData : [];
+        setMusics(list);
+      } else {
         setMusics([]);
       }
     } catch (error) {
@@ -92,79 +103,16 @@ export function MyMusicManagement() {
     }
   }, [isRegularUser, user?.id, fetchUserArtistProfile]);
 
-  const handleEdit = (music: IMusic) => {
-    setEditingMusicId(music._id || music.id || null);
-    setEditForm({
-      title: music.title || "",
-      cover: music.cover || "",
-      audio: music.audio || "",
-      youtube: music.youtube || "",
-      content: music.content || "",
-      type: music.type || "",
-      srt: music.srt || "",
-      beat: music.beat || "",
-    });
-    setMessage("");
-  };
-
-  const handleCancelEdit = () => {
-    setEditingMusicId(null);
-    setEditForm({
-      title: "",
-      cover: "",
-      audio: "",
-      youtube: "",
-      content: "",
-      type: "",
-      srt: "",
-      beat: "",
-    });
-    setMessage("");
-  };
-
-  const handleUpdateMusic = async () => {
-    if (!editingMusicId || !userArtistProfile) return;
-
-    setIsLoading(true);
-    setMessage("");
-
-    try {
-      const singerId = userArtistProfile._id || userArtistProfile.id;
-      if (!singerId) {
-        setMessage("Không tìm thấy profile ca sĩ!");
-        setIsLoading(false);
-        return;
-      }
-
-      const response = await fetch(
-        `/api/singers/${singerId}/musics/${editingMusicId}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(editForm),
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        setMessage("Cập nhật bài hát thành công!");
-        setEditingMusicId(null);
-        // Refresh musics list
-        await fetchUserArtistProfile();
-      } else {
-        setMessage(data.error || "Có lỗi xảy ra khi cập nhật!");
-      }
-    } catch (error) {
-      console.error("Error updating music:", error);
-      setMessage("Có lỗi xảy ra khi cập nhật!");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleDeleteMusic = async (musicId: string) => {
-    if (!userArtistProfile) return;
+    const rawSingerId =
+      userArtistProfile?._id ||
+      userArtistProfile?.id ||
+      (musics[0] as { singerId?: unknown })?.singerId;
+    const singerId = rawSingerId ? String(rawSingerId) : null;
+    if (!singerId) {
+      setMessage("Không tìm thấy profile ca sĩ!");
+      return;
+    }
 
     if (!confirm("Bạn có chắc muốn xóa bài hát này?")) return;
 
@@ -172,13 +120,6 @@ export function MyMusicManagement() {
     setMessage("");
 
     try {
-      const singerId = userArtistProfile._id || userArtistProfile.id;
-      if (!singerId) {
-        setMessage("Không tìm thấy profile ca sĩ!");
-        setIsLoading(false);
-        return;
-      }
-
       const response = await fetch(
         `/api/singers/${singerId}/musics/${musicId}`,
         {
@@ -224,7 +165,7 @@ export function MyMusicManagement() {
     );
   }
 
-  if (!userArtistProfile) {
+  if (!userArtistProfile && musics.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
@@ -244,17 +185,38 @@ export function MyMusicManagement() {
         <HeaderMusicPage name="Quản Lý Nhạc Của Tôi" />
       </div>
 
-      <div className="mx-4 md:mx-72">
-        <div className="rounded-3xl border border-zinc-300 bg-gradient-to-tr from-transparent to-black/10 p-4 font-apple backdrop-blur-2xl dark:border-zinc-700 dark:to-white/10">
-          <div className="mb-4 rounded-lg bg-green-50 p-3 text-sm text-green-800 dark:bg-green-900/20 dark:text-green-300">
-            <div className="mb-1 font-semibold">
-              🎵 Thông tin ca sĩ của bạn:
+      <MenuBar />
+
+      <div className="mx-4 md:ml-[270px] md:mr-4">
+        <div className="rounded-3xl border p-4 font-apple shadow-sm dark:border-zinc-800">
+          {userArtistProfile && (
+            <div className="mb-4 rounded-xl bg-green-50 p-3 text-sm text-green-800 dark:bg-green-900/20 dark:text-green-300">
+              <div className="mb-1 font-semibold">Thông tin ca sĩ của bạn:</div>
+
+              <div>
+                <strong>Tên ca sĩ:</strong> {userArtistProfile.singer}
+              </div>
+
+              <div className="mt-2">
+                <strong>Tổng số bài hát:</strong> {musics.length}
+              </div>
             </div>
-            <div>
-              <strong>Tên ca sĩ:</strong> {userArtistProfile.singer}
-            </div>
-            <div className="mt-2">
-              <strong>Tổng số bài hát:</strong> {musics.length}
+          )}
+
+          <div className="mb-4 rounded-xl bg-blue-50 p-3 text-sm text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
+            <div className="mb-1 font-semibold"> Trạng thái bài hát:</div>
+            <div className="flex flex-wrap gap-2">
+              <span className="rounded-full bg-amber-200 px-2 py-0.5 text-xs dark:bg-amber-800/50">
+                Chờ duyệt
+              </span>
+
+              <span className="rounded-full bg-emerald-200 px-2 py-0.5 text-xs dark:bg-emerald-800/50">
+                Đã duyệt
+              </span>
+
+              <span className="rounded-full bg-rose-200 px-2 py-0.5 text-xs dark:bg-rose-800/50">
+                Bị từ chối (chỉ bạn nghe được)
+              </span>
             </div>
           </div>
 
@@ -278,135 +240,63 @@ export function MyMusicManagement() {
             <div className="space-y-4">
               {musics.map((music) => {
                 const musicId = music._id || music.id || "";
-                const isEditing = editingMusicId === musicId;
 
                 return (
                   <div
                     key={musicId}
-                    className="rounded-xl border border-zinc-300 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900"
+                    className="rounded-xl border p-4 shadow-sm dark:border-zinc-800"
                   >
-                    {isEditing ? (
-                      <div className="space-y-3">
-                        <input
-                          type="text"
-                          placeholder="Tên bài hát"
-                          value={editForm.title}
-                          onChange={(e) =>
-                            setEditForm({ ...editForm, title: e.target.value })
-                          }
-                          className="w-full rounded-xl border px-4 py-2 dark:border-zinc-900 dark:bg-zinc-950"
-                        />
-                        <input
-                          type="text"
-                          placeholder="Link ảnh cover"
-                          value={editForm.cover}
-                          onChange={(e) =>
-                            setEditForm({ ...editForm, cover: e.target.value })
-                          }
-                          className="w-full rounded-xl border px-4 py-2 dark:border-zinc-900 dark:bg-zinc-950"
-                        />
-                        <input
-                          type="text"
-                          placeholder="Link audio"
-                          value={editForm.audio}
-                          onChange={(e) =>
-                            setEditForm({ ...editForm, audio: e.target.value })
-                          }
-                          className="w-full rounded-xl border px-4 py-2 dark:border-zinc-900 dark:bg-zinc-950"
-                        />
-                        <input
-                          type="text"
-                          placeholder="Link Youtube (tùy chọn)"
-                          value={editForm.youtube}
-                          onChange={(e) =>
-                            setEditForm({
-                              ...editForm,
-                              youtube: e.target.value,
-                            })
-                          }
-                          className="w-full rounded-xl border px-4 py-2 dark:border-zinc-900 dark:bg-zinc-950"
-                        />
-                        <input
-                          type="text"
-                          placeholder="Thể loại (tùy chọn)"
-                          value={editForm.type}
-                          onChange={(e) =>
-                            setEditForm({ ...editForm, type: e.target.value })
-                          }
-                          className="w-full rounded-xl border px-4 py-2 dark:border-zinc-900 dark:bg-zinc-950"
-                        />
-                        <textarea
-                          placeholder="Nội dung (tùy chọn)"
-                          value={editForm.content}
-                          onChange={(e) =>
-                            setEditForm({
-                              ...editForm,
-                              content: e.target.value,
-                            })
-                          }
-                          className="w-full rounded-xl border px-4 py-2 dark:border-zinc-900 dark:bg-zinc-950"
-                          rows={3}
-                        />
-                        <div className="flex gap-2">
-                          <Button
-                            onClick={handleUpdateMusic}
-                            disabled={isLoading}
-                            className="flex-1"
-                          >
-                            {isLoading ? "Đang lưu..." : "Lưu"}
-                          </Button>
-                          <Button
-                            onClick={handleCancelEdit}
-                            variant="outline"
-                            disabled={isLoading}
-                            className="flex-1"
-                          >
-                            Hủy
-                          </Button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
                           <h3 className="text-lg font-semibold">
                             {music.title}
                           </h3>
-                          {music.type && (
-                            <p className="text-sm text-zinc-500">
-                              Thể loại: {music.type}
-                            </p>
-                          )}
-                          {music.youtube && (
-                            <a
-                              href={music.youtube}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="mt-2 inline-block text-sm text-blue-600 hover:underline"
-                            >
-                              Xem trên YouTube
-                            </a>
-                          )}
+                          <StatusBadge status={music.status} />
                         </div>
-                        <div className="flex gap-2">
-                          <Button
-                            onClick={() => handleEdit(music)}
-                            variant="outline"
-                            size="sm"
-                            disabled={isLoading}
+                        {music.type && (
+                          <p className="text-sm text-zinc-500">
+                            Thể loại: {music.type}
+                          </p>
+                        )}
+                        {music.youtube && (
+                          <a
+                            href={music.youtube}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-2 inline-block text-sm text-blue-600 hover:underline"
                           >
-                            Sửa
-                          </Button>
-                          <Button
-                            onClick={() => handleDeleteMusic(musicId)}
-                            variant="destructive"
-                            size="sm"
-                            disabled={isLoading}
-                          >
-                            Xóa
-                          </Button>
-                        </div>
+                            Xem trên YouTube
+                          </a>
+                        )}
                       </div>
-                    )}
+
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={() =>
+                            handlePlayAudio({
+                              ...music,
+                              id: music.id || musicId,
+                            } as IMusic)
+                          }
+                          variant="outline"
+                          size="sm"
+                          className="flex items-center gap-1 rounded-xl shadow-sm"
+                        >
+                          <Play size={16} weight="fill" />
+                          Nghe
+                        </Button>
+
+                        <Button
+                          onClick={() => handleDeleteMusic(musicId)}
+                          variant="destructive"
+                          size="sm"
+                          disabled={isLoading}
+                        >
+                          Xóa
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 );
               })}
@@ -414,7 +304,6 @@ export function MyMusicManagement() {
           )}
         </div>
       </div>
-
     </div>
   );
 }

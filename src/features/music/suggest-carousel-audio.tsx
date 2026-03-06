@@ -7,10 +7,14 @@ export async function SuggestCarouselAudio() {
     const client = await clientPromise;
     const db = client.db("musicdb");
 
+    const publicFilter = {
+      $or: [{ status: { $exists: false } }, { status: "approved" }],
+    };
+
     const data = await db
       .collection("musics")
       .find(
-        {},
+        publicFilter,
         {
           projection: {
             title: 1,

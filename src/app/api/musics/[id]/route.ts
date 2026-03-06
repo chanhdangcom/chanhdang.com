@@ -28,6 +28,18 @@ export async function GET(
       return NextResponse.json({ error: "Music not found" }, { status: 404 });
     }
 
+    // Bài bị từ chối: chỉ admin hoặc người đăng (addedBy) mới truy cập được
+    const status = music.status as string | undefined;
+    if (status === "rejected") {
+      const role = await getUserRole(request);
+      const userId = await getUserId(request);
+      const addedBy = music.addedBy != null ? String(music.addedBy) : null;
+      const isOwner = addedBy && userId && String(userId) === addedBy;
+      if (role !== "admin" && !isOwner) {
+        return NextResponse.json({ error: "Music not found" }, { status: 404 });
+      }
+    }
+
     return NextResponse.json(normalizeDocument(music));
   } catch (error) {
     console.error("Error fetching music:", error);
