@@ -696,6 +696,7 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
             <CaretDown
               size={20}
               className="ml-4 hidden cursor-pointer md:flex"
+              weight="bold"
               onClick={onRequestClose}
             />
 
@@ -706,7 +707,10 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
             {currentMusic?.cover ? (
               <div
                 key={currentMusic?.cover}
-                className="flex justify-center md:mx-2 md:justify-start"
+                className={cn(
+                  "flex justify-center md:mx-2",
+                  currentMusic?.srt ? "md:justify-start" : "md:justify-center"
+                )}
               >
                 <div className="relative">
                   <motion.img
@@ -727,17 +731,17 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
             ) : (
               <div className="flex h-[40vh] w-full shrink-0 justify-center rounded-2xl bg-zinc-700" />
             )}
-
-            <div className="mx-auto space-y-8 rounded-3xl md:inset-x-8 md:-bottom-20 md:w-[60vh]">
-              <div className="absolute bottom-0 left-0 -z-10 hidden h-[30vh] w-[75vh] bg-black/60 text-sm blur-3xl md:flex" />
-            </div>
           </div>
         </div>
 
+        {/* Subtitle Desktop */}
         {isDesktop && isHeavyReady ? (
           <div
             ref={subtitleScrollRef}
-            className="scroll-spring pointer-events-none ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block"
+            className={cn(
+              "scroll-spring pointer-events-none ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block",
+              !currentMusic?.srt ? "md:hidden" : "md:block"
+            )}
             style={{
               scrollBehavior: "smooth",
               WebkitOverflowScrolling: "touch",
@@ -1016,7 +1020,9 @@ const FeaturedPage = ({
               </div>
 
               <div className="mt-4">
-                <div className="font-semibold text-white">{tPlayer("continueMusic")}</div>
+                <div className="font-semibold text-white">
+                  {tPlayer("continueMusic")}
+                </div>
 
                 {!isHeavyReady && (
                   <div className="mt-2 text-xs text-zinc-400">
@@ -1292,9 +1298,14 @@ export function PlayerPage({ setIsClick }: IProp) {
         <ContentPage onRequestClose={handleClosePlayer} />
       )}
 
-      <>
+      <div
+        className={cn(
+          "items-center md:flex",
+          currentMusic?.srt ? "justify-start" : "justify-center"
+        )}
+      >
         <div className="fixed bottom-0 z-50 w-full space-y-4 px-8 pb-8 md:bottom-8 md:w-[40vw] md:space-y-4">
-          <div className="pointer-events-none absolute -bottom-16 left-0 -z-10 h-[40vh] w-full scale-150 bg-black blur-xl brightness-0 md:w-[35vw] md:blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-16 left-0 -z-10 h-[45vh] w-full scale-150 bg-black blur-xl brightness-0 md:bg-black/60 md:blur-3xl" />
 
           {isClickLyric && (
             <>
@@ -1391,14 +1402,14 @@ export function PlayerPage({ setIsClick }: IProp) {
           <div className="space-y-8">
             <VolumeBar />
 
-            <div className="mx-8 flex items-center justify-between text-base text-zinc-400">
+            <div className="mx-8 flex items-center justify-between text-base text-zinc-400 md:justify-center">
               <button
                 type="button"
                 onClick={() => {
                   setIsClickLyric(!isClickLyric);
                   setIsClickFeatured(false);
                 }}
-                className={`flex h-12 w-12 items-center justify-center rounded-full transition-colors ${
+                className={`flex h-12 w-12 items-center justify-center rounded-full transition-colors md:hidden ${
                   isClickLyric ? "bg-white/20" : "bg-transparent"
                 }`}
               >
@@ -1424,7 +1435,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                   setIsClickFeatured(!isClickFeatured);
                   setIsClickLyric(false);
                 }}
-                className={`flex h-12 w-12 items-center justify-center rounded-full transition-colors ${
+                className={`flex h-12 w-12 items-center justify-center rounded-full transition-colors md:hidden ${
                   isClickFeatured ? "bg-white/20" : "bg-transparent"
                 }`}
               >
@@ -1437,7 +1448,7 @@ export function PlayerPage({ setIsClick }: IProp) {
             </div>
           </div>
         </div>
-      </>
+      </div>
     </div>
   );
 }

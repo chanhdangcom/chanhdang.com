@@ -13,6 +13,7 @@ import { useTranslations } from "next-intl";
 
 import { DurationAudio } from "./component/duration-audio";
 import {
+  ArrowsOutSimple,
   ChatTeardropText,
   ListBullets,
   RepeatOnce,
@@ -26,6 +27,7 @@ import { BorderPro } from "./component/border-pro";
 import dynamic from "next/dynamic";
 import { Drawer } from "vaul";
 import { AnimatePresence, motion } from "framer-motion";
+import { cn } from "@/utils/cn";
 
 const PlayerPage = dynamic(
   () => import("./player-page").then((mod) => mod.PlayerPage),
@@ -440,42 +442,74 @@ export function AudioBar() {
                   </div>
                 </div>
 
-                <div className="mr-4 hidden md:flex">
+                <div className="mr-8 hidden md:flex">
                   <DurationAudio className="text-xs" />
                 </div>
               </div>
             </div>
 
             <div className="hidden items-center gap-4 text-black dark:text-white md:flex">
-              <ChatTeardropText
-                size={23}
-                weight="fill"
-                className={` ${tapFeedbackClass}`}
-                onClick={(e) => {
-                  if (!scroll) e.stopPropagation();
+              {currentMusic ? (
+                <ChatTeardropText
+                  size={20}
+                  weight="fill"
+                  className={` ${tapFeedbackClass}`}
+                  onClick={(e) => {
+                    if (!scroll) e.stopPropagation();
 
-                  if (typeof window !== "undefined") {
-                    window.dispatchEvent(new Event("toggle-lyric-sidebar"));
-                  }
-                }}
-              />
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new Event("toggle-lyric-sidebar"));
+                    }
+                  }}
+                />
+              ) : (
+                <ChatTeardropText
+                  size={20}
+                  weight="fill"
+                  className={cn(
+                    tapFeedbackClass,
+                    "pointer-events-none opacity-30"
+                  )}
+                  onClick={(e) => {
+                    if (!scroll) e.stopPropagation();
 
-              <ListBullets
-                size={23}
-                weight="bold"
-                className={` ${tapFeedbackClass}`}
-                onClick={(e) => {
-                  if (!scroll) e.stopPropagation();
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new Event("toggle-lyric-sidebar"));
+                    }
+                  }}
+                />
+              )}
 
-                  if (typeof window !== "undefined") {
-                    window.dispatchEvent(new Event("toggle-feature-sidebar"));
-                  }
-                }}
-              />
+              {currentMusic ? (
+                <ListBullets
+                  size={20}
+                  weight="bold"
+                  className={` ${tapFeedbackClass}`}
+                  onClick={(e) => {
+                    if (!scroll) e.stopPropagation();
+
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new Event("toggle-feature-sidebar"));
+                    }
+                  }}
+                />
+              ) : (
+                <ListBullets
+                  size={20}
+                  weight="bold"
+                  className={cn(
+                    tapFeedbackClass,
+                    "pointer-events-none opacity-30"
+                  )}
+                  onClick={(e) => {
+                    if (!scroll) e.stopPropagation();
+                  }}
+                />
+              )}
 
               {isMuted ? (
                 <SpeakerSlash
-                  size={23}
+                  size={20}
                   weight="fill"
                   onClick={(e) => {
                     if (!scroll) e.stopPropagation();
@@ -485,13 +519,38 @@ export function AudioBar() {
                 />
               ) : (
                 <SpeakerHigh
-                  size={23}
+                  size={20}
                   weight="fill"
                   onClick={(e) => {
                     if (!scroll) e.stopPropagation();
                     handleMute();
                   }}
+                  className={cn(tapFeedbackClass)}
+                />
+              )}
+
+              {currentMusic ? (
+                <ArrowsOutSimple
+                  size={20}
+                  weight="fill"
                   className={tapFeedbackClass}
+                  onClick={(e) => {
+                    if (!scroll) e.stopPropagation();
+                    setIsClick(true);
+                  }}
+                />
+              ) : (
+                <ArrowsOutSimple
+                  size={20}
+                  weight="fill"
+                  className={cn(
+                    tapFeedbackClass,
+                    "pointer-events-none opacity-30"
+                  )}
+                  onClick={(e) => {
+                    if (!scroll) e.stopPropagation();
+                    setIsClick(true);
+                  }}
                 />
               )}
             </div>

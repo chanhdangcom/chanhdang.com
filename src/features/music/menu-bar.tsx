@@ -11,13 +11,14 @@ import {
   ChartDonut,
   Clock,
   Crown,
+  Faders,
   Gear,
   House,
   MicrophoneStage,
   MusicNotesSimple,
+  SealCheck,
   ShieldCheck,
   SquaresFour,
-  UserCircle,
 } from "@phosphor-icons/react/dist/ssr";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
@@ -230,6 +231,23 @@ export function MenuBar() {
         />
       ),
     },
+
+    {
+      key: "approve-musics",
+      label: tMenu("approveMusics"),
+      href: `${basePath}/pending-musics`,
+      isActive: isPathActive(`${basePath}/pending-musics`),
+      disabled: !canManageSystem,
+      icon: (
+        <SealCheck
+          size={25}
+          weight={
+            isPathActive(`${basePath}/pending-musics`) ? "fill" : "regular"
+          }
+          className={getIconClass(isPathActive(`${basePath}/pending-musics`))}
+        />
+      ),
+    },
   ];
 
   const settingsItems: MenuBarItemConfig[] = [
@@ -318,7 +336,7 @@ export function MenuBar() {
                   href: `${basePath}/my-music`,
                   isActive: isPathActive(`${basePath}/my-music`),
                   icon: (
-                    <UserCircle
+                    <Faders
                       size={25}
                       weight={
                         isPathActive(`${basePath}/my-music`)

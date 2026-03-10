@@ -13,20 +13,22 @@ import { motion } from "framer-motion";
 import { BorderPro } from "./border-pro";
 import {
   CardsThree,
+  ChartDonut,
+  Faders,
   Gear,
-  MicrophoneStage,
-  MusicNotesSimple,
   SignOut,
   UserCircle,
 } from "@phosphor-icons/react/dist/ssr";
 import { ThemeToggleMenuBar } from "@/components/theme-toggle-menubar";
 import { SwitchLanguageMenuBar } from "@/app/[locale]/features/profile/components/swtich-language-menu-bar";
+import { usePermissions } from "@/hooks/use-permissions";
 
 export function LogoutButton() {
   const { user, logout } = useUser();
   const params = useParams();
   const locale = (params?.locale as string) || "en";
   const withLocale = (path: string) => `/${locale}${path}`;
+  const { canManageSystem } = usePermissions();
 
   const handleLogout = async () => {
     try {
@@ -45,7 +47,7 @@ export function LogoutButton() {
     <div>
       {!user ? (
         <Link href={withLocale("/auth/login")} className="size-10">
-          <div className="my-2 flex items-center gap-2 text-black dark:text-white font-apple">
+          <div className="my-2 flex items-center gap-2 font-apple text-black dark:text-white">
             <UserCircle size={20} weight="fill" className="size-10" />
 
             <div className="hidden md:flex">Login</div>
@@ -54,7 +56,7 @@ export function LogoutButton() {
       ) : (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <div className="my-2 flex items-center gap-2 font-semibold font-apple">
+            <div className="my-2 flex items-center gap-2 font-apple font-semibold">
               <BorderPro roundedSize="rounded-full">
                 {user?.avatarUrl ? (
                   <motion.img
@@ -64,27 +66,27 @@ export function LogoutButton() {
                     whileTap={{ scale: 0.9 }}
                   />
                 ) : (
-                  <div className="flex size-10 items-center justify-center rounded-full bg-zinc-200 text-sm font-bold uppercase text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 font-apple">
+                  <div className="flex size-10 items-center justify-center rounded-full bg-zinc-200 font-apple text-sm font-bold uppercase text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
                     {user?.username?.charAt(0) || <UserCircle size={20} />}
                   </div>
                 )}
               </BorderPro>
 
-              <div className="line-clamp-1 hidden max-w-[140px] truncate text-sm md:flex font-apple">
+              <div className="line-clamp-1 hidden max-w-[140px] truncate font-apple text-sm md:flex">
                 {user.username}
               </div>
             </div>
           </DropdownMenuTrigger>
 
           <DropdownMenuContent className="m-2 w-60 rounded-xl border bg-zinc-50 text-lg dark:border-zinc-800 dark:bg-zinc-950">
-            <div className="text-md flex items-center gap-1 rounded-t-md bg-zinc-200 px-2.5 py-0.5 font-bold dark:bg-zinc-800 font-apple">
-              <div className="line-clamp-1 w-full truncate py-1.5 text-sm md:flex font-apple">
+            <div className="text-md flex items-center gap-1 rounded-t-md bg-zinc-200 px-2.5 py-0.5 font-apple font-bold dark:bg-zinc-800">
+              <div className="line-clamp-1 w-full truncate py-1.5 font-apple text-sm md:flex">
                 {user.username}
               </div>
             </div>
 
             <div className="pt-1">
-              <Link
+              {/* <Link
                 href={`/${locale}/music/add-music`}
                 className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
               >
@@ -95,7 +97,7 @@ export function LogoutButton() {
                 />
 
                 <div className="text-sm font-medium">Add New Music</div>
-              </Link>
+              </Link> */}
 
               <Link
                 href={`/${locale}/music/library`}
@@ -109,7 +111,7 @@ export function LogoutButton() {
                 <div className="text-sm font-medium">Library</div>
               </Link>
 
-              <Link
+              {/* <Link
                 href={`/${locale}/music/add-singer`}
                 className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
               >
@@ -119,35 +121,67 @@ export function LogoutButton() {
                 />
 
                 <div className="text-sm font-medium">Add Artists</div>
-              </Link>
+              </Link> */}
 
-              <div className="pb-1">
-                <Link
-                  href={`/${locale}/music/profile-setting`}
-                  className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
-                >
-                  <Gear
-                    size={20}
-                    className="text-rose-500 dark:text-blue-500"
-                  />
-
-                  <div className="text-sm font-medium">Profile Setting</div>
-                </Link>
-              </div>
-
-              <div className="border-t py-1 dark:border-zinc-800 md:hidden">
+              <div className="py-1 dark:border-zinc-800 md:hidden">
                 <div className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800">
-                  <ThemeToggleMenuBar className="size-5 text-sm font-medium text-rose-500 dark:text-blue-500" />
+                  <ThemeToggleMenuBar className="size-5 text-rose-500 dark:text-blue-500" />
 
                   <div className="text-sm font-medium">Theme</div>
                 </div>
 
                 <div className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800">
-                  <SwitchLanguageMenuBar className="text-sm font-medium" />
+                  <SwitchLanguageMenuBar className="" />
                 </div>
               </div>
 
-              <div className="space-y-2 border-t pt-1 dark:border-zinc-800">
+              <div className="border-t pt-1 dark:border-zinc-800">
+                {canManageSystem && (
+                  <div className="">
+                    <Link
+                      href={`/${locale}/music/management-page`}
+                      className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                    >
+                      <ChartDonut
+                        size={20}
+                        className="text-rose-500 dark:text-blue-500"
+                      />
+
+                      <div className="text-sm font-medium">Management</div>
+                    </Link>
+                  </div>
+                )}
+
+                <div className="">
+                  <Link
+                    href={`/${locale}/music/my-music`}
+                    className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                  >
+                    <Faders
+                      size={20}
+                      className="text-rose-500 dark:text-blue-500"
+                    />
+
+                    <div className="text-sm font-medium">My Music</div>
+                  </Link>
+                </div>
+
+                <div className="">
+                  <Link
+                    href={`/${locale}/music/profile-setting`}
+                    className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                  >
+                    <Gear
+                      size={20}
+                      className="text-rose-500 dark:text-blue-500"
+                    />
+
+                    <div className="text-sm font-medium">Profile Setting</div>
+                  </Link>
+                </div>
+              </div>
+
+              <div className="border-t pt-1 dark:border-zinc-800">
                 <div
                   className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
                   onClick={handleLogout}
