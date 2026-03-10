@@ -29,6 +29,7 @@ type IMusicContext = {
   isPlaying: boolean;
   isPaused: boolean;
   isMuted: boolean;
+  isMixMode: boolean;
   currentLyrics: string | null;
   subtitles: Subtitle[];
   currentSubtitleId: number | null;
@@ -44,6 +45,7 @@ type IMusicContext = {
   isRepeat: boolean | null;
   handleToggleRepeat: () => void;
   handleToggleKaraoke: () => void;
+  handleToggleMixMode: () => void;
   setIsPlayerPageOpen: (isOpen: boolean) => void;
 };
 
@@ -226,6 +228,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   const [isPaused, setIsPaused] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isRepeat, setIsRepeat] = useState(false);
+  const [isMixMode, setIsMixMode] = useState(false);
   const [currentMusic, setCurrentMusic] = useState<IMusic | null>(null);
   const [subtitles, setSubtitles] = useState<Subtitle[]>([]);
   const [currentLyrics, setCurrentLyrics] = useState<string | null>(null);
@@ -242,8 +245,14 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   const currentMusicIdRef = useRef<string | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const { isAuthenticated, user } = useUser();
+  const mixAudioRef = useRef<HTMLAudioElement | null>(null);
+  const crossfadeInProgressRef = useRef(false);
+  const { user } = useUser();
   const { canListenWithoutAds } = usePermissions();
+
+  const MIX_TRIGGER_REMAINING_S = 15; // khi bài hiện tại còn ~6-7s
+  const MIX_CROSSFADE_MS = 5000; // thời gian crossfade
+  const MIX_START_AT_S = 10; // khi bắt đầu bài mới sẽ nhảy tới giây 10
 
   // ----------------------------
   // Load subtitles for the current track from cloud/raw
@@ -354,6 +363,97 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   const previousKaraokeModeRef = useRef<boolean>(false);
   const timeUpdateIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  const crossfadeToMusic = useCallback(
+    async (nextMusic: IMusic) => {
+      const from = audioRef.current;
+      const to = mixAudioRef.current;
+      if (!from || !to) return;
+      if (crossfadeInProgressRef.current) return;
+
+      // Nếu đang paused thì không mix, phát kiểu thường
+      if (from.paused) {
+        setCurrentMusic(nextMusic);
+        setIsPlaying(true);
+        setIsPaused(false);
+        setCurrentLyrics(null);
+        setCurrentSubtitleId(null);
+        setIsKaraokeMode(false);
+        return;
+      }
+
+      crossfadeInProgressRef.current = true;
+
+      // Tránh effect "isNewTrack" reset src/time: đánh dấu track mới trước
+      previousMusicIdRef.current = nextMusic.id;
+      previousKaraokeModeRef.current = false;
+
+      // UI chuyển sang bài mới trong lúc mix
+      setCurrentMusic(nextMusic);
+      setIsPlaying(true);
+      setIsPaused(false);
+      setCurrentLyrics(null);
+      setCurrentSubtitleId(null);
+      setIsKaraokeMode(false);
+
+      const startVol = Math.max(0, Math.min(1, from.volume || 1));
+      const nextSource = nextMusic.audio;
+
+      try {
+        to.src = nextSource;
+        to.currentTime = 0;
+        to.muted = from.muted;
+        to.volume = 0;
+
+        await new Promise<void>((resolve) => {
+          const handler = () => resolve();
+          to.addEventListener("canplay", handler, { once: true });
+        });
+
+        // Nhảy vào bài mới từ giây thứ 10 (nếu bài đủ dài)
+        if (Number.isFinite(to.duration) && to.duration > MIX_START_AT_S + 0.5) {
+          to.currentTime = MIX_START_AT_S;
+        }
+
+        await to.play();
+
+        const start = performance.now();
+        const step = (now: number) => {
+          const t = Math.min((now - start) / MIX_CROSSFADE_MS, 1);
+          from.volume = startVol * (1 - t);
+          to.volume = startVol * t;
+
+          if (t < 1) {
+            requestAnimationFrame(step);
+            return;
+          }
+
+          const carrySrc = to.src;
+          const carryTime = to.currentTime;
+
+          to.pause();
+          to.removeAttribute("src");
+          to.load();
+
+          from.pause();
+          from.src = carrySrc;
+          from.currentTime = carryTime;
+          from.muted = isMuted;
+          from.volume = startVol;
+          void from.play().catch(() => {});
+
+          crossfadeInProgressRef.current = false;
+        };
+
+        requestAnimationFrame(step);
+      } catch (e) {
+        console.warn("Crossfade failed, fallback to normal play:", e);
+        crossfadeInProgressRef.current = false;
+        setCurrentMusic(nextMusic);
+      }
+    },
+    [isMuted]
+  );
+
   useEffect(() => {
     if (!audioRef.current || !currentMusic) return;
 
@@ -388,7 +488,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         try {
           await audioEl.play();
           // Fade in audio mới
-          await fadeIn(audioEl, 300);
+          await fadeIn(audioEl, isMixMode ? 800 : 300);
         } catch (error) {
           console.error("Lỗi phát nhạc:", error);
         }
@@ -488,7 +588,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         timeUpdateIntervalRef.current = null;
       }
     };
-  }, [currentMusic, isKaraokeMode, user?.id]);
+  }, [currentMusic, isKaraokeMode, user?.id, isMixMode]);
 
   const handleToggleRepeat = useCallback(() => {
     setIsRepeat((prev) => !prev);
@@ -499,6 +599,10 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       setIsKaraokeMode((prev) => !prev);
     }
   }, [currentMusic]);
+
+  const handleToggleMixMode = useCallback(() => {
+    setIsMixMode((prev) => !prev);
+  }, []);
 
   const handlePlayRandomAudio = useCallback(async () => {
     try {
@@ -517,15 +621,32 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         });
         if (res2.ok) {
           const data2 = (await res2.json()) as IMusic[];
-          if (data2?.[0]) await handlePlayAudio(data2[0]);
+          if (data2?.[0]) {
+            if (isMixMode && !isRepeat && canListenWithoutAds) {
+              await crossfadeToMusic(data2[0]);
+            } else {
+              await handlePlayAudio(data2[0]);
+            }
+          }
           return;
         }
       }
-      await handlePlayAudio(randomMusic);
+      if (isMixMode && !isRepeat && canListenWithoutAds) {
+        await crossfadeToMusic(randomMusic);
+      } else {
+        await handlePlayAudio(randomMusic);
+      }
     } catch (e) {
       console.error("Lỗi random nhạc:", e);
     }
-  }, [handlePlayAudio, currentMusic]);
+  }, [
+    handlePlayAudio,
+    currentMusic,
+    isMixMode,
+    isRepeat,
+    canListenWithoutAds,
+    crossfadeToMusic,
+  ]);
 
   const handlePauseAudio = useCallback(() => {
     if (!audioRef.current || audioRef.current.paused) return;
@@ -651,6 +772,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         audioRef.current.currentTime = 0;
         audioRef.current.play();
       } else {
+        if (crossfadeInProgressRef.current) return;
         // Kiểm tra nếu user không có quyền nghe không quảng cáo, hiển thị quảng cáo
         if (!canListenWithoutAds) {
           setPendingNextTrack(() => handlePlayRandomAudio);
@@ -674,6 +796,49 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     isRepeat,
     isPlayerPageOpen,
     canListenWithoutAds,
+  ]);
+
+  // Auto-mix: khi gần hết bài thì tự crossfade sang bài kế tiếp
+  useEffect(() => {
+    const audioEl = audioRef.current;
+    if (!audioEl) return;
+    if (!isMixMode) return;
+    if (isRepeat) return;
+    if (!canListenWithoutAds) return;
+
+    const onTimeUpdate = async () => {
+      if (crossfadeInProgressRef.current) return;
+      if (audioEl.paused) return;
+      if (!audioEl.duration || Number.isNaN(audioEl.duration)) return;
+
+      const remaining = audioEl.duration - audioEl.currentTime;
+      if (remaining > MIX_TRIGGER_REMAINING_S) return;
+
+      try {
+        const res = await fetch("/api/musics?random=1&limit=1", {
+          cache: "no-store",
+        });
+        if (!res.ok) return;
+        const data = (await res.json()) as IMusic[];
+        const next = data?.[0];
+        if (!next) return;
+        if (next.id === currentMusic?.id) return;
+        await crossfadeToMusic(next);
+      } catch {
+        // ignore
+      }
+    };
+
+    audioEl.addEventListener("timeupdate", onTimeUpdate);
+    return () => {
+      audioEl.removeEventListener("timeupdate", onTimeUpdate);
+    };
+  }, [
+    isMixMode,
+    isRepeat,
+    canListenWithoutAds,
+    currentMusic?.id,
+    crossfadeToMusic,
   ]);
 
   useEffect(() => {
@@ -743,6 +908,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       isPlaying={isPlaying}
       isPaused={isPaused}
       isMuted={isMuted}
+      isMixMode={isMixMode}
       currentLyrics={currentLyrics}
       subtitles={subtitles}
       currentSubtitleId={currentSubtitleId}
@@ -757,9 +923,11 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       isRepeat={isRepeat}
       handleToggleRepeat={handleToggleRepeat}
       handleToggleKaraoke={handleToggleKaraoke}
+      handleToggleMixMode={handleToggleMixMode}
       setIsPlayerPageOpen={setIsPlayerPageOpen}
     >
       <audio ref={audioRef} />
+      <audio ref={mixAudioRef} />
       {children}
       <AdModal
         isOpen={showAd}

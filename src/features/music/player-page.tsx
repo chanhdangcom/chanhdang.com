@@ -785,6 +785,8 @@ const FeaturedPage = ({
     isRepeat,
     currentSubtitleId,
     subtitles,
+    isMixMode,
+    handleToggleMixMode,
   } = useAudio();
 
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
@@ -1010,12 +1012,18 @@ const FeaturedPage = ({
                   )}
                 </div>
 
-                <div className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white">
+                <div
+                  className={`cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white transition-colors`}
+                  onClick={handleToggleMixMode}
+                >
                   <Infinity size={25} weight="regular" />
                 </div>
 
-                <div className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white">
-                  <Exclude size={25} weight="fill" />
+                <div
+                  className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white"
+                  onClick={() => handleToggleMixMode()}
+                >
+                  <Exclude size={25} weight={isMixMode ? "fill" : "regular"} />
                 </div>
               </div>
 
