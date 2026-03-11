@@ -283,7 +283,7 @@ const useMusicActionsMenu = ({
 
         <DropdownMenuContent
           align="end"
-          className="min-w-[180px] rounded-xl border-white/10 bg-zinc-950/50 backdrop-blur-xl"
+          className="min-w-[180px] rounded-xl border-white/10 bg-white/10 backdrop-blur-xl"
         >
           <DropdownMenuItem
             onClick={onToggleFavorites}
@@ -351,8 +351,8 @@ const SubtitleItem = memo(
         id={`subtitle-${id}`}
         className={`z-40 mb-6 text-balance font-apple md:mb-8 ${
           isActive
-            ? "text-balance font-semibold leading-snug text-white md:text-5xl"
-            : "leading-snug text-white/20 md:text-5xl"
+            ? "text-balance leading-snug text-white md:text-5xl"
+            : "text-balance leading-snug text-white/20 md:text-5xl"
         }`}
       >
         {text}
@@ -596,6 +596,10 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
     isPaused,
     currentSubtitleId,
     subtitles,
+    isKaraokeMode,
+    isMixMode,
+    handleToggleMixMode,
+    handleToggleKaraoke,
     setIsPlayerPageOpen,
   } = useAudio();
 
@@ -691,7 +695,7 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
           </div>
 
           <header
-            className="flex items-center justify-start p-1 text-white md:py-0"
+            className="flex w-full items-center justify-start p-1 text-white"
             onTouchStart={(e) => {
               if (e.touches.length > 0) {
                 setTouchStartY(e.touches[0].clientY);
@@ -704,30 +708,60 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
               touchDeltaYRef.current = currentY - touchStartY;
             }}
           >
-            <ArrowsInSimple
-              size={30}
-              className="absolute bottom-14 right-8 z-50 ml-4 hidden cursor-pointer hover:scale-125 md:flex"
-              weight="fill"
-              onClick={onRequestClose}
-            />
-
-            <div className="mx-auto mb-8 mt-4 h-[5px] w-14 rounded-full bg-white/20" />
+            <div className="mx-auto mb-8 mt-4 h-[5px] w-16 rounded-full bg-white/20" />
           </header>
 
-          <div className="relative mx-3 space-y-4 md:space-y-10">
+          <ArrowsInSimple
+            size={30}
+            className="absolute bottom-8 right-8 z-50 ml-4 hidden cursor-pointer text-white md:flex"
+            weight="fill"
+            onClick={onRequestClose}
+          />
+
+          <motion.div
+            whileTap={{ scale: 0.2 }}
+            className="absolute right-24 top-8 hidden cursor-pointer rounded-full bg-white/10 p-2 text-white md:block"
+            onClick={() => handleToggleMixMode()}
+          >
+            <Exclude size={25} weight={isMixMode ? "fill" : "regular"} />
+          </motion.div>
+
+          {!isKaraokeMode ? (
+            <motion.div
+              whileTap={{ scale: 0.2 }}
+              onClick={() => handleToggleKaraoke()}
+              className={cn(
+                "absolute right-8 top-8 hidden cursor-pointer rounded-full bg-white/10 p-2 md:block",
+                !currentMusic?.beat ? "pointer-events-none opacity-40" : ""
+              )}
+            >
+              <MagicWand size={25} className="text-white" />
+            </motion.div>
+          ) : (
+            <div
+              onClick={() => handleToggleKaraoke()}
+              className="absolute right-8 top-8 cursor-pointer rounded-full bg-white/10 p-2"
+            >
+              <MagicWand size={25} weight="fill" className="text-white" />
+            </div>
+          )}
+
+          <div className="relative mx-3 space-y-4 md:mx-0 md:space-y-10">
             {currentMusic?.cover ? (
               <div
                 key={currentMusic?.cover}
                 className={cn(
-                  "mx-6 flex justify-center md:mx-14",
-                  currentMusic?.srt ? "md:justify-start" : "md:justify-center"
+                  "mx-6 flex justify-center md:mx-0",
+                  currentMusic?.srt
+                    ? "md:ml-16 md:justify-start"
+                    : "md:justify-center"
                 )}
               >
                 <div className="relative">
                   <motion.img
                     src={currentMusic?.cover}
                     alt="cover"
-                    className="flex h-[43vh] w-screen shrink-0 transform-gpu justify-center rounded-3xl object-cover shadow-xl [backface-visibility:hidden] md:h-[44vh] md:w-[31vw]"
+                    className="flex h-[43vh] w-screen shrink-0 transform-gpu justify-center rounded-3xl object-cover shadow-xl [backface-visibility:hidden] md:h-[43vh] md:w-[35vw]"
                     initial={false}
                     animate={{ scale: isPaused ? 0.75 : 1 }}
                     transition={{
@@ -980,31 +1014,36 @@ const FeaturedPage = ({
                       key={currentMusic?.cover}
                       className="flex justify-center gap-8"
                     >
-                      <BorderPro roundedSize="rounded-xl">
-                        <motion.img
-                          src={currentMusic?.cover}
-                          alt="cover"
-                          onClick={onRequestClose}
-                          className="flex size-16 shrink-0 justify-center rounded-xl object-cover"
-                          initial={false}
-                          transition={{ layout: COVER_LAYOUT_SPRING }}
-                          layoutId="cover-audio"
-                          style={{ willChange: "transform" }}
-                        />
-                      </BorderPro>
+                      <motion.img
+                        src={currentMusic?.cover}
+                        alt="cover"
+                        onClick={onRequestClose}
+                        className="flex size-16 shrink-0 justify-center rounded-xl object-cover"
+                        initial={false}
+                        transition={{ layout: COVER_LAYOUT_SPRING }}
+                        layoutId="cover-audio"
+                        style={{ willChange: "transform" }}
+                      />
                     </div>
                   ) : (
                     <div className="flex h-[45vh] w-full shrink-0 justify-center rounded-xl bg-zinc-700" />
                   )}
 
-                  <div id="info-song" className="">
+                  <motion.div
+                    id="info-song"
+                    layoutId="info-song"
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
                     <div className="line-clamp-1 font-semibold text-white">
                       {currentMusic?.title || tPlayer("titleSong")}
                     </div>
                     <div className="line-clamp-1 text-zinc-300">
                       {currentMusic?.singer || tCommon("singer")}
                     </div>
-                  </div>
+                  </motion.div>
                 </div>
 
                 <MusicActionsMenu />
@@ -1334,33 +1373,46 @@ export function PlayerPage({ setIsClick }: IProp) {
           currentMusic?.srt ? "justify-start" : "justify-center"
         )}
       >
-        <div className="fixed bottom-0 z-50 w-full space-y-4 px-8 pb-8 md:bottom-2 md:w-[40vw] md:space-y-4">
+        <div
+          className={cn(
+            "fixed bottom-0 z-50 w-full space-y-4 px-8 pb-8 md:bottom-2 md:ml-16 md:w-[35vw] md:space-y-4 md:px-0",
+            currentMusic?.srt ? "md:ml-16" : "md:ml-0"
+          )}
+        >
           {/* <div className="pointer-events-none absolute -bottom-16 left-0 -z-10 h-[45vh] w-full scale-150 bg-black blur-xl brightness-0 md:bg-black/60 md:blur-3xl" /> */}
 
           {isClickLyric && (
             <>
               {!isKaraokeMode ? (
-                <div
+                <motion.div
+                  whileTap={{ scale: 0.2 }}
                   onClick={() => handleToggleKaraoke()}
                   className="absolute -top-8 right-8 cursor-pointer rounded-full bg-white/10 p-2"
                 >
                   <MagicWand size={25} className="text-white" />
-                </div>
+                </motion.div>
               ) : (
-                <div
+                <motion.div
+                  whileTap={{ scale: 0.2 }}
                   onClick={() => handleToggleKaraoke()}
-                  className="absolute -top-16 right-8 cursor-pointer rounded-full bg-white/10 p-2"
+                  className="absolute -top-8 right-8 cursor-pointer rounded-full bg-white/10 p-2"
                 >
-                  <MagicWand size={25} weight="fill" />
-                </div>
+                  <MagicWand size={25} weight="fill" className="text-white" />
+                </motion.div>
               )}
             </>
           )}
 
           {!isClickLyric && !isClickFeatured && (
-            <div className="mx-2 md:mx-14">
+            <div className="mx-2 md:mx-0">
               <div className="flex items-center justify-between">
-                <div id="info-song">
+                <motion.div
+                  id="info-song"
+                  layoutId="info-song"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
                   <div className="line-clamp-1 text-xl font-semibold text-white">
                     {currentMusic?.title || tPlayer("titleSong")}
                   </div>
@@ -1377,33 +1429,41 @@ export function PlayerPage({ setIsClick }: IProp) {
                       {currentMusic?.singer || tCommon("singer")}
                     </span>
                   )}
-                </div>
+                </motion.div>
 
                 <MusicActionsMenu />
               </div>
 
-              <div className="mt-4 md:mt-0 flex items-center justify-center">
+              <motion.div
+                whileTap={{ scale: 1.05 }}
+                className="mt-4 flex items-center justify-center md:mt-0"
+              >
                 <AudioTimeLine coverUrl={currentMusic?.cover || ""} />
-              </div>
+              </motion.div>
             </div>
           )}
 
           {(isClickLyric || isClickFeatured) && (
-            <div className="mx-2 flex items-center justify-center">
+            <motion.div
+              whileTap={{ scale: 1.05 }}
+              className="mx-2 flex items-center justify-center"
+            >
               <AudioTimeLine coverUrl={currentMusic?.cover || ""} />
-            </div>
+            </motion.div>
           )}
 
           <div className="flex items-center justify-center">
-            <div className="mx-8 mb-2 flex w-full items-center justify-between text-white md:mx-20">
-              <button
+            <div className="mx-8 mb-2 flex w-full items-center justify-between text-white md:mx-8">
+              <motion.button
+                whileTap={{ scale: 0.2 }}
                 onClick={handAudioForward}
                 className="flex h-12 w-12 cursor-pointer items-center justify-center"
               >
                 <Rewind size={35} weight="fill" />
-              </button>
+              </motion.button>
 
-              <button
+              <motion.button
+                whileTap={{ scale: 0.2 }}
                 onClick={
                   isPlaying
                     ? handlePauseAudio
@@ -1418,22 +1478,26 @@ export function PlayerPage({ setIsClick }: IProp) {
                 ) : (
                   <Play size={40} weight="fill" />
                 )}
-              </button>
+              </motion.button>
 
-              <button
+              <motion.button
+                whileTap={{ scale: 0.2 }}
                 onClick={handleAudioSkip}
                 className="flex h-12 w-12 cursor-pointer items-center justify-center"
               >
                 <FastForward size={35} weight="fill" />
-              </button>
+              </motion.button>
             </div>
           </div>
 
-          <div className="mx-2 space-y-2 md:mx-14 md:space-y-4">
-            <VolumeBar />
+          <div className="mx-2 space-y-2 md:mx-0 md:space-y-4">
+            <motion.div whileTap={{ scale: 1.05 }}>
+              <VolumeBar />
+            </motion.div>
 
             <div className="mx-2 flex items-center justify-between text-base text-zinc-400">
-              <button
+              <motion.button
+                whileTap={{ scale: 0.2 }}
                 type="button"
                 onClick={() => {
                   setIsClickLyric(!isClickLyric);
@@ -1441,15 +1505,18 @@ export function PlayerPage({ setIsClick }: IProp) {
                 }}
                 className={`flex h-12 w-12 items-center justify-center rounded-full transition-colors md:hidden ${
                   isClickLyric ? "bg-white/20" : "bg-transparent"
+                } ${
+                  !currentMusic?.srt ? "pointer-events-none opacity-40" : ""
                 }`}
               >
                 <ChatTeardropText
                   size={25}
                   weight={isClickLyric ? "fill" : "regular"}
                 />
-              </button>
+              </motion.button>
 
-              <button
+              <motion.button
+                whileTap={{ scale: 0.2 }}
                 type="button"
                 onClick={() => {
                   handlePlayRandomAudio();
@@ -1457,7 +1524,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                 className={`hidden h-12 w-12 items-center justify-center rounded-full transition-colors md:flex`}
               >
                 <Shuffle size={25} weight={isClickLyric ? "fill" : "regular"} />
-              </button>
+              </motion.button>
 
               <Heart
                 size={25}
@@ -1469,8 +1536,8 @@ export function PlayerPage({ setIsClick }: IProp) {
                 onClick={handleToggleFavorites}
               />
 
-              <button
-                type="button"
+              <motion.button
+                whileTap={{ scale: 0.2 }}
                 onClick={() => {
                   setIsClickLyric(!isClickLyric);
                   setIsClickFeatured(false);
@@ -1483,9 +1550,10 @@ export function PlayerPage({ setIsClick }: IProp) {
                   size={25}
                   weight={isClickLyric ? "fill" : "regular"}
                 />
-              </button>
+              </motion.button>
 
-              <button
+              <motion.button
+                whileTap={{ scale: 0.2 }}
                 type="button"
                 onClick={() => {
                   setIsClickFeatured(!isClickFeatured);
@@ -1500,7 +1568,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                 ) : (
                   <ListStar size={25} weight="bold" />
                 )}
-              </button>
+              </motion.button>
             </div>
           </div>
         </div>
