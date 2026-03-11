@@ -82,7 +82,7 @@ export function VolumeBar() {
         onClick={handleMinSpeakerClick}
         className="flex items-center justify-start text-zinc-200/90 transition hover:text-white"
       >
-        <SpeakerNone size={18} weight="fill" />
+        <SpeakerNone size={15} weight="fill" />
       </button>
 
       <div className="flex flex-1 items-center">
@@ -129,7 +129,7 @@ export function VolumeBar() {
       </div>
 
       <div className="flex items-center justify-end text-zinc-200/90">
-        <SpeakerHigh size={18} weight="fill" className="ml-2" />
+        <SpeakerHigh size={15} weight="fill" className="ml-2" />
       </div>
     </div>
   );

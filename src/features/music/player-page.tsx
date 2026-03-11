@@ -3,7 +3,6 @@ import { useTranslations } from "next-intl";
 import { useAudio } from "@/components/music-provider";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import {
-  CaretDown,
   DotsThree,
   Infinity,
   FastForward,
@@ -19,6 +18,7 @@ import {
   RepeatOnce,
   ChatTeardropText,
   Heart,
+  ArrowsInSimple,
 } from "@phosphor-icons/react/dist/ssr";
 
 import { useCallback, useEffect, useState, useRef, memo } from "react";
@@ -27,6 +27,7 @@ import { useRouter, useParams } from "next/navigation";
 import { AudioTimeLine } from "./component/audio-time-line";
 import { BorderPro } from "./component/border-pro";
 import { ISingerItem } from "./type/singer";
+import { motion } from "framer-motion";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -40,7 +41,6 @@ import { VolumeBar } from "./volume-bar";
 import { AudioItemOrder } from "./component/audio-item-order";
 import Link from "next/link";
 import { useImageHoverColor } from "@/hooks/use-image-hover-color";
-import { motion } from "framer-motion";
 import { cn } from "@/utils/cn";
 
 type IProp = {
@@ -349,10 +349,10 @@ const SubtitleItem = memo(
     return (
       <p
         id={`subtitle-${id}`}
-        className={`z-40 mb-6 text-balance md:mb-8 ${
+        className={`z-40 mb-6 text-balance font-apple md:mb-8 ${
           isActive
-            ? "text-balance font-semibold leading-snug text-white"
-            : "leading-snug text-white/20"
+            ? "text-balance font-semibold leading-snug text-white md:text-5xl"
+            : "leading-snug text-white/20 md:text-5xl"
         }`}
       >
         {text}
@@ -464,11 +464,21 @@ const LyricPage = ({
   });
 
   const hoverBg = useImageHoverColor(currentMusic?.cover, {
-    alpha: isDesktop ? 1 : 0.72,
+    alpha: isDesktop ? 0.5 : 0.5,
   });
+
+  const hoverBgSolid = useImageHoverColor(currentMusic?.cover, {
+    alpha: 1,
+  });
+
   return (
     <>
-      <div className="fixed inset-0 z-50 flex justify-between space-y-4 px-4 md:rounded-3xl md:border md:border-white/10">
+      <div className="fixed inset-0 z-50 flex justify-between space-y-0 px-8 md:rounded-3xl md:border md:border-white/10">
+        <div
+          style={{ backgroundColor: hoverBgSolid }}
+          className="pointer-events-none absolute -bottom-16 left-0 z-10 h-[40vh] w-full scale-150 blur-xl brightness-50 md:bg-black/60 md:blur-3xl"
+        />
+
         <div className="w-full">
           <div
             className={`absolute inset-0 -z-10 flex justify-center bg-zinc-950 ${
@@ -481,9 +491,6 @@ const LyricPage = ({
               }`}
               style={{
                 backgroundColor: hoverBg,
-                backgroundImage: isDesktop
-                  ? `radial-gradient(120% 95% at 50% 0%, ${hoverBg} 0%, rgba(39, 39, 42, 0.28) 58%, rgba(9, 9, 11, 0.52) 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 44%)`
-                  : `linear-gradient(180deg, ${hoverBg} 0%, rgba(9, 9, 11, 0.84) 72%)`,
               }}
             />
           </div>
@@ -513,7 +520,7 @@ const LyricPage = ({
             <div className="mx-auto my-4 h-1 w-16 rounded-full bg-white/20 md:hidden" />
           </header>
 
-          <div className="absolute inset-x-4 z-50 mt-2 rounded-2xl p-1">
+          <div className="absolute inset-x-8 z-50 rounded-2xl p-1">
             <div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -658,7 +665,11 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
   // Kiểm tra xem bài hát có trong Favorites hay không
 
   const hoverBg = useImageHoverColor(currentMusic?.cover, {
-    alpha: isDesktop ? 1 : 0.72,
+    alpha: isDesktop ? 0.5 : 0.5,
+  });
+
+  const hoverBgSolid = useImageHoverColor(currentMusic?.cover, {
+    alpha: 1,
   });
 
   return (
@@ -672,15 +683,15 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
               }`}
               style={{
                 backgroundColor: hoverBg,
-                backgroundImage: isDesktop
-                  ? `radial-gradient(120% 95% at 50% 0%, ${hoverBg} 0%, rgba(39, 39, 42, 0.28) 58%, rgba(9, 9, 11, 0.52) 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 44%)`
-                  : `linear-gradient(180deg, ${hoverBg} 0%, rgba(9, 9, 11, 0.84) 72%)`,
+                // backgroundImage: isDesktop
+                //   ? `radial-gradient(120% 95% at 50% 0%, ${hoverBg} 0%, rgba(39, 39, 42, 0.28) 58%, rgba(9, 9, 11, 0.52) 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 44%)`
+                //   : `linear-gradient(180deg, ${hoverBg} 0%, rgba(9, 9, 11, 0.84) 72%)`,
               }}
             />
           </div>
 
           <header
-            className="flex items-center justify-start p-1 text-white md:py-4"
+            className="flex items-center justify-start p-1 text-white md:py-0"
             onTouchStart={(e) => {
               if (e.touches.length > 0) {
                 setTouchStartY(e.touches[0].clientY);
@@ -693,14 +704,14 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
               touchDeltaYRef.current = currentY - touchStartY;
             }}
           >
-            <CaretDown
-              size={20}
-              className="ml-4 hidden cursor-pointer md:flex"
-              weight="bold"
+            <ArrowsInSimple
+              size={30}
+              className="absolute bottom-14 right-8 z-50 ml-4 hidden cursor-pointer hover:scale-125 md:flex"
+              weight="fill"
               onClick={onRequestClose}
             />
 
-            <div className="mx-auto mb-8 mt-4 h-1 w-16 rounded-full bg-white/20 md:hidden" />
+            <div className="mx-auto mb-8 mt-4 h-[5px] w-14 rounded-full bg-white/20" />
           </header>
 
           <div className="relative mx-3 space-y-4 md:space-y-10">
@@ -708,7 +719,7 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
               <div
                 key={currentMusic?.cover}
                 className={cn(
-                  "flex justify-center md:mx-2",
+                  "mx-6 flex justify-center md:mx-14",
                   currentMusic?.srt ? "md:justify-start" : "md:justify-center"
                 )}
               >
@@ -716,7 +727,7 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                   <motion.img
                     src={currentMusic?.cover}
                     alt="cover"
-                    className="flex h-[70vh] w-full shrink-0 transform-gpu justify-center rounded-3xl object-cover [backface-visibility:hidden] md:h-[55vh] md:w-[37vw]"
+                    className="flex h-[43vh] w-screen shrink-0 transform-gpu justify-center rounded-3xl object-cover shadow-xl [backface-visibility:hidden] md:h-[44vh] md:w-[31vw]"
                     initial={false}
                     animate={{ scale: isPaused ? 0.75 : 1 }}
                     transition={{
@@ -739,7 +750,7 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
           <div
             ref={subtitleScrollRef}
             className={cn(
-              "scroll-spring pointer-events-none ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block",
+              "scroll-spring pointer-events-none ml-8 mr-16 hidden h-full w-full overflow-y-auto scrollbar-hide md:block",
               !currentMusic?.srt ? "md:hidden" : "md:block"
             )}
             style={{
@@ -748,7 +759,12 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
               overscrollBehaviorY: "auto",
             }}
           >
-            <div className="px-4 py-12 text-right font-apple text-4xl font-bold leading-loose text-zinc-300">
+            <div
+              style={{ backgroundColor: hoverBgSolid }}
+              className="pointer-events-none absolute -bottom-16 left-0 z-10 h-[25vh] w-full scale-150 blur-xl brightness-50 md:bg-black/60 md:blur-3xl"
+            />
+
+            <div className="px-4 py-12 text-left font-apple font-bold text-zinc-300">
               {subtitles.map((line) => (
                 <SubtitleItem
                   key={line.id}
@@ -904,7 +920,11 @@ const FeaturedPage = ({
   });
 
   const hoverBg = useImageHoverColor(currentMusic?.cover, {
-    alpha: isDesktop ? 1 : 0.72,
+    alpha: isDesktop ? 0.5 : 0.5,
+  });
+
+  const hoverBgSolid = useImageHoverColor(currentMusic?.cover, {
+    alpha: 1,
   });
 
   return (
@@ -922,9 +942,6 @@ const FeaturedPage = ({
               }`}
               style={{
                 backgroundColor: hoverBg,
-                backgroundImage: isDesktop
-                  ? `radial-gradient(120% 95% at 50% 0%, ${hoverBg} 0%, rgba(39, 39, 42, 0.28) 58%, rgba(9, 9, 11, 0.52) 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 44%)`
-                  : `linear-gradient(180deg, ${hoverBg} 0%, rgba(9, 9, 11, 0.84) 72%)`,
               }}
             />
           </div>
@@ -954,7 +971,7 @@ const FeaturedPage = ({
             <div className="mx-auto my-4 h-1 w-16 rounded-full bg-white/20 md:hidden" />
           </header>
 
-          <div className="absolute inset-x-4 z-50 mt-8 rounded-2xl p-1">
+          <div className="absolute inset-x-4 z-50 mx-4 mt-8 rounded-2xl">
             <div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -1049,8 +1066,13 @@ const FeaturedPage = ({
                   randomMusics.length > 0 && (
                     <div className="relative mt-2">
                       <div
+                        style={{ backgroundColor: hoverBgSolid }}
+                        className="pointer-events-none absolute -bottom-16 left-0 z-10 h-[20vh] w-full scale-150 blur-xl brightness-50 md:blur-3xl"
+                      />
+
+                      <div
                         ref={randomListRef}
-                        className="h-[40vh] w-full space-y-4 overflow-y-auto pr-2 scrollbar-hide"
+                        className="z-0 h-[50vh] w-full space-y-4 overflow-y-auto pb-28 pr-2 scrollbar-hide"
                         style={{ contentVisibility: "auto" }}
                       >
                         {randomMusics.slice(0, 8).map((music) => (
@@ -1312,31 +1334,31 @@ export function PlayerPage({ setIsClick }: IProp) {
           currentMusic?.srt ? "justify-start" : "justify-center"
         )}
       >
-        <div className="fixed bottom-0 z-50 w-full space-y-4 px-8 pb-8 md:bottom-8 md:w-[40vw] md:space-y-4">
-          <div className="pointer-events-none absolute -bottom-16 left-0 -z-10 h-[45vh] w-full scale-150 bg-black blur-xl brightness-0 md:bg-black/60 md:blur-3xl" />
+        <div className="fixed bottom-0 z-50 w-full space-y-4 px-8 pb-8 md:bottom-2 md:w-[40vw] md:space-y-4">
+          {/* <div className="pointer-events-none absolute -bottom-16 left-0 -z-10 h-[45vh] w-full scale-150 bg-black blur-xl brightness-0 md:bg-black/60 md:blur-3xl" /> */}
 
           {isClickLyric && (
             <>
               {!isKaraokeMode ? (
                 <div
                   onClick={() => handleToggleKaraoke()}
-                  className="absolute -top-16 right-8 cursor-pointer rounded-full bg-white/10 p-1"
+                  className="absolute -top-8 right-8 cursor-pointer rounded-full bg-white/10 p-2"
                 >
-                  <MagicWand size={28} className="text-white" />
+                  <MagicWand size={25} className="text-white" />
                 </div>
               ) : (
                 <div
                   onClick={() => handleToggleKaraoke()}
-                  className="absolute -top-16 right-8 cursor-pointer rounded-full bg-white/10 p-1"
+                  className="absolute -top-16 right-8 cursor-pointer rounded-full bg-white/10 p-2"
                 >
-                  <MagicWand size={28} weight="fill" />
+                  <MagicWand size={25} weight="fill" />
                 </div>
               )}
             </>
           )}
 
           {!isClickLyric && !isClickFeatured && (
-            <div className="space-y-0">
+            <div className="mx-2 md:mx-14">
               <div className="flex items-center justify-between">
                 <div id="info-song">
                   <div className="line-clamp-1 text-xl font-semibold text-white">
@@ -1360,25 +1382,25 @@ export function PlayerPage({ setIsClick }: IProp) {
                 <MusicActionsMenu />
               </div>
 
-              <div className="flex items-center justify-center">
+              <div className="mt-4 md:mt-0 flex items-center justify-center">
                 <AudioTimeLine coverUrl={currentMusic?.cover || ""} />
               </div>
             </div>
           )}
 
           {(isClickLyric || isClickFeatured) && (
-            <div className="flex items-center justify-center">
+            <div className="mx-2 flex items-center justify-center">
               <AudioTimeLine coverUrl={currentMusic?.cover || ""} />
             </div>
           )}
 
-          <div className="justify-cente flex items-center">
-            <div className="mx-8 mb-4 flex w-full items-center justify-between text-white">
+          <div className="flex items-center justify-center">
+            <div className="mx-8 mb-2 flex w-full items-center justify-between text-white md:mx-20">
               <button
                 onClick={handAudioForward}
                 className="flex h-12 w-12 cursor-pointer items-center justify-center"
               >
-                <Rewind size={40} weight="fill" />
+                <Rewind size={35} weight="fill" />
               </button>
 
               <button
@@ -1392,9 +1414,9 @@ export function PlayerPage({ setIsClick }: IProp) {
                 className="flex h-14 w-14 cursor-pointer items-center justify-center"
               >
                 {isPlaying ? (
-                  <Pause size={45} weight="fill" />
+                  <Pause size={40} weight="fill" />
                 ) : (
-                  <Play size={45} weight="fill" />
+                  <Play size={40} weight="fill" />
                 )}
               </button>
 
@@ -1402,15 +1424,15 @@ export function PlayerPage({ setIsClick }: IProp) {
                 onClick={handleAudioSkip}
                 className="flex h-12 w-12 cursor-pointer items-center justify-center"
               >
-                <FastForward size={40} weight="fill" />
+                <FastForward size={35} weight="fill" />
               </button>
             </div>
           </div>
 
-          <div className="space-y-8">
+          <div className="mx-2 space-y-2 md:mx-14 md:space-y-4">
             <VolumeBar />
 
-            <div className="mx-8 flex items-center justify-between text-base text-zinc-400 md:justify-center">
+            <div className="mx-2 flex items-center justify-between text-base text-zinc-400">
               <button
                 type="button"
                 onClick={() => {
@@ -1422,13 +1444,23 @@ export function PlayerPage({ setIsClick }: IProp) {
                 }`}
               >
                 <ChatTeardropText
-                  size={30}
+                  size={25}
                   weight={isClickLyric ? "fill" : "regular"}
                 />
               </button>
 
+              <button
+                type="button"
+                onClick={() => {
+                  handlePlayRandomAudio();
+                }}
+                className={`hidden h-12 w-12 items-center justify-center rounded-full transition-colors md:flex`}
+              >
+                <Shuffle size={25} weight={isClickLyric ? "fill" : "regular"} />
+              </button>
+
               <Heart
-                size={30}
+                size={25}
                 weight={isInFavorites ? "fill" : "regular"}
                 className={cn(
                   "cursor-pointer",
@@ -1436,6 +1468,22 @@ export function PlayerPage({ setIsClick }: IProp) {
                 )}
                 onClick={handleToggleFavorites}
               />
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsClickLyric(!isClickLyric);
+                  setIsClickFeatured(false);
+                }}
+                className={`hidden h-12 w-12 items-center justify-center rounded-full transition-colors md:flex ${
+                  isClickLyric ? "bg-white/20" : "bg-transparent"
+                }`}
+              >
+                <Infinity
+                  size={25}
+                  weight={isClickLyric ? "fill" : "regular"}
+                />
+              </button>
 
               <button
                 type="button"
@@ -1448,9 +1496,9 @@ export function PlayerPage({ setIsClick }: IProp) {
                 }`}
               >
                 {!isClickFeatured ? (
-                  <ListBullets size={28} weight="bold" />
+                  <ListBullets size={25} weight="bold" />
                 ) : (
-                  <ListStar size={28} weight="bold" />
+                  <ListStar size={25} weight="bold" />
                 )}
               </button>
             </div>
