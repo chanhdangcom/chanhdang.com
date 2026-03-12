@@ -262,6 +262,7 @@ export function AudioBar() {
         layout
         initial={false}
         animate={{ opacity: 1 }}
+        whileTap={{ scale: 1.05 }}
         transition={{
           layout: {
             type: "spring",
@@ -275,9 +276,7 @@ export function AudioBar() {
           scroll ? "inset-x-4 bottom-[88px]" : "inset-x-24 bottom-[32px]"
         }`}
       >
-        <div className="relative w-full overflow-hidden rounded-[50px] border border-white/20 bg-zinc-300/80 px-3 py-1 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset,0_-1px_0_rgba(0,0,0,0.06)_inset] backdrop-blur-sm dark:border-white/10 dark:bg-zinc-950/80 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset,0_-1px_0_rgba(0,0,0,0.45)_inset] md:rounded-[55px]">
-          <div className="via-white/8 dark:from-white/12 pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-b from-white/35 to-transparent dark:via-transparent dark:to-transparent" />
-          <div className="pointer-events-none absolute inset-x-6 bottom-0 h-px bg-black/10 dark:bg-white/10" />
+        <div className="relative w-full overflow-hidden rounded-[50px] border border-black/10 bg-white/70 px-3 py-1 backdrop-blur-md dark:border-white/10 dark:bg-black/50 md:rounded-[55px]">
           <div
             onClick={() => {
               if (window.innerWidth < 768) {

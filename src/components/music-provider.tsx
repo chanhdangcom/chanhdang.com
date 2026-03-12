@@ -26,6 +26,7 @@ type Subtitle = {
 type IMusicContext = {
   audioRef: React.RefObject<HTMLAudioElement | null>;
   currentMusic: IMusic | null;
+  queue: IMusic[];
   isPlaying: boolean;
   isPaused: boolean;
   isMuted: boolean;
@@ -47,6 +48,7 @@ type IMusicContext = {
   handleToggleKaraoke: () => void;
   handleToggleMixMode: () => void;
   setIsPlayerPageOpen: (isOpen: boolean) => void;
+  setQueue: (nextQueue: IMusic[]) => void;
 };
 
 // ----------------------------
@@ -230,6 +232,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   const [isRepeat, setIsRepeat] = useState(false);
   const [isMixMode, setIsMixMode] = useState(false);
   const [currentMusic, setCurrentMusic] = useState<IMusic | null>(null);
+  const [queue, setQueue] = useState<IMusic[]>([]);
   const [subtitles, setSubtitles] = useState<Subtitle[]>([]);
   const [currentLyrics, setCurrentLyrics] = useState<string | null>(null);
   const [currentSubtitleId, setCurrentSubtitleId] = useState<number | null>(
@@ -771,15 +774,44 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       if (isRepeat && audioRef.current) {
         audioRef.current.currentTime = 0;
         audioRef.current.play();
-      } else {
-        if (crossfadeInProgressRef.current) return;
-        // Kiểm tra nếu user không có quyền nghe không quảng cáo, hiển thị quảng cáo
+        return;
+      }
+
+      if (crossfadeInProgressRef.current) return;
+
+      // Ưu tiên phát theo hàng đợi nếu có
+      if (queue.length > 0) {
+        const [nextTrack, ...rest] = queue;
+        setQueue(rest);
+
+        const playNextFromQueue = async () => {
+          try {
+            if (isMixMode && !isRepeat && canListenWithoutAds) {
+              await crossfadeToMusic(nextTrack);
+            } else {
+              await handlePlayAudio(nextTrack);
+            }
+          } catch (error) {
+            console.error("Lỗi phát bài tiếp theo trong hàng đợi:", error);
+          }
+        };
+
+        // Nếu có quảng cáo, lưu lại hành động phát bài kế tiếp
         if (!canListenWithoutAds) {
-          setPendingNextTrack(() => handlePlayRandomAudio);
+          setPendingNextTrack(() => playNextFromQueue);
           setShowAd(true);
         } else {
-          handlePlayRandomAudio();
+          void playNextFromQueue();
         }
+        return;
+      }
+
+      // Nếu không có hàng đợi → giữ nguyên logic random hiện tại
+      if (!canListenWithoutAds) {
+        setPendingNextTrack(() => handlePlayRandomAudio);
+        setShowAd(true);
+      } else {
+        handlePlayRandomAudio();
       }
     };
 
@@ -796,6 +828,10 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     isRepeat,
     isPlayerPageOpen,
     canListenWithoutAds,
+    queue,
+    isMixMode,
+    crossfadeToMusic,
+    handlePlayAudio,
   ]);
 
   // Auto-mix: khi gần hết bài thì tự crossfade sang bài kế tiếp
@@ -905,6 +941,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     <Provider
       audioRef={audioRef}
       currentMusic={currentMusic}
+      queue={queue}
       isPlaying={isPlaying}
       isPaused={isPaused}
       isMuted={isMuted}
@@ -925,6 +962,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       handleToggleKaraoke={handleToggleKaraoke}
       handleToggleMixMode={handleToggleMixMode}
       setIsPlayerPageOpen={setIsPlayerPageOpen}
+      setQueue={setQueue}
     >
       <audio ref={audioRef} />
       <audio ref={mixAudioRef} />

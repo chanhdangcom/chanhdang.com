@@ -41,6 +41,12 @@
     @apply bg-zinc-50 font-body text-zinc-950 antialiased dark:bg-black dark:text-zinc-50;
     min-height: 100vh;
     overscroll-behavior-y: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
   }
 
   /* Selection styles */

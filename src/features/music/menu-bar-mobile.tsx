@@ -22,7 +22,7 @@ export function MenuBarMobile() {
   const locale = (params?.locale as string) || "vi";
   const { isAuthenticated } = useUser();
   const tCommon = useTranslations("music.common");
-  const tMenu = useTranslations("music.menu");
+
   const [show, setShow] = useState(true);
   const showStateRef = useRef(true);
   const [reactToScroll, setReactToScroll] = useState(false);
@@ -196,11 +196,10 @@ export function MenuBarMobile() {
     <div className="fixed inset-x-4 bottom-6 z-10 flex items-center justify-between font-apple sm:hidden">
       <AnimatePresence>
         {show ? (
-          <div className="relative overflow-hidden rounded-[50px] border border-white/20 bg-zinc-300/80 px-0.5 py-1 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset,0_-1px_0_rgba(0,0,0,0.06)_inset] backdrop-blur-sm dark:border-white/10 dark:bg-zinc-950/80 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset,0_-1px_0_rgba(0,0,0,0.45)_inset]">
-            <div className="via-white/8 dark:from-white/12 pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-b from-white/35 to-transparent dark:via-transparent dark:to-transparent" />
-
-            <div className="pointer-events-none absolute inset-x-6 bottom-0 h-px bg-black/10 dark:bg-white/10" />
-
+          <motion.div
+            whileTap={{ scale: 1.05 }}
+            className="relative overflow-hidden rounded-[50px] border border-white/20 bg-white/70 px-0.5 py-1 backdrop-blur-sm dark:border-white/10 dark:bg-black/70"
+          >
             <motion.div
               layout
               transition={{
@@ -218,7 +217,7 @@ export function MenuBarMobile() {
                 </div>
               ))}
             </motion.div>
-          </div>
+          </motion.div>
         ) : (
           <motion.div
             layout

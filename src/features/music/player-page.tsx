@@ -19,6 +19,7 @@ import {
   ChatTeardropText,
   Heart,
   ArrowsInSimple,
+  ArrowsCounterClockwise,
 } from "@phosphor-icons/react/dist/ssr";
 
 import { useCallback, useEffect, useState, useRef, memo } from "react";
@@ -27,7 +28,7 @@ import { useRouter, useParams } from "next/navigation";
 import { AudioTimeLine } from "./component/audio-time-line";
 import { BorderPro } from "./component/border-pro";
 import { ISingerItem } from "./type/singer";
-import { motion } from "framer-motion";
+import { motion, Reorder, useDragControls } from "framer-motion";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -122,6 +123,69 @@ const useDeferredRender = (isDesktop: boolean, delayMs = 220) => {
   }, [delayMs, isDesktop]);
 
   return isReady;
+};
+
+const QueueItem = ({
+  music,
+  onPlay,
+  scrollContainerRef,
+}: {
+  music: IMusic;
+  onPlay: () => void;
+  scrollContainerRef: React.RefObject<HTMLDivElement | null>;
+}) => {
+  const controls = useDragControls();
+  const [isDragging, setIsDragging] = useState(false);
+
+  return (
+    <Reorder.Item
+      key={music.id}
+      value={music}
+      dragControls={controls}
+      dragListener={false}
+      dragElastic={0.08}
+      dragMomentum={false}
+      onDrag={(_, info) => {
+        const container = scrollContainerRef.current;
+        if (!container) return;
+
+        const rect = container.getBoundingClientRect();
+        const y = info.point.y;
+        const edgeThreshold = 72; // px từ mép trên/dưới
+        const maxSpeed = 14; // tốc độ scroll tối đa
+
+        // Kéo gần phía trên → scroll lên
+        if (y < rect.top + edgeThreshold) {
+          const intensity = (rect.top + edgeThreshold - y) / edgeThreshold; // 0 → 1
+          container.scrollTop -= maxSpeed * intensity;
+        }
+
+        // Kéo gần phía dưới → scroll xuống
+        if (y > rect.bottom - edgeThreshold) {
+          const intensity = (y - (rect.bottom - edgeThreshold)) / edgeThreshold; // 0 → 1
+          container.scrollTop += maxSpeed * intensity;
+        }
+      }}
+      onDragStart={() => setIsDragging(true)}
+      onDragEnd={() => setIsDragging(false)}
+      className={cn(
+        "relative z-0 transform rounded-xl transition-all ease-out",
+        isDragging && "shadow-3xl z-50 bg-white/10 p-1.5 backdrop-blur-xl"
+      )}
+    >
+      <AudioItemOrder
+        music={music}
+        handlePlay={onPlay}
+        border={false}
+        titleVariant="alwaysWhite"
+        draggable
+        onDragHandlePointerDown={(event) => {
+          event.preventDefault();
+          controls.start(event);
+        }}
+      />
+    </Reorder.Item>
+  );
 };
 
 const fetchFavoriteMusicIds = async (
@@ -837,6 +901,8 @@ const FeaturedPage = ({
     subtitles,
     isMixMode,
     handleToggleMixMode,
+    queue,
+    setQueue,
   } = useAudio();
 
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
@@ -915,6 +981,12 @@ const FeaturedPage = ({
     let isMounted = true;
 
     const loadRandomMusics = async () => {
+      // Nếu queue đã có dữ liệu (ví dụ từ lần trước) thì chỉ sync lại, không random mới
+      if (queue.length > 0) {
+        setRandomMusics(queue);
+        return;
+      }
+
       setIsLoadingRandom(true);
       try {
         const parsed = await fetchRandomMusics(8);
@@ -924,6 +996,7 @@ const FeaturedPage = ({
         );
         if (isMounted) {
           setRandomMusics(filtered);
+          setQueue(filtered);
         }
       } catch (error) {
         if (!isMounted) return;
@@ -940,7 +1013,31 @@ const FeaturedPage = ({
     return () => {
       isMounted = false;
     };
-  }, [currentMusic?.id, isHeavyReady]);
+  }, [isHeavyReady, queue, currentMusic?.id, setQueue]);
+
+  const handleRefreshRandomQueue = async () => {
+    setIsLoadingRandom(true);
+    try {
+      const parsed = await fetchRandomMusics(8);
+      const filtered = parsed.filter((music) => music.id !== currentMusic?.id);
+      setRandomMusics(filtered);
+      setQueue(filtered);
+    } catch (error) {
+      console.error("Error refreshing random musics:", error);
+    } finally {
+      setIsLoadingRandom(false);
+    }
+  };
+
+  const handlePlayFromQueue = (musicId: string) => {
+    const index = randomMusics.findIndex((m) => m.id === musicId);
+    if (index === -1) return;
+
+    const track = randomMusics[index];
+    const restQueue = randomMusics.filter((_, i) => i !== index);
+    setQueue(restQueue);
+    handlePlayAudio(track);
+  };
 
   const MusicActionsMenu = useMusicActionsMenu({
     isInFavorites: sharedActions.isInFavorites,
@@ -1050,14 +1147,16 @@ const FeaturedPage = ({
               </div>
 
               <div className="mt-4 flex items-center justify-between md:justify-start md:gap-16">
-                <div
+                <motion.div
+                  whileTap={{ scale: 0.2 }}
                   className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white"
                   onClick={() => handlePlayRandomAudio()}
                 >
                   <Shuffle size={25} weight="regular" />
-                </div>
+                </motion.div>
 
-                <div
+                <motion.div
+                  whileTap={{ scale: 0.2 }}
                   className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white"
                   onClick={() => handleToggleRepeat()}
                 >
@@ -1066,26 +1165,39 @@ const FeaturedPage = ({
                   ) : (
                     <RepeatOnce size={25} weight="regular" />
                   )}
-                </div>
+                </motion.div>
 
-                <div
+                <motion.div
+                  whileTap={{ scale: 0.2 }}
                   className={`cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white transition-colors`}
                   onClick={handleToggleMixMode}
                 >
                   <Infinity size={25} weight="regular" />
-                </div>
+                </motion.div>
 
-                <div
+                <motion.div
+                  whileTap={{ scale: 0.2 }}
                   className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white"
                   onClick={() => handleToggleMixMode()}
                 >
                   <Exclude size={25} weight={isMixMode ? "fill" : "regular"} />
-                </div>
+                </motion.div>
               </div>
 
               <div className="mt-4">
-                <div className="font-semibold text-white">
-                  {tPlayer("continueMusic")}
+                <div className="flex items-center justify-between">
+                  <div className="font-semibold text-white">
+                    {tPlayer("continueMusic")}
+                  </div>
+
+                  <motion.button
+                    whileTap={{ scale: 0.2 }}
+                    type="button"
+                    onClick={handleRefreshRandomQueue}
+                    className="flex items-center gap-1 rounded-full bg-white/10 p-2 text-xs font-medium text-white"
+                  >
+                    <ArrowsCounterClockwise size={16} weight="bold" />
+                  </motion.button>
                 </div>
 
                 {!isHeavyReady && (
@@ -1109,21 +1221,28 @@ const FeaturedPage = ({
                         className="pointer-events-none absolute -bottom-16 left-0 z-10 h-[20vh] w-full scale-150 blur-xl brightness-50 md:blur-3xl"
                       />
 
-                      <div
-                        ref={randomListRef}
+                      <Reorder.Group
+                        ref={randomListRef as React.RefObject<HTMLDivElement>}
+                        axis="y"
+                        values={randomMusics}
+                        onReorder={(next) => {
+                          setRandomMusics(next);
+                          setQueue(next);
+                        }}
                         className="z-0 h-[50vh] w-full space-y-4 overflow-y-auto pb-28 pr-2 scrollbar-hide"
                         style={{ contentVisibility: "auto" }}
                       >
-                        {randomMusics.slice(0, 8).map((music) => (
-                          <AudioItemOrder
+                        {randomMusics.map((music) => (
+                          <QueueItem
                             key={music.id}
                             music={music}
-                            handlePlay={() => handlePlayAudio(music)}
-                            border={false}
-                            titleVariant="alwaysWhite"
+                            onPlay={() => handlePlayFromQueue(music.id)}
+                            scrollContainerRef={
+                              randomListRef as React.RefObject<HTMLDivElement | null>
+                            }
                           />
                         ))}
-                      </div>
+                      </Reorder.Group>
                     </div>
                   )}
               </div>

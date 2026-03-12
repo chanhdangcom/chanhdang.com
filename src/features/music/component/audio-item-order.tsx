@@ -2,6 +2,7 @@
 
 "use client";
 
+import React from "react";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { IPlaylistItem } from "../type/playlist";
 import { cn } from "@/lib/utils";
@@ -9,6 +10,7 @@ import { BorderPro } from "./border-pro";
 import { useAudio } from "@/components/music-provider";
 import { DynamicIslandWave } from "@/components/ui/dynamic-island";
 import { useTheme } from "next-themes";
+import { List } from "@phosphor-icons/react/dist/ssr";
 
 type IProp = {
   music: IMusic | IPlaylistItem;
@@ -20,6 +22,12 @@ type IProp = {
   duration?: string;
   border?: boolean;
   titleVariant?: "default" | "alwaysWhite";
+  /**
+   * Kích hoạt icon handle kéo thả (UI giống Apple Music).
+   * Việc drag thực tế sẽ được điều khiển từ component cha (Reorder.Item).
+   */
+  draggable?: boolean;
+  onDragHandlePointerDown?: (event: React.PointerEvent<HTMLDivElement>) => void;
 };
 
 export function AudioItemOrder({
@@ -31,12 +39,16 @@ export function AudioItemOrder({
   duration,
   border,
   titleVariant = "default",
+  draggable = false,
+  onDragHandlePointerDown,
 }: IProp) {
   const { currentMusic, isPlaying } = useAudio();
   const { resolvedTheme } = useTheme();
 
   if (!music) {
-    return <div className="text-rose-500 font-apple">Dữ liệu nhạc chưa sẵn sàng</div>;
+    return (
+      <div className="font-apple text-rose-500">Dữ liệu nhạc chưa sẵn sàng</div>
+    );
   }
 
   const isCurrentTrack =
@@ -70,7 +82,7 @@ export function AudioItemOrder({
         >
           <div className="flex items-center justify-between">
             <div className="w-40">
-              <div className="flex items-center gap-1 text-sm font-semibold font-apple">
+              <div className="flex items-center gap-1 font-apple text-sm font-semibold">
                 <span
                   className={cn(
                     "line-clamp-1",
@@ -81,7 +93,7 @@ export function AudioItemOrder({
                 </span>
               </div>
 
-              <div className="line-clamp-1 text-sm text-zinc-400 font-apple">
+              <div className="line-clamp-1 font-apple text-sm text-zinc-400">
                 {music.singer || "SINGER"}
               </div>
             </div>
@@ -93,7 +105,19 @@ export function AudioItemOrder({
             )}
 
             {duration && (
-              <div className="text-sm text-zinc-400 font-apple">{duration}</div>
+              <div className="font-apple text-sm text-zinc-400">{duration}</div>
+            )}
+
+            {draggable && (
+              <div
+                className="flex cursor-grab items-center active:cursor-grabbing"
+                onPointerDown={(event) => {
+                  event.stopPropagation();
+                  onDragHandlePointerDown?.(event);
+                }}
+              >
+                <List size={22} weight="regular" className="text-white/20" />
+              </div>
             )}
 
             {isCurrentTrack ? (
