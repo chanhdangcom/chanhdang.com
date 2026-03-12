@@ -129,10 +129,12 @@ const QueueItem = ({
   music,
   onPlay,
   scrollContainerRef,
+  onDragStateChange,
 }: {
   music: IMusic;
   onPlay: () => void;
   scrollContainerRef: React.RefObject<HTMLDivElement | null>;
+  onDragStateChange?: (dragging: boolean) => void;
 }) => {
   const controls = useDragControls();
   const [isDragging, setIsDragging] = useState(false);
@@ -145,14 +147,22 @@ const QueueItem = ({
       dragListener={false}
       dragElastic={0.08}
       dragMomentum={false}
+      onDragStart={() => {
+        setIsDragging(true);
+        onDragStateChange?.(true);
+      }}
+      onDragEnd={() => {
+        setIsDragging(false);
+        onDragStateChange?.(false);
+      }}
       onDrag={(_, info) => {
         const container = scrollContainerRef.current;
         if (!container) return;
 
         const rect = container.getBoundingClientRect();
         const y = info.point.y;
-        const edgeThreshold = 72; // px từ mép trên/dưới
-        const maxSpeed = 14; // tốc độ scroll tối đa
+        const edgeThreshold = 70; // px từ mép trên/dưới
+        const maxSpeed = 20; // tốc độ scroll tối đa
 
         // Kéo gần phía trên → scroll lên
         if (y < rect.top + edgeThreshold) {
@@ -166,8 +176,6 @@ const QueueItem = ({
           container.scrollTop += maxSpeed * intensity;
         }
       }}
-      onDragStart={() => setIsDragging(true)}
-      onDragEnd={() => setIsDragging(false)}
       className={cn(
         "relative z-0 transform rounded-xl transition-all ease-out",
         isDragging && "shadow-3xl z-50 bg-white/10 p-1.5 backdrop-blur-xl"
@@ -180,8 +188,8 @@ const QueueItem = ({
         titleVariant="alwaysWhite"
         draggable
         onDragHandlePointerDown={(event) => {
-          event.preventDefault();
-          controls.start(event);
+          // Bắt đầu drag sao cho item bám sát vị trí cảm ứng
+          controls.start(event, { snapToCursor: true });
         }}
       />
     </Reorder.Item>
@@ -250,7 +258,7 @@ const updateFavoriteMusicCache = (
   });
 };
 
-const fetchRandomMusics = async (limit = 8): Promise<IMusic[]> => {
+const fetchRandomMusics = async (limit = 12): Promise<IMusic[]> => {
   if (randomMusicCache && randomMusicCache.expiresAt > Date.now()) {
     return randomMusicCache.items;
   }
@@ -884,9 +892,11 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
 const FeaturedPage = ({
   onRequestClose,
   sharedActions,
+  onQueueDraggingChange,
 }: {
   onRequestClose: () => void;
   sharedActions: SharedMusicActionsProps;
+  onQueueDraggingChange?: (dragging: boolean) => void;
 }) => {
   const {
     currentMusic,
@@ -915,6 +925,12 @@ const FeaturedPage = ({
   const isHeavyReady = useDeferredRender(isDesktop, 220);
   const tPlayer = useTranslations("music.player");
   const tCommon = useTranslations("music.common");
+  const [isQueueDragging, setIsQueueDragging] = useState(false);
+
+  const handleItemDragStateChange = (dragging: boolean) => {
+    setIsQueueDragging(dragging);
+    onQueueDraggingChange?.(dragging);
+  };
 
   // Thêm hiệu ứng scroll lò xo
   useSpringScroll(subtitleScrollRef);
@@ -989,7 +1005,7 @@ const FeaturedPage = ({
 
       setIsLoadingRandom(true);
       try {
-        const parsed = await fetchRandomMusics(8);
+        const parsed = await fetchRandomMusics(12);
         // Loại bỏ bài hát hiện tại nếu có
         const filtered = parsed.filter(
           (music) => music.id !== currentMusic?.id
@@ -1018,7 +1034,7 @@ const FeaturedPage = ({
   const handleRefreshRandomQueue = async () => {
     setIsLoadingRandom(true);
     try {
-      const parsed = await fetchRandomMusics(8);
+      const parsed = await fetchRandomMusics(12);
       const filtered = parsed.filter((music) => music.id !== currentMusic?.id);
       setRandomMusics(filtered);
       setQueue(filtered);
@@ -1216,10 +1232,12 @@ const FeaturedPage = ({
                   !isLoadingRandom &&
                   randomMusics.length > 0 && (
                     <div className="relative mt-2">
-                      <div
-                        style={{ backgroundColor: hoverBgSolid }}
-                        className="pointer-events-none absolute -bottom-16 left-0 z-10 h-[20vh] w-full scale-150 blur-xl brightness-50 md:blur-3xl"
-                      />
+                      {!isQueueDragging && (
+                        <div
+                          style={{ backgroundColor: hoverBgSolid }}
+                          className="pointer-events-none absolute -bottom-16 left-0 z-10 h-[20vh] w-full scale-150 blur-xl brightness-50 md:blur-3xl"
+                        />
+                      )}
 
                       <Reorder.Group
                         ref={randomListRef as React.RefObject<HTMLDivElement>}
@@ -1229,7 +1247,10 @@ const FeaturedPage = ({
                           setRandomMusics(next);
                           setQueue(next);
                         }}
-                        className="z-0 h-[50vh] w-full space-y-4 overflow-y-auto pb-28 pr-2 scrollbar-hide"
+                        className={cn(
+                          "z-0 h-[50vh] w-full space-y-4 overflow-y-auto pb-28 pr-2 scrollbar-hide",
+                          isQueueDragging && "h-full"
+                        )}
                         style={{ contentVisibility: "auto" }}
                       >
                         {randomMusics.map((music) => (
@@ -1237,6 +1258,7 @@ const FeaturedPage = ({
                             key={music.id}
                             music={music}
                             onPlay={() => handlePlayFromQueue(music.id)}
+                            onDragStateChange={handleItemDragStateChange}
                             scrollContainerRef={
                               randomListRef as React.RefObject<HTMLDivElement | null>
                             }
@@ -1303,6 +1325,7 @@ export function PlayerPage({ setIsClick }: IProp) {
   const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
   const [isClickFeatured, setIsClickFeatured] = useState(false);
   const [singerId, setSingerId] = useState<string | null>(null);
+  const [isQueueDragging, setIsQueueDragging] = useState(false);
 
   useEffect(() => {
     if (!user?.id || !currentMusic?.id) {
@@ -1476,6 +1499,7 @@ export function PlayerPage({ setIsClick }: IProp) {
         <FeaturedPage
           onRequestClose={handleClosePlayer}
           sharedActions={sharedActions}
+          onQueueDraggingChange={setIsQueueDragging}
         />
       ) : isClickLyric ? (
         <LyricPage
@@ -1498,8 +1522,6 @@ export function PlayerPage({ setIsClick }: IProp) {
             currentMusic?.srt ? "md:ml-16" : "md:ml-0"
           )}
         >
-          {/* <div className="pointer-events-none absolute -bottom-16 left-0 -z-10 h-[45vh] w-full scale-150 bg-black blur-xl brightness-0 md:bg-black/60 md:blur-3xl" /> */}
-
           {isClickLyric && (
             <>
               {!isKaraokeMode ? (
@@ -1522,7 +1544,7 @@ export function PlayerPage({ setIsClick }: IProp) {
             </>
           )}
 
-          {!isClickLyric && !isClickFeatured && (
+          {!isClickLyric && !isClickFeatured && !isQueueDragging && (
             <div className="mx-2 md:mx-0">
               <div className="flex items-center justify-between">
                 <motion.div
@@ -1562,7 +1584,7 @@ export function PlayerPage({ setIsClick }: IProp) {
             </div>
           )}
 
-          {(isClickLyric || isClickFeatured) && (
+          {(isClickLyric || isClickFeatured) && !isQueueDragging && (
             <motion.div
               whileTap={{ scale: 1.05 }}
               className="mx-2 flex items-center justify-center"
@@ -1571,125 +1593,132 @@ export function PlayerPage({ setIsClick }: IProp) {
             </motion.div>
           )}
 
-          <div className="flex items-center justify-center">
-            <div className="mx-8 mb-2 flex w-full items-center justify-between text-white md:mx-8">
-              <motion.button
-                whileTap={{ scale: 0.2 }}
-                onClick={handAudioForward}
-                className="flex h-12 w-12 cursor-pointer items-center justify-center"
-              >
-                <Rewind size={35} weight="fill" />
-              </motion.button>
+          {!isQueueDragging && (
+            <div className="flex items-center justify-center">
+              <div className="mx-14 mb-2 flex w-full items-center justify-between text-white md:mx-20">
+                <motion.button
+                  whileTap={{ scale: 0.2 }}
+                  onClick={handAudioForward}
+                  className="flex h-12 w-12 cursor-pointer items-center justify-center"
+                >
+                  <Rewind size={35} weight="fill" />
+                </motion.button>
 
-              <motion.button
-                whileTap={{ scale: 0.2 }}
-                onClick={
-                  isPlaying
-                    ? handlePauseAudio
-                    : isPaused
-                      ? handleResumeAudio
-                      : handlePlayRandomAudio
-                }
-                className="flex h-14 w-14 cursor-pointer items-center justify-center"
-              >
-                {isPlaying ? (
-                  <Pause size={40} weight="fill" />
-                ) : (
-                  <Play size={40} weight="fill" />
-                )}
-              </motion.button>
+                <motion.button
+                  whileTap={{ scale: 0.2 }}
+                  onClick={
+                    isPlaying
+                      ? handlePauseAudio
+                      : isPaused
+                        ? handleResumeAudio
+                        : handlePlayRandomAudio
+                  }
+                  className="flex h-14 w-14 cursor-pointer items-center justify-center"
+                >
+                  {isPlaying ? (
+                    <Pause size={40} weight="fill" />
+                  ) : (
+                    <Play size={40} weight="fill" />
+                  )}
+                </motion.button>
 
-              <motion.button
-                whileTap={{ scale: 0.2 }}
-                onClick={handleAudioSkip}
-                className="flex h-12 w-12 cursor-pointer items-center justify-center"
-              >
-                <FastForward size={35} weight="fill" />
-              </motion.button>
+                <motion.button
+                  whileTap={{ scale: 0.2 }}
+                  onClick={handleAudioSkip}
+                  className="flex h-12 w-12 cursor-pointer items-center justify-center"
+                >
+                  <FastForward size={35} weight="fill" />
+                </motion.button>
+              </div>
             </div>
-          </div>
+          )}
 
-          <div className="mx-2 space-y-2 md:mx-0 md:space-y-4">
-            <motion.div whileTap={{ scale: 1.05 }}>
-              <VolumeBar />
-            </motion.div>
+          {!isQueueDragging && (
+            <div className="mx-2 space-y-2 md:mx-0 md:space-y-4">
+              <motion.div whileTap={{ scale: 1.05 }}>
+                <VolumeBar />
+              </motion.div>
 
-            <div className="mx-2 flex items-center justify-between text-base text-zinc-400">
-              <motion.button
-                whileTap={{ scale: 0.2 }}
-                type="button"
-                onClick={() => {
-                  setIsClickLyric(!isClickLyric);
-                  setIsClickFeatured(false);
-                }}
-                className={`flex h-12 w-12 items-center justify-center rounded-full transition-colors md:hidden ${
-                  isClickLyric ? "bg-white/20" : "bg-transparent"
-                } ${
-                  !currentMusic?.srt ? "pointer-events-none opacity-40" : ""
-                }`}
-              >
-                <ChatTeardropText
+              <div className="mx-2 flex items-center justify-between text-base text-zinc-400">
+                <motion.button
+                  whileTap={{ scale: 0.2 }}
+                  type="button"
+                  onClick={() => {
+                    setIsClickLyric(!isClickLyric);
+                    setIsClickFeatured(false);
+                  }}
+                  className={`flex h-12 w-12 items-center justify-center rounded-full transition-colors md:hidden ${
+                    isClickLyric ? "bg-white/20" : "bg-transparent"
+                  } ${
+                    !currentMusic?.srt ? "pointer-events-none opacity-40" : ""
+                  }`}
+                >
+                  <ChatTeardropText
+                    size={25}
+                    weight={isClickLyric ? "fill" : "regular"}
+                  />
+                </motion.button>
+
+                <motion.button
+                  whileTap={{ scale: 0.2 }}
+                  type="button"
+                  onClick={() => {
+                    handlePlayRandomAudio();
+                  }}
+                  className={`hidden h-12 w-12 items-center justify-center rounded-full transition-colors md:flex`}
+                >
+                  <Shuffle
+                    size={25}
+                    weight={isClickLyric ? "fill" : "regular"}
+                  />
+                </motion.button>
+
+                <Heart
                   size={25}
-                  weight={isClickLyric ? "fill" : "regular"}
+                  weight={isInFavorites ? "fill" : "regular"}
+                  className={cn(
+                    "cursor-pointer",
+                    isInFavorites ? "text-rose-500" : "text-zinc-400"
+                  )}
+                  onClick={handleToggleFavorites}
                 />
-              </motion.button>
 
-              <motion.button
-                whileTap={{ scale: 0.2 }}
-                type="button"
-                onClick={() => {
-                  handlePlayRandomAudio();
-                }}
-                className={`hidden h-12 w-12 items-center justify-center rounded-full transition-colors md:flex`}
-              >
-                <Shuffle size={25} weight={isClickLyric ? "fill" : "regular"} />
-              </motion.button>
+                <motion.button
+                  whileTap={{ scale: 0.2 }}
+                  onClick={() => {
+                    setIsClickLyric(!isClickLyric);
+                    setIsClickFeatured(false);
+                  }}
+                  className={`hidden h-12 w-12 items-center justify-center rounded-full transition-colors md:flex ${
+                    isClickLyric ? "bg-white/20" : "bg-transparent"
+                  }`}
+                >
+                  <Infinity
+                    size={25}
+                    weight={isClickLyric ? "fill" : "regular"}
+                  />
+                </motion.button>
 
-              <Heart
-                size={25}
-                weight={isInFavorites ? "fill" : "regular"}
-                className={cn(
-                  "cursor-pointer",
-                  isInFavorites ? "text-rose-500" : "text-zinc-400"
-                )}
-                onClick={handleToggleFavorites}
-              />
-
-              <motion.button
-                whileTap={{ scale: 0.2 }}
-                onClick={() => {
-                  setIsClickLyric(!isClickLyric);
-                  setIsClickFeatured(false);
-                }}
-                className={`hidden h-12 w-12 items-center justify-center rounded-full transition-colors md:flex ${
-                  isClickLyric ? "bg-white/20" : "bg-transparent"
-                }`}
-              >
-                <Infinity
-                  size={25}
-                  weight={isClickLyric ? "fill" : "regular"}
-                />
-              </motion.button>
-
-              <motion.button
-                whileTap={{ scale: 0.2 }}
-                type="button"
-                onClick={() => {
-                  setIsClickFeatured(!isClickFeatured);
-                  setIsClickLyric(false);
-                }}
-                className={`flex h-12 w-12 items-center justify-center rounded-full transition-colors md:hidden ${
-                  isClickFeatured ? "bg-white/20" : "bg-transparent"
-                }`}
-              >
-                {!isClickFeatured ? (
-                  <ListBullets size={25} weight="bold" />
-                ) : (
-                  <ListStar size={25} weight="bold" />
-                )}
-              </motion.button>
+                <motion.button
+                  whileTap={{ scale: 0.2 }}
+                  type="button"
+                  onClick={() => {
+                    setIsClickFeatured(!isClickFeatured);
+                    setIsClickLyric(false);
+                  }}
+                  className={`flex h-12 w-12 items-center justify-center rounded-full transition-colors md:hidden ${
+                    isClickFeatured ? "bg-white/20" : "bg-transparent"
+                  }`}
+                >
+                  {!isClickFeatured ? (
+                    <ListBullets size={25} weight="bold" />
+                  ) : (
+                    <ListStar size={25} weight="bold" />
+                  )}
+                </motion.button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

@@ -27,7 +27,7 @@ type IProp = {
    * Việc drag thực tế sẽ được điều khiển từ component cha (Reorder.Item).
    */
   draggable?: boolean;
-  onDragHandlePointerDown?: (event: React.PointerEvent<HTMLDivElement>) => void;
+  onDragHandlePointerDown?: (event: PointerEvent) => void;
 };
 
 export function AudioItemOrder({
@@ -44,6 +44,8 @@ export function AudioItemOrder({
 }: IProp) {
   const { currentMusic, isPlaying } = useAudio();
   const { resolvedTheme } = useTheme();
+  const dragTimeoutRef = React.useRef<number | null>(null);
+  const dragStartedRef = React.useRef(false);
 
   if (!music) {
     return (
@@ -60,7 +62,40 @@ export function AudioItemOrder({
     return (
       <div
         className={cn(`flex w-full items-center gap-3`, className)}
-        onClick={handlePlay}
+        onPointerDown={(event) => {
+          // Ngăn select text / context default
+          event.preventDefault();
+
+          dragStartedRef.current = false;
+
+          if (!draggable) return;
+
+          // Long press ~500ms để kích hoạt drag
+          dragTimeoutRef.current = window.setTimeout(() => {
+            dragStartedRef.current = true;
+            const native = event.nativeEvent as PointerEvent;
+            onDragHandlePointerDown?.(native);
+          }, 500);
+        }}
+        onPointerUp={() => {
+          if (dragTimeoutRef.current !== null) {
+            window.clearTimeout(dragTimeoutRef.current);
+            dragTimeoutRef.current = null;
+          }
+
+          // Nếu chưa vào drag mode → xử lý như click play
+          if (!dragStartedRef.current && handlePlay) {
+            handlePlay();
+          }
+
+          dragStartedRef.current = false;
+        }}
+        onPointerLeave={() => {
+          if (dragTimeoutRef.current !== null) {
+            window.clearTimeout(dragTimeoutRef.current);
+            dragTimeoutRef.current = null;
+          }
+        }}
       >
         {music.cover ? (
           <BorderPro roundedSize="rounded-md">
@@ -109,14 +144,12 @@ export function AudioItemOrder({
             )}
 
             {draggable && (
-              <div
-                className="flex cursor-grab items-center active:cursor-grabbing"
-                onPointerDown={(event) => {
-                  event.stopPropagation();
-                  onDragHandlePointerDown?.(event);
-                }}
-              >
-                <List size={22} weight="regular" className="text-white/20" />
+              <div className="flex cursor-grab items-center justify-center">
+                <List
+                  size={22}
+                  weight="regular"
+                  className="pointer-events-none text-white/20"
+                />
               </div>
             )}
 
