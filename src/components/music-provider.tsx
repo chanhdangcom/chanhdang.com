@@ -31,6 +31,7 @@ type IMusicContext = {
   isPaused: boolean;
   isMuted: boolean;
   isMixMode: boolean;
+  isLoop: boolean;
   currentLyrics: string | null;
   subtitles: Subtitle[];
   currentSubtitleId: number | null;
@@ -45,6 +46,7 @@ type IMusicContext = {
   handleMute: () => void;
   isRepeat: boolean | null;
   handleToggleRepeat: () => void;
+  handleToggleLoop: () => void;
   handleToggleKaraoke: () => void;
   handleToggleMixMode: () => void;
   setIsPlayerPageOpen: (isOpen: boolean) => void;
@@ -230,6 +232,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   const [isPaused, setIsPaused] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isRepeat, setIsRepeat] = useState(false);
+  const [isLoop, setIsLoop] = useState(false);
   const [isMixMode, setIsMixMode] = useState(false);
   const [currentMusic, setCurrentMusic] = useState<IMusic | null>(null);
   const [queue, setQueue] = useState<IMusic[]>([]);
@@ -597,6 +600,10 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     setIsRepeat((prev) => !prev);
   }, []);
 
+  const handleToggleLoop = useCallback(() => {
+    setIsLoop((prev) => !prev);
+  }, []);
+
   const handleToggleKaraoke = useCallback(() => {
     if (currentMusic?.beat) {
       setIsKaraokeMode((prev) => !prev);
@@ -771,9 +778,18 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     };
 
     const handleEnded = () => {
+      // Loop vô hạn (ưu tiên cao nhất)
+      if (isLoop && audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play();
+        return;
+      }
+
+      // Lặp lại đúng 1 lần rồi tự tắt chế độ repeat
       if (isRepeat && audioRef.current) {
         audioRef.current.currentTime = 0;
         audioRef.current.play();
+        setIsRepeat(false);
         return;
       }
 
@@ -956,6 +972,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       isPaused={isPaused}
       isMuted={isMuted}
       isMixMode={isMixMode}
+      isLoop={isLoop}
       currentLyrics={currentLyrics}
       subtitles={subtitles}
       currentSubtitleId={currentSubtitleId}
@@ -969,6 +986,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       handleMute={handleMute}
       isRepeat={isRepeat}
       handleToggleRepeat={handleToggleRepeat}
+      handleToggleLoop={handleToggleLoop}
       handleToggleKaraoke={handleToggleKaraoke}
       handleToggleMixMode={handleToggleMixMode}
       setIsPlayerPageOpen={setIsPlayerPageOpen}

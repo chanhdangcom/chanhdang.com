@@ -7,7 +7,6 @@ import {
   Infinity,
   FastForward,
   ListBullets,
-  ListStar,
   Pause,
   Play,
   Repeat,
@@ -684,6 +683,8 @@ const ContentPage = ({
     handlePlayAudio,
     queue,
     setQueue,
+    handleToggleRepeat,
+    isRepeat,
   } = useAudio();
 
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
@@ -691,6 +692,7 @@ const ContentPage = ({
   const subtitleScrollRef = useRef<HTMLDivElement>(null);
   const isDesktop = useIsDesktop();
   const isHeavyReady = useDeferredRender(isDesktop, 180);
+  const tPlayer = useTranslations("music.player");
 
   // Thêm hiệu ứng scroll lò xo
   useSpringScroll(subtitleScrollRef);
@@ -762,7 +764,7 @@ const ContentPage = ({
   const [randomMusics, setRandomMusics] = useState<IMusic[]>([]);
   const [isLoadingRandom, setIsLoadingRandom] = useState(false);
   const randomListRef = useRef<HTMLDivElement | null>(null);
-  const [isQueueDragging, setIsQueueDragging] = useState(false);
+  const [, setIsQueueDragging] = useState(false);
 
   // Lấy danh sách nhạc random / sync với queue khi mở queue
   useEffect(() => {
@@ -954,18 +956,37 @@ const ContentPage = ({
             }}
           >
             <div className="mx-3 mb-4 flex items-center justify-between">
-              <div className="font-apple font-medium text-white/30">
-                Continue Playing
+              <div className="line-clamp-1 font-apple font-medium text-white/30">
+                {tPlayer("continueMusic")}
               </div>
 
-              <div className="flex items-center gap-8">
+              <div className="flex items-center gap-4">
                 <motion.div
                   whileTap={{ scale: 0.2 }}
-                  className="hidden cursor-pointer rounded-full bg-white/10 p-2 text-white md:block"
+                  className={cn(
+                    "cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white",
+                    isRepeat ? "bg-white/50 text-zinc-600" : "bg-white/10"
+                  )}
+                  onClick={() => handleToggleRepeat()}
+                >
+                  {!isRepeat ? (
+                    <Repeat size={22} weight="bold" />
+                  ) : (
+                    <RepeatOnce size={22} weight="bold" />
+                  )}
+                </motion.div>
+
+                <motion.div
+                  whileTap={{ scale: 0.2 }}
+                  className={cn(
+                    "cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white",
+                    isMixMode ? "bg-white/50 text-zinc-600" : "bg-white/10"
+                  )}
                   onClick={() => handleToggleMixMode()}
                 >
-                  <Exclude size={25} weight={isMixMode ? "fill" : "regular"} />
+                  <Exclude size={22} weight={isMixMode ? "fill" : "regular"} />
                 </motion.div>
+
                 {!isKaraokeMode ? (
                   <motion.div
                     whileTap={{ scale: 0.2 }}
@@ -1057,9 +1078,13 @@ const FeaturedPage = ({
     subtitles,
     isMixMode,
     handleToggleMixMode,
+    isLoop,
+    handleToggleLoop,
     queue,
     setQueue,
   } = useAudio();
+
+  const { user } = useUser();
 
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const touchDeltaYRef = useRef(0);
@@ -1314,42 +1339,58 @@ const FeaturedPage = ({
                   className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white"
                   onClick={() => handlePlayRandomAudio()}
                 >
-                  <Shuffle size={25} weight="regular" />
+                  <Shuffle size={22} weight="bold" />
                 </motion.div>
 
                 <motion.div
                   whileTap={{ scale: 0.2 }}
-                  className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white"
+                  className={cn(
+                    "cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white",
+                    isRepeat ? "bg-white/50 text-zinc-600" : "bg-white/10"
+                  )}
                   onClick={() => handleToggleRepeat()}
                 >
                   {!isRepeat ? (
-                    <Repeat size={25} weight="regular" />
+                    <Repeat size={22} weight="bold" />
                   ) : (
-                    <RepeatOnce size={25} weight="regular" />
+                    <RepeatOnce size={22} weight="bold" />
                   )}
                 </motion.div>
 
                 <motion.div
                   whileTap={{ scale: 0.2 }}
-                  className={`cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white transition-colors`}
-                  onClick={handleToggleMixMode}
+                  className={cn(
+                    "cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white",
+                    isLoop ? "bg-white/50 text-zinc-600" : "bg-white/10"
+                  )}
+                  onClick={handleToggleLoop}
                 >
-                  <Infinity size={25} weight="regular" />
+                  <Infinity size={22} weight="bold" />
                 </motion.div>
 
                 <motion.div
                   whileTap={{ scale: 0.2 }}
-                  className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white"
+                  className={cn(
+                    "cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white",
+                    isMixMode ? "bg-white/50 text-zinc-600" : "bg-white/10"
+                  )}
                   onClick={() => handleToggleMixMode()}
                 >
-                  <Exclude size={25} weight={isMixMode ? "fill" : "regular"} />
+                  <Exclude size={22} weight={isMixMode ? "fill" : "regular"} />
                 </motion.div>
               </div>
 
               <div className="mt-4">
-                <div className="flex items-center justify-between">
+                <div className="mb-4 flex items-center justify-between">
                   <div className="font-semibold text-white">
                     {tPlayer("continueMusic")}
+
+                    {user && (
+                      <div className="font-apple text-xs font-normal text-white/70">
+                        From{" "}
+                        {(user.displayName || user.username) + "'s Station"}
+                      </div>
+                    )}
                   </div>
 
                   <motion.button
@@ -1457,7 +1498,10 @@ export function PlayerPage({ setIsClick }: IProp) {
     setIsPlayerPageOpen,
     isPlaying,
     isPaused,
-    handleAudioSkip,
+
+    queue,
+    setQueue,
+    handlePlayAudio,
   } = useAudio();
   const tPlayer = useTranslations("music.player");
   const tCommon = useTranslations("music.common");
@@ -1473,6 +1517,28 @@ export function PlayerPage({ setIsClick }: IProp) {
   const [singerId, setSingerId] = useState<string | null>(null);
   const [isQueueDragging, setIsQueueDragging] = useState(false);
   const [isOpenQueue, setIsOpenQueue] = useState(false);
+
+  const handlePlayNextFromQueue = () => {
+    if (queue.length > 0) {
+      const [nextTrack, ...rest] = queue;
+      setQueue(rest);
+      handlePlayAudio(nextTrack);
+    } else {
+      handlePlayRandomAudio();
+    }
+  };
+
+  const handlePlayPrevFromQueue = () => {
+    if (queue.length > 0) {
+      const prevIndex = queue.length - 1;
+      const prevTrack = queue[prevIndex];
+      const rest = queue.slice(0, prevIndex);
+      setQueue(rest);
+      handlePlayAudio(prevTrack);
+    } else {
+      handAudioForward();
+    }
+  };
 
   useEffect(() => {
     if (!user?.id || !currentMusic?.id) {
@@ -1748,11 +1814,11 @@ export function PlayerPage({ setIsClick }: IProp) {
 
           {!isQueueDragging && (
             <div className="flex items-center justify-center">
-              <div className="mx-14 mb-2 flex w-full items-center justify-between text-white md:mx-20">
+              <div className="mx-12 mb-2 flex w-full items-center justify-between text-white md:mx-16">
                 <motion.button
                   whileTap={{ scale: 0.2 }}
-                  onClick={handAudioForward}
-                  className="flex h-12 w-12 cursor-pointer items-center justify-center"
+                  onClick={handlePlayPrevFromQueue}
+                  className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full active:bg-white/10"
                 >
                   <Rewind size={35} weight="fill" />
                 </motion.button>
@@ -1766,7 +1832,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                         ? handleResumeAudio
                         : handlePlayRandomAudio
                   }
-                  className="flex h-14 w-14 cursor-pointer items-center justify-center"
+                  className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-full active:bg-white/10"
                 >
                   {isPlaying ? (
                     <Pause size={40} weight="fill" />
@@ -1777,8 +1843,8 @@ export function PlayerPage({ setIsClick }: IProp) {
 
                 <motion.button
                   whileTap={{ scale: 0.2 }}
-                  onClick={handleAudioSkip}
-                  className="flex h-12 w-12 cursor-pointer items-center justify-center"
+                  onClick={handlePlayNextFromQueue}
+                  className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full active:bg-white/10"
                 >
                   <FastForward size={35} weight="fill" />
                 </motion.button>
@@ -1818,7 +1884,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                   onClick={() => {
                     handlePlayRandomAudio();
                   }}
-                  className={`hidden h-12 w-12 items-center justify-center rounded-full transition-colors md:flex`}
+                  className={`hidden h-12 w-12 items-center justify-center rounded-full transition-colors active:bg-white/10 md:flex`}
                 >
                   <Shuffle
                     size={25}
@@ -1863,11 +1929,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                     isClickFeatured ? "bg-white/20" : "bg-transparent"
                   }`}
                 >
-                  {!isClickFeatured ? (
-                    <ListBullets size={25} weight="bold" />
-                  ) : (
-                    <ListStar size={25} weight="bold" />
-                  )}
+                  <ListBullets size={25} weight="bold" />
                 </motion.button>
               </div>
             </div>
