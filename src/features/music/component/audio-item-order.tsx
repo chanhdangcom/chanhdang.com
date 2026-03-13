@@ -112,7 +112,7 @@ export function AudioItemOrder({
         <div
           className={cn(
             "flex-2 flex-1 flex-col pb-2 text-black dark:text-white",
-            border && "border-b border-zinc-200 dark:border-zinc-900"
+            border && "border-b border-white/10"
           )}
         >
           <div className="flex items-center justify-between">

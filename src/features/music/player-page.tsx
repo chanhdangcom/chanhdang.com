@@ -184,7 +184,7 @@ const QueueItem = ({
       <AudioItemOrder
         music={music}
         handlePlay={onPlay}
-        border={false}
+        border
         titleVariant="alwaysWhite"
         draggable
         onDragHandlePointerDown={(event) => {
@@ -662,7 +662,15 @@ const LyricPage = ({
 
 // ........
 
-const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
+const ContentPage = ({
+  onRequestClose,
+  isOpenQueue,
+  setIsOpenQueue,
+}: {
+  onRequestClose: () => void;
+  isOpenQueue: boolean;
+  setIsOpenQueue: (value: boolean) => void;
+}) => {
   const {
     currentMusic,
     isPaused,
@@ -673,6 +681,9 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
     handleToggleMixMode,
     handleToggleKaraoke,
     setIsPlayerPageOpen,
+    handlePlayAudio,
+    queue,
+    setQueue,
   } = useAudio();
 
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
@@ -748,6 +759,65 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
     alpha: 1,
   });
 
+  const [randomMusics, setRandomMusics] = useState<IMusic[]>([]);
+  const [isLoadingRandom, setIsLoadingRandom] = useState(false);
+  const randomListRef = useRef<HTMLDivElement | null>(null);
+  const [isQueueDragging, setIsQueueDragging] = useState(false);
+
+  // Lấy danh sách nhạc random / sync với queue khi mở queue
+  useEffect(() => {
+    if (!isHeavyReady || !isDesktop || !isOpenQueue) return;
+    let isMounted = true;
+
+    const loadRandomMusics = async () => {
+      // Nếu queue đã có dữ liệu (ví dụ từ lần trước) thì chỉ sync lại, không random mới
+      if (queue.length > 0) {
+        setRandomMusics(queue);
+        return;
+      }
+
+      setIsLoadingRandom(true);
+      try {
+        const parsed = await fetchRandomMusics(12);
+        // Loại bỏ bài hát hiện tại nếu có
+        const filtered = parsed.filter(
+          (music) => music.id !== currentMusic?.id
+        );
+        if (isMounted) {
+          setRandomMusics(filtered);
+          setQueue(filtered);
+        }
+      } catch (error) {
+        if (!isMounted) return;
+        console.error("Error fetching random musics:", error);
+      } finally {
+        if (isMounted) {
+          setIsLoadingRandom(false);
+        }
+      }
+    };
+
+    void loadRandomMusics();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isHeavyReady, isDesktop, isOpenQueue, queue, currentMusic?.id, setQueue]);
+
+  const handlePlayFromQueue = (musicId: string) => {
+    const index = randomMusics.findIndex((m) => m.id === musicId);
+    if (index === -1) return;
+
+    const track = randomMusics[index];
+    const restQueue = randomMusics.filter((_, i) => i !== index);
+    setQueue(restQueue);
+    handlePlayAudio(track);
+  };
+
+  const handleItemDragStateChange = (dragging: boolean) => {
+    setIsQueueDragging(dragging);
+  };
+
   return (
     <>
       <div className="fixed inset-0 z-50 flex justify-between space-y-4 md:z-50 md:rounded-3xl md:border-white/10">
@@ -783,40 +853,23 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
             <div className="mx-auto mb-8 mt-4 h-[5px] w-16 rounded-full bg-white/20" />
           </header>
 
+          <motion.button
+            whileTap={{ scale: 0.2 }}
+            type="button"
+            onClick={() => setIsOpenQueue(!isOpenQueue)}
+            className={`absolute bottom-[22px] right-24 z-50 ml-4 hidden h-12 w-12 cursor-pointer items-center justify-center rounded-full text-white md:flex ${
+              isOpenQueue ? "bg-white/20" : "bg-transparent"
+            } `}
+          >
+            <ListBullets size={28} weight="regular" />
+          </motion.button>
+
           <ArrowsInSimple
-            size={30}
+            size={28}
             className="absolute bottom-8 right-8 z-50 ml-4 hidden cursor-pointer text-white md:flex"
             weight="fill"
             onClick={onRequestClose}
           />
-
-          <motion.div
-            whileTap={{ scale: 0.2 }}
-            className="absolute right-24 top-8 hidden cursor-pointer rounded-full bg-white/10 p-2 text-white md:block"
-            onClick={() => handleToggleMixMode()}
-          >
-            <Exclude size={25} weight={isMixMode ? "fill" : "regular"} />
-          </motion.div>
-
-          {!isKaraokeMode ? (
-            <motion.div
-              whileTap={{ scale: 0.2 }}
-              onClick={() => handleToggleKaraoke()}
-              className={cn(
-                "absolute right-8 top-8 hidden cursor-pointer rounded-full bg-white/10 p-2 md:block",
-                !currentMusic?.beat ? "pointer-events-none opacity-40" : ""
-              )}
-            >
-              <MagicWand size={25} className="text-white" />
-            </motion.div>
-          ) : (
-            <div
-              onClick={() => handleToggleKaraoke()}
-              className="absolute right-8 top-8 cursor-pointer rounded-full bg-white/10 p-2"
-            >
-              <MagicWand size={25} weight="fill" className="text-white" />
-            </div>
-          )}
 
           <div className="relative mx-3 space-y-4 md:mx-0 md:space-y-10">
             {currentMusic?.cover ? (
@@ -824,7 +877,7 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                 key={currentMusic?.cover}
                 className={cn(
                   "mx-6 flex justify-center md:mx-0",
-                  currentMusic?.srt
+                  currentMusic?.srt || isOpenQueue
                     ? "md:ml-16 md:justify-start"
                     : "md:justify-center"
                 )}
@@ -833,7 +886,7 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
                   <motion.img
                     src={currentMusic?.cover}
                     alt="cover"
-                    className="flex h-[43vh] w-screen shrink-0 transform-gpu justify-center rounded-3xl object-cover shadow-xl [backface-visibility:hidden] md:h-[43vh] md:w-[35vw]"
+                    className="flex h-[calc(100vh-440px)] w-screen shrink-0 transform-gpu justify-center rounded-3xl object-cover shadow-xl [backface-visibility:hidden] md:h-[calc(100vh-450px)] md:w-[35vw]"
                     initial={false}
                     animate={{ scale: isPaused ? 0.75 : 1 }}
                     transition={{
@@ -857,7 +910,7 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
             ref={subtitleScrollRef}
             className={cn(
               "scroll-spring pointer-events-none ml-8 mr-16 hidden h-full w-full overflow-y-auto scrollbar-hide md:block",
-              !currentMusic?.srt ? "md:hidden" : "md:block"
+              currentMusic?.srt && !isOpenQueue ? "md:block" : "md:hidden"
             )}
             style={{
               scrollBehavior: "smooth",
@@ -881,6 +934,99 @@ const ContentPage = ({ onRequestClose }: { onRequestClose: () => void }) => {
               ))}
             </div>
           </div>
+        ) : null}
+
+        {/* Featured Desktop */}
+        {isDesktop && isOpenQueue ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            ref={subtitleScrollRef}
+            className={cn(
+              "ml-8 mr-16 hidden h-full w-full overflow-y-auto scrollbar-hide md:block"
+            )}
+            style={{
+              scrollBehavior: "smooth",
+              WebkitOverflowScrolling: "touch",
+              overscrollBehaviorY: "auto",
+            }}
+          >
+            <div className="mx-3 mb-4 flex items-center justify-between">
+              <div className="font-apple font-medium text-white/30">
+                Continue Playing
+              </div>
+
+              <div className="flex items-center gap-8">
+                <motion.div
+                  whileTap={{ scale: 0.2 }}
+                  className="hidden cursor-pointer rounded-full bg-white/10 p-2 text-white md:block"
+                  onClick={() => handleToggleMixMode()}
+                >
+                  <Exclude size={25} weight={isMixMode ? "fill" : "regular"} />
+                </motion.div>
+                {!isKaraokeMode ? (
+                  <motion.div
+                    whileTap={{ scale: 0.2 }}
+                    onClick={() => handleToggleKaraoke()}
+                    className={cn(
+                      "hidden cursor-pointer rounded-full bg-white/10 p-2 md:block",
+                      !currentMusic?.beat
+                        ? "pointer-events-none opacity-40"
+                        : ""
+                    )}
+                  >
+                    <MagicWand size={25} className="text-white" />
+                  </motion.div>
+                ) : (
+                  <div
+                    onClick={() => handleToggleKaraoke()}
+                    className="cursor-pointer rounded-full bg-white/10 p-2"
+                  >
+                    <MagicWand size={25} weight="fill" className="text-white" />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div
+              style={{ backgroundColor: hoverBgSolid }}
+              className="pointer-events-none absolute -bottom-16 left-0 z-10 h-[20vh] w-full scale-150 blur-xl brightness-50 md:bg-black/60 md:blur-3xl"
+            />
+
+            <div className="px-4 text-left font-apple font-bold text-zinc-300">
+              {isHeavyReady && !isLoadingRandom && randomMusics.length > 0 && (
+                <div className="relative mt-2">
+                  <Reorder.Group
+                    ref={randomListRef as React.RefObject<HTMLDivElement>}
+                    axis="y"
+                    values={randomMusics}
+                    onReorder={(next) => {
+                      setRandomMusics(next);
+                      setQueue(next);
+                    }}
+                    className={cn(
+                      "z-0 h-full w-full space-y-4 overflow-y-auto pb-28 pr-2 scrollbar-hide"
+                    )}
+                    style={{ contentVisibility: "auto" }}
+                  >
+                    {randomMusics.map((music) => (
+                      <QueueItem
+                        key={music.id}
+                        music={music}
+                        onPlay={() => handlePlayFromQueue(music.id)}
+                        onDragStateChange={handleItemDragStateChange}
+                        scrollContainerRef={
+                          randomListRef as React.RefObject<HTMLDivElement | null>
+                        }
+                      />
+                    ))}
+                  </Reorder.Group>
+                </div>
+              )}
+            </div>
+          </motion.div>
         ) : null}
       </div>
     </>
@@ -1326,6 +1472,7 @@ export function PlayerPage({ setIsClick }: IProp) {
   const [isClickFeatured, setIsClickFeatured] = useState(false);
   const [singerId, setSingerId] = useState<string | null>(null);
   const [isQueueDragging, setIsQueueDragging] = useState(false);
+  const [isOpenQueue, setIsOpenQueue] = useState(false);
 
   useEffect(() => {
     if (!user?.id || !currentMusic?.id) {
@@ -1507,19 +1654,25 @@ export function PlayerPage({ setIsClick }: IProp) {
           sharedActions={sharedActions}
         />
       ) : (
-        <ContentPage onRequestClose={handleClosePlayer} />
+        <ContentPage
+          onRequestClose={handleClosePlayer}
+          isOpenQueue={isOpenQueue}
+          setIsOpenQueue={setIsOpenQueue}
+        />
       )}
 
-      <div
+      <motion.div
+        layout
         className={cn(
           "items-center md:flex",
-          currentMusic?.srt ? "justify-start" : "justify-center"
+          currentMusic?.srt || isOpenQueue ? "justify-start" : "justify-center"
         )}
       >
-        <div
+        <motion.div
+          layout
           className={cn(
             "fixed bottom-0 z-50 w-full space-y-4 px-8 pb-8 md:bottom-2 md:ml-16 md:w-[35vw] md:space-y-4 md:px-0",
-            currentMusic?.srt ? "md:ml-16" : "md:ml-0"
+            currentMusic?.srt || isOpenQueue ? "md:ml-16" : "md:ml-0"
           )}
         >
           {isClickLyric && (
@@ -1719,8 +1872,8 @@ export function PlayerPage({ setIsClick }: IProp) {
               </div>
             </div>
           )}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

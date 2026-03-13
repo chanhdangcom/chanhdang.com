@@ -14,8 +14,6 @@ import { useTranslations } from "next-intl";
 import { DurationAudio } from "./component/duration-audio";
 import {
   ArrowsOutSimple,
-  ChatTeardropText,
-  ListBullets,
   RepeatOnce,
   SpeakerHigh,
   SpeakerSlash,
@@ -354,7 +352,7 @@ export function AudioBar() {
 
             <div className="flex min-w-0 flex-1 items-center justify-start gap-2 pr-1 md:ml-6 md:gap-2">
               {!currentMusic?.cover ? (
-                <div className="flex size-10 items-center justify-center rounded-xl bg-zinc-500 md:rounded-lg">
+                <div className="flex size-8 items-center justify-center rounded-xl bg-zinc-700 md:rounded-lg">
                   <MusicNotes size={18} weight="fill" className="text-white" />
                 </div>
               ) : (
@@ -447,65 +445,7 @@ export function AudioBar() {
               </div>
             </div>
 
-            <div className="hidden items-center gap-4 text-black dark:text-white md:flex">
-              {currentMusic ? (
-                <ChatTeardropText
-                  size={20}
-                  weight="fill"
-                  className={` ${tapFeedbackClass}`}
-                  onClick={(e) => {
-                    if (!scroll) e.stopPropagation();
-
-                    if (typeof window !== "undefined") {
-                      window.dispatchEvent(new Event("toggle-lyric-sidebar"));
-                    }
-                  }}
-                />
-              ) : (
-                <ChatTeardropText
-                  size={20}
-                  weight="fill"
-                  className={cn(
-                    tapFeedbackClass,
-                    "pointer-events-none opacity-30"
-                  )}
-                  onClick={(e) => {
-                    if (!scroll) e.stopPropagation();
-
-                    if (typeof window !== "undefined") {
-                      window.dispatchEvent(new Event("toggle-lyric-sidebar"));
-                    }
-                  }}
-                />
-              )}
-
-              {currentMusic ? (
-                <ListBullets
-                  size={20}
-                  weight="bold"
-                  className={` ${tapFeedbackClass}`}
-                  onClick={(e) => {
-                    if (!scroll) e.stopPropagation();
-
-                    if (typeof window !== "undefined") {
-                      window.dispatchEvent(new Event("toggle-feature-sidebar"));
-                    }
-                  }}
-                />
-              ) : (
-                <ListBullets
-                  size={20}
-                  weight="bold"
-                  className={cn(
-                    tapFeedbackClass,
-                    "pointer-events-none opacity-30"
-                  )}
-                  onClick={(e) => {
-                    if (!scroll) e.stopPropagation();
-                  }}
-                />
-              )}
-
+            <div className="hidden items-center gap-8 text-black dark:text-white md:flex">
               {isMuted ? (
                 <SpeakerSlash
                   size={20}

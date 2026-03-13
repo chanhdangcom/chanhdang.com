@@ -851,6 +851,14 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       if (remaining > MIX_TRIGGER_REMAINING_S) return;
 
       try {
+        // Nếu đang có hàng đợi → ưu tiên crossfade theo queue thay vì random
+        if (queue.length > 0) {
+          const [nextFromQueue, ...rest] = queue;
+          setQueue(rest);
+          await crossfadeToMusic(nextFromQueue);
+          return;
+        }
+
         const res = await fetch("/api/musics?random=1&limit=1", {
           cache: "no-store",
         });
@@ -875,6 +883,8 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     canListenWithoutAds,
     currentMusic?.id,
     crossfadeToMusic,
+    queue,
+    setQueue,
   ]);
 
   useEffect(() => {
