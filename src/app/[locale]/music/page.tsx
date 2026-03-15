@@ -80,7 +80,12 @@ const structuredData = {
   },
 };
 
-export default function Page() {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ locale?: string }>;
+}) {
+  const { locale = "vi" } = await params;
   return (
     <>
       <Script
@@ -89,7 +94,7 @@ export default function Page() {
         strategy="beforeInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <MusicPage />
+      <MusicPage locale={locale} />
     </>
   );
 }

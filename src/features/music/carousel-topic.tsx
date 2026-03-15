@@ -23,7 +23,11 @@ const parseLegacyMusicIds = (musics: unknown[] = []) =>
       .filter(Boolean)
   );
 
-export async function CarouselTopic() {
+export interface CarouselTopicProps {
+  locale?: string;
+}
+
+export async function CarouselTopic({ locale = "vi" }: CarouselTopicProps) {
   try {
     const client = await clientPromise;
     const db = await client.db("musicdb");
@@ -116,7 +120,7 @@ export async function CarouselTopic() {
             <div key={topic.id} className="">
               <>
                 <Link
-                  href={`/en/music/topic/${topic.id}`}
+                  href={`/${locale}/music/topic/${topic.id}`}
                   className="relative ml-2 mt-4 flex w-fit items-center gap-1 px-1 text-xl font-bold text-black dark:text-white md:ml-[270px]"
                 >
                   <div className="mb-1 mt-2 line-clamp-1">{topic.title}</div>

@@ -108,6 +108,7 @@ export async function GET(request: Request) {
       displayName: user.displayName,
       role: user.role || "user",
       isPremium: Boolean(user.isPremium),
+      isPremiumCreator: Boolean(user.isPremiumCreator),
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     }));

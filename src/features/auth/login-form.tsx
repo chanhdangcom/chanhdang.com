@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Eye, EyeOff, AlertCircle, CheckCircle2 } from "lucide-react";
@@ -25,6 +25,7 @@ export default function LoginForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const params = useParams();
+  const searchParams = useSearchParams();
   const locale = (params?.locale as string) || "en";
   const router = useRouter();
   const { login, user, isLoading } = useUser();
@@ -34,6 +35,20 @@ export default function LoginForm() {
       router.replace(`/${locale}/music`);
     }
   }, [user, locale, router]);
+
+  // Hiển thị lỗi OAuth từ NextAuth (Google login callback fail)
+  useEffect(() => {
+    const error = searchParams.get("error");
+    if (error === "OAuthCallback" || error === "OAuthAccountNotLinked") {
+      setErrors((prev) => ({
+        ...prev,
+        general:
+          error === "OAuthAccountNotLinked"
+            ? "Email này đã được dùng với cách đăng nhập khác. Thử đăng nhập bằng mật khẩu hoặc dùng đúng tài khoản Google."
+            : "Đăng nhập Google không thành công. Vui lòng thử lại hoặc đăng nhập bằng tên và mật khẩu.",
+      }));
+    }
+  }, [searchParams]);
 
   // Load remember me data
   useEffect(() => {

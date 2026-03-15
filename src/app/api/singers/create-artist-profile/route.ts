@@ -2,14 +2,14 @@ import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { getUserRole, getUserId } from "@/lib/auth-helpers";
 import { normalizeDocument } from "@/lib/mongodb-helpers";
+import { ObjectId } from "mongodb";
 
 /**
- * API endpoint for users to create their own artist profile
- * Only authenticated users can create their own artist profile
+ * API endpoint for users to create their own artist profile.
+ * Chỉ Premium Creator (hoặc admin) mới được tạo kênh ca sĩ riêng.
  */
 export async function POST(request: Request) {
   try {
-    // Check authentication
     const role = await getUserRole(request);
     const userId = await getUserId(request);
 
@@ -18,6 +18,25 @@ export async function POST(request: Request) {
         { error: "Bạn cần đăng nhập để tạo profile ca sĩ" },
         { status: 401 }
       );
+    }
+
+    // User thường: chặn chỉ khi isPremiumCreator === false (tương thích ngược: user cũ không có field vẫn được phép)
+    if (role === "user") {
+      const client = await clientPromise;
+      const db = client.db("musicdb");
+      const userDoc = await db.collection("users").findOne(
+        { _id: new ObjectId(userId) },
+        { projection: { isPremiumCreator: 1 } }
+      );
+      if (userDoc?.isPremiumCreator === false) {
+        return NextResponse.json(
+          {
+            error:
+              "Bạn cần nâng cấp lên gói Premium Creator để tạo kênh ca sĩ riêng.",
+          },
+          { status: 403 }
+        );
+      }
     }
 
     const body = await request.json();
@@ -32,7 +51,7 @@ export async function POST(request: Request) {
     const client = await clientPromise;
     const db = client.db("musicdb");
 
-    // Check if user already has an artist profile
+    // Check if user already has an artist profile (return existing if any)
     const existingProfile = await db.collection("singers").findOne({
       addedBy: userId,
     });

@@ -1,9 +1,15 @@
 /**
  * Permission system for the music platform
  * Roles: guest, user, admin
+ * Gói: Free (đã đăng nhập) = không quảng cáo; Premium = đủ tính năng trừ thêm bài/tạo kênh; Premium Creator = đủ tất cả.
  */
 
 export type UserRole = "guest" | "user" | "admin";
+
+export interface PremiumTier {
+  isPremium?: boolean;
+  isPremiumCreator?: boolean;
+}
 
 export interface UserPermissions {
   canAddMusic: boolean;
@@ -17,9 +23,18 @@ export interface UserPermissions {
 }
 
 /**
- * Get permissions based on user role
+ * Get permissions based on role and premium tier.
+ * - Free (logged-in): no ads. No add music / no create artist channel.
+ * - Premium: no ads, all features except add music & create artist channel.
+ * - Premium Creator: no ads, all features including add music & create artist channel.
  */
-export function getPermissions(role: UserRole | null | undefined): UserPermissions {
+export function getPermissions(
+  role: UserRole | null | undefined,
+  tier?: PremiumTier | null
+): UserPermissions {
+  const isPremiumCreator = Boolean(tier?.isPremiumCreator);
+  const isPremium = Boolean(tier?.isPremium);
+
   switch (role) {
     case "admin":
       return {
@@ -34,11 +49,11 @@ export function getPermissions(role: UserRole | null | undefined): UserPermissio
       };
     case "user":
       return {
-        canAddMusic: true,
-        canAddSinger: false, // Only admin can add singers freely
+        canAddMusic: isPremiumCreator,
+        canAddSinger: false,
         canManageSystem: false,
-        canListenWithoutAds: true,
-        canCreateArtistProfile: true, // Users can create their own artist profile
+        canListenWithoutAds: true, // Đăng nhập = không quảng cáo
+        canCreateArtistProfile: isPremiumCreator,
         canManageShopProducts: false,
         canManageShopOrders: false,
         canManageShopCoupons: false,
@@ -49,7 +64,7 @@ export function getPermissions(role: UserRole | null | undefined): UserPermissio
         canAddMusic: false,
         canAddSinger: false,
         canManageSystem: false,
-        canListenWithoutAds: false, // Guests hear ads
+        canListenWithoutAds: false,
         canCreateArtistProfile: false,
         canManageShopProducts: false,
         canManageShopOrders: false,
@@ -63,9 +78,10 @@ export function getPermissions(role: UserRole | null | undefined): UserPermissio
  */
 export function hasPermission(
   role: UserRole | null | undefined,
-  permission: keyof UserPermissions
+  permission: keyof UserPermissions,
+  tier?: PremiumTier | null
 ): boolean {
-  const permissions = getPermissions(role);
+  const permissions = getPermissions(role, tier);
   return permissions[permission];
 }
 

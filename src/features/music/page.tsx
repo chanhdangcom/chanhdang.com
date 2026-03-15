@@ -18,7 +18,9 @@ function SectionSkeleton() {
   );
 }
 
-export function MusicPage() {
+type MusicPageProps = { locale?: string };
+
+export function MusicPage({ locale = "vi" }: MusicPageProps) {
   return (
     <div className="flex bg-zinc-100 font-apple dark:bg-zinc-950">
       <MotionHeaderMusic />
@@ -37,13 +39,13 @@ export function MusicPage() {
 
             <div className="mt-4 flex justify-start">
               <Suspense fallback={<SectionSkeleton />}>
-                <SuggestCarouselAudio />
+                <SuggestCarouselAudio locale={locale} />
               </Suspense>
             </div>
 
             <div className="flex justify-start">
               <Suspense fallback={<SectionSkeleton />}>
-                <CarouselTopic />
+                <CarouselTopic locale={locale} />
               </Suspense>
             </div>
 
@@ -53,7 +55,7 @@ export function MusicPage() {
 
             <div className="mt-4 flex justify-start">
               <Suspense fallback={<SectionSkeleton />}>
-                <NewCarouselAudio />
+                <NewCarouselAudio locale={locale} />
               </Suspense>
             </div>
 
@@ -63,7 +65,7 @@ export function MusicPage() {
 
             <div className="mt-4 flex justify-start">
               <Suspense fallback={<SectionSkeleton />}>
-                <CarouselAudio />
+                <CarouselAudio locale={locale} />
               </Suspense>
             </div>
 

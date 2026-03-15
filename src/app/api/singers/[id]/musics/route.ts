@@ -107,6 +107,33 @@ export async function POST(
       );
     }
 
+    const userId = await getUserId(request);
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Bạn cần đăng nhập để thêm bài hát" },
+        { status: 401 }
+      );
+    }
+
+    // User thường: chặn chỉ khi isPremiumCreator === false (tương thích ngược: user cũ không có field vẫn được phép)
+    if (role === "user") {
+      const client = await clientPromise;
+      const db = client.db("musicdb");
+      const userDoc = await db.collection("users").findOne(
+        { _id: new ObjectId(userId) },
+        { projection: { isPremiumCreator: 1 } }
+      );
+      if (userDoc?.isPremiumCreator === false) {
+        return NextResponse.json(
+          {
+            error:
+              "Bạn cần nâng cấp lên gói Premium Creator để thêm bài hát vào kênh.",
+          },
+          { status: 403 }
+        );
+      }
+    }
+
     const { id } = await context.params;
     const body = await request.json();
 
@@ -131,7 +158,6 @@ export async function POST(
 
     // Check if user owns this singer profile (for regular users)
     // Admin can add to any singer
-    const userId = await getUserId(request);
     if (role === "user" && singer.addedBy && singer.addedBy !== userId) {
       return NextResponse.json(
         { error: "Bạn chỉ có thể thêm bài hát vào profile ca sĩ của chính mình" },

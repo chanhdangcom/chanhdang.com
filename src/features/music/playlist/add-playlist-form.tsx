@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useIsAdmin } from "@/hooks/use-permissions";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 type MusicLite = {
   id: string;
@@ -18,7 +18,9 @@ type PlaylistItem = {
 };
 
 export function AddPlaylistForm() {
-  const isAdmin = useIsAdmin();
+  const params = useParams();
+  const locale = (params?.locale as string) || "vi";
+  const { isAdmin } = useIsAdmin();
   const router = useRouter();
   const t = useTranslations("music.playlist");
   const tError = useTranslations("music.player");
@@ -104,7 +106,7 @@ export function AddPlaylistForm() {
 
   useEffect(() => {
     if (!isAdmin) {
-      router.push("/music");
+      router.push(`/${locale}/music`);
       return;
     }
 
@@ -120,7 +122,7 @@ export function AddPlaylistForm() {
     return () => {
       isMounted = false;
     };
-  }, [isAdmin, router]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isAdmin, locale, router]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!isAdmin) {
     return (

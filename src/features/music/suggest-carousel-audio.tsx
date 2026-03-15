@@ -2,7 +2,13 @@ import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import clientPromise from "@/lib/mongodb";
 import { SuggestCarouselAudioSection } from "./suggest-carousel-audio-section";
 
-export async function SuggestCarouselAudio() {
+export interface SuggestCarouselAudioProps {
+  locale?: string;
+}
+
+export async function SuggestCarouselAudio({
+  locale = "vi",
+}: SuggestCarouselAudioProps) {
   try {
     const client = await clientPromise;
     const db = client.db("musicdb");
@@ -57,7 +63,7 @@ export async function SuggestCarouselAudio() {
           .filter((m) => m.title && m.audio)
       : [];
 
-    return <SuggestCarouselAudioSection musics={musics} />;
+    return <SuggestCarouselAudioSection musics={musics} locale={locale} />;
   } catch (error) {
     console.error(" Failed to fetch musics:", error);
     return (

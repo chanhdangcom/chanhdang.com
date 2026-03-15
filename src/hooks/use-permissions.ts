@@ -1,15 +1,26 @@
 "use client";
 
 import { useUser } from "./use-user";
-import { getPermissions, hasPermission, type UserRole, type UserPermissions } from "@/lib/permissions";
+import { usePremium } from "./use-premium";
+import {
+  getPermissions,
+  hasPermission,
+  type UserRole,
+  type UserPermissions,
+} from "@/lib/permissions";
 
 /**
- * Hook to get user permissions based on their role
+ * Hook to get user permissions based on role and premium tier.
+ * Free (đăng nhập): không quảng cáo. Premium: đủ trừ thêm bài/tạo kênh. Premium Creator: đủ tất cả.
  */
 export function usePermissions(): UserPermissions & { role: UserRole | null } {
   const { user } = useUser();
+  const { isPremium, isPremiumCreator } = usePremium();
   const role = (user?.role || null) as UserRole | null;
-  const permissions = getPermissions(role);
+  const permissions = getPermissions(role, {
+    isPremium,
+    isPremiumCreator,
+  });
 
   return {
     ...permissions,
@@ -22,8 +33,9 @@ export function usePermissions(): UserPermissions & { role: UserRole | null } {
  */
 export function useHasPermission(permission: keyof UserPermissions): boolean {
   const { user } = useUser();
+  const { isPremium, isPremiumCreator } = usePremium();
   const role = (user?.role || null) as UserRole | null;
-  return hasPermission(role, permission);
+  return hasPermission(role, permission, { isPremium, isPremiumCreator });
 }
 
 /**
@@ -35,10 +47,14 @@ export function useIsAuthenticated(): boolean {
 }
 
 /**
- * Hook to check if user is admin
+ * Hook to check if user is admin.
+ * Trả về { isAdmin, isLoading } để tránh redirect khi session chưa load (isAdmin tạm false).
  */
-export function useIsAdmin(): boolean {
-  const { user } = useUser();
-  return user?.role === "admin";
+export function useIsAdmin(): { isAdmin: boolean; isLoading: boolean } {
+  const { user, isLoading } = useUser();
+  return {
+    isAdmin: user?.role === "admin",
+    isLoading,
+  };
 }
 

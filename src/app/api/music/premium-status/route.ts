@@ -7,19 +7,32 @@ export async function GET(request: Request) {
   try {
     const userId = await getUserId(request);
     if (!userId || !ObjectId.isValid(userId)) {
-      return NextResponse.json({ isPremium: false }, { status: 200 });
+      return NextResponse.json(
+        { isPremium: false, isPremiumCreator: false },
+        { status: 200 }
+      );
     }
 
     const client = await clientPromise;
     const db = client.db("musicdb");
     const user = await db
       .collection("users")
-      .findOne({ _id: new ObjectId(userId) }, { projection: { isPremium: 1 } });
+      .findOne(
+        { _id: new ObjectId(userId) },
+        { projection: { isPremium: 1, isPremiumCreator: 1 } }
+      );
 
-    return NextResponse.json({ isPremium: Boolean(user?.isPremium) });
+    // Tương thích ngược: user cũ (chưa có field isPremiumCreator) vẫn được quyền thêm bài/tạo kênh như bản deploy cũ. Chỉ chặn khi explicitly isPremiumCreator === false.
+    return NextResponse.json({
+      isPremium: Boolean(user?.isPremium),
+      isPremiumCreator: user?.isPremiumCreator !== false,
+    });
   } catch (error) {
     console.error("[premium-status] Failed to get premium status", error);
-    return NextResponse.json({ isPremium: false }, { status: 200 });
+    return NextResponse.json(
+      { isPremium: false, isPremiumCreator: false },
+      { status: 200 }
+    );
   }
 }
 

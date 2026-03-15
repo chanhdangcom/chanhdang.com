@@ -4,7 +4,13 @@ import { NewAuidoListClient } from "./new-audio-list-client";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 
-export async function NewCarouselAudio() {
+export interface NewCarouselAudioProps {
+  locale?: string;
+}
+
+export async function NewCarouselAudio({
+  locale = "vi",
+}: NewCarouselAudioProps) {
   try {
     // ✅ Kết nối MongoDB
     const client = await clientPromise;
@@ -63,7 +69,7 @@ export async function NewCarouselAudio() {
       <div className="relative w-full rounded-3xl text-black dark:text-white md:max-h-full">
         <div className="flex justify-between">
           <Link
-            href="/en/music/new-release"
+            href={`/${locale}/music/new-release`}
             className="ml-2 flex items-center gap-1 px-1 text-xl font-bold text-black dark:text-white md:ml-[270px]"
           >
             <div>New Release</div>

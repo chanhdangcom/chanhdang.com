@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
+import { useParams } from "next/navigation";
+import Link from "next/link";
 import { HeaderMusicPage } from "./header-music-page";
 import { Button } from "@/components/ui/button";
 import { MotionHeaderMusic } from "./component/motion-header-music";
@@ -12,8 +14,10 @@ import { MenuBar } from "./menu-bar";
 
 export default function AddMusicForm() {
   const t = useTranslations("musicForm.addMusic");
+  const params = useParams();
+  const locale = (params?.locale as string) || "vi";
   const { user } = useUser();
-  const { role } = usePermissions();
+  const { role, canAddMusic } = usePermissions();
   const isAdmin = role === "admin";
   const isRegularUser = role === "user";
 
@@ -692,6 +696,21 @@ export default function AddMusicForm() {
       <MenuBar />
 
       <div className="">
+        {isRegularUser && !canAddMusic ? (
+          <div className="left-6 z-30 mx-4 space-y-4 rounded-3xl border border-amber-300 bg-amber-50/80 p-6 font-apple dark:border-amber-700 dark:bg-amber-950/30 md:ml-[270px]">
+            <div className="text-center text-xl font-bold text-amber-800 dark:text-amber-200">
+              Cần gói Premium Creator
+            </div>
+            <p className="text-center text-sm text-amber-700 dark:text-amber-300">
+              Chỉ gói Premium Creator mới có thể thêm bài hát và tạo kênh ca sĩ riêng. Nâng cấp để sử dụng tính năng này.
+            </p>
+            <div className="flex justify-center">
+              <Button asChild className="rounded-xl bg-amber-600 hover:bg-amber-700">
+                <Link href={`/${locale}/music/premium`}>Nâng cấp Premium Creator</Link>
+              </Button>
+            </div>
+          </div>
+        ) : (
         <form
           className="left-6 z-30 mx-4 space-y-4 rounded-3xl border border-zinc-300 p-4 font-apple backdrop-blur-2xl dark:border-zinc-700 dark:to-white/10 md:ml-[270px]"
           onSubmit={handleSubmit}
@@ -1132,6 +1151,7 @@ export default function AddMusicForm() {
             {message && <p className="text-center font-semibold">{message}</p>}
           </div>
         </form>
+        )}
       </div>
     </div>
   );

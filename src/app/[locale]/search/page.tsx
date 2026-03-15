@@ -62,10 +62,13 @@ const normalize = (value: string) =>
     .replace(/đ/g, "d");
 
 export default async function SearchPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale?: string }>;
   searchParams?: Promise<Record<string, string | string[]>>;
 }) {
+  const { locale = "vi" } = await params;
   const resolvedSearchParams = searchParams ? await searchParams : {};
 
   const client = await clientPromise;
@@ -92,21 +95,21 @@ export default async function SearchPage({
     : [];
 
   const primaryDestinations = [
-    { name: "Daifolio", description: "Overview of Chánh Đang", href: "/" },
+    { name: "Daifolio", description: "Overview of Chánh Đang", href: `/${locale}` },
     {
       name: "Musics",
       description: "Playlists & curated tracks",
-      href: "/music",
+      href: `/${locale}/music`,
     },
     {
       name: "Blogs",
       description: "Thoughts, tutorials & stories",
-      href: "/blog",
+      href: `/${locale}/blog`,
     },
     {
       name: "Components",
       description: "UI components & code snippets",
-      href: "/components",
+      href: `/${locale}/components`,
     },
   ] as const;
 
@@ -118,7 +121,7 @@ export default async function SearchPage({
           Tìm kiếm nội dung trên chanhdang.com — danh mục dự án, bài viết, âm
           nhạc và nhiều hơn nữa.
         </p>
-        <form action="/search" method="get" className="flex gap-2">
+        <form action={`/${locale}/search`} method="get" className="flex gap-2">
           <label htmlFor="site-search" className="sr-only">
             Search
           </label>
@@ -189,7 +192,7 @@ export default async function SearchPage({
                     </p>
                   </div>
                   <Link
-                    href="/music"
+                    href={`/${locale}/music`}
                     className="text-sm font-medium text-zinc-900 hover:underline dark:text-white"
                   >
                     Listen

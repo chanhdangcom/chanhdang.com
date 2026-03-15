@@ -2,18 +2,29 @@
 
 import { UserManagement } from "@/features/music/admin/user-management";
 import { useIsAdmin } from "@/hooks/use-permissions";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function MusicAdminPage() {
-  const isAdmin = useIsAdmin();
+  const params = useParams();
+  const locale = (params?.locale as string) || "vi";
+  const { isAdmin, isLoading } = useIsAdmin();
   const router = useRouter();
 
   useEffect(() => {
+    if (isLoading) return;
     if (!isAdmin) {
-      router.push("/music");
+      router.push(`/${locale}/music`);
     }
-  }, [isAdmin, router]);
+  }, [isAdmin, isLoading, locale, router]);
+
+  if (isLoading) {
+    return (
+      <div className="mx-4 flex items-center justify-center py-16 md:ml-[270px]">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-zinc-300 border-t-zinc-900 dark:border-zinc-700 dark:border-t-zinc-300" />
+      </div>
+    );
+  }
 
   if (!isAdmin) {
     return (

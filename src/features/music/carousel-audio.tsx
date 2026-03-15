@@ -4,7 +4,13 @@ import clientPromise from "@/lib/mongodb";
 import Link from "next/link";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 
-export default async function CarouselAudio() {
+export interface CarouselAudioProps {
+  locale?: string;
+}
+
+export default async function CarouselAudio({
+  locale = "vi",
+}: CarouselAudioProps) {
   try {
     // ✅ Kết nối MongoDB
     const client = await clientPromise;
@@ -64,7 +70,7 @@ export default async function CarouselAudio() {
       <div className="relative w-full rounded-3xl text-black dark:text-white md:max-h-full">
         <div className="flex justify-between">
           <Link
-            href="/en/music/trending-now"
+            href={`/${locale}/music/trending-now`}
             className="ml-2 flex cursor-pointer items-center gap-1 px-1 text-xl font-bold text-black dark:text-white md:ml-[270px]"
           >
             <div> Trending Now </div>

@@ -3,13 +3,20 @@ import GoogleProvider from "next-auth/providers/google";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "@/lib/mongodb";
 
+/**
+ * Cần có trong .env.local cho Google login:
+ * - NEXTAUTH_SECRET (bất kỳ chuỗi bí mật, ví dụ: openssl rand -base64 32)
+ * - NEXTAUTH_URL=http://localhost:3000 (local) hoặc https://yourdomain.com (production)
+ * - GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET
+ * Trong Google Cloud Console, thêm Authorized redirect URI: http://localhost:3000/api/auth/callback/google
+ */
 const handler = NextAuth({
   adapter: MongoDBAdapter(clientPromise),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      allowDangerousEmailAccountLinking: true, // Cho phép link account tự động khi email match
+      allowDangerousEmailAccountLinking: true,
       profile(profile) {
         return {
           id: profile.sub,
@@ -23,34 +30,25 @@ const handler = NextAuth({
   session: { strategy: "jwt" },
   pages: {
     signIn: "/auth/login",
-    error: "/auth/login", // Redirect error về login page
+    error: "/auth/login",
   },
   callbacks: {
     async signIn({ user, account, profile }) {
-      if (!user.email) {
-        return false;
-      }
+      if (!user.email) return false;
 
       try {
         const client = await clientPromise;
         const db = client.db("musicdb");
 
-        // Kiểm tra xem user đã tồn tại chưa
         const existingUser = await db.collection("users").findOne({
           email: user.email,
         });
 
-        // Nếu user đã tồn tại nhưng chưa có account linked với Google
         if (existingUser && account?.provider === "google") {
-          // Kiểm tra xem account đã được link chưa
-          const existingAccount = await db
-            .collection("accounts")
-            .findOne({
-              userId: existingUser._id,
-              provider: "google",
-            });
-
-          // Nếu chưa có account Google, tạo mới và link
+          const existingAccount = await db.collection("accounts").findOne({
+            userId: existingUser._id,
+            provider: "google",
+          });
           if (!existingAccount && account) {
             await db.collection("accounts").insertOne({
               userId: existingUser._id,
@@ -66,7 +64,6 @@ const handler = NextAuth({
           }
         }
 
-        // Lưu/cập nhật avatar Google vào DB
         if (account?.provider === "google" && profile && user.email) {
           const picture = (profile as { picture?: string }).picture;
           await db.collection("users").updateOne(
@@ -80,7 +77,7 @@ const handler = NextAuth({
               },
               $setOnInsert: {
                 createdAt: new Date(),
-                role: "user", // Default role for new Google users
+                role: "user",
                 username: user.email?.split("@")[0] || user.name || "user",
                 displayName: user.name,
               },
@@ -88,11 +85,9 @@ const handler = NextAuth({
             { upsert: true }
           );
         }
-
         return true;
-      } catch (error) {
-        console.error("Error in signIn callback:", error);
-        // Cho phép đăng nhập ngay cả khi có lỗi DB (fallback)
+      } catch (err) {
+        console.error("[NextAuth] signIn callback error:", err);
         return true;
       }
     },
@@ -135,9 +130,11 @@ const handler = NextAuth({
         session.user.name = token.name ?? session.user.name;
         session.user.email = token.email ?? session.user.email;
         // Ưu tiên picture từ token, fallback về image từ session
-        session.user.image = (token.picture as string) || session.user.image || null;
-        // Add role to session
-        (session.user as any).role = (token.role as string) || "user";
+        session.user.image =
+          (token.picture as string) || session.user.image || null;
+        // Add role to session (mở rộng kiểu session.user)
+        (session.user as { role?: string }).role =
+          (token.role as string) || "user";
       }
       return session;
     },

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useIsAdmin } from "@/hooks/use-permissions";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { MenuBar } from "../menu-bar";
@@ -13,7 +13,9 @@ type MusicWithMeta = IMusic & {
 };
 
 export function MusicApproval() {
-  const isAdmin = useIsAdmin();
+  const params = useParams();
+  const locale = (params?.locale as string) || "vi";
+  const { isAdmin, isLoading: isAuthLoading } = useIsAdmin();
   const router = useRouter();
   const [musics, setMusics] = useState<MusicWithMeta[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,13 +24,14 @@ export function MusicApproval() {
   const { handlePlayAudio } = useAudio();
 
   useEffect(() => {
+    if (isAuthLoading) return;
     if (!isAdmin) {
-      router.push("/music");
+      router.push(`/${locale}/music`);
       return;
     }
     void fetchPendingMusics();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAdmin]);
+  }, [isAdmin, isAuthLoading, locale]);
 
   const fetchPendingMusics = async () => {
     try {
@@ -82,6 +85,14 @@ export function MusicApproval() {
       setUpdatingId(null);
     }
   };
+
+  if (isAuthLoading) {
+    return (
+      <div className="mx-4 flex items-center justify-center py-16 md:ml-[270px]">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-zinc-300 border-t-zinc-900 dark:border-zinc-700 dark:border-t-zinc-300" />
+      </div>
+    );
+  }
 
   if (!isAdmin) {
     return null;

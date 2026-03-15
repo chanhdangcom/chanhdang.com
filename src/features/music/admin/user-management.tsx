@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { ShieldCheck, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsAdmin } from "@/hooks/use-permissions";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { MenuBar } from "../menu-bar";
 interface UserData {
   id: string;
@@ -13,24 +13,28 @@ interface UserData {
   displayName?: string;
   role: "user" | "admin";
   isPremium?: boolean;
+  isPremiumCreator?: boolean;
   createdAt?: string;
 }
 
 export function UserManagement() {
+  const params = useParams();
+  const locale = (params?.locale as string) || "vi";
   const [users, setUsers] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [updating, setUpdating] = useState<string | null>(null);
-  const isAdmin = useIsAdmin();
+  const { isAdmin, isLoading: isAuthLoading } = useIsAdmin();
   const router = useRouter();
 
   useEffect(() => {
+    if (isAuthLoading) return;
     if (!isAdmin) {
-      router.push("/music");
+      router.push(`/${locale}/music`);
       return;
     }
     fetchUsers();
-  }, [isAdmin, router]);
+  }, [isAdmin, isAuthLoading, locale, router]);
 
   const fetchUsers = async () => {
     try {
@@ -74,6 +78,14 @@ export function UserManagement() {
       setUpdating(null);
     }
   };
+
+  if (isAuthLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-zinc-300 border-t-zinc-900 dark:border-zinc-700 dark:border-t-zinc-300" />
+      </div>
+    );
+  }
 
   if (!isAdmin) {
     return null;
@@ -128,10 +140,10 @@ export function UserManagement() {
                 </div>
               </div>
 
-              <div className="flex w-56 flex-col gap-2 text-xs">
-                <div className="flex gap-1.5">
+              <div className="flex flex-col gap-2 text-xs sm:w-64">
+                <div className="flex flex-wrap gap-1.5">
                   <div
-                    className={`flex-1 rounded-full px-3 py-1 text-center font-medium ${
+                    className={`rounded-full px-3 py-1 text-center font-medium ${
                       user.role === "admin"
                         ? "bg-rose-100 text-rose-700 dark:bg-blue-100 dark:text-blue-500"
                         : "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
@@ -140,7 +152,7 @@ export function UserManagement() {
                     {user.role === "admin" ? "Admin" : "User"}
                   </div>
                   <div
-                    className={`flex-1 rounded-full px-3 py-1 text-center font-medium ${
+                    className={`rounded-full px-3 py-1 text-center font-medium ${
                       user.isPremium
                         ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
                         : "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
@@ -148,9 +160,18 @@ export function UserManagement() {
                   >
                     {user.isPremium ? "Premium" : "Free"}
                   </div>
+                  <div
+                    className={`rounded-full px-3 py-1 text-center font-medium ${
+                      user.isPremiumCreator
+                        ? "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
+                        : "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
+                    }`}
+                  >
+                    {user.isPremiumCreator ? "Creator" : "—"}
+                  </div>
                 </div>
 
-                <div className="flex gap-1.5">
+                <div className="flex flex-wrap gap-1.5">
                   <Button
                     onClick={() =>
                       updateRole(
@@ -161,15 +182,14 @@ export function UserManagement() {
                     disabled={updating === user.id}
                     variant="outline"
                     size="sm"
-                    className="w-full rounded-full shadow-sm dark:border-zinc-800"
+                    className="rounded-full shadow-sm dark:border-zinc-800"
                   >
                     {updating === user.id
-                      ? "Đang cập nhật..."
+                      ? "..."
                       : user.role === "admin"
                         ? "Gỡ Admin"
-                        : "Thêm Admin"}
+                        : "Admin"}
                   </Button>
-
                   <Button
                     onClick={async () => {
                       try {
@@ -211,13 +231,65 @@ export function UserManagement() {
                     disabled={updating === user.id}
                     variant={user.isPremium ? "outline" : "default"}
                     size="sm"
-                    className="w-full rounded-full shadow-sm dark:border-zinc-800"
+                    className="rounded-full shadow-sm dark:border-zinc-800"
+                  >
+                    {updating === user.id ? "..." : user.isPremium ? "Gỡ P" : "Premium"}
+                  </Button>
+                  <Button
+                    onClick={async () => {
+                      try {
+                        setUpdating(user.id);
+                        const res = await fetch(
+                          `/api/users/${encodeURIComponent(user.id)}`,
+                          {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              userId: user.id,
+                              isPremiumCreator: !user.isPremiumCreator,
+                              ...(!user.isPremiumCreator ? { isPremium: true } : {}),
+                            }),
+                          }
+                        );
+                        const data = await res.json();
+                        if (!res.ok || !data?.success) {
+                          throw new Error(
+                            data?.error || "Không thể cập nhật Creator"
+                          );
+                        }
+                        setUsers((prev) =>
+                          prev.map((u) =>
+                            u.id === user.id
+                              ? {
+                                  ...u,
+                                  isPremiumCreator: !user.isPremiumCreator,
+                                  ...(!user.isPremiumCreator
+                                    ? { isPremium: true }
+                                    : {}),
+                                }
+                              : u
+                          )
+                        );
+                      } catch (err) {
+                        setError(
+                          err instanceof Error
+                            ? err.message
+                            : "Có lỗi xảy ra"
+                        );
+                      } finally {
+                        setUpdating(null);
+                      }
+                    }}
+                    disabled={updating === user.id}
+                    variant={user.isPremiumCreator ? "outline" : "default"}
+                    size="sm"
+                    className="rounded-full bg-amber-500 shadow-sm hover:bg-amber-600 dark:border-amber-600 dark:bg-amber-900/50 dark:hover:bg-amber-800"
                   >
                     {updating === user.id
-                      ? "Đang cập nhật..."
-                      : user.isPremium
-                        ? "Gỡ Premium"
-                        : "Thêm Premium"}
+                      ? "..."
+                      : user.isPremiumCreator
+                        ? "Gỡ Creator"
+                        : "Creator"}
                   </Button>
                 </div>
               </div>

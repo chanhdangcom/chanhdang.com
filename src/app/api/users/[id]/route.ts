@@ -20,6 +20,7 @@ export async function PATCH(request: Request) {
       bio,
       avatarUrl,
       isPremium,
+      isPremiumCreator,
       userId: bodyUserId,
       lookupUsername: bodyLookupUsername,
     } = payload ?? {};
@@ -31,6 +32,8 @@ export async function PATCH(request: Request) {
     if (typeof bio === "string") update.bio = bio;
     if (typeof avatarUrl === "string") update.avatarUrl = avatarUrl;
     if (typeof isPremium === "boolean") update.isPremium = isPremium;
+    if (typeof isPremiumCreator === "boolean")
+      update.isPremiumCreator = isPremiumCreator;
     update.updatedAt = new Date();
 
     console.log("[users:PATCH] Built update object", update);

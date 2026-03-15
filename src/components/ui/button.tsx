@@ -58,16 +58,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const Comp = asChild ? Slot : "button";
-
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        disabled={loading || props.disabled}
-        {...props}
-      >
+    const content = (
+      <>
         {variant === "liquid" && <></>}
-
         <div className="relative z-10 flex items-center gap-2">
           {loading && (
             <div className="flex items-center gap-2">
@@ -77,6 +70,31 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           )}
           {!loading && children}
         </div>
+      </>
+    );
+
+    // asChild: Slot chỉ nhận đúng 1 child (vd: Link), không được bọc thêm div
+    if (asChild) {
+      return (
+        <Slot
+          className={cn(buttonVariants({ variant, size, className }))}
+          ref={ref}
+          disabled={loading || props.disabled}
+          {...props}
+        >
+          {children}
+        </Slot>
+      );
+    }
+
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        disabled={loading || props.disabled}
+        {...props}
+      >
+        {content}
       </Comp>
     );
   }

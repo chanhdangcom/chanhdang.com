@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useIsAdmin } from "@/hooks/use-permissions";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 interface Music {
   id?: string;
@@ -19,7 +19,9 @@ type TopicItem = {
 };
 
 export function AddTopicMusicForm() {
-  const isAdmin = useIsAdmin();
+  const params = useParams();
+  const locale = (params?.locale as string) || "vi";
+  const { isAdmin } = useIsAdmin();
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [cover, setCover] = useState("");
@@ -114,7 +116,7 @@ export function AddTopicMusicForm() {
 
   useEffect(() => {
     if (!isAdmin) {
-      router.push("/music");
+      router.push(`/${locale}/music`);
       return;
     }
 
@@ -127,7 +129,7 @@ export function AddTopicMusicForm() {
         setIsSynchronized(false);
       }
     })();
-  }, [isAdmin, router]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isAdmin, locale, router]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!isAdmin) {
     return (

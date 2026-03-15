@@ -3,6 +3,7 @@
 import Image from "next/image";
 import React, { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useParams } from "next/navigation";
 import { useOutsideClick } from "./hook/use-outside-click";
 
 import { useAudio } from "@/components/music-provider";
@@ -18,6 +19,8 @@ import { CodeTag } from "@/components/code-tag";
 import { MUSICS } from "@/features/music/data/music-page";
 
 export function MusicList() {
+  const params = useParams();
+  const locale = (params?.locale as string) || "vi";
   const [musicView, setMusicView] = useState<IMusic | null>(null);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -42,7 +45,7 @@ export function MusicList() {
           <CodeTag tagName="ChanhDangMusic" shortTag />
 
           <Link
-            href={"/music"}
+            href={`/${locale}/music`}
             className="flex gap-1 rounded-3xl px-3 py-1 hover:underline"
           >
             <ChanhdangLogotype className="w-28" />

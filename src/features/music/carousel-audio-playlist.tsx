@@ -1,11 +1,13 @@
 "use client";
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { PlaylistItem } from "./component/playlist-item";
 import { IPlaylistItem } from "./type/playlist";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 
 export function CarouselAudioPlaylist() {
+  const params = useParams();
+  const locale = (params?.locale as string) || "vi";
   const ref = React.useRef<HTMLDivElement>(null);
   const [playlists, setPlaylists] = React.useState<IPlaylistItem[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -77,7 +79,7 @@ export function CarouselAudioPlaylist() {
                 music={music}
                 onClick={(item) => {
                   if (!item.id) return;
-                  router.push(`/music/playlist/${item.id}`);
+                  router.push(`/${locale}/music/playlist/${item.id}`);
                 }}
               />
             </div>
