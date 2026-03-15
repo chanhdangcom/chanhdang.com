@@ -18,6 +18,7 @@ import {
   MusicNotesSimple,
   SealCheck,
   ShieldCheck,
+  SketchLogo,
   SquaresFour,
 } from "@phosphor-icons/react/dist/ssr";
 import { AnimatePresence, motion } from "framer-motion";
@@ -283,7 +284,7 @@ export function MenuBar() {
             href: `${basePath}/premium`,
             isActive: isPathActive(`${basePath}/premium`),
             icon: (
-              <Crown
+              <SketchLogo
                 size={25}
                 weight={
                   isPathActive(`${basePath}/premium`) ? "fill" : "regular"
@@ -296,11 +297,11 @@ export function MenuBar() {
       : [
           {
             key: "premium",
-            label: "Nâng cấp Premium",
+            label: tMenu("premium"),
             href: `${basePath}/premium`,
             isActive: isPathActive(`${basePath}/premium`),
             icon: (
-              <Crown
+              <SketchLogo
                 size={25}
                 weight={
                   isPathActive(`${basePath}/premium`) ? "fill" : "regular"

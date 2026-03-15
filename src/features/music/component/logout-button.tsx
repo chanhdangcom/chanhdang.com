@@ -17,6 +17,7 @@ import {
   Faders,
   Gear,
   SignOut,
+  SketchLogo,
   UserCircle,
 } from "@phosphor-icons/react/dist/ssr";
 import { ThemeToggleMenuBar } from "@/components/theme-toggle-menubar";
@@ -109,6 +110,18 @@ export function LogoutButton() {
                 />
 
                 <div className="text-sm font-medium">Library</div>
+              </Link>
+
+              <Link
+                href={`/${locale}/music/premium`}
+                className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+              >
+                <SketchLogo
+                  size={20}
+                  className="text-rose-500 dark:text-blue-500"
+                />
+
+                <div className="text-sm font-medium">Premium</div>
               </Link>
 
               {/* <Link
