@@ -12,6 +12,7 @@ interface UserData {
   email?: string;
   displayName?: string;
   role: "user" | "admin";
+  isPremium?: boolean;
   createdAt?: string;
 }
 
@@ -127,35 +128,98 @@ export function UserManagement() {
                 </div>
               </div>
 
-              <div className="w-28 space-y-2">
-                <div
-                  className={`rounded-full px-3 py-1 text-center text-xs font-medium ${
-                    user.role === "admin"
-                      ? "bg-rose-100 text-rose-700 dark:bg-blue-100 dark:text-blue-500"
-                      : "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
-                  }`}
-                >
-                  {user.role === "admin" ? "Admin" : "User"}
+              <div className="flex w-56 flex-col gap-2 text-xs">
+                <div className="flex gap-1.5">
+                  <div
+                    className={`flex-1 rounded-full px-3 py-1 text-center font-medium ${
+                      user.role === "admin"
+                        ? "bg-rose-100 text-rose-700 dark:bg-blue-100 dark:text-blue-500"
+                        : "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
+                    }`}
+                  >
+                    {user.role === "admin" ? "Admin" : "User"}
+                  </div>
+                  <div
+                    className={`flex-1 rounded-full px-3 py-1 text-center font-medium ${
+                      user.isPremium
+                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
+                        : "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
+                    }`}
+                  >
+                    {user.isPremium ? "Premium" : "Free"}
+                  </div>
                 </div>
 
-                <Button
-                  onClick={() =>
-                    updateRole(
-                      user.id,
-                      user.role === "admin" ? "user" : "admin"
-                    )
-                  }
-                  disabled={updating === user.id}
-                  variant="outline"
-                  size="sm"
-                  className="w-full rounded-full shadow-sm dark:border-zinc-800"
-                >
-                  {updating === user.id
-                    ? "Đang cập nhật..."
-                    : user.role === "admin"
-                      ? "Gỡ Admin"
-                      : "Thêm Admin"}
-                </Button>
+                <div className="flex gap-1.5">
+                  <Button
+                    onClick={() =>
+                      updateRole(
+                        user.id,
+                        user.role === "admin" ? "user" : "admin"
+                      )
+                    }
+                    disabled={updating === user.id}
+                    variant="outline"
+                    size="sm"
+                    className="w-full rounded-full shadow-sm dark:border-zinc-800"
+                  >
+                    {updating === user.id
+                      ? "Đang cập nhật..."
+                      : user.role === "admin"
+                        ? "Gỡ Admin"
+                        : "Thêm Admin"}
+                  </Button>
+
+                  <Button
+                    onClick={async () => {
+                      try {
+                        setUpdating(user.id);
+                        const res = await fetch(
+                          `/api/users/${encodeURIComponent(user.id)}`,
+                          {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              userId: user.id,
+                              isPremium: !user.isPremium,
+                            }),
+                          }
+                        );
+                        const data = await res.json();
+                        if (!res.ok || !data?.success) {
+                          throw new Error(
+                            data?.error || "Không thể cập nhật premium"
+                          );
+                        }
+                        setUsers((prev) =>
+                          prev.map((u) =>
+                            u.id === user.id
+                              ? { ...u, isPremium: !user.isPremium }
+                              : u
+                          )
+                        );
+                      } catch (err) {
+                        setError(
+                          err instanceof Error
+                            ? err.message
+                            : "Có lỗi xảy ra"
+                        );
+                      } finally {
+                        setUpdating(null);
+                      }
+                    }}
+                    disabled={updating === user.id}
+                    variant={user.isPremium ? "outline" : "default"}
+                    size="sm"
+                    className="w-full rounded-full shadow-sm dark:border-zinc-800"
+                  >
+                    {updating === user.id
+                      ? "Đang cập nhật..."
+                      : user.isPremium
+                        ? "Gỡ Premium"
+                        : "Thêm Premium"}
+                  </Button>
+                </div>
               </div>
             </div>
           ))}

@@ -3,18 +3,11 @@ import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 
 // PATCH /api/users/:id
-export async function PATCH(
-  request: Request,
-  context: unknown
-) {
+export async function PATCH(request: Request) {
   try {
-    const params = (context as { params?: { id?: string } })?.params;
-    const userId = params?.id;
-    console.log("[users:PATCH] Incoming request", { userId });
-    if (!userId) {
-      console.warn("[users:PATCH] Missing user id in route params");
-      return NextResponse.json({ error: "Missing user id" }, { status: 400 });
-    }
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split("/");
+    const userIdFromPath = pathParts[pathParts.length - 1];
 
     const payload = await request.json();
     console.log("[users:PATCH] Parsed payload", {
@@ -26,6 +19,7 @@ export async function PATCH(
       displayName,
       bio,
       avatarUrl,
+      isPremium,
       userId: bodyUserId,
       lookupUsername: bodyLookupUsername,
     } = payload ?? {};
@@ -36,13 +30,16 @@ export async function PATCH(
     if (typeof displayName === "string") update.displayName = displayName;
     if (typeof bio === "string") update.bio = bio;
     if (typeof avatarUrl === "string") update.avatarUrl = avatarUrl;
+    if (typeof isPremium === "boolean") update.isPremium = isPremium;
     update.updatedAt = new Date();
 
     console.log("[users:PATCH] Built update object", update);
 
     // Kiểm tra nếu không có gì để update
     if (Object.keys(update).length === 1 && update.updatedAt) {
-      console.warn("[users:PATCH] No valid fields to update", { userId });
+      console.warn("[users:PATCH] No valid fields to update", {
+        userId: userIdFromPath,
+      });
       return NextResponse.json(
         { error: "No valid fields to update" },
         { status: 400 }
@@ -62,11 +59,13 @@ export async function PATCH(
       filters.push({ _id: new ObjectId(bodyUserId) });
     }
 
-    if (userId) {
-      if (ObjectId.isValid(userId)) {
-        filters.push({ _id: new ObjectId(userId) });
+    if (userIdFromPath) {
+      if (ObjectId.isValid(userIdFromPath)) {
+        filters.push({ _id: new ObjectId(userIdFromPath) });
       } else {
-        filters.push({ username: { $regex: new RegExp(`^${userId}$`, "i") } });
+        filters.push({
+          username: { $regex: new RegExp(`^${userIdFromPath}$`, "i") },
+        });
       }
     }
 

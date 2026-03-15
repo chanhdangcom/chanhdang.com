@@ -107,6 +107,7 @@ export async function GET(request: Request) {
       email: user.email,
       displayName: user.displayName,
       role: user.role || "user",
+      isPremium: Boolean(user.isPremium),
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     }));

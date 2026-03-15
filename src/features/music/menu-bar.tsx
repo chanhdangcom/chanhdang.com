@@ -31,12 +31,15 @@ import { ThemeToggleMenuBar } from "@/components/theme-toggle-menubar";
 import { cn } from "@/lib/utils";
 import { MenuBarItem, type MenuBarItemConfig } from "./component/menu-bar-item";
 import { ChanhdangLogotypeMusic } from "@/components/chanhdang-logotype-music";
+import { usePremium } from "@/hooks/use-premium";
+import { useTheme } from "next-themes";
 
 export function MenuBar() {
   const params = useParams();
   const pathname = usePathname();
   const locale = (params?.locale as string) || "vi";
   const { isAuthenticated } = useUser();
+  const { isPremium } = usePremium();
   const { canAddMusic, canAddSinger, canManageSystem, role } = usePermissions();
   const isRegularUser = role === "user";
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -65,6 +68,8 @@ export function MenuBar() {
   const isAdminPanelActive = isPathActive(`${basePath}/admin`);
   const isAddMusicActive = isPathActive(`${basePath}/add-music`);
   const isAddSingerActive = isPathActive(`${basePath}/add-singer`);
+  const { theme } = useTheme();
+
   const isManageActive =
     isManageHubActive ||
     isAdminPanelActive ||
@@ -272,8 +277,39 @@ export function MenuBar() {
               />
             ),
           } as MenuBarItemConfig,
+          {
+            key: "premium",
+            label: isPremium ? "Premium" : "Nâng cấp Premium",
+            href: `${basePath}/premium`,
+            isActive: isPathActive(`${basePath}/premium`),
+            icon: (
+              <Crown
+                size={25}
+                weight={
+                  isPathActive(`${basePath}/premium`) ? "fill" : "regular"
+                }
+                className={getIconClass(isPathActive(`${basePath}/premium`))}
+              />
+            ),
+          } as MenuBarItemConfig,
         ]
-      : []),
+      : [
+          {
+            key: "premium",
+            label: "Nâng cấp Premium",
+            href: `${basePath}/premium`,
+            isActive: isPathActive(`${basePath}/premium`),
+            icon: (
+              <Crown
+                size={25}
+                weight={
+                  isPathActive(`${basePath}/premium`) ? "fill" : "regular"
+                }
+                className={getIconClass(isPathActive(`${basePath}/premium`))}
+              />
+            ),
+          } as MenuBarItemConfig,
+        ]),
     {
       key: "theme",
       label: tMenu("theme"),
@@ -291,9 +327,28 @@ export function MenuBar() {
       <div className="absolute h-[96vh] w-60 space-y-4 overflow-y-auto rounded-3xl bg-gradient-to-tr from-transparent to-zinc-50 px-3 pb-8 pt-5 text-zinc-50 shadow-xl backdrop-blur-3xl dark:to-white/10">
         <>
           <div className="text-base text-black dark:text-white">
-            <div className="mb-4 flex items-end justify-center gap-1">
-              <Link href={`/${locale}/music`} className="flex cursor-pointer">
-                <ChanhdangLogotypeMusic height={28} className="w-auto" />
+            <div className="mb-4 flex flex-col items-center justify-center gap-0.5">
+              <Link
+                href={`/${locale}/music`}
+                className="flex cursor-pointer items-center gap-1.5"
+              >
+                {isPremium ? (
+                  theme === "dark" ? (
+                    <img
+                      src="/img/logo/Logotype Premium (Dark).svg"
+                      alt="Premium"
+                      className="w-28"
+                    />
+                  ) : (
+                    <img
+                      src="/img/logo/Logotype Premium (Light).svg"
+                      alt="Premium"
+                      className="w-28"
+                    />
+                  )
+                ) : (
+                  <ChanhdangLogotypeMusic height={28} className="w-auto" />
+                )}
               </Link>
             </div>
 
