@@ -42,6 +42,7 @@ import { AudioItemOrder } from "./component/audio-item-order";
 import Link from "next/link";
 import { useImageHoverColor } from "@/hooks/use-image-hover-color";
 import { cn } from "@/utils/cn";
+import { usePermissions } from "@/hooks/use-permissions";
 
 type IProp = {
   setIsClick: () => void;
@@ -1517,6 +1518,7 @@ export function PlayerPage({ setIsClick }: IProp) {
   const [singerId, setSingerId] = useState<string | null>(null);
   const [isQueueDragging, setIsQueueDragging] = useState(false);
   const [isOpenQueue, setIsOpenQueue] = useState(false);
+  const { canUseLibrary } = usePermissions();
 
   const handlePlayNextFromQueue = () => {
     if (queue.length > 0) {
@@ -1594,6 +1596,10 @@ export function PlayerPage({ setIsClick }: IProp) {
 
   // Xử lý thêm/xóa khỏi Favorites
   const handleToggleFavorites = async () => {
+    if (!canUseLibrary) {
+      router.push(`/${locale}/music/premium`);
+      return;
+    }
     if (!user?.id) {
       alert(tPlayer("loginRequired"));
       return;

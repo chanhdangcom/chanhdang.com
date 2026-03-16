@@ -52,37 +52,45 @@ export async function PATCH(request: Request) {
     const client = await clientPromise;
     const db = client.db("musicdb");
     const users = db.collection("users");
-    const filters: Array<Record<string, unknown>> = [];
 
-    // Tạo danh sách filter tìm user
-    if (typeof bodyLookupUsername === "string" && bodyLookupUsername.trim()) {
-      filters.push({ username: bodyLookupUsername.trim() });
-    }
+    // Đơn giản hoá filter: ưu tiên _id từ body.userId (admin UI luôn gửi),
+    // sau đó tới id trên URL, cuối cùng mới fallback theo username.
+    let filter: Record<string, unknown> | null = null;
     if (typeof bodyUserId === "string" && ObjectId.isValid(bodyUserId)) {
-      filters.push({ _id: new ObjectId(bodyUserId) });
+      filter = { _id: new ObjectId(bodyUserId) };
+    } else if (userIdFromPath && ObjectId.isValid(userIdFromPath)) {
+      filter = { _id: new ObjectId(userIdFromPath) };
+    } else if (typeof bodyLookupUsername === "string" && bodyLookupUsername.trim()) {
+      filter = { username: bodyLookupUsername.trim() };
+    } else if (userIdFromPath) {
+      filter = {
+        username: { $regex: new RegExp(`^${userIdFromPath}$`, "i") },
+      };
     }
 
-    if (userIdFromPath) {
-      if (ObjectId.isValid(userIdFromPath)) {
-        filters.push({ _id: new ObjectId(userIdFromPath) });
-      } else {
-        filters.push({
-          username: { $regex: new RegExp(`^${userIdFromPath}$`, "i") },
-        });
-      }
+    if (!filter) {
+      console.warn("[users:PATCH] No valid filter built", {
+        userIdFromPath,
+        bodyUserId,
+        bodyLookupUsername,
+      });
+      return NextResponse.json(
+        { error: "No valid identifier to update user" },
+        { status: 400 }
+      );
     }
 
-    console.log("[users:PATCH] Computed filters", filters);
+    console.log("[users:PATCH] Computed filter", filter);
 
     // Cập nhật user
     const result = await users.findOneAndUpdate(
-      { $or: filters },
+      filter,
       { $set: update },
       { returnDocument: "after" }
     );
 
     if (!result?.value) {
-      console.warn("[users:PATCH] User not found for filters", filters);
+      console.warn("[users:PATCH] User not found for filter", filter);
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 

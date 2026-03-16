@@ -17,6 +17,7 @@ export interface UserPermissions {
   canManageSystem: boolean;
   canListenWithoutAds: boolean;
   canCreateArtistProfile: boolean;
+  canUseLibrary: boolean;
   canManageShopProducts: boolean;
   canManageShopOrders: boolean;
   canManageShopCoupons: boolean;
@@ -43,6 +44,7 @@ export function getPermissions(
         canManageSystem: true,
         canListenWithoutAds: true,
         canCreateArtistProfile: true,
+        canUseLibrary: true,
         canManageShopProducts: true,
         canManageShopOrders: true,
         canManageShopCoupons: true,
@@ -54,6 +56,8 @@ export function getPermissions(
         canManageSystem: false,
         canListenWithoutAds: true, // Đăng nhập = không quảng cáo
         canCreateArtistProfile: isPremiumCreator,
+        // Chỉ Premium / Premium Creator mới được dùng Library & Favorites
+        canUseLibrary: isPremium || isPremiumCreator,
         canManageShopProducts: false,
         canManageShopOrders: false,
         canManageShopCoupons: false,
@@ -66,6 +70,7 @@ export function getPermissions(
         canManageSystem: false,
         canListenWithoutAds: false,
         canCreateArtistProfile: false,
+        canUseLibrary: false,
         canManageShopProducts: false,
         canManageShopOrders: false,
         canManageShopCoupons: false,

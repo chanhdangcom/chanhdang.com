@@ -4,8 +4,11 @@ import { useState, useEffect } from "react";
 import { ShieldCheck, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsAdmin } from "@/hooks/use-permissions";
+import { useUser } from "@/hooks/use-user";
+import { usePremium } from "@/hooks/use-premium";
 import { useParams, useRouter } from "next/navigation";
 import { MenuBar } from "../menu-bar";
+import { cn } from "@/utils/cn";
 interface UserData {
   id: string;
   username: string;
@@ -25,6 +28,8 @@ export function UserManagement() {
   const [error, setError] = useState<string | null>(null);
   const [updating, setUpdating] = useState<string | null>(null);
   const { isAdmin, isLoading: isAuthLoading } = useIsAdmin();
+  const { user: currentUser } = useUser();
+  const { refresh } = usePremium();
   const router = useRouter();
 
   useEffect(() => {
@@ -45,6 +50,7 @@ export function UserManagement() {
       }
       const data = await res.json();
       setUsers(data.users || []);
+      setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Có lỗi xảy ra");
     } finally {
@@ -66,12 +72,12 @@ export function UserManagement() {
         throw new Error(data.error || "Không thể cập nhật role");
       }
 
-      // Update local state
       setUsers((prev) =>
         prev.map((user) =>
           user.id === userId ? { ...user, role: newRole } : user
         )
       );
+      setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Có lỗi xảy ra");
     } finally {
@@ -141,37 +147,7 @@ export function UserManagement() {
               </div>
 
               <div className="flex flex-col gap-2 text-xs sm:w-64">
-                <div className="flex flex-wrap gap-1.5">
-                  <div
-                    className={`rounded-full px-3 py-1 text-center font-medium ${
-                      user.role === "admin"
-                        ? "bg-rose-100 text-rose-700 dark:bg-blue-100 dark:text-blue-500"
-                        : "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
-                    }`}
-                  >
-                    {user.role === "admin" ? "Admin" : "User"}
-                  </div>
-                  <div
-                    className={`rounded-full px-3 py-1 text-center font-medium ${
-                      user.isPremium
-                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
-                        : "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
-                    }`}
-                  >
-                    {user.isPremium ? "Premium" : "Free"}
-                  </div>
-                  <div
-                    className={`rounded-full px-3 py-1 text-center font-medium ${
-                      user.isPremiumCreator
-                        ? "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
-                        : "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
-                    }`}
-                  >
-                    {user.isPremiumCreator ? "Creator" : "—"}
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-2">
                   <Button
                     onClick={() =>
                       updateRole(
@@ -180,16 +156,18 @@ export function UserManagement() {
                       )
                     }
                     disabled={updating === user.id}
-                    variant="outline"
+                    variant={user.role === "admin" ? "default" : "outline"}
                     size="sm"
-                    className="rounded-full shadow-sm dark:border-zinc-800"
+                    className={cn(
+                      "rounded-full shadow-sm dark:border-zinc-800",
+                      user.role === "admin"
+                        ? "bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
+                        : "bg-zinc-100 text-black hover:bg-zinc-200 dark:bg-white dark:hover:bg-zinc-200"
+                    )}
                   >
-                    {updating === user.id
-                      ? "..."
-                      : user.role === "admin"
-                        ? "Gỡ Admin"
-                        : "Admin"}
+                    {updating === user.id ? "..." : "Admin"}
                   </Button>
+
                   <Button
                     onClick={async () => {
                       try {
@@ -218,23 +196,30 @@ export function UserManagement() {
                               : u
                           )
                         );
+                        if (currentUser?.id === user.id) {
+                          refresh();
+                        }
                       } catch (err) {
                         setError(
-                          err instanceof Error
-                            ? err.message
-                            : "Có lỗi xảy ra"
+                          err instanceof Error ? err.message : "Có lỗi xảy ra"
                         );
                       } finally {
                         setUpdating(null);
                       }
                     }}
                     disabled={updating === user.id}
-                    variant={user.isPremium ? "outline" : "default"}
+                    variant={user.isPremium ? "default" : "outline"}
                     size="sm"
-                    className="rounded-full shadow-sm dark:border-zinc-800"
+                    className={cn(
+                      "rounded-full shadow-sm dark:border-zinc-800",
+                      user.isPremium
+                        ? "bg-rose-500 text-white hover:bg-rose-600 dark:bg-rose-600 dark:hover:bg-rose-700"
+                        : "bg-zinc-100 text-black hover:bg-zinc-200 dark:bg-white dark:hover:bg-zinc-200"
+                    )}
                   >
-                    {updating === user.id ? "..." : user.isPremium ? "Gỡ P" : "Premium"}
+                    {updating === user.id ? "..." : "Premium"}
                   </Button>
+
                   <Button
                     onClick={async () => {
                       try {
@@ -247,7 +232,9 @@ export function UserManagement() {
                             body: JSON.stringify({
                               userId: user.id,
                               isPremiumCreator: !user.isPremiumCreator,
-                              ...(!user.isPremiumCreator ? { isPremium: true } : {}),
+                              ...(!user.isPremiumCreator
+                                ? { isPremium: true }
+                                : {}),
                             }),
                           }
                         );
@@ -270,26 +257,28 @@ export function UserManagement() {
                               : u
                           )
                         );
+                        if (currentUser?.id === user.id) {
+                          refresh();
+                        }
                       } catch (err) {
                         setError(
-                          err instanceof Error
-                            ? err.message
-                            : "Có lỗi xảy ra"
+                          err instanceof Error ? err.message : "Có lỗi xảy ra"
                         );
                       } finally {
                         setUpdating(null);
                       }
                     }}
                     disabled={updating === user.id}
-                    variant={user.isPremiumCreator ? "outline" : "default"}
+                    variant={user.isPremiumCreator ? "default" : "outline"}
                     size="sm"
-                    className="rounded-full bg-amber-500 shadow-sm hover:bg-amber-600 dark:border-amber-600 dark:bg-amber-900/50 dark:hover:bg-amber-800"
+                    className={cn(
+                      "rounded-full shadow-sm dark:border-zinc-800",
+                      user.isPremiumCreator
+                        ? "bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700"
+                        : "bg-zinc-100 text-black hover:bg-zinc-200 dark:bg-white dark:hover:bg-zinc-200"
+                    )}
                   >
-                    {updating === user.id
-                      ? "..."
-                      : user.isPremiumCreator
-                        ? "Gỡ Creator"
-                        : "Creator"}
+                    {updating === user.id ? "..." : "Creator"}
                   </Button>
                 </div>
               </div>

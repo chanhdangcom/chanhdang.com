@@ -20,7 +20,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // User thường: chặn chỉ khi isPremiumCreator === false (tương thích ngược: user cũ không có field vẫn được phép)
+    // User thường: chỉ Premium Creator mới được tạo kênh ca sĩ
     if (role === "user") {
       const client = await clientPromise;
       const db = client.db("musicdb");
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
         { _id: new ObjectId(userId) },
         { projection: { isPremiumCreator: 1 } }
       );
-      if (userDoc?.isPremiumCreator === false) {
+      if (!userDoc?.isPremiumCreator) {
         return NextResponse.json(
           {
             error:

@@ -12,12 +12,46 @@ import { MotionHeaderMusic } from "@/features/music/component/motion-header-musi
 import { Input } from "@/components/ui/input";
 import { CaretRight, Star } from "@phosphor-icons/react/dist/ssr";
 import { BackButton } from "../component/back-button";
+import { usePermissions } from "@/hooks/use-permissions";
+import { Button } from "@/components/ui/button";
 
 export function LibraryPage() {
   const { user } = useUser();
   const params = useParams();
   const locale = (params?.locale as string) || "en";
   const withLocale = (path: string) => `/${locale}${path}`;
+  const { canUseLibrary } = usePermissions();
+
+  if (!canUseLibrary) {
+    return (
+      <div className="flex font-apple">
+        <MenuBar />
+        <MotionHeaderMusic name="Library" />
+        <div className="mx-4 mt-20 w-full md:ml-[270px] md:mt-8">
+          <BackButton />
+          <div className="mt-6 space-y-4 rounded-3xl border border-amber-300 bg-amber-50/80 p-6 text-center dark:border-amber-700 dark:bg-amber-950/30">
+            <h1 className="text-xl font-bold text-amber-800 dark:text-amber-200">
+              Cần gói Premium để dùng Library
+            </h1>
+            <p className="text-sm text-amber-700 dark:text-amber-300">
+              Nâng cấp Premium để lưu bài hát yêu thích và quản lý Library cá
+              nhân của bạn.
+            </p>
+            <div className="flex justify-center">
+              <Button
+                asChild
+                className="rounded-xl bg-amber-600 hover:bg-amber-700"
+              >
+                <Link href={`/${locale}/music/premium`}>
+                  Nâng cấp Premium
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex font-apple">

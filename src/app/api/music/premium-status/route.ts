@@ -22,10 +22,9 @@ export async function GET(request: Request) {
         { projection: { isPremium: 1, isPremiumCreator: 1 } }
       );
 
-    // Tương thích ngược: user cũ (chưa có field isPremiumCreator) vẫn được quyền thêm bài/tạo kênh như bản deploy cũ. Chỉ chặn khi explicitly isPremiumCreator === false.
     return NextResponse.json({
       isPremium: Boolean(user?.isPremium),
-      isPremiumCreator: user?.isPremiumCreator !== false,
+      isPremiumCreator: Boolean(user?.isPremiumCreator),
     });
   } catch (error) {
     console.error("[premium-status] Failed to get premium status", error);

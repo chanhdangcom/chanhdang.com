@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
+import { usePermissions } from "@/hooks/use-permissions";
+import { useParams, useRouter } from "next/navigation";
 import { CheckCircle, Star } from "@phosphor-icons/react/dist/ssr";
 
 interface LibraryTrackButtonProps {
@@ -70,6 +72,10 @@ export function LibraryTrackButton({
 }: LibraryTrackButtonProps) {
   const [isInLibrary, setIsInLibrary] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+   const { canUseLibrary } = usePermissions();
+   const params = useParams();
+   const router = useRouter();
+   const locale = (params?.locale as string) || "en";
 
   // Kiểm tra xem bài hát có trong Library hay không
   useEffect(() => {
@@ -111,6 +117,10 @@ export function LibraryTrackButton({
   }, [userId, music.id]);
 
   const handleToggleLibrary = async () => {
+    if (!canUseLibrary) {
+      router.push(`/${locale}/music/premium`);
+      return;
+    }
     if (!userId) {
       alert("Vui lòng đăng nhập để sử dụng tính năng này!");
       return;
