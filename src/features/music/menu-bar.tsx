@@ -128,85 +128,89 @@ export function MenuBar() {
 
   const libraryItems: MenuBarItemConfig[] =
     isAuthenticated && canUseLibrary
-    ? [
-        {
-          key: "recently-played",
-          label: tMenu("recentlyPlayed"),
-          href: `${basePath}/recently-played`,
-          isActive: isPathActive(`${basePath}/recently-played`),
-          icon: (
-            <Clock
-              size={25}
-              weight={
-                isPathActive(`${basePath}/recently-played`) ? "fill" : "regular"
-              }
-              className={getIconClass(
-                isPathActive(`${basePath}/recently-played`)
-              )}
-            />
-          ),
-        },
-        {
-          key: "library",
-          label: tCommon("library"),
-          href: `${basePath}/library`,
-          isActive: isPathActive(`${basePath}/library`),
-          icon: (
-            <CardsThree
-              size={25}
-              weight={isPathActive(`${basePath}/library`) ? "fill" : "regular"}
-              className={getIconClass(isPathActive(`${basePath}/library`))}
-            />
-          ),
-        },
-      ]
-    : isAuthenticated
-    ? [
-        {
-          key: "recently-played-disabled-premium",
-          label: tMenu("recentlyPlayed"),
-          href: `${basePath}/recently-played`,
-          disabled: true,
-          icon: (
-            <Clock size={25} className="text-rose-500 dark:text-blue-500" />
-          ),
-        },
-        {
-          key: "library-disabled-premium",
-          label: tCommon("library"),
-          href: `${basePath}/premium`,
-          disabled: false,
-          icon: (
-            <BookBookmark
-              size={25}
-              className="text-rose-500 dark:text-blue-500"
-            />
-          ),
-        },
-      ]
-    : [
-        {
-          key: "recently-played-disabled",
-          label: tMenu("recentlyPlayed"),
-          href: `${basePath}/recently-played`,
-          disabled: true,
-          icon: (
-            <Clock size={25} className="text-rose-500 dark:text-blue-500" />
-          ),
-        },
-        {
-          key: "library-disabled",
-          label: tCommon("library"),
-          href: `${basePath}/library`,
-          disabled: true,
-          icon: (
-            <BookBookmark
-              size={25}
-              className="text-rose-500 dark:text-blue-500"
-            />
-          ),
-        },
-      ];
+      ? [
+          {
+            key: "recently-played",
+            label: tMenu("recentlyPlayed"),
+            href: `${basePath}/recently-played`,
+            isActive: isPathActive(`${basePath}/recently-played`),
+            icon: (
+              <Clock
+                size={25}
+                weight={
+                  isPathActive(`${basePath}/recently-played`)
+                    ? "fill"
+                    : "regular"
+                }
+                className={getIconClass(
+                  isPathActive(`${basePath}/recently-played`)
+                )}
+              />
+            ),
+          },
+          {
+            key: "library",
+            label: tCommon("library"),
+            href: `${basePath}/library`,
+            isActive: isPathActive(`${basePath}/library`),
+            icon: (
+              <CardsThree
+                size={25}
+                weight={
+                  isPathActive(`${basePath}/library`) ? "fill" : "regular"
+                }
+                className={getIconClass(isPathActive(`${basePath}/library`))}
+              />
+            ),
+          },
+        ]
+      : isAuthenticated
+        ? [
+            {
+              key: "recently-played-disabled-premium",
+              label: tMenu("recentlyPlayed"),
+              href: `${basePath}/recently-played`,
+              disabled: true,
+              icon: (
+                <Clock size={25} className="text-rose-500 dark:text-blue-500" />
+              ),
+            },
+            {
+              key: "library-disabled-premium",
+              label: tCommon("library"),
+              href: `${basePath}/premium`,
+              disabled: false,
+              icon: (
+                <BookBookmark
+                  size={25}
+                  className="text-rose-500 dark:text-blue-500"
+                />
+              ),
+            },
+          ]
+        : [
+            {
+              key: "recently-played-disabled",
+              label: tMenu("recentlyPlayed"),
+              href: `${basePath}/recently-played`,
+              disabled: true,
+              icon: (
+                <Clock size={25} className="text-rose-500 dark:text-blue-500" />
+              ),
+            },
+            {
+              key: "library-disabled",
+              label: tCommon("library"),
+              href: `${basePath}/library`,
+              disabled: true,
+              icon: (
+                <BookBookmark
+                  size={25}
+                  className="text-rose-500 dark:text-blue-500"
+                />
+              ),
+            },
+          ];
 
   const manageItems: MenuBarItemConfig[] = [
     {
@@ -306,7 +310,7 @@ export function MenuBar() {
           } as MenuBarItemConfig,
           {
             key: "premium",
-            label: isPremium ? "Premium" : "Nâng cấp Premium",
+            label: tMenu("premium"),
             href: `${basePath}/premium`,
             isActive: isPathActive(`${basePath}/premium`),
             icon: (

@@ -19,14 +19,9 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { useTheme } from "next-themes";
 import { ChanhdangLogotypeMusic } from "@/components/chanhdang-logotype-music";
-import { BgLogo } from "./component/bg-logo";
-
 const FREE_PLAN = "Free";
 const PRICE_MONTHLY_VND = "29.000";
 const PRICE_MONTHLY_PRO_VND = "49.000";
-
-const PREMIUM_LOGO_LIGHT = "/img/logo/Logotype Premium (Light).svg";
-const PREMIUM_LOGO_DARK = "/img/logo/Logotype Premium (Dark).svg";
 
 export function PremiumPage() {
   const params = useParams();
@@ -52,15 +47,6 @@ export function PremiumPage() {
       <MenuBar />
 
       <div className="relative mx-4 mt-16 min-h-screen w-full md:ml-[270px] md:mt-8">
-        <BgLogo
-          logos={
-            (theme ?? "light") === "dark"
-              ? [PREMIUM_LOGO_DARK]
-              : [PREMIUM_LOGO_LIGHT]
-          }
-          opacity={theme === "dark" ? 0.1 : 0.15}
-        />
-
         <div className="relative z-10">
           <BackButton />
 
@@ -320,7 +306,7 @@ export function PremiumPage() {
                       href={`${basePath}/checkout`}
                       className="text-center text-sm font-semibold"
                     >
-                      <Button className="w-full rounded-xl border-none bg-gradient-to-tr from-[#996515] via-[#F1E5AC] to-[#D4AF37] shadow-[0_4px_15px_0_rgba(212,175,55,0.4)] hover:brightness-110 dark:bg-gradient-to-tr dark:from-[#996515] dark:via-[#F1E5AC] dark:to-[#D4AF37]">
+                      <Button className="w-full rounded-xl border-none bg-gradient-to-tr from-[#996515] via-[#F1E5AC] to-[#D4AF37] text-white shadow-[0_4px_15px_0_rgba(212,175,55,0.4)] hover:brightness-110 dark:bg-gradient-to-tr dark:from-[#996515] dark:via-[#F1E5AC] dark:to-[#D4AF37]">
                         Buy Now
                       </Button>
                     </Link>

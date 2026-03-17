@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
+
 /**
  * Nền logo lặp theo lưới, xoay nhiều chiều, tối ưu để không đè lên nhau.
  * Trang khác truyền vào mảng logo (src) để dùng logo riêng.
@@ -29,27 +31,36 @@ const ROTATIONS = [
 const SIZES_MOBILE = ["w-10", "w-12", "w-10", "w-12"] as const;
 const SIZES_DESKTOP = ["w-20", "w-24", "w-28", "w-32"] as const;
 
-/** Offset giả ngẫu nhiên từ index (cố định để tránh hydration lệch), range ±maxPct. */
-function jitter(index: number, maxPct: number): number {
-  const n = (index * 17 + index * index * 7) % 100;
-  return ((n / 100) * 2 - 1) * maxPct;
+function mulberry32(seed: number) {
+  return () => {
+    let t = (seed += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
 }
 
+function jitter(rnd: () => number, maxPct: number): number {
+  return (rnd() * 2 - 1) * maxPct;
+}
+
+type GridItem = { top: string; left: string; rotate: string; size: string };
+
 /** Lưới mobile: 4 cột x 8 dòng + jitter → lộn xộn tự nhiên, không đè. */
-function buildMobileGridItems(): { top: string; left: string; rotate: string; size: string }[] {
+function buildMobileGridItems(seed: number): GridItem[] {
+  const rnd = mulberry32(seed ^ 0xa341316c);
   const items: { top: string; left: string; rotate: string; size: string }[] = [];
   const cols = 4;
   const rows = 8;
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
-      const idx = r * cols + c;
       const baseTop = r * 12;
       const baseLeft = c * 25;
       items.push({
-        top: `${baseTop + jitter(idx * 2, 3)}%`,
-        left: `${baseLeft + jitter(idx * 2 + 1, 4)}%`,
-        rotate: ROTATIONS[idx % ROTATIONS.length],
-        size: SIZES_MOBILE[idx % SIZES_MOBILE.length],
+        top: `${baseTop + jitter(rnd, 6)}%`,
+        left: `${baseLeft + jitter(rnd, 8)}%`,
+        rotate: ROTATIONS[Math.floor(rnd() * ROTATIONS.length)],
+        size: SIZES_MOBILE[Math.floor(rnd() * SIZES_MOBILE.length)],
       });
     }
   }
@@ -57,28 +68,25 @@ function buildMobileGridItems(): { top: string; left: string; rotate: string; si
 }
 
 /** Lưới desktop: 8 cột x 10 dòng + jitter → lộn xộn tự nhiên. */
-function buildDesktopGridItems(): { top: string; left: string; rotate: string; size: string }[] {
+function buildDesktopGridItems(seed: number): GridItem[] {
+  const rnd = mulberry32(seed ^ 0xc8013ea4);
   const items: { top: string; left: string; rotate: string; size: string }[] = [];
   const cols = 8;
   const rows = 10;
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
-      const idx = r * cols + c;
       const baseTop = r * 11;
       const baseLeft = c * 13;
       items.push({
-        top: `${baseTop + jitter(idx * 2, 2.5)}%`,
-        left: `${baseLeft + jitter(idx * 2 + 1, 3)}%`,
-        rotate: ROTATIONS[idx % ROTATIONS.length],
-        size: SIZES_DESKTOP[idx % SIZES_DESKTOP.length],
+        top: `${baseTop + jitter(rnd, 5)}%`,
+        left: `${baseLeft + jitter(rnd, 6)}%`,
+        rotate: ROTATIONS[Math.floor(rnd() * ROTATIONS.length)],
+        size: SIZES_DESKTOP[Math.floor(rnd() * SIZES_DESKTOP.length)],
       });
     }
   }
   return items;
 }
-
-const MOBILE_GRID_ITEMS = buildMobileGridItems();
-const DESKTOP_GRID_ITEMS = buildDesktopGridItems();
 
 export interface BgLogoProps {
   /** Danh sách URL ảnh logo (1 phần tử = 1 logo dùng cho tất cả; nhiều phần tử = xoay vòng). */
@@ -90,14 +98,24 @@ export interface BgLogoProps {
 }
 
 export function BgLogo({ logos, opacity = 0.1, className = "" }: BgLogoProps) {
+  const [seed, setSeed] = useState(0);
+
+  useEffect(() => {
+    const arr = new Uint32Array(1);
+    crypto.getRandomValues(arr);
+    setSeed(arr[0] ?? 0);
+  }, []);
+
   const srcList = logos.length > 0 ? logos : ["/img/logo/Logotype Premium (Light).svg"];
   const wrapperClass = `pointer-events-none absolute inset-0 -z-10 min-h-screen overflow-hidden ${className}`;
+  const mobileItems = useMemo(() => buildMobileGridItems(seed), [seed]);
+  const desktopItems = useMemo(() => buildDesktopGridItems(seed), [seed]);
 
   return (
     <>
       {/* Mobile: lưới thưa 4x8, logo nhỏ → không đè */}
       <div className={`${wrapperClass} md:hidden`} style={{ opacity }}>
-        {MOBILE_GRID_ITEMS.map((item, i) => (
+        {mobileItems.map((item, i) => (
           <img
             key={i}
             src={srcList[i % srcList.length]}
@@ -109,7 +127,7 @@ export function BgLogo({ logos, opacity = 0.1, className = "" }: BgLogoProps) {
       </div>
       {/* Desktop: lưới dày 8x10 */}
       <div className={`${wrapperClass} hidden md:block`} style={{ opacity }}>
-        {DESKTOP_GRID_ITEMS.map((item, i) => (
+        {desktopItems.map((item, i) => (
           <img
             key={i}
             src={srcList[i % srcList.length]}

@@ -13,8 +13,8 @@ import {
   QrCode,
   HighDefinition,
   BookmarksSimple,
-  UsersThree,
   CreditCard,
+  NotSupersetOf,
 } from "@phosphor-icons/react/dist/ssr";
 import { ChanhdangLogotypeMusic } from "@/components/chanhdang-logotype-music";
 
@@ -132,15 +132,22 @@ export function CheckoutPage() {
                 <ChanhdangLogotypeMusic height={28} className="w-auto" />
               </div>
 
-              <h1 className="font-bold">Choose a plan</h1>
-
               <div className="mt-2 rounded-2xl border border-rose-500/40 bg-zinc-100 p-4 dark:bg-zinc-950">
                 <div className="items-center justify-between space-y-4 md:flex md:space-y-0">
                   <p className="space-y-2 text-sm">
                     <p className="flex items-center gap-1 font-medium">
+                      <NotSupersetOf
+                        weight="fill"
+                        className="text-rose-500 dark:text-rose-600"
+                        size={23}
+                      />
+                      <div>No ad interruptions.</div>
+                    </p>
+
+                    <p className="flex items-center gap-1 font-medium">
                       <HighDefinition
                         weight="fill"
-                        className="text-rose-500"
+                        className="text-rose-500 dark:text-rose-600"
                         size={23}
                       />
                       <div>Unlimited listening, high quality.</div>
@@ -149,25 +156,16 @@ export function CheckoutPage() {
                     <p className="flex items-center gap-1 font-medium">
                       <BookmarksSimple
                         weight="fill"
-                        className="text-rose-500"
+                        className="text-rose-500 dark:text-rose-600"
                         size={23}
                       />
                       <div>Use library.</div>
                     </p>
 
                     <p className="flex items-center gap-1 font-medium">
-                      <UsersThree
-                        weight="fill"
-                        className="text-rose-500"
-                        size={23}
-                      />
-                      <div>Start creating a music channel.</div>
-                    </p>
-
-                    <p className="flex items-center gap-1 font-medium">
                       <CreditCard
                         weight="fill"
-                        className="text-rose-500"
+                        className="text-rose-500 dark:text-rose-600"
                         size={23}
                       />
                       <div>Support platform development fee.</div>
@@ -175,17 +173,7 @@ export function CheckoutPage() {
                   </p>
 
                   <p className="flex items-center justify-center gap-1 text-2xl font-semibold tabular-nums text-rose-500 dark:text-rose-600 md:text-right">
-                    {PRICE_MONTHLY_VND}
-
-                    <div className="flex items-center">
-                      <span className="ml-0.5 font-normal text-zinc-500">
-                        đ
-                      </span>
-
-                      <span className="block font-normal text-zinc-500">
-                        /month
-                      </span>
-                    </div>
+                    {PRICE_MONTHLY_VND} VND
                   </p>
                 </div>
               </div>
@@ -213,7 +201,7 @@ export function CheckoutPage() {
                       <img
                         src="/img/VNPay-icon.jpg"
                         alt="VNPay"
-                        className="size-10 rounded-lg border"
+                        className="size-6 rounded-lg border"
                       />
 
                       <span className="font-semibold">
@@ -228,7 +216,7 @@ export function CheckoutPage() {
                       <img
                         src="/img/momo-icon.png"
                         alt="Momo"
-                        className="size-10 rounded-lg"
+                        className="size-6 rounded-lg"
                       />
 
                       <span className="font-semibold">
@@ -244,8 +232,8 @@ export function CheckoutPage() {
                   )}
                 </>
               ) : (
-                <div className="rounded-2xl border border-rose-500/40 bg-zinc-100 p-4 dark:bg-zinc-950">
-                  <div className="flex justify-between">
+                <div className="relative overflow-hidden rounded-2xl border border-rose-500/40 p-4">
+                  <div className="justify-between md:flex">
                     <div className="text-xs font-semibold">
                       {qrPayload.gateway.toUpperCase()} – {qrPayload.orderId}
                     </div>
