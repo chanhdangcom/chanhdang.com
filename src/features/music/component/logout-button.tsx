@@ -94,7 +94,7 @@ export function LogoutButton() {
                 <MusicNotesSimple
                   size={20}
                   weight="bold"
-                  className="text-rose-500 dark:text-blue-500"
+                  className="text-rose-500 0"
                 />
 
                 <div className="text-sm font-medium">Add New Music</div>
@@ -104,10 +104,7 @@ export function LogoutButton() {
                 href={`/${locale}/music/library`}
                 className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
               >
-                <CardsThree
-                  size={20}
-                  className="text-rose-500 dark:text-blue-500"
-                />
+                <CardsThree size={20} className="0 text-rose-500" />
 
                 <div className="text-sm font-medium">Library</div>
               </Link>
@@ -116,10 +113,7 @@ export function LogoutButton() {
                 href={`/${locale}/music/premium`}
                 className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
               >
-                <SketchLogo
-                  size={20}
-                  className="text-rose-500 dark:text-blue-500"
-                />
+                <SketchLogo size={20} className="0 text-rose-500" />
 
                 <div className="text-sm font-medium">Premium</div>
               </Link>
@@ -130,7 +124,7 @@ export function LogoutButton() {
               >
                 <MicrophoneStage
                   size={20}
-                  className="text-rose-500 dark:text-blue-500"
+                  className="text-rose-500 0"
                 />
 
                 <div className="text-sm font-medium">Add Artists</div>
@@ -138,7 +132,7 @@ export function LogoutButton() {
 
               <div className="py-1 dark:border-zinc-800 md:hidden">
                 <div className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800">
-                  <ThemeToggleMenuBar className="size-5 text-rose-500 dark:text-blue-500" />
+                  <ThemeToggleMenuBar className="0 size-5 text-rose-500" />
 
                   <div className="text-sm font-medium">Theme</div>
                 </div>
@@ -155,10 +149,7 @@ export function LogoutButton() {
                       href={`/${locale}/music/management-page`}
                       className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
                     >
-                      <ChartDonut
-                        size={20}
-                        className="text-rose-500 dark:text-blue-500"
-                      />
+                      <ChartDonut size={20} className="0 text-rose-500" />
 
                       <div className="text-sm font-medium">Management</div>
                     </Link>
@@ -170,10 +161,7 @@ export function LogoutButton() {
                     href={`/${locale}/music/my-music`}
                     className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
                   >
-                    <Faders
-                      size={20}
-                      className="text-rose-500 dark:text-blue-500"
-                    />
+                    <Faders size={20} className="0 text-rose-500" />
 
                     <div className="text-sm font-medium">My Music</div>
                   </Link>
@@ -184,10 +172,7 @@ export function LogoutButton() {
                     href={`/${locale}/music/profile-setting`}
                     className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
                   >
-                    <Gear
-                      size={20}
-                      className="text-rose-500 dark:text-blue-500"
-                    />
+                    <Gear size={20} className="0 text-rose-500" />
 
                     <div className="text-sm font-medium">Profile Setting</div>
                   </Link>
@@ -199,10 +184,7 @@ export function LogoutButton() {
                   className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
                   onClick={handleLogout}
                 >
-                  <SignOut
-                    size={20}
-                    className="text-rose-500 dark:text-blue-500"
-                  />
+                  <SignOut size={20} className="0 text-rose-500" />
 
                   <div className="text-sm font-medium">Log Out</div>
                 </div>

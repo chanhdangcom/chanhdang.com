@@ -14,7 +14,6 @@ import { cn } from "@/lib/utils";
 import { IPlaylistItem } from "../type/playlist";
 import { useAudio } from "@/components/music-provider";
 import { DynamicIslandWave } from "@/components/ui/dynamic-island";
-import { useTheme } from "next-themes";
 
 type IProp = {
   music: IMusic | IPlaylistItem;
@@ -25,13 +24,13 @@ type IProp = {
 export function AuidoItem({ music, handlePlay, className }: IProp) {
   const { user } = useUser();
   const { currentMusic, isPlaying } = useAudio();
-  const { resolvedTheme } = useTheme();
+
   const [isEnter, setIsEnter] = useState<boolean>(false);
   const hoverBg = useImageHoverColor(music?.cover, { alpha: 0.3 });
   const isCurrentTrack =
     typeof (music as IMusic).audio === "string" &&
     currentMusic?.id === music?.id;
-  const waveColor = resolvedTheme === "dark" ? "#3b82f6" : "#f43f5e";
+  const waveColor = "#f43f5e";
 
   return (
     <motion.div whileTap={{ scale: 0.8 }}>
@@ -116,15 +115,15 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
           )}
         </div>
 
-        <div className="text-black dark:text-white font-apple">
+        <div className="font-apple text-black dark:text-white">
           <div
-            className="line-clamp-1 w-full cursor-pointer text-sm font-semibold font-apple"
+            className="line-clamp-1 w-full cursor-pointer font-apple text-sm font-semibold"
             onClick={handlePlay}
           >
             {music.title || "TITLE"}
           </div>
 
-          <div className="line-clamp-1 w-full text-xs text-zinc-500 font-apple">
+          <div className="line-clamp-1 w-full font-apple text-xs text-zinc-500">
             {music.singer || "SINGER"}
           </div>
         </div>

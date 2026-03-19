@@ -95,9 +95,7 @@ export function TableRanking() {
                   <div
                     className={cn(
                       "text-sm font-medium text-zinc-500",
-                      index < 4
-                        ? "text-lg font-semibold text-rose-500 dark:text-blue-500"
-                        : ""
+                      index < 4 ? "text-lg font-semibold text-rose-500" : ""
                     )}
                   >
                     {index + 1}

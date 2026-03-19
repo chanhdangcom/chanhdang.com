@@ -61,10 +61,7 @@ export function MenuBar() {
     );
 
   const getIconClass = (active: boolean) =>
-    cn(
-      "text-rose-500 dark:text-blue-500",
-      active && "text-rose-600 dark:text-blue-400"
-    );
+    cn("text-rose-500", active && "text-rose-600");
 
   const isManageHubActive = isPathActive(`${basePath}/management-page`);
   const isAdminPanelActive = isPathActive(`${basePath}/admin`);
@@ -171,21 +168,14 @@ export function MenuBar() {
               label: tMenu("recentlyPlayed"),
               href: `${basePath}/recently-played`,
               disabled: true,
-              icon: (
-                <Clock size={25} className="text-rose-500 dark:text-blue-500" />
-              ),
+              icon: <Clock size={25} className="text-rose-500" />,
             },
             {
               key: "library-disabled-premium",
               label: tCommon("library"),
               href: `${basePath}/premium`,
               disabled: false,
-              icon: (
-                <BookBookmark
-                  size={25}
-                  className="text-rose-500 dark:text-blue-500"
-                />
-              ),
+              icon: <BookBookmark size={25} className="text-rose-500" />,
             },
           ]
         : [
@@ -194,21 +184,14 @@ export function MenuBar() {
               label: tMenu("recentlyPlayed"),
               href: `${basePath}/recently-played`,
               disabled: true,
-              icon: (
-                <Clock size={25} className="text-rose-500 dark:text-blue-500" />
-              ),
+              icon: <Clock size={25} className="text-rose-500" />,
             },
             {
               key: "library-disabled",
               label: tCommon("library"),
               href: `${basePath}/library`,
               disabled: true,
-              icon: (
-                <BookBookmark
-                  size={25}
-                  className="text-rose-500 dark:text-blue-500"
-                />
-              ),
+              icon: <BookBookmark size={25} className="text-rose-500" />,
             },
           ];
 
@@ -344,7 +327,7 @@ export function MenuBar() {
     {
       key: "theme",
       label: tMenu("theme"),
-      icon: <ThemeToggleMenuBar className="text-rose-500 dark:text-blue-500" />,
+      icon: <ThemeToggleMenuBar className="text-rose-500" />,
     },
     {
       key: "language",
