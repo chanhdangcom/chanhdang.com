@@ -22,6 +22,7 @@ import {
   Queue,
   Shuffle,
   Star,
+  ThumbsDown,
 } from "@phosphor-icons/react/dist/ssr";
 
 type IProp = {
@@ -188,30 +189,34 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
 
   const renderMenuContent = () => (
     <>
-      <div className="flex justify-between gap-8 border-b border-white/10 pb-4">
+      <div className="flex justify-between gap-8 border-b border-black/10 px-2 py-2 pb-4 dark:border-white/10">
         <div className="flex flex-col items-center justify-center gap-0.5">
           <PlusCircle size={18} weight="fill" />
+
           <div className="text-xs font-medium">Add</div>
         </div>
 
         <div className="flex flex-col items-center justify-center gap-0.5">
           <Star size={18} weight="fill" />
+
           <div className="text-xs font-medium">Favorite</div>
         </div>
 
         <div className="flex flex-col items-center justify-center gap-0.5">
           <Export size={18} weight="fill" />
+
           <div className="text-xs font-medium">Share</div>
         </div>
       </div>
 
-      <div className="space-y-2 border-b border-white/10 py-2">
+      <div className="space-y-4 border-b border-black/10 py-2 dark:border-white/10">
         <button
           type="button"
           className="flex w-full items-center gap-2 rounded-xl text-left text-sm hover:bg-zinc-800"
           onClick={handleAddToQueue}
         >
           <Play size={16} weight="regular" className="" />
+
           <span className="font-medium">Play</span>
         </button>
 
@@ -221,29 +226,44 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
           onClick={handlePlayRandomAudio}
         >
           <Shuffle size={16} weight="regular" className="" />
+
           <span className="font-medium"> Shuffle</span>
         </button>
       </div>
 
-      <div className="border-b border-white/10 py-2">
+      <div className="border-b border-black/10 py-4 dark:border-white/10">
         <button
           type="button"
           className="flex w-full items-center gap-2 rounded-xl text-left text-sm hover:bg-zinc-800"
           onClick={handleAddToQueue}
         >
           <ListPlus size={16} weight="regular" className="" />
+
           <span className="font-medium">Add to a Playlist</span>
         </button>
       </div>
 
-      <div className="pt-2">
+      <div className="border-b border-black/10 py-4 dark:border-white/10">
         <button
           type="button"
           className="flex w-full items-center gap-2 rounded-xl text-left text-sm hover:bg-zinc-800"
           onClick={handleAddToQueue}
         >
           <Queue size={16} weight="regular" className="" />
+
           <span className="font-medium">Add to Queue</span>
+        </button>
+      </div>
+
+      <div className="pt-4">
+        <button
+          type="button"
+          className="flex w-full items-center gap-2 rounded-xl text-left text-sm hover:bg-zinc-800"
+          onClick={handleAddToQueue}
+        >
+          <ThumbsDown size={16} weight="regular" className="" />
+
+          <span className="font-medium">Suggest Less</span>
         </button>
       </div>
     </>
@@ -251,14 +271,22 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
 
   return (
     <>
+      {showMenu &&
+        isDesktop &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div className="fixed inset-0 z-[80] bg-black/45 backdrop-blur-[4px]" />,
+          document.body
+        )}
+
       {showOverlay &&
         typeof document !== "undefined" &&
         createPortal(
-          <div className="pointer-events-none fixed inset-0 z-[120]">
+          <div className="fixed inset-0 z-[120] bg-black/45 backdrop-blur-[4px]">
             <div
               ref={overlayRef}
               className={cn(
-                "pointer-events-auto absolute flex flex-col items-center",
+                "pointer-events-auto absolute flex scale-125 flex-col items-center",
                 isDesktop ? "" : "left-1/2 top-28 -translate-x-1/2"
               )}
               style={
@@ -319,7 +347,7 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
                 transition={{ duration: 0.28, ease: "easeOut", delay: 0.06 }}
                 ref={menuRef}
                 className={cn(
-                  "max-h-[calc(100dvh-320px)] w-52 overflow-y-auto rounded-2xl border border-white/10 bg-zinc-500/40 p-4 text-black shadow-xl backdrop-blur-xl dark:bg-zinc-950/60 dark:text-white",
+                  "z-[130] max-h-[calc(100dvh-320px)] w-full overflow-y-auto rounded-3xl border border-white/15 bg-white/70 px-4 py-2 pb-4 text-black shadow-2xl backdrop-blur-md dark:bg-zinc-950/70 dark:text-white",
                   isDesktop
                     ? "absolute right-[calc(100%+8px)] top-1/2 mt-0 -translate-y-1/2"
                     : "mt-2"
@@ -349,7 +377,9 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
               : isCurrentTrack
                 ? "z-20"
                 : "z-10",
-          showMenu ? "rounded-xl bg-zinc-300 dark:bg-zinc-900" : ""
+          showMenu
+            ? "saturate-110 rounded-xl bg-zinc-300 brightness-105 dark:bg-zinc-900"
+            : ""
         )}
       >
         <div
