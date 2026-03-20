@@ -64,7 +64,7 @@ export default async function CarouselAudio({
       : [];
 
     return (
-      <div className="relative w-full rounded-3xl text-black dark:text-white">
+      <div className="relative w-full overflow-visible rounded-3xl text-black dark:text-white">
         <div className="flex justify-between">
           <Link
             href={`/${locale}/music/trending-now`}
