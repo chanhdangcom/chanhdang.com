@@ -23,24 +23,21 @@ export default async function CarouselAudio({
     // ✅ Chỉ lấy dữ liệu cần cho carousel để tải nhanh khi chuyển trang
     const data = await db
       .collection("musics")
-      .find(
-        publicFilter,
-        {
-          projection: {
-            title: 1,
-            singer: 1,
-            cover: 1,
-            audio: 1,
-            youtube: 1,
-            content: 1,
-            type: 1,
-            srt: 1,
-            beat: 1,
-            createdAt: 1,
-            playCount: 1,
-          },
-        }
-      )
+      .find(publicFilter, {
+        projection: {
+          title: 1,
+          singer: 1,
+          cover: 1,
+          audio: 1,
+          youtube: 1,
+          content: 1,
+          type: 1,
+          srt: 1,
+          beat: 1,
+          createdAt: 1,
+          playCount: 1,
+        },
+      })
       .sort({ playCount: -1, createdAt: -1 })
       .limit(24)
       .toArray();
@@ -67,7 +64,7 @@ export default async function CarouselAudio({
       : [];
 
     return (
-      <div className="relative w-full rounded-3xl text-black dark:text-white md:max-h-full">
+      <div className="relative w-full rounded-3xl text-black dark:text-white">
         <div className="flex justify-between">
           <Link
             href={`/${locale}/music/trending-now`}
@@ -89,7 +86,9 @@ export default async function CarouselAudio({
   } catch (error) {
     console.error("❌ Failed to fetch musics:", error);
     return (
-      <div className="text-center text-rose-500">Failed to load music data.</div>
+      <div className="text-center text-rose-500">
+        Failed to load music data.
+      </div>
     );
   }
 }

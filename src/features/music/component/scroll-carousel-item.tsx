@@ -17,7 +17,7 @@ export function ScrollCarouselItem({
   canScrollRight = true,
 }: IProp) {
   return (
-    <div className="group/carousel relative">
+    <div className="group/carousel relative overflow-visible">
       {canScrollLeft && (
         <div
           onClick={scrollLeft}

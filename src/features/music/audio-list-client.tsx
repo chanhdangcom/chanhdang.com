@@ -24,7 +24,7 @@ export function AuidoListClient({ musics }: { musics: IMusic[] }) {
   }, [musics]);
 
   return (
-    <>
+    <div className="relative overflow-visible">
       <ScrollCarouselItem
         scrollLeft={scrollLeft}
         scrollRight={scrollRight}
@@ -33,16 +33,16 @@ export function AuidoListClient({ musics }: { musics: IMusic[] }) {
       >
         <div
           ref={scrollRef}
-          className="relative grid snap-x snap-mandatory grid-flow-col grid-rows-2 overflow-x-auto scroll-smooth scrollbar-hide md:snap-none"
+          className="relative -my-6 grid snap-x snap-mandatory grid-flow-col grid-rows-2 overflow-x-auto scroll-smooth py-8 scrollbar-hide md:snap-none"
           style={{
             scrollBehavior: "smooth",
             WebkitOverflowScrolling: "touch",
           }}
         >
           {shuffledMusics.map((music, index) => (
-            <div key={music.id} className="snap-start">
+            <div key={music.id} className="snap-start overflow-visible">
               <div
-                className={`w-full shrink-0 ${
+                className={`relative w-full shrink-0 overflow-visible ${
                   index === 0 || index === 1 ? "ml-2 md:ml-[270px]" : ""
                 }`}
               >
@@ -55,6 +55,6 @@ export function AuidoListClient({ musics }: { musics: IMusic[] }) {
           ))}
         </div>
       </ScrollCarouselItem>
-    </>
+    </div>
   );
 }
