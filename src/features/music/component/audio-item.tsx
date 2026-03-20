@@ -286,7 +286,7 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
             <div
               ref={overlayRef}
               className={cn(
-                "pointer-events-auto absolute flex scale-125 flex-col items-center",
+                "pointer-events-auto absolute flex scale-125 flex-col items-center md:scale-105",
                 isDesktop ? "" : "left-1/2 top-28 -translate-x-1/2"
               )}
               style={
