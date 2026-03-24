@@ -156,7 +156,9 @@ export function AudioItemOrderLayout({
             )}
 
             <div className="flex items-center gap-8">
-              <div className="font-apple text-sm text-zinc-400"> 3:28</div>
+              <div className="hidden font-apple text-sm text-zinc-400 md:block">
+                3:28
+              </div>
 
               <div className="">{item}</div>
             </div>
