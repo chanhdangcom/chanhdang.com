@@ -16,9 +16,9 @@ import {
   MagicWand,
   RepeatOnce,
   ChatTeardropText,
-  Heart,
   ArrowsInSimple,
   ArrowsCounterClockwise,
+  Star,
 } from "@phosphor-icons/react/dist/ssr";
 
 import { useCallback, useEffect, useState, useRef, memo } from "react";
@@ -629,7 +629,16 @@ const LyricPage = ({
                   </div>
                 </div>
 
-                <MusicActionsMenu />
+                <div className="flex items-center gap-4">
+                  <Star
+                    size={25}
+                    weight={sharedActions.isInFavorites ? "fill" : "regular"}
+                    className={cn("cursor-pointer text-white")}
+                    onClick={sharedActions.onToggleFavorites}
+                  />
+
+                  <MusicActionsMenu />
+                </div>
               </div>
             </div>
           </div>
@@ -827,14 +836,9 @@ const ContentPage = ({
         <div className="w-full">
           <div className="absolute inset-0 -z-10 flex justify-center gap-8 bg-zinc-950">
             <div
-              className={`h-full w-full ${
-                isDesktop ? "saturate-125 rotate-180 scale-110" : "saturate-110"
-              }`}
+              className={`h-full w-full`}
               style={{
                 backgroundColor: hoverBg,
-                // backgroundImage: isDesktop
-                //   ? `radial-gradient(120% 95% at 50% 0%, ${hoverBg} 0%, rgba(39, 39, 42, 0.28) 58%, rgba(9, 9, 11, 0.52) 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 44%)`
-                //   : `linear-gradient(180deg, ${hoverBg} 0%, rgba(9, 9, 11, 0.84) 72%)`,
               }}
             />
           </div>
@@ -962,6 +966,28 @@ const ContentPage = ({
               </div>
 
               <div className="flex items-center gap-4">
+                <motion.div
+                  whileTap={{ scale: 0.2 }}
+                  className={cn(
+                    "cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white",
+                    isMixMode ? "bg-white/50 text-zinc-600" : "bg-white/10"
+                  )}
+                  onClick={() => handleToggleMixMode()}
+                >
+                  <Shuffle size={22} weight="bold" />
+                </motion.div>
+
+                <motion.div
+                  whileTap={{ scale: 0.2 }}
+                  className={cn(
+                    "cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white",
+                    isMixMode ? "bg-white/50 text-zinc-600" : "bg-white/10"
+                  )}
+                  onClick={() => handleToggleMixMode()}
+                >
+                  <Infinity size={22} weight={"bold"} />
+                </motion.div>
+
                 <motion.div
                   whileTap={{ scale: 0.2 }}
                   className={cn(
@@ -1331,7 +1357,16 @@ const FeaturedPage = ({
                   </motion.div>
                 </div>
 
-                <MusicActionsMenu />
+                <div className="flex items-center gap-4">
+                  <Star
+                    size={25}
+                    weight={sharedActions.isInFavorites ? "fill" : "regular"}
+                    className={cn("cursor-pointer text-white")}
+                    onClick={sharedActions.onToggleFavorites}
+                  />
+
+                  <MusicActionsMenu />
+                </div>
               </div>
 
               <div className="mt-4 flex items-center justify-between md:justify-start md:gap-16">
@@ -1797,7 +1832,16 @@ export function PlayerPage({ setIsClick }: IProp) {
                   )}
                 </motion.div>
 
-                <MusicActionsMenu />
+                <div className="flex items-center gap-4">
+                  <Star
+                    size={25}
+                    weight={sharedActions.isInFavorites ? "fill" : "regular"}
+                    className={cn("cursor-pointer text-white")}
+                    onClick={sharedActions.onToggleFavorites}
+                  />
+
+                  <MusicActionsMenu />
+                </div>
               </div>
 
               <motion.div
@@ -1897,16 +1941,6 @@ export function PlayerPage({ setIsClick }: IProp) {
                     weight={isClickLyric ? "fill" : "regular"}
                   />
                 </motion.button>
-
-                <Heart
-                  size={25}
-                  weight={isInFavorites ? "fill" : "regular"}
-                  className={cn(
-                    "cursor-pointer",
-                    isInFavorites ? "text-rose-500" : "text-zinc-400"
-                  )}
-                  onClick={handleToggleFavorites}
-                />
 
                 <motion.button
                   whileTap={{ scale: 0.2 }}

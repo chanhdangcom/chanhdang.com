@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { IPlaylistItem } from "../type/playlist";
-import { Plus, CheckCircle } from "@phosphor-icons/react/dist/ssr";
+import { CheckCircle, Star } from "@phosphor-icons/react/dist/ssr";
 
 type LibraryPlaylistButtonProps = {
   playlist: IPlaylistItem;
@@ -108,7 +108,7 @@ export function LibraryPlaylistButton({
             className="text-rose-500 drop-shadow-sm transition-colors duration-200 group-hover:text-rose-400"
           />
         ) : (
-          <Plus
+          <Star
             size={22}
             weight="bold"
             className="text-white transition-colors duration-200 group-hover:scale-125"

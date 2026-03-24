@@ -7,8 +7,8 @@ import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { usePermissions } from "@/hooks/use-permissions";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { AudioItemOrder } from "../component/audio-item-order";
 import { DotsThreeVertical } from "@phosphor-icons/react/dist/ssr";
+import { AudioItemOrderLayout } from "../component/audio-item-order-layout";
 
 interface LibraryTracksListProps {
   userId?: string;
@@ -92,7 +92,7 @@ export function LibraryTracksList({ userId }: LibraryTracksListProps) {
                 <div key={music.id} className="">
                   <div className="flex flex-col text-black dark:text-white">
                     <div className="">
-                      <AudioItemOrder
+                      <AudioItemOrderLayout
                         music={music}
                         handlePlay={() => handlePlayAudio(music)}
                         className="w-full"

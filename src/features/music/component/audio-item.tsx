@@ -400,17 +400,38 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
         >
           <div className="relative">
             {music.cover ? (
-              <BorderPro roundedSize="rounded-lg">
-                <img
-                  src={music.cover}
-                  alt="cover"
-                  className={cn(
-                    "mx-auto size-44 shrink-0 cursor-pointer justify-center rounded-lg object-cover md:size-52",
-                    className
-                  )}
-                  onClick={handlePlay}
-                />
-              </BorderPro>
+              <div className="relative">
+                {(isEnter || isCurrentTrack) && !showMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2, ease: "easeIn" }}
+                    className="pointer-events-none absolute inset-0 z-50 flex h-full w-full items-center justify-center bg-zinc-900/60"
+                  >
+                    {isCurrentTrack && (
+                      <div className="">
+                        <DynamicIslandWave
+                          isPlay={isPlaying}
+                          coverUrl={music.cover}
+                          color={waveColor}
+                        />
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+
+                <BorderPro roundedSize="rounded-lg">
+                  <img
+                    src={music.cover}
+                    alt="cover"
+                    className={cn(
+                      "mx-auto size-44 shrink-0 cursor-pointer justify-center rounded-lg object-cover md:size-52",
+                      className
+                    )}
+                    onClick={handlePlay}
+                  />
+                </BorderPro>
+              </div>
             ) : (
               <div
                 className="size-40 cursor-pointer rounded-xl bg-zinc-800"
@@ -439,30 +460,6 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
                   userId={user?.id}
                   size="sm"
                 />
-              </motion.div>
-            )}
-
-            {(isEnter || isCurrentTrack) && !showMenu && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2, ease: "easeIn" }}
-                className="absolute bottom-2 right-2"
-              >
-                {isCurrentTrack ? (
-                  <div className="rounded-full bg-zinc-500/60 px-2 py-0.5 backdrop-blur-sm">
-                    <DynamicIslandWave
-                      isPlay={isPlaying}
-                      coverUrl={music.cover}
-                      color={waveColor}
-                    />
-                  </div>
-                ) : (
-                  <Play
-                    className="size-10 rounded-full bg-zinc-900/60 p-2 text-rose-500 backdrop-blur-sm"
-                    weight="fill"
-                  />
-                )}
               </motion.div>
             )}
           </div>

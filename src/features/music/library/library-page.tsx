@@ -1,56 +1,45 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
-import { useUser } from "@/hooks/use-user";
+// import { useUser } from "@/hooks/use-user";
+import { useEffect } from "react";
 import { HeaderMusicPage } from "@/features/music/header-music-page";
 import { MenuBar } from "@/features/music/menu-bar";
 import { MenuBarMobile } from "@/features/music/menu-bar-mobile";
 import { AudioBar } from "@/features/music/audio-bar";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { LibraryPlaylistsList } from "@/features/music/library/library-playlists-list";
+import { useParams, useRouter } from "next/navigation";
+// import { LibraryPlaylistsList } from "@/features/music/library/library-playlists-list";
 import { MotionHeaderMusic } from "@/features/music/component/motion-header-music";
-import { Input } from "@/components/ui/input";
-import { CaretRight, Star } from "@phosphor-icons/react/dist/ssr";
+
+import {
+  CardsThree,
+  CaretRight,
+  MicrophoneStage,
+  MusicNote,
+  Playlist,
+} from "@phosphor-icons/react/dist/ssr";
 import { BackButton } from "../component/back-button";
 import { usePermissions } from "@/hooks/use-permissions";
-import { Button } from "@/components/ui/button";
+import { usePremium } from "@/hooks/use-premium";
+import { useUser } from "@/hooks/use-user";
 
 export function LibraryPage() {
-  const { user } = useUser();
+  // const { user } = useUser();
   const params = useParams();
+  const router = useRouter();
   const locale = (params?.locale as string) || "en";
   const withLocale = (path: string) => `/${locale}${path}`;
   const { canUseLibrary } = usePermissions();
+  const { isLoading: isUserLoading } = useUser();
+  const { isLoading: isPremiumLoading } = usePremium();
 
-  if (!canUseLibrary) {
-    return (
-      <div className="flex font-apple">
-        <MenuBar />
-        <MotionHeaderMusic name="Library" />
-        <div className="mx-4 mt-20 w-full md:ml-[270px] md:mt-8">
-          <BackButton />
-          <div className="mt-6 space-y-4 rounded-3xl border border-amber-300 bg-amber-50/80 p-6 text-center dark:border-amber-700 dark:bg-amber-950/30">
-            <h1 className="text-xl font-bold text-amber-800 dark:text-amber-200">
-              Cần gói Premium để dùng Library
-            </h1>
-            <p className="text-sm text-amber-700 dark:text-amber-300">
-              Nâng cấp Premium để lưu bài hát yêu thích và quản lý Library cá
-              nhân của bạn.
-            </p>
-            <div className="flex justify-center">
-              <Button
-                asChild
-                className="rounded-xl bg-amber-600 hover:bg-amber-700"
-              >
-                <Link href={`/${locale}/music/premium`}>
-                  Nâng cấp Premium
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+  useEffect(() => {
+    if (!isUserLoading && !isPremiumLoading && !canUseLibrary) {
+      router.replace(`/${locale}/music/premium`);
+    }
+  }, [canUseLibrary, isPremiumLoading, isUserLoading, locale, router]);
+
+  if (isUserLoading || isPremiumLoading || !canUseLibrary) {
+    return null;
   }
 
   return (
@@ -69,18 +58,8 @@ export function LibraryPage() {
 
           <BackButton />
 
-          <div className="md mx-4 md:ml-[270px]">
-            <Link href={withLocale("/music/search")} className="">
-              <Input
-                type="text"
-                placeholder="Music, Playlist ..."
-                className="z-10 rounded-3xl border bg-white dark:border-zinc-800 dark:bg-zinc-800 md:w-[40vw]"
-              />
-            </Link>
-          </div>
-
-          <div className="mx-4 md:ml-[270px]">
-            <div className="gap-4 space-y-4 md:space-y-8">
+          <div className="mx-4 space-y-4 md:ml-[270px]">
+            {/* <div className="gap-4 space-y-4 md:space-y-8">
               <Link
                 href={withLocale("/music/library/favorites")}
                 className="flex items-center justify-between rounded-lg md:mt-8"
@@ -109,7 +88,106 @@ export function LibraryPage() {
               <div className="mt-4 md:mt-0">
                 <LibraryPlaylistsList userId={user?.id} />
               </div>
+            </div> */}
+
+            <div className="flex items-center justify-between">
+              <div className="flex flex-1 items-center gap-2">
+                <Playlist
+                  size={28}
+                  weight="regular"
+                  className="text-rose-500 dark:text-rose-600"
+                />
+
+                <div className="flex-1 flex-row space-y-2 font-apple">
+                  <div className="flex items-center justify-between">
+                    <div>Playlists</div>
+
+                    <CaretRight
+                      size={20}
+                      weight="bold"
+                      className="text-white/30"
+                    />
+                  </div>
+
+                  <div className="h-[1px] w-full bg-zinc-200 dark:bg-zinc-900" />
+                </div>
+              </div>
             </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex flex-1 items-center gap-2">
+                <MicrophoneStage
+                  size={28}
+                  weight="regular"
+                  className="text-rose-500 dark:text-rose-600"
+                />
+
+                <div className="flex-1 flex-row space-y-2 font-apple">
+                  <div className="flex items-center justify-between">
+                    <div>Artists</div>
+
+                    <CaretRight
+                      size={20}
+                      weight="bold"
+                      className="text-white/30"
+                    />
+                  </div>
+
+                  <div className="h-[1px] w-full bg-zinc-200 dark:bg-zinc-900" />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex flex-1 items-center gap-2">
+                <CardsThree
+                  size={28}
+                  weight="regular"
+                  className="text-rose-500 dark:text-rose-600"
+                />
+
+                <div className="flex-1 flex-row space-y-2 font-apple">
+                  <div className="flex items-center justify-between">
+                    <div>Albums</div>
+
+                    <CaretRight
+                      size={20}
+                      weight="bold"
+                      className="text-white/30"
+                    />
+                  </div>
+
+                  <div className="h-[1px] w-full bg-zinc-200 dark:bg-zinc-900" />
+                </div>
+              </div>
+            </div>
+
+            <Link
+              href={withLocale("/music/library/favorites")}
+              className="flex items-center justify-between"
+            >
+              <div className="flex flex-1 items-center gap-2">
+                <MusicNote
+                  size={28}
+                  weight="fill"
+                  className="text-rose-500 dark:text-rose-600"
+                />
+
+                <div className="flex-1 flex-row space-y-2 font-apple">
+                  <div className="flex items-center justify-between">
+                    <div>Songs</div>
+
+                    <CaretRight
+                      size={20}
+                      weight="bold"
+                      className="text-white/30"
+                    />
+                  </div>
+
+                  <div className="h-[1px] w-full bg-zinc-200 dark:bg-zinc-900" />
+                </div>
+              </div>
+            </Link>
           </div>
         </div>
 

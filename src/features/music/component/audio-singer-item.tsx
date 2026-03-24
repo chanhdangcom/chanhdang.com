@@ -1,8 +1,8 @@
 "use client";
 import { ISingerItem } from "../type/singer";
 import { useAudio } from "@/components/music-provider";
-import { AudioItemOrder } from "./audio-item-order";
 import { DotsThreeVertical } from "@phosphor-icons/react/dist/ssr";
+import { AudioItemOrderLayout } from "./audio-item-order-layout";
 
 type IProp = {
   music: ISingerItem;
@@ -22,7 +22,7 @@ export function AudioSingerItem({ music }: IProp) {
           <div key={song.id} className="flex items-center gap-4 font-apple">
             <div className="font-medium text-zinc-500">{index + 1}</div>
 
-            <AudioItemOrder
+            <AudioItemOrderLayout
               music={song}
               handlePlay={() => handlePlayAudio(song)}
               date={

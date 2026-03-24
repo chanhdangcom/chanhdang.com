@@ -5,7 +5,6 @@ import { MenuBar } from "../menu-bar";
 import { MenuBarMobile } from "../menu-bar-mobile";
 import { AudioBar } from "../audio-bar";
 import { IPlaylistItem } from "../type/playlist";
-import { AudioItemOrder } from "../component/audio-item-order";
 import {
   DotsThree,
   Play,
@@ -18,6 +17,7 @@ import { useUser } from "@/hooks/use-user";
 import { BackButton } from "../component/back-button";
 import { useScroll, useSpring, useTransform, motion } from "framer-motion";
 import { useImageHoverColor } from "@/hooks/use-image-hover-color";
+import { AudioItemOrderLayout } from "../component/audio-item-order-layout";
 
 type Props = {
   playlist: IPlaylistItem;
@@ -196,7 +196,7 @@ export function PlaylistDetailClient({ playlist }: Props) {
                       {index + 1}
                     </div>
 
-                    <AudioItemOrder
+                    <AudioItemOrderLayout
                       music={music}
                       handlePlay={() => handlePlayAudio(music)}
                       border
