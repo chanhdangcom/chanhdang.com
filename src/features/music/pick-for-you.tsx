@@ -105,7 +105,7 @@ export function PickForYou() {
   return (
     <>
       <div className="flex text-xl font-bold">
-        <div className="px-3 text-black dark:text-white md:ml-[270px] md:px-0">
+        <div className="ml-2 px-1 text-black dark:text-white md:ml-[270px] md:px-0">
           Top Pick for You
         </div>
       </div>
@@ -118,10 +118,16 @@ export function PickForYou() {
       >
         <div
           ref={scrollRef}
-          className="mt-2 flex w-full snap-x snap-mandatory scroll-pl-2 overflow-x-auto scroll-smooth pl-2 text-white scrollbar-hide md:scroll-pl-[270px] md:pl-[270px]"
+          className="mt-2 flex w-full snap-x snap-mandatory overflow-x-auto scroll-smooth text-white scrollbar-hide"
         >
-          {pickForYou.map((item) => (
-            <div key={item.id} className={cn("", "mr-1")}>
+          {pickForYou.map((item, index) => (
+            <div
+              key={item.id}
+              className={cn(
+                "mr-1",
+                index === 0 ? "ml-2 md:ml-[270px]" : ""
+              )}
+            >
               <div className="snap-start p-1">
                 <div className="mx-2 mb-1 font-apple text-sm font-medium text-zinc-500">
                   Make for you

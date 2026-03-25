@@ -194,6 +194,36 @@
 }
 
 @layer utilities {
+  @media (min-width: 768px) {
+    .md\:ml-\[270px\] {
+      transition: margin-left var(--duration-normal) var(--expo-out);
+      will-change: margin-left;
+    }
+
+    .md\:pl-\[270px\] {
+      transition: padding-left var(--duration-normal) var(--expo-out);
+      will-change: padding-left;
+    }
+
+    html.music-menu-bar-closed .music-motion-header {
+      display: none;
+    }
+
+    html.music-menu-bar-closed .md\:ml-\[270px\] {
+      margin-left: 16 !important;
+    }
+
+    html.music-menu-bar-closed .md\:pl-\[270px\] {
+      padding-left: 16 !important;
+    }
+
+    html.music-menu-bar-closed .md\:scroll-pl-\[270px\] {
+      scroll-padding-left: 16 !important;
+    }
+  }
+}
+
+@layer utilities {
   /* Fade ở đầu trang toàn chiều rộng */
   .page-top-fade {
     position: fixed;

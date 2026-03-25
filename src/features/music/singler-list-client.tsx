@@ -38,7 +38,7 @@ export function SingerListClient({ singers }: IProp) {
             <div key={music.id} className="max-w-full shrink-0 snap-start">
               <div className="shrink-0 snap-start">
                 <div
-                  className={`${index === 0 ? "ml-4 md:ml-[270px]" : "ml-2"}`}
+                  className={`${index === 0 ? "ml-2 md:ml-[270px]" : "ml-2"}`}
                 >
                   <SingerItem
                     music={music}

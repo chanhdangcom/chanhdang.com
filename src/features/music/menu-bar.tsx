@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useTranslations } from "next-intl";
@@ -5,6 +6,7 @@ import { useUser } from "@/hooks/use-user";
 import { usePermissions } from "@/hooks/use-permissions";
 import {
   BookBookmark,
+  Browsers,
   CardsThree,
   CaretDown,
   CaretRight,
@@ -15,6 +17,7 @@ import {
   Gear,
   House,
   MicrophoneStage,
+  MusicNote,
   MusicNotesSimple,
   SealCheck,
   ShieldCheck,
@@ -146,12 +149,42 @@ export function MenuBar() {
             ),
           },
           {
+            key: "artists",
+            label: tCommon("artists"),
+            href: `${basePath}/library`,
+            isActive: isPathActive(`${basePath}/artists`),
+            icon: (
+              <MicrophoneStage
+                size={25}
+                weight={
+                  isPathActive(`${basePath}/library`) ? "fill" : "regular"
+                }
+                className={getIconClass(isPathActive(`${basePath}/library`))}
+              />
+            ),
+          },
+          {
             key: "library",
             label: tCommon("library"),
             href: `${basePath}/library`,
             isActive: isPathActive(`${basePath}/library`),
             icon: (
               <CardsThree
+                size={25}
+                weight={
+                  isPathActive(`${basePath}/library`) ? "fill" : "regular"
+                }
+                className={getIconClass(isPathActive(`${basePath}/library`))}
+              />
+            ),
+          },
+          {
+            key: "songs",
+            label: tCommon("songs"),
+            href: `${basePath}/library`,
+            isActive: isPathActive(`${basePath}/songs`),
+            icon: (
+              <MusicNote
                 size={25}
                 weight={
                   isPathActive(`${basePath}/library`) ? "fill" : "regular"
@@ -336,131 +369,134 @@ export function MenuBar() {
     },
   ];
 
+  const [isMenuBarOpen, setIsMenuBarOpen] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle(
+      "music-menu-bar-closed",
+      !isMenuBarOpen
+    );
+
+    return () => {
+      document.documentElement.classList.remove("music-menu-bar-closed");
+    };
+  }, [isMenuBarOpen]);
+  const menuBarTransition = {
+    type: "spring",
+    stiffness: 350,
+    damping: 40,
+  } as const;
+
   return (
-    <div className="fixed left-4 top-4 z-30 hidden font-apple md:flex">
-      <div className="absolute h-[96vh] w-60 space-y-4 overflow-y-auto rounded-3xl bg-gradient-to-tr from-transparent to-zinc-50 px-3 pb-8 pt-5 text-zinc-50 shadow-xl backdrop-blur-3xl dark:to-white/10">
-        <>
-          <div className="text-base text-black dark:text-white">
-            <div className="mb-4 flex flex-col items-center justify-center gap-0.5">
+    <AnimatePresence initial={false}>
+      {!isMenuBarOpen ? (
+        <div className="pointer-events-none fixed inset-x-0 top-4 z-30 hidden justify-center md:flex">
+          <motion.div
+            key="collapsed-menu-bar"
+            layoutId="menu-bar"
+            transition={menuBarTransition}
+            layout
+            className="pointer-events-auto w-[30vw] rounded-full border border-black/10 bg-white/80 font-apple backdrop-blur-sm dark:border-white/10 dark:bg-black/40"
+          >
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.18 }}
+              className="flex items-center justify-between px-4 py-2"
+            >
+              <div
+                className=""
+                onClick={() => setIsMenuBarOpen(!isMenuBarOpen)}
+              >
+                <Browsers size={20} className="text-zinc-400" />
+              </div>
+
               <Link
                 href={`/${locale}/music`}
-                className="flex cursor-pointer items-center gap-1.5"
-              >
-                {isPremium ? (
-                  theme === "dark" ? (
-                    <img
-                      src="/img/logo/Logotype Premium (Dark).svg"
-                      alt="Premium"
-                      className="w-28"
-                    />
-                  ) : (
-                    <img
-                      src="/img/logo/Logotype Premium (Light).svg"
-                      alt="Premium"
-                      className="w-28"
-                    />
-                  )
-                ) : (
-                  <ChanhdangLogotypeMusic height={28} className="w-auto" />
+                className={cn(
+                  "font-medium transition-colors",
+                  isPathActive(basePath, true) && "text-rose-500"
                 )}
-              </Link>
-            </div>
-
-            <AnimatePresence>
-              <motion.div
-                transition={{
-                  type: "spring",
-                  stiffness: 250,
-                  damping: 20,
-                  duration: 0.5,
-                }}
               >
-                {topItems.map((item) => (
-                  <MenuBarItem
-                    key={item.key}
-                    item={item}
-                    getItemClass={getItemClass}
-                  />
-                ))}
-              </motion.div>
-            </AnimatePresence>
+                Home
+              </Link>
 
-            <div className="mb-2 mt-4 pl-3 font-medium text-zinc-400">
-              {tCommon("library")}
-            </div>
+              <Link
+                href={`/${locale}/music/new-release`}
+                className={cn(
+                  "font-medium transition-colors",
+                  isPathActive(`${basePath}/new-release`) && "text-rose-500"
+                )}
+              >
+                New
+              </Link>
 
-            {libraryItems.map((item) => (
-              <MenuBarItem
-                key={item.key}
-                item={item}
-                getItemClass={getItemClass}
-              />
-            ))}
+              <div className="font-medium">Radio</div>
 
-            {isRegularUser && (
-              <MenuBarItem
-                item={{
-                  key: "my-music",
-                  label: tMenu("myMusic"),
-                  href: `${basePath}/my-music`,
-                  isActive: isPathActive(`${basePath}/my-music`),
-                  icon: (
-                    <Faders
-                      size={25}
-                      weight={
-                        isPathActive(`${basePath}/my-music`)
-                          ? "fill"
-                          : "regular"
-                      }
-                      className={getIconClass(
-                        isPathActive(`${basePath}/my-music`)
-                      )}
-                    />
-                  ),
-                }}
-                getItemClass={getItemClass}
-              />
-            )}
+              <div className="font-medium">Recently Played</div>
 
-            {canManageSystem && (
-              <MenuBarItem
-                item={{
-                  key: "manage-toggle",
-                  label: tMenu("manage"),
-                  isActive: isManageActive,
-                  onClick: () => setIsDropdownOpen(!isDropdownOpen),
-                  icon: (
-                    <Crown
-                      size={25}
-                      weight={isManageActive ? "fill" : "regular"}
-                      className={getIconClass(isManageActive)}
-                    />
-                  ),
-                  trailing: (
-                    <div className="">
-                      {isDropdownOpen ? (
-                        <CaretDown size={18} weight="bold" className="" />
-                      ) : (
-                        <CaretRight size={18} weight="bold" className="" />
-                      )}
-                    </div>
-                  ),
-                }}
-                getItemClass={getItemClass}
-              />
-            )}
-
-            {canManageSystem && (
-              <div>
-                {isDropdownOpen && (
-                  <motion.div
-                    className="mt-1.5 space-y-2 pl-4"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5 }}
+              <Link
+                href={`/${locale}/music/search`}
+                className={cn(
+                  "font-medium text-zinc-400 transition-colors",
+                  isPathActive(`${basePath}/search`) && "text-rose-500"
+                )}
+              >
+                <MagnifyingGlass size={20} className="" />
+              </Link>
+            </motion.div>
+          </motion.div>
+        </div>
+      ) : (
+        <div className="fixed left-4 top-4 z-30 hidden font-apple md:block">
+          <motion.div
+            key="expanded-menu-bar"
+            layoutId="menu-bar"
+            layout
+            transition={menuBarTransition}
+            initial={{ opacity: 0.88, x: -18, y: 6, scale: 0.96 }}
+            animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+            exit={{ opacity: 0.9, x: 18, y: -8, scale: 0.98 }}
+            className="h-[96vh] w-60 origin-top-left space-y-4 overflow-hidden overflow-y-auto rounded-3xl bg-gradient-to-tr from-transparent to-zinc-50 px-3 pb-8 pt-5 text-zinc-50 shadow-xl backdrop-blur-3xl dark:to-white/10"
+          >
+            <>
+              <div className="text-base text-black dark:text-white">
+                <div className="mb-4 flex flex-col items-center justify-center gap-0.5">
+                  <Link
+                    href={`/${locale}/music`}
+                    className="flex cursor-pointer items-center gap-1.5"
                   >
-                    {manageItems.map((item) => (
+                    {isPremium ? (
+                      theme === "dark" ? (
+                        <img
+                          src="/img/logo/Logotype Premium (Dark).svg"
+                          alt="Premium"
+                          className="w-28"
+                        />
+                      ) : (
+                        <img
+                          src="/img/logo/Logotype Premium (Light).svg"
+                          alt="Premium"
+                          className="w-28"
+                        />
+                      )
+                    ) : (
+                      <ChanhdangLogotypeMusic height={28} className="w-auto" />
+                    )}
+                  </Link>
+                </div>
+
+                <AnimatePresence>
+                  <motion.div
+                    transition={{
+                      type: "spring",
+                      stiffness: 250,
+                      damping: 20,
+                      duration: 0.5,
+                    }}
+                  >
+                    {topItems.map((item) => (
                       <MenuBarItem
                         key={item.key}
                         item={item}
@@ -468,28 +504,122 @@ export function MenuBar() {
                       />
                     ))}
                   </motion.div>
+                </AnimatePresence>
+
+                <div className="mb-2 mt-4 pl-3 font-medium text-zinc-400">
+                  {tCommon("library")}
+                </div>
+
+                {libraryItems.map((item) => (
+                  <MenuBarItem
+                    key={item.key}
+                    item={item}
+                    getItemClass={getItemClass}
+                  />
+                ))}
+
+                {isRegularUser && (
+                  <MenuBarItem
+                    item={{
+                      key: "my-music",
+                      label: tMenu("myMusic"),
+                      href: `${basePath}/my-music`,
+                      isActive: isPathActive(`${basePath}/my-music`),
+                      icon: (
+                        <Faders
+                          size={25}
+                          weight={
+                            isPathActive(`${basePath}/my-music`)
+                              ? "fill"
+                              : "regular"
+                          }
+                          className={getIconClass(
+                            isPathActive(`${basePath}/my-music`)
+                          )}
+                        />
+                      ),
+                    }}
+                    getItemClass={getItemClass}
+                  />
                 )}
+
+                {canManageSystem && (
+                  <MenuBarItem
+                    item={{
+                      key: "manage-toggle",
+                      label: tMenu("manage"),
+                      isActive: isManageActive,
+                      onClick: () => setIsDropdownOpen(!isDropdownOpen),
+                      icon: (
+                        <Crown
+                          size={25}
+                          weight={isManageActive ? "fill" : "regular"}
+                          className={getIconClass(isManageActive)}
+                        />
+                      ),
+                      trailing: (
+                        <div className="">
+                          {isDropdownOpen ? (
+                            <CaretDown size={18} weight="bold" className="" />
+                          ) : (
+                            <CaretRight size={18} weight="bold" className="" />
+                          )}
+                        </div>
+                      ),
+                    }}
+                    getItemClass={getItemClass}
+                  />
+                )}
+
+                {canManageSystem && (
+                  <div>
+                    {isDropdownOpen && (
+                      <motion.div
+                        className="mt-1.5 space-y-2 pl-4"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        {manageItems.map((item) => (
+                          <MenuBarItem
+                            key={item.key}
+                            item={item}
+                            getItemClass={getItemClass}
+                          />
+                        ))}
+                      </motion.div>
+                    )}
+                  </div>
+                )}
+
+                <div className="mb-2 mt-4 pl-3 font-medium text-zinc-400">
+                  {tMenu("settings")}
+                </div>
+
+                {settingsItems.map((item) => (
+                  <MenuBarItem
+                    key={item.key}
+                    item={item}
+                    getItemClass={getItemClass}
+                  />
+                ))}
+
+                <div className="absolute -m-3 mt-auto flex w-full items-end justify-center pt-4">
+                  <LogoutButton />
+                </div>
+
+                <div
+                  className="absolute right-3 top-3"
+                  onClick={() => setIsMenuBarOpen(!isMenuBarOpen)}
+                >
+                  <Browsers size={20} className="text-zinc-400" />
+                </div>
               </div>
-            )}
-
-            <div className="mb-2 mt-4 pl-3 font-medium text-zinc-400">
-              {tMenu("settings")}
-            </div>
-
-            {settingsItems.map((item) => (
-              <MenuBarItem
-                key={item.key}
-                item={item}
-                getItemClass={getItemClass}
-              />
-            ))}
-
-            <div className="absolute -m-3 mt-auto flex w-full items-end justify-center pt-4">
-              <LogoutButton />
-            </div>
-          </div>
-        </>
-      </div>
-    </div>
+            </>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
 }
