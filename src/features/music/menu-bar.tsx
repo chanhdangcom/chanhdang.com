@@ -19,6 +19,7 @@ import {
   MicrophoneStage,
   MusicNote,
   MusicNotesSimple,
+  Playlist,
   SealCheck,
   ShieldCheck,
   SketchLogo,
@@ -151,15 +152,36 @@ export function MenuBar() {
           {
             key: "artists",
             label: tCommon("artists"),
-            href: `${basePath}/library`,
-            isActive: isPathActive(`${basePath}/artists`),
+            href: `${basePath}/library/artists`,
+            isActive: isPathActive(`${basePath}/library/artists`),
             icon: (
               <MicrophoneStage
                 size={25}
                 weight={
-                  isPathActive(`${basePath}/library`) ? "fill" : "regular"
+                  isPathActive(`${basePath}/library/artists`) ? "fill" : "regular"
                 }
-                className={getIconClass(isPathActive(`${basePath}/library`))}
+                className={getIconClass(
+                  isPathActive(`${basePath}/library/artists`)
+                )}
+              />
+            ),
+          },
+          {
+            key: "playlists",
+            label: "Playlists",
+            href: `${basePath}/library/playlists`,
+            isActive: isPathActive(`${basePath}/library/playlists`),
+            icon: (
+              <Playlist
+                size={25}
+                weight={
+                  isPathActive(`${basePath}/library/playlists`)
+                    ? "fill"
+                    : "regular"
+                }
+                className={getIconClass(
+                  isPathActive(`${basePath}/library/playlists`)
+                )}
               />
             ),
           },
@@ -181,15 +203,19 @@ export function MenuBar() {
           {
             key: "songs",
             label: tCommon("songs"),
-            href: `${basePath}/library`,
-            isActive: isPathActive(`${basePath}/songs`),
+            href: `${basePath}/library/favorites`,
+            isActive: isPathActive(`${basePath}/library/favorites`),
             icon: (
               <MusicNote
                 size={25}
                 weight={
-                  isPathActive(`${basePath}/library`) ? "fill" : "regular"
+                  isPathActive(`${basePath}/library/favorites`)
+                    ? "fill"
+                    : "regular"
                 }
-                className={getIconClass(isPathActive(`${basePath}/library`))}
+                className={getIconClass(
+                  isPathActive(`${basePath}/library/favorites`)
+                )}
               />
             ),
           },

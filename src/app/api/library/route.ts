@@ -29,6 +29,13 @@ type PlaylistDocument = {
   musics?: unknown[];
 };
 
+type SingerDocument = {
+  _id: ObjectId;
+  singer?: string;
+  cover?: string;
+  musicIds?: unknown[];
+};
+
 const parseLegacyMusicIds = (musics: unknown[] = []) =>
   normalizeObjectIds(
     musics
@@ -82,6 +89,23 @@ const normalizeLibraryEntry = async (db: Db, entry: LibraryDoc) => {
         musics: musicDocs.map((music) =>
           normalizeMusic(music as Record<string, unknown>)
         ),
+      };
+    }
+  }
+
+  if (resourceId && resourceType === "singer" && ObjectId.isValid(resourceId)) {
+    const singer = (await db.collection("singers").findOne({
+      _id: new ObjectId(resourceId),
+    })) as SingerDocument | null;
+
+    if (singer) {
+      resourceData = {
+        ...normalizeDocument(singer),
+        singer: String(singer.singer ?? ""),
+        cover: String(singer.cover ?? ""),
+        musicIds: Array.isArray(singer.musicIds)
+          ? normalizeObjectIds(singer.musicIds).map((id) => id.toString())
+          : [],
       };
     }
   }
@@ -144,7 +168,8 @@ export async function POST(request: Request) {
     const userId = body.userId;
     const resourceType = (body.resourceType ?? "music") as
       | "music"
-      | "playlist";
+      | "playlist"
+      | "singer";
     const resourceId = body.resourceId ?? body.musicId;
     const resourceData = body.data ?? body.musicData;
 

@@ -16,6 +16,10 @@ type PlaylistDocument = {
   cover?: string;
   musicIds?: unknown[];
   musics?: unknown[];
+  ownerId?: string;
+  ownerName?: string;
+  ownerAvatar?: string;
+  isUserPlaylist?: boolean;
 };
 
 const parseLegacyMusicIds = (musics: unknown[] = []) =>
@@ -67,6 +71,11 @@ export async function GET(
       title: String(doc.title ?? ""),
       singer: String(doc.singer ?? ""),
       cover: String(doc.cover ?? ""),
+      ownerId: typeof doc.ownerId === "string" ? doc.ownerId : undefined,
+      ownerName: typeof doc.ownerName === "string" ? doc.ownerName : undefined,
+      ownerAvatar:
+        typeof doc.ownerAvatar === "string" ? doc.ownerAvatar : undefined,
+      isUserPlaylist: Boolean(doc.isUserPlaylist),
       musicIds: musicIds.map((item) => item.toString()),
       musics: musicDocs.map((music) => normalizeMusic(music as Record<string, unknown>)),
     };
@@ -86,14 +95,6 @@ export async function PUT(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const role = await getUserRole(request);
-    if (role !== "admin") {
-      return NextResponse.json(
-        { error: "Chỉ admin mới có quyền cập nhật playlist" },
-        { status: 403 }
-      );
-    }
-
     const { id } = await context.params;
     if (!ObjectId.isValid(id)) {
       return NextResponse.json({ error: "Invalid id" }, { status: 400 });
@@ -102,11 +103,36 @@ export async function PUT(
     const body = await request.json();
     const client = await clientPromise;
     const db = client.db("musicdb");
+    const role = await getUserRole(request);
+    const existing = (await db.collection("playlists").findOne({
+      _id: new ObjectId(id),
+    })) as PlaylistDocument | null;
+
+    if (!existing) {
+      return NextResponse.json({ error: "Playlist not found" }, { status: 404 });
+    }
+
+    const requesterUserId =
+      typeof body.userId === "string" && body.userId.trim()
+        ? body.userId.trim()
+        : undefined;
+    const canManage = role === "admin" || existing.ownerId === requesterUserId;
+
+    if (!canManage) {
+      return NextResponse.json(
+        { error: "Bạn không có quyền cập nhật playlist này" },
+        { status: 403 }
+      );
+    }
 
     const updateDoc: Record<string, unknown> = { updatedAt: new Date() };
     if (typeof body.title === "string") updateDoc.title = body.title;
     if (typeof body.singer === "string") updateDoc.singer = body.singer;
     if (typeof body.cover === "string") updateDoc.cover = body.cover;
+    if (typeof body.ownerName === "string") updateDoc.ownerName = body.ownerName;
+    if (typeof body.ownerAvatar === "string") {
+      updateDoc.ownerAvatar = body.ownerAvatar;
+    }
     if (Array.isArray(body.musicIds)) {
       updateDoc.musicIds = parseObjectIds(body.musicIds);
     } else if (Array.isArray(body.musics)) {
@@ -133,14 +159,6 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const role = await getUserRole(request);
-    if (role !== "admin") {
-      return NextResponse.json(
-        { error: "Chỉ admin mới có quyền xóa playlist" },
-        { status: 403 }
-      );
-    }
-
     const { id } = await context.params;
     if (!ObjectId.isValid(id)) {
       return NextResponse.json({ error: "Invalid id" }, { status: 400 });
@@ -148,6 +166,25 @@ export async function DELETE(
 
     const client = await clientPromise;
     const db = client.db("musicdb");
+    const role = await getUserRole(request);
+    const url = new URL(request.url);
+    const requesterUserId = url.searchParams.get("userId") ?? undefined;
+    const existing = (await db.collection("playlists").findOne({
+      _id: new ObjectId(id),
+    })) as PlaylistDocument | null;
+
+    if (!existing) {
+      return NextResponse.json({ error: "Playlist not found" }, { status: 404 });
+    }
+
+    const canManage = role === "admin" || existing.ownerId === requesterUserId;
+    if (!canManage) {
+      return NextResponse.json(
+        { error: "Bạn không có quyền xóa playlist này" },
+        { status: 403 }
+      );
+    }
+
     const result = await db.collection("playlists").deleteOne({ _id: new ObjectId(id) });
 
     if (result.deletedCount === 0) {

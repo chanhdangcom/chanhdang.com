@@ -15,6 +15,10 @@ type PlaylistDocument = {
   cover?: string;
   musicIds?: unknown[];
   musics?: unknown[];
+  ownerId?: string;
+  ownerName?: string;
+  ownerAvatar?: string;
+  isUserPlaylist?: boolean;
 };
 
 const escapeRegex = (value: string) =>
@@ -74,6 +78,7 @@ export async function GET(request: Request) {
     const url = new URL(request.url);
     const genre = url.searchParams.get("genre");
     const singerId = url.searchParams.get("singerId");
+    const ownerId = url.searchParams.get("ownerId");
     const lite = url.searchParams.get("lite") === "1";
     const limitParam = Number(url.searchParams.get("limit") ?? "0");
     const limit = Number.isFinite(limitParam) && limitParam > 0
@@ -164,8 +169,17 @@ export async function GET(request: Request) {
       return NextResponse.json([playlist]);
     }
 
+    const query: Record<string, unknown> = ownerId
+      ? { ownerId }
+      : {
+          $or: [
+            { isUserPlaylist: { $exists: false } },
+            { isUserPlaylist: false },
+          ],
+        };
+
     const cursor = db.collection("playlists").find(
-      {},
+      query,
       {
         projection: lite
           ? {
@@ -173,6 +187,10 @@ export async function GET(request: Request) {
               singer: 1,
               cover: 1,
               musicIds: 1,
+              ownerId: 1,
+              ownerName: 1,
+              ownerAvatar: 1,
+              isUserPlaylist: 1,
               createdAt: 1,
               updatedAt: 1,
             }
@@ -190,6 +208,14 @@ export async function GET(request: Request) {
         title: String(playlist.title ?? ""),
         singer: String(playlist.singer ?? ""),
         cover: String(playlist.cover ?? ""),
+        ownerId: typeof playlist.ownerId === "string" ? playlist.ownerId : undefined,
+        ownerName:
+          typeof playlist.ownerName === "string" ? playlist.ownerName : undefined,
+        ownerAvatar:
+          typeof playlist.ownerAvatar === "string"
+            ? playlist.ownerAvatar
+            : undefined,
+        isUserPlaylist: Boolean(playlist.isUserPlaylist),
       }));
       return NextResponse.json(lightweight);
     }
@@ -208,6 +234,14 @@ export async function GET(request: Request) {
           title: String(playlist.title ?? ""),
           singer: String(playlist.singer ?? ""),
           cover: String(playlist.cover ?? ""),
+          ownerId: typeof playlist.ownerId === "string" ? playlist.ownerId : undefined,
+          ownerName:
+            typeof playlist.ownerName === "string" ? playlist.ownerName : undefined,
+          ownerAvatar:
+            typeof playlist.ownerAvatar === "string"
+              ? playlist.ownerAvatar
+              : undefined,
+          isUserPlaylist: Boolean(playlist.isUserPlaylist),
           musicIds: normalizedIds.map((id) => id.toString()),
           musics,
         };
@@ -228,14 +262,6 @@ export async function GET(request: Request) {
 // body: { title, singer, cover, musicIds?: string[] }
 export async function POST(request: Request) {
   try {
-    const role = await getUserRole(request);
-    if (role !== "admin") {
-      return NextResponse.json(
-        { error: "Chỉ admin mới có quyền tạo playlist" },
-        { status: 403 }
-      );
-    }
-
     const body = await request.json();
     if (!body.title || !body.cover) {
       return NextResponse.json(
@@ -246,6 +272,19 @@ export async function POST(request: Request) {
 
     const client = await clientPromise;
     const db = client.db("musicdb");
+    const role = await getUserRole(request);
+    const ownerId =
+      typeof body.userId === "string" && body.userId.trim()
+        ? body.userId.trim()
+        : undefined;
+    const isAdmin = role === "admin";
+
+    if (!isAdmin && !ownerId) {
+      return NextResponse.json(
+        { error: "Bạn cần đăng nhập để tạo playlist cá nhân" },
+        { status: 401 }
+      );
+    }
 
     const payload =
       Array.isArray(body.musicIds) && body.musicIds.length > 0
@@ -257,9 +296,21 @@ export async function POST(request: Request) {
 
     const doc = {
       title: String(body.title),
-      singer: String(body.singer ?? ""),
+      singer: String(
+        body.singer ??
+          body.ownerName ??
+          (ownerId ? "Created by you" : "")
+      ),
       cover: String(body.cover),
       musicIds,
+      ownerId,
+      ownerName:
+        typeof body.ownerName === "string" ? String(body.ownerName) : undefined,
+      ownerAvatar:
+        typeof body.ownerAvatar === "string"
+          ? String(body.ownerAvatar)
+          : undefined,
+      isUserPlaylist: !isAdmin && Boolean(ownerId),
       createdAt: new Date(),
       updatedAt: new Date(),
     };

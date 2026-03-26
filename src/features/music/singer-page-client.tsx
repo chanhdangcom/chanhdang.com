@@ -19,6 +19,8 @@ import { ISingerItem } from "./type/singer";
 import { useAudio } from "@/components/music-provider";
 import { BackButton } from "./component/back-button";
 import { useImageHoverColor } from "@/hooks/use-image-hover-color";
+import { useUser } from "@/hooks/use-user";
+import { LibrarySingerButton } from "./library/library-singer-button";
 
 type IProp = {
   singer: ISingerItem;
@@ -26,6 +28,7 @@ type IProp = {
 
 export function SingerPageClient({ singer }: IProp) {
   const { handlePlayAudio } = useAudio();
+  const { user } = useUser();
   const [isMobile, setIsMobile] = useState(false);
 
   const handleRandomAudio = () => {
@@ -129,11 +132,23 @@ export function SingerPageClient({ singer }: IProp) {
 
                       <div className="">{singer.singer}</div>
 
-                      <div
-                        className="rounded-full bg-rose-500 p-3 md:hidden"
-                        onClick={() => handleRandomAudio()}
-                      >
-                        <Play size={22} weight="fill" className="text-white" />
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="rounded-full bg-rose-500 p-3 md:hidden"
+                          onClick={() => handleRandomAudio()}
+                        >
+                          <Play
+                            size={22}
+                            weight="fill"
+                            className="text-white"
+                          />
+                        </div>
+                        <div className="">
+                          <LibrarySingerButton
+                            singer={singer}
+                            userId={user?.id}
+                          />
+                        </div>
                       </div>
                     </motion.div>
                   </div>

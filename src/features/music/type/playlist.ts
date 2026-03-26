@@ -8,4 +8,8 @@ export type IPlaylistItem = {
   musicIds?: string[];
   musics?: IMusic[];
   queueName?: string;
+  ownerId?: string;
+  ownerName?: string;
+  ownerAvatar?: string;
+  isUserPlaylist?: boolean;
 };

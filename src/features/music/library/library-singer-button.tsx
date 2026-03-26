@@ -1,32 +1,33 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { IPlaylistItem } from "../type/playlist";
+import { useParams, useRouter } from "next/navigation";
 import { CheckCircle, Star } from "@phosphor-icons/react/dist/ssr";
 import { usePermissions } from "@/hooks/use-permissions";
-import { useParams, useRouter } from "next/navigation";
+import { ISingerItem } from "../type/singer";
+import { cn } from "@/utils/cn";
 
-type LibraryPlaylistButtonProps = {
-  playlist: IPlaylistItem;
+type LibrarySingerButtonProps = {
+  singer: ISingerItem;
   userId?: string;
   size?: "sm" | "md" | "lg";
   showLabel?: boolean;
   className?: string;
 };
 
-const libraryPlaylistIdsCache = new Map<string, Set<string>>();
-const libraryPlaylistFetchInFlight = new Map<string, Promise<Set<string>>>();
-const LIBRARY_PLAYLIST_UPDATED_EVENT = "library:playlist-updated";
+const librarySingerIdsCache = new Map<string, Set<string>>();
+const librarySingerFetchInFlight = new Map<string, Promise<Set<string>>>();
+const LIBRARY_SINGER_UPDATED_EVENT = "library:singer-updated";
 
-const fetchLibraryPlaylistIds = async (userId: string) => {
-  const cached = libraryPlaylistIdsCache.get(userId);
+const fetchLibrarySingerIds = async (userId: string) => {
+  const cached = librarySingerIdsCache.get(userId);
   if (cached) return cached;
 
-  const inFlight = libraryPlaylistFetchInFlight.get(userId);
+  const inFlight = librarySingerFetchInFlight.get(userId);
   if (inFlight) return inFlight;
 
   const request = (async () => {
-    const response = await fetch(`/api/library?userId=${userId}&type=playlist`);
+    const response = await fetch(`/api/library?userId=${userId}&type=singer`);
     if (!response.ok) return new Set<string>();
 
     const entries = (await response.json()) as Array<{ resourceId?: string }>;
@@ -36,71 +37,72 @@ const fetchLibraryPlaylistIds = async (userId: string) => {
         .filter((id): id is string => typeof id === "string" && id.length > 0)
     );
 
-    libraryPlaylistIdsCache.set(userId, ids);
+    librarySingerIdsCache.set(userId, ids);
     return ids;
   })();
 
-  libraryPlaylistFetchInFlight.set(userId, request);
+  librarySingerFetchInFlight.set(userId, request);
 
   try {
     return await request;
   } finally {
-    libraryPlaylistFetchInFlight.delete(userId);
+    librarySingerFetchInFlight.delete(userId);
   }
 };
 
-const updateLibraryPlaylistCache = (
+const updateLibrarySingerCache = (
   userId: string,
-  playlistId: string,
+  singerId: string,
   shouldExist: boolean
 ) => {
-  const next = new Set(libraryPlaylistIdsCache.get(userId) ?? []);
+  const next = new Set(librarySingerIdsCache.get(userId) ?? []);
   if (shouldExist) {
-    next.add(playlistId);
+    next.add(singerId);
   } else {
-    next.delete(playlistId);
+    next.delete(singerId);
   }
 
-  libraryPlaylistIdsCache.set(userId, next);
+  librarySingerIdsCache.set(userId, next);
 
   window.dispatchEvent(
-    new CustomEvent(LIBRARY_PLAYLIST_UPDATED_EVENT, {
-      detail: { userId, playlistId, shouldExist },
+    new CustomEvent(LIBRARY_SINGER_UPDATED_EVENT, {
+      detail: { userId, singerId, shouldExist },
     })
   );
 };
 
-export function LibraryPlaylistButton({
-  playlist,
+export function LibrarySingerButton({
+  singer,
   userId,
   size = "md",
   showLabel = false,
   className = "",
-}: LibraryPlaylistButtonProps) {
+}: LibrarySingerButtonProps) {
   const [isInLibrary, setIsInLibrary] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { canUseLibrary } = usePermissions();
   const params = useParams();
   const router = useRouter();
   const locale = (params?.locale as string) || "en";
+  const singerId = singer.id ?? singer._id;
 
   useEffect(() => {
-    if (!userId || !playlist?.id) {
+    if (!userId || !singerId) {
       setIsInLibrary(false);
       return;
     }
 
-    const cached = libraryPlaylistIdsCache.get(userId);
+    const cached = librarySingerIdsCache.get(userId);
     if (cached) {
-      setIsInLibrary(cached.has(playlist.id));
+      setIsInLibrary(cached.has(singerId));
     }
 
     const checkLibrary = async () => {
       try {
-        const ids = await fetchLibraryPlaylistIds(userId);
-        setIsInLibrary(ids.has(playlist.id));
+        const ids = await fetchLibrarySingerIds(userId);
+        setIsInLibrary(ids.has(singerId));
       } catch (error) {
-        console.error("Error checking playlist library state:", error);
+        console.error("Error checking singer library state:", error);
       }
     };
 
@@ -109,25 +111,25 @@ export function LibraryPlaylistButton({
     const onLibraryUpdated = (event: Event) => {
       const customEvent = event as CustomEvent<{
         userId: string;
-        playlistId: string;
+        singerId: string;
         shouldExist: boolean;
       }>;
 
       if (customEvent.detail.userId !== userId) return;
-      if (customEvent.detail.playlistId !== playlist.id) return;
+      if (customEvent.detail.singerId !== singerId) return;
 
       setIsInLibrary(customEvent.detail.shouldExist);
     };
 
-    window.addEventListener(LIBRARY_PLAYLIST_UPDATED_EVENT, onLibraryUpdated);
+    window.addEventListener(LIBRARY_SINGER_UPDATED_EVENT, onLibraryUpdated);
 
     return () => {
       window.removeEventListener(
-        LIBRARY_PLAYLIST_UPDATED_EVENT,
+        LIBRARY_SINGER_UPDATED_EVENT,
         onLibraryUpdated
       );
     };
-  }, [playlist.id, userId]);
+  }, [singerId, userId]);
 
   const handleToggleLibrary = async () => {
     if (!canUseLibrary) {
@@ -136,50 +138,55 @@ export function LibraryPlaylistButton({
     }
 
     if (!userId) {
-      alert("Vui lòng đăng nhập để sử dụng tính năng này!");
+      alert("Vui long dang nhap de su dung tinh nang nay!");
       return;
     }
 
-    if (!playlist?.id) return;
+    if (!singerId) return;
 
     const nextValue = !isInLibrary;
     setIsInLibrary(nextValue);
-    updateLibraryPlaylistCache(userId, playlist.id, nextValue);
+    updateLibrarySingerCache(userId, singerId, nextValue);
     setIsLoading(true);
+
     try {
       if (isInLibrary) {
         const response = await fetch(
-          `/api/library?userId=${userId}&resourceId=${playlist.id}&type=playlist`,
+          `/api/library?userId=${userId}&resourceId=${singerId}&type=singer`,
           { method: "DELETE" }
         );
+
         if (!response.ok) {
           const error = await response.json();
           setIsInLibrary(!nextValue);
-          updateLibraryPlaylistCache(userId, playlist.id, !nextValue);
-          alert(error.error || "Có lỗi xảy ra!");
+          updateLibrarySingerCache(userId, singerId, !nextValue);
+          alert(error.error || "Co loi xay ra!");
         }
       } else {
         const response = await fetch("/api/library", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             userId,
-            resourceId: playlist.id,
-            resourceType: "playlist",
+            resourceId: singerId,
+            resourceType: "singer",
           }),
         });
+
         if (!response.ok) {
           const error = await response.json();
           setIsInLibrary(!nextValue);
-          updateLibraryPlaylistCache(userId, playlist.id, !nextValue);
-          alert(error.error || "Có lỗi xảy ra!");
+          updateLibrarySingerCache(userId, singerId, !nextValue);
+          alert(error.error || "Co loi xay ra!");
         }
       }
     } catch (error) {
       setIsInLibrary(!nextValue);
-      updateLibraryPlaylistCache(userId, playlist.id, !nextValue);
-      console.error("Error toggling playlist library state:", error);
-      alert("Có lỗi xảy ra!");
+      updateLibrarySingerCache(userId, singerId, !nextValue);
+      console.error("Error toggling singer library state:", error);
+      alert("Co loi xay ra!");
     } finally {
       setIsLoading(false);
     }
@@ -187,8 +194,8 @@ export function LibraryPlaylistButton({
 
   const iconSize = {
     sm: 18,
-    md: 22,
-    lg: 26,
+    md: 20,
+    lg: 24,
   };
 
   return (
@@ -197,23 +204,23 @@ export function LibraryPlaylistButton({
       onClick={handleToggleLibrary}
       disabled={isLoading}
       aria-label={
-        isInLibrary ? "Remove playlist from Library" : "Add playlist to Library"
+        isInLibrary ? "Remove artist from Library" : "Add artist to Library"
       }
-      className={`group relative flex items-center justify-center gap-2 rounded-full transition-all duration-200 ease-in-out active:scale-90 ${
-        isLoading ? "pointer-events-none opacity-40" : ""
-      } ${className}`}
+      className={`flex items-center justify-center gap-2 rounded-full border border-white/15 bg-black/25 p-2 text-white backdrop-blur-sm transition ${
+        isLoading ? "cursor-not-allowed opacity-50" : "hover:scale-105"
+      } ${isInLibrary ? "border-rose-500/40" : ""} ${className}`}
     >
       {isInLibrary ? (
         <CheckCircle
           size={iconSize[size]}
           weight="fill"
-          className="text-rose-500 drop-shadow-sm transition-colors duration-200 group-hover:text-rose-400"
+          className="text-rose-500"
         />
       ) : (
         <Star
           size={iconSize[size]}
-          weight="bold"
-          className="text-white transition-colors duration-200 group-hover:scale-125"
+          weight="regular"
+          className={cn("text-white")}
         />
       )}
 

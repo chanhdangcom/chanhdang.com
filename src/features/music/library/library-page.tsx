@@ -90,7 +90,10 @@ export function LibraryPage() {
               </div>
             </div> */}
 
-            <div className="flex items-center justify-between">
+            <Link
+              href={withLocale("/music/library/playlists")}
+              className="flex items-center justify-between"
+            >
               <div className="flex flex-1 items-center gap-2">
                 <Playlist
                   size={28}
@@ -112,9 +115,12 @@ export function LibraryPage() {
                   <div className="h-[1px] w-full bg-zinc-200 dark:bg-zinc-900" />
                 </div>
               </div>
-            </div>
+            </Link>
 
-            <div className="flex items-center justify-between">
+            <Link
+              href={withLocale("/music/library/artists")}
+              className="flex items-center justify-between"
+            >
               <div className="flex flex-1 items-center gap-2">
                 <MicrophoneStage
                   size={28}
@@ -136,7 +142,7 @@ export function LibraryPage() {
                   <div className="h-[1px] w-full bg-zinc-200 dark:bg-zinc-900" />
                 </div>
               </div>
-            </div>
+            </Link>
 
             <div className="flex items-center justify-between">
               <div className="flex flex-1 items-center gap-2">
