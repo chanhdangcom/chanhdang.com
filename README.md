@@ -1,13 +1,13 @@
 # 🌐 ChanhDang — Developer Portfolio & Music Platform
 
 > “Power is not in the tools, but in the mind that codes.”  
-> — Nguyễn Chánh Đăng
+> — Nguyễn Chánh Đang
 
 ---
 
 ## 🧠 About Me
 
-Hi, I'm **Chánh Đăng** — a developer passionate about building **modern web applications** and **creative tools** using  
+Hi, I'm **Chánh Đang** — a developer passionate about building **modern web applications** and **creative tools** using  
 **Next.js**, **React**, **Tailwind CSS**, and **ShadCN UI**.
 
 I love designing clean interfaces, writing elegant code, and turning ideas into polished digital products.
@@ -114,4 +114,4 @@ Inspired by:
 - [Nativewind](https://www.nativewind.dev/)
 - [ShadCN UI](https://ui.shadcn.com/)
 
-© 2025 **Chánh Đăng** — All rights reserved.
+© 2025 **Chánh Đang** — All rights reserved.
