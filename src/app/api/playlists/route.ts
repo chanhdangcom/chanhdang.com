@@ -79,11 +79,13 @@ export async function GET(request: Request) {
     const genre = url.searchParams.get("genre");
     const singerId = url.searchParams.get("singerId");
     const ownerId = url.searchParams.get("ownerId");
+    const requesterUserId = url.searchParams.get("userId")?.trim() || undefined;
     const lite = url.searchParams.get("lite") === "1";
     const limitParam = Number(url.searchParams.get("limit") ?? "0");
     const limit = Number.isFinite(limitParam) && limitParam > 0
       ? Math.min(limitParam, 50)
       : 0;
+    const role = await getUserRole(request);
 
     const client = await clientPromise;
     const db = client.db("musicdb");
@@ -167,6 +169,13 @@ export async function GET(request: Request) {
       };
 
       return NextResponse.json([playlist]);
+    }
+
+    if (ownerId && role !== "admin" && ownerId !== requesterUserId) {
+      return NextResponse.json(
+        { error: "Bạn không có quyền xem playlist cá nhân của người khác" },
+        { status: 403 }
+      );
     }
 
     const query: Record<string, unknown> = ownerId

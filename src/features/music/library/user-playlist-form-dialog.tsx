@@ -3,11 +3,17 @@
 import { type FormEvent, useEffect, useMemo, useState } from "react";
 import { X } from "@phosphor-icons/react/dist/ssr";
 import { IPlaylistItem } from "../type/playlist";
+import { PlaylistCover } from "../component/playlist-cover";
+import {
+  DEFAULT_PLAYLIST_COVER,
+  createPlaylistCoverValue,
+} from "../utils/playlist-cover";
 
 type MusicLite = {
   id: string;
   title: string;
   singer?: string;
+  cover?: string;
 };
 
 type UserLite = {
@@ -25,8 +31,6 @@ type UserPlaylistFormDialogProps = {
   playlist?: IPlaylistItem | null;
 };
 
-const defaultCover = "/img/Logomark.png";
-
 export function UserPlaylistFormDialog({
   open,
   onClose,
@@ -35,7 +39,6 @@ export function UserPlaylistFormDialog({
   playlist,
 }: UserPlaylistFormDialogProps) {
   const [title, setTitle] = useState("");
-  const [cover, setCover] = useState("");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [allMusics, setAllMusics] = useState<MusicLite[]>([]);
   const [search, setSearch] = useState("");
@@ -47,11 +50,10 @@ export function UserPlaylistFormDialog({
     if (!open) return;
 
     setTitle(playlist?.title ?? "");
-    setCover(playlist?.cover ?? user?.avatarUrl ?? defaultCover);
     setSelectedIds(playlist?.musicIds ?? []);
     setSearch("");
     setError(null);
-  }, [open, playlist, user?.avatarUrl]);
+  }, [open, playlist]);
 
   useEffect(() => {
     if (!open) return;
@@ -75,6 +77,7 @@ export function UserPlaylistFormDialog({
                   : "",
             title: String(music.title ?? ""),
             singer: String(music.singer ?? ""),
+            cover: String(music.cover ?? ""),
           }))
           .filter((music) => music.id && music.title);
 
@@ -99,6 +102,23 @@ export function UserPlaylistFormDialog({
       return haystack.includes(keyword);
     });
   }, [allMusics, search]);
+
+  const selectedMusicCovers = useMemo(() => {
+    const coversById = new Map(allMusics.map((music) => [music.id, music.cover]));
+
+    return selectedIds
+      .map((musicId) => coversById.get(musicId))
+      .filter((cover): cover is string => Boolean(cover));
+  }, [allMusics, selectedIds]);
+
+  const generatedCover = useMemo(
+    () =>
+      createPlaylistCoverValue(
+        selectedMusicCovers,
+        playlist?.cover || user?.avatarUrl || DEFAULT_PLAYLIST_COVER
+      ),
+    [playlist?.cover, selectedMusicCovers, user?.avatarUrl]
+  );
 
   const toggleMusic = (musicId: string) => {
     setSelectedIds((prev) =>
@@ -130,7 +150,7 @@ export function UserPlaylistFormDialog({
         ownerName: user.displayName || user.username || "You",
         ownerAvatar: user.avatarUrl || "",
         title: title.trim(),
-        cover: cover.trim() || user.avatarUrl || defaultCover,
+        cover: generatedCover,
         singer: user.displayName || user.username || "Created by you",
         musicIds: selectedIds,
       };
@@ -170,21 +190,16 @@ export function UserPlaylistFormDialog({
 
   return (
     <div className="fixed inset-0 z-[120] bg-black/55 px-4 py-6 backdrop-blur-sm">
-      <div className="mx-auto flex h-full w-full max-w-3xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-white text-black shadow-2xl dark:bg-zinc-950 dark:text-white">
-        <div className="flex items-center justify-between border-b border-black/10 px-5 py-4 dark:border-white/10">
-          <div>
-            <div className="text-xl font-semibold">
-              {playlist ? "Edit Playlist" : "Create Playlist"}
-            </div>
-            <div className="text-sm text-zinc-500 dark:text-zinc-400">
-              Name your playlist, add an avatar, and choose songs.
-            </div>
+      <div className="mx-auto flex h-full w-full max-w-3xl flex-col overflow-hidden rounded-3xl border bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="flex items-center justify-between border-b px-4 py-2 shadow-sm dark:border-zinc-800">
+          <div className="text-xl font-semibold text-rose-600">
+            {playlist ? "Edit Playlist" : "Create Playlist"}
           </div>
 
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full p-2 text-zinc-500 transition hover:bg-zinc-100 hover:text-black dark:hover:bg-zinc-900 dark:hover:text-white"
+            className="rounded-full text-zinc-500 transition hover:bg-zinc-100 hover:text-black dark:hover:bg-zinc-900 dark:hover:text-white"
             aria-label="Close"
           >
             <X size={20} weight="bold" />
@@ -195,34 +210,39 @@ export function UserPlaylistFormDialog({
           onSubmit={handleSubmit}
           className="flex min-h-0 flex-1 flex-col overflow-hidden"
         >
-          <div className="grid min-h-0 flex-1 gap-5 overflow-hidden p-5 md:grid-cols-[320px,1fr]">
+          <div className="grid min-h-0 flex-1 gap-2 overflow-hidden p-4">
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-zinc-500 dark:text-zinc-400">
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400">
                   Playlist name
                 </label>
+
                 <input
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
                   placeholder="My playlist"
-                  className="mt-1 w-full rounded-2xl border border-zinc-200 bg-transparent px-4 py-3 outline-none transition focus:border-rose-400 dark:border-zinc-800"
+                  className="mt-1 w-full rounded-2xl border border-zinc-200 bg-transparent px-4 py-2 outline-none transition placeholder:text-sm focus:border-rose-400 dark:border-zinc-800"
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-zinc-500 dark:text-zinc-400">
-                  Avatar URL
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+                  Playlist cover
                 </label>
-                <input
-                  value={cover}
-                  onChange={(event) => setCover(event.target.value)}
-                  placeholder="https://..."
-                  className="mt-1 w-full rounded-2xl border border-zinc-200 bg-transparent px-4 py-3 outline-none transition focus:border-rose-400 dark:border-zinc-800"
-                />
-              </div>
 
-              <div className="rounded-3xl border border-dashed border-zinc-200 p-4 text-sm text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
-                {selectedIds.length} song{selectedIds.length === 1 ? "" : "s"} selected
+                <div className="mt-2 flex items-center gap-3 rounded-3xl border border-zinc-200 bg-white/60 p-3 dark:border-zinc-800 dark:bg-zinc-950/60">
+                  <PlaylistCover
+                    cover={generatedCover}
+                    title={title || playlist?.title || "Playlist cover"}
+                    className="size-20 rounded-2xl"
+                  />
+
+                  <div className="min-w-0 text-sm text-zinc-500 dark:text-zinc-400">
+                    {selectedMusicCovers.length >= 2
+                      ? "Cover will be generated automatically from the selected songs."
+                      : "Select at least 2 songs to create a collage cover like Apple Music."}
+                  </div>
+                </div>
               </div>
 
               {error ? (
@@ -234,20 +254,23 @@ export function UserPlaylistFormDialog({
 
             <div className="flex min-h-0 flex-col overflow-hidden">
               <div>
-                <label className="block text-sm text-zinc-500 dark:text-zinc-400">
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400">
                   Search songs
                 </label>
+
                 <input
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
                   placeholder="Search by title or singer"
-                  className="mt-1 w-full rounded-2xl border border-zinc-200 bg-transparent px-4 py-3 outline-none transition focus:border-rose-400 dark:border-zinc-800"
+                  className="mt-1 w-full rounded-2xl border border-zinc-200 bg-transparent px-4 py-2 outline-none transition dark:border-zinc-800"
                 />
               </div>
 
-              <div className="mt-4 min-h-0 flex-1 overflow-y-auto rounded-3xl border border-zinc-200 p-2 dark:border-zinc-800">
+              <div className="mt-4 min-h-0 flex-1 overflow-y-auto rounded-2xl border border-zinc-200 p-2 dark:border-zinc-800">
                 {isLoadingMusics ? (
-                  <div className="px-3 py-4 text-sm text-zinc-500">Loading songs...</div>
+                  <div className="px-3 py-4 text-sm text-zinc-500">
+                    Loading songs...
+                  </div>
                 ) : filteredMusics.length === 0 ? (
                   <div className="px-3 py-4 text-sm text-zinc-500">
                     No songs found.
@@ -273,6 +296,7 @@ export function UserPlaylistFormDialog({
                             <div className="line-clamp-1 text-sm font-medium">
                               {music.title}
                             </div>
+
                             <div className="line-clamp-1 text-xs text-zinc-500 dark:text-zinc-400">
                               {music.singer || "Unknown singer"}
                             </div>
@@ -286,7 +310,12 @@ export function UserPlaylistFormDialog({
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-3 border-t border-black/10 px-5 py-4 dark:border-white/10">
+          <div className="flex items-center justify-end gap-3 border-t px-4 py-2 shadow-sm dark:border-zinc-800">
+            <div className="text-xs text-zinc-500 dark:text-zinc-400">
+              {selectedIds.length} song{selectedIds.length === 1 ? "" : "s"}{" "}
+              selected
+            </div>
+
             <button
               type="button"
               onClick={onClose}

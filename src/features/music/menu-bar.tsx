@@ -39,6 +39,20 @@ import { ChanhdangLogotypeMusic } from "@/components/chanhdang-logotype-music";
 import { usePremium } from "@/hooks/use-premium";
 import { useTheme } from "next-themes";
 
+const MENU_BAR_OPEN_STORAGE_KEY = "music-menu-bar-open";
+
+function getInitialMenuBarOpen() {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  try {
+    return window.localStorage.getItem(MENU_BAR_OPEN_STORAGE_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
 export function MenuBar() {
   const params = useParams();
   const pathname = usePathname();
@@ -158,7 +172,9 @@ export function MenuBar() {
               <MicrophoneStage
                 size={25}
                 weight={
-                  isPathActive(`${basePath}/library/artists`) ? "fill" : "regular"
+                  isPathActive(`${basePath}/library/artists`)
+                    ? "fill"
+                    : "regular"
                 }
                 className={getIconClass(
                   isPathActive(`${basePath}/library/artists`)
@@ -189,14 +205,16 @@ export function MenuBar() {
             key: "library",
             label: tCommon("library"),
             href: `${basePath}/library`,
-            isActive: isPathActive(`${basePath}/library`),
+            isActive: isPathActive(`${basePath}/library`, true),
             icon: (
               <CardsThree
                 size={25}
                 weight={
-                  isPathActive(`${basePath}/library`) ? "fill" : "regular"
+                  isPathActive(`${basePath}/library`, true) ? "fill" : "regular"
                 }
-                className={getIconClass(isPathActive(`${basePath}/library`))}
+                className={getIconClass(
+                  isPathActive(`${basePath}/library`, true)
+                )}
               />
             ),
           },
@@ -395,7 +413,18 @@ export function MenuBar() {
     },
   ];
 
-  const [isMenuBarOpen, setIsMenuBarOpen] = useState(false);
+  const [isMenuBarOpen, setIsMenuBarOpen] = useState(getInitialMenuBarOpen);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(
+        MENU_BAR_OPEN_STORAGE_KEY,
+        isMenuBarOpen ? "true" : "false"
+      );
+    } catch {
+      // Ignore storage errors so the menu still works normally.
+    }
+  }, [isMenuBarOpen]);
 
   useEffect(() => {
     document.documentElement.classList.toggle(
@@ -422,14 +451,14 @@ export function MenuBar() {
             layoutId="menu-bar"
             transition={menuBarTransition}
             layout
-            className="pointer-events-auto w-[30vw] rounded-full border border-black/10 bg-white/80 font-apple backdrop-blur-sm dark:border-white/10 dark:bg-black/40"
+            className="pointer-events-auto rounded-full border border-black/10 bg-white/80 font-apple backdrop-blur-sm dark:border-white/10 dark:bg-black/40"
           >
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.18 }}
-              className="flex items-center justify-between px-4 py-2"
+              className="flex items-center justify-between gap-16 px-4 py-2"
             >
               <div
                 className=""

@@ -27,6 +27,8 @@ type PlaylistDocument = {
   cover?: string;
   musicIds?: unknown[];
   musics?: unknown[];
+  ownerId?: string;
+  isUserPlaylist?: boolean;
 };
 
 type SingerDocument = {
@@ -68,6 +70,13 @@ const normalizeLibraryEntry = async (db: Db, entry: LibraryDoc) => {
     })) as PlaylistDocument | null;
 
     if (playlist) {
+      if (
+        playlist.isUserPlaylist &&
+        playlist.ownerId !== entry.userId
+      ) {
+        return null;
+      }
+
       const musicIds = Array.isArray(playlist.musicIds)
         ? normalizeObjectIds(playlist.musicIds)
         : Array.isArray(playlist.musics)
@@ -151,7 +160,7 @@ export async function GET(request: Request) {
     const normalizedEntries = await Promise.all(
       entries.map((entry) => normalizeLibraryEntry(db, entry))
     );
-    return NextResponse.json(normalizedEntries);
+    return NextResponse.json(normalizedEntries.filter(Boolean));
   } catch (error) {
     console.error("MONGO ERROR:", error);
     return NextResponse.json(

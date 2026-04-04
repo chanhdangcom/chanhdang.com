@@ -54,6 +54,18 @@ export async function GET(
       return NextResponse.json({ error: "Playlist not found" }, { status: 404 });
     }
 
+    const role = await getUserRole(request);
+    const requesterUserId =
+      new URL(request.url).searchParams.get("userId")?.trim() || undefined;
+
+    if (
+      doc.isUserPlaylist &&
+      role !== "admin" &&
+      (!requesterUserId || doc.ownerId !== requesterUserId)
+    ) {
+      return NextResponse.json({ error: "Playlist not found" }, { status: 404 });
+    }
+
     const musicIds = Array.isArray(doc.musicIds)
       ? normalizeObjectIds(doc.musicIds)
       : Array.isArray(doc.musics)

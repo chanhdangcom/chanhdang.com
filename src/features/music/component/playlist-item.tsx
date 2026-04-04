@@ -1,11 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { IPlaylistItem } from "../type/playlist";
 import { BorderPro } from "./border-pro";
 import { useImageHoverColor } from "@/hooks/use-image-hover-color";
+import { PlaylistCover } from "./playlist-cover";
+import { getPlaylistCoverPreviewUrl } from "../utils/playlist-cover";
 
 type IProp = {
   music: IPlaylistItem | null;
@@ -14,23 +15,7 @@ type IProp = {
 
 export function PlaylistItem({ music, onClick }: IProp) {
   const [isEnter, setIsEnter] = useState<boolean>(false);
-
-  // Validate cover URL to prevent "Failed to construct 'URL': Invalid URL" error
-  const isValidUrl = (url: string | undefined | null): boolean => {
-    if (!url || typeof url !== "string" || url.trim() === "") {
-      return false;
-    }
-    try {
-      new URL(url);
-      return true;
-    } catch {
-      // If it's a relative URL, check if it starts with /
-      return url.startsWith("/");
-    }
-  };
-
-  const coverUrl =
-    music?.cover && isValidUrl(music.cover) ? music.cover : "/img/Logomark.png";
+  const coverUrl = getPlaylistCoverPreviewUrl(music?.cover);
 
   const hoverBg = useImageHoverColor(coverUrl);
 
@@ -55,12 +40,10 @@ export function PlaylistItem({ music, onClick }: IProp) {
         <div className="my-1 space-y-2">
           <div className="relative">
             <BorderPro roundedSize="rounded-md">
-              <Image
-                alt={music.title || "Playlist cover"}
-                src={coverUrl}
-                width={500}
-                height={500}
-                className="mx-auto size-44 shrink-0 cursor-pointer justify-center rounded-lg object-cover md:size-52"
+              <PlaylistCover
+                cover={music.cover}
+                title={music.title || "Playlist cover"}
+                className="mx-auto size-44 shrink-0 cursor-pointer justify-center rounded-lg md:size-52"
               />
             </BorderPro>
 

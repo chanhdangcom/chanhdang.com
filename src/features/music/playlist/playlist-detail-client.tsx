@@ -18,6 +18,8 @@ import { BackButton } from "../component/back-button";
 import { useScroll, useSpring, useTransform, motion } from "framer-motion";
 import { useImageHoverColor } from "@/hooks/use-image-hover-color";
 import { AudioItemOrderLayout } from "../component/audio-item-order-layout";
+import { PlaylistCover } from "../component/playlist-cover";
+import { getPlaylistCoverPreviewUrl } from "../utils/playlist-cover";
 
 type Props = {
   playlist: IPlaylistItem;
@@ -27,7 +29,9 @@ export function PlaylistDetailClient({ playlist }: Props) {
   const { handlePlayAudio, handlePlayRandomAudio } = useAudio();
   const { user } = useUser();
   const [isMobile, setIsMobile] = useState(false);
-  const hoverColor = useImageHoverColor(playlist.cover, { alpha: 0.8 });
+  const hoverColor = useImageHoverColor(getPlaylistCoverPreviewUrl(playlist.cover), {
+    alpha: 0.8,
+  });
 
   const musics = useMemo(
     () => playlist.musics?.filter((m) => m && m.id) ?? [],
@@ -120,13 +124,18 @@ export function PlaylistDetailClient({ playlist }: Props) {
                   <motion.div
                     role="img"
                     aria-label="cover"
-                    className="mx-auto aspect-square w-full border border-white/10 bg-cover bg-center bg-no-repeat shadow-2xl md:mx-4 md:size-80 md:rounded-3xl"
+                    className="mx-auto aspect-square w-full overflow-hidden border border-white/10 shadow-2xl md:mx-4 md:size-80 md:rounded-3xl"
                     style={{
-                      backgroundImage: `url(${playlist.cover})`,
                       y: isMobile ? smoothParallax : 0,
                       scale: isMobile ? smoothScale : 1,
                     }}
-                  />
+                  >
+                    <PlaylistCover
+                      cover={playlist.cover}
+                      title={playlist.title || "Playlist cover"}
+                      className="size-full md:rounded-3xl"
+                    />
+                  </motion.div>
                 </div>
 
                 <div className="absolute inset-x-4 bottom-8 space-y-4 md:static md:space-y-28">

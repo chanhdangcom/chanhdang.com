@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -21,8 +20,10 @@ import { IPlaylistItem } from "../type/playlist";
 import { UserPlaylistFormDialog } from "./user-playlist-form-dialog";
 import { HeaderMusicPage } from "../header-music-page";
 import { BorderPro } from "../component/border-pro";
+import { PlaylistCover } from "../component/playlist-cover";
 import { useImageHoverColor } from "@/hooks/use-image-hover-color";
 import { cn } from "@/lib/utils";
+import { getPlaylistCoverPreviewUrl } from "../utils/playlist-cover";
 
 type LibraryPlaylistEntry = {
   _id: string;
@@ -33,17 +34,6 @@ type LibraryPlaylistEntry = {
 
 type OwnedPlaylist = IPlaylistItem & {
   createdAt?: string;
-};
-
-const getCoverUrl = (cover?: string) => {
-  if (!cover) return "/img/Logomark.png";
-
-  try {
-    new URL(cover);
-    return cover;
-  } catch {
-    return cover.startsWith("/") ? cover : "/img/Logomark.png";
-  }
 };
 
 type OwnedPlaylistItemProps = {
@@ -73,7 +63,7 @@ function OwnedPlaylistItem({
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const didLongPressRef = useRef(false);
   const instanceId = useId();
-  const coverUrl = getCoverUrl(playlist.cover);
+  const coverUrl = getPlaylistCoverPreviewUrl(playlist.cover);
   const hoverBg = useImageHoverColor(coverUrl, { alpha: 0.12 });
   const cardLayoutId = `owned-playlist-item-${playlist.id}-${instanceId}`;
 
@@ -274,12 +264,10 @@ function OwnedPlaylistItem({
                   onClick={handleOpenPlaylist}
                 >
                   <BorderPro roundedSize="rounded-xl">
-                    <Image
-                      src={coverUrl}
-                      alt={playlist.title || "Playlist cover"}
-                      width={240}
-                      height={240}
-                      className="size-16 rounded-xl object-cover md:size-20"
+                    <PlaylistCover
+                      cover={playlist.cover}
+                      title={playlist.title || "Playlist cover"}
+                      className="size-16 rounded-xl md:size-20"
                     />
                   </BorderPro>
 
@@ -337,12 +325,10 @@ function OwnedPlaylistItem({
         >
           <div className="flex items-center justify-between">
             <div className="flex flex-1 items-center gap-2">
-              <Image
-                src={coverUrl}
-                alt={playlist.title || "Playlist cover"}
-                width={200}
-                height={200}
-                className="size-14 rounded-xl object-cover md:size-20"
+              <PlaylistCover
+                cover={playlist.cover}
+                title={playlist.title || "Playlist cover"}
+                className="size-14 rounded-xl md:size-20"
               />
 
               <div className="flex-1 flex-row space-y-4 font-apple">
@@ -393,7 +379,7 @@ export function LibraryFavoritePlaylistsPage() {
       try {
         const [favoriteResponse, ownedResponse] = await Promise.all([
           fetch(`/api/library?userId=${user.id}&type=playlist`),
-          fetch(`/api/playlists?ownerId=${user.id}&lite=1`),
+          fetch(`/api/playlists?ownerId=${user.id}&userId=${user.id}&lite=1`),
         ]);
 
         if (favoriteResponse.ok) {
@@ -423,7 +409,7 @@ export function LibraryFavoritePlaylistsPage() {
     try {
       const [favoriteResponse, ownedResponse] = await Promise.all([
         fetch(`/api/library?userId=${user.id}&type=playlist`),
-        fetch(`/api/playlists?ownerId=${user.id}&lite=1`),
+        fetch(`/api/playlists?ownerId=${user.id}&userId=${user.id}&lite=1`),
       ]);
 
       if (favoriteResponse.ok) {
@@ -488,12 +474,10 @@ export function LibraryFavoritePlaylistsPage() {
         className="flex items-center justify-between"
       >
         <div className="flex flex-1 items-center gap-2">
-          <Image
-            src={getCoverUrl(cover)}
-            alt={title || "Playlist cover"}
-            width={200}
-            height={200}
-            className="size-14 rounded-xl object-cover md:size-20"
+          <PlaylistCover
+            cover={cover}
+            title={title || "Playlist cover"}
+            className="size-14 rounded-xl md:size-20"
           />
 
           <div className="flex-1 flex-row space-y-4 font-apple">
@@ -548,13 +532,13 @@ export function LibraryFavoritePlaylistsPage() {
           <div className="py-8 text-center text-zinc-500">Loading...</div>
         ) : (
           <div className="space-y-4">
-            <section className="space-y-4">
-              <div className="flex items-center">
+            <section className="space-y-2">
+              <div className="absolute right-8 top-8 z-50">
                 {user?.id ? (
                   <button
                     type="button"
                     onClick={handleCreatePlaylist}
-                    className="rounded-md bg-black/10 p-2 shadow-sm dark:bg-white/10"
+                    className="rounded-md bg-black/10 p-1.5 shadow-sm dark:bg-white/10"
                   >
                     <Plus size={25} weight="bold" className="text-rose-600" />
                   </button>

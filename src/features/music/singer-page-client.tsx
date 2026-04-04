@@ -88,6 +88,10 @@ export function SingerPageClient({ singer }: IProp) {
             <div>
               <BackButton />
 
+              <div className="absolute right-4 top-4 z-50">
+                <LibrarySingerButton singer={singer} userId={user?.id} />
+              </div>
+
               <div className="flex rounded-3xl">
                 <div className="w-full flex-col items-center md:flex-none">
                   <div className="relative overflow-hidden">
@@ -141,12 +145,6 @@ export function SingerPageClient({ singer }: IProp) {
                             size={22}
                             weight="fill"
                             className="text-white"
-                          />
-                        </div>
-                        <div className="">
-                          <LibrarySingerButton
-                            singer={singer}
-                            userId={user?.id}
                           />
                         </div>
                       </div>

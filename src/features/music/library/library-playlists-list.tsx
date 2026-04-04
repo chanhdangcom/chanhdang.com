@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -8,6 +7,7 @@ import { IPlaylistItem } from "../type/playlist";
 import { Star } from "phosphor-react";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 import { useParams } from "next/navigation";
+import { PlaylistCover } from "../component/playlist-cover";
 
 type LibraryPlaylist = {
   _id: string;
@@ -18,17 +18,6 @@ type LibraryPlaylist = {
 
 type Props = {
   userId?: string;
-};
-
-const getCoverUrl = (cover?: string) => {
-  if (!cover) return "/img/Logomark.png";
-  try {
-    new URL(cover);
-    return cover;
-  } catch {
-    if (cover.startsWith("/")) return cover;
-    return "/img/Logomark.png";
-  }
 };
 
 export function LibraryPlaylistsList({ userId }: Props) {
@@ -81,7 +70,6 @@ export function LibraryPlaylistsList({ userId }: Props) {
       <div className="space-y-4 md:space-y-8">
         {playlists.map((entry) => {
           const playlist = entry.resourceData;
-          const coverUrl = getCoverUrl(playlist?.cover);
 
           return (
             <div key={entry._id}>
@@ -92,12 +80,10 @@ export function LibraryPlaylistsList({ userId }: Props) {
                 <div className="flex items-center gap-2">
                   <Star weight="fill" size={10} className="text-rose-500" />
 
-                  <Image
-                    src={coverUrl}
-                    alt={playlist.title || "Playlist cover"}
-                    width={500}
-                    height={500}
-                    className="size-14 rounded-xl object-cover hover:scale-105 md:size-24"
+                  <PlaylistCover
+                    cover={playlist?.cover}
+                    title={playlist?.title || "Playlist cover"}
+                    className="size-14 rounded-xl hover:scale-105 md:size-24"
                   />
 
                   <div className="ml-2">

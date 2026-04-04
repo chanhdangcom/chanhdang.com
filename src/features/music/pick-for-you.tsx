@@ -103,7 +103,7 @@ export function PickForYou() {
   const { scrollRef, scrollLeft, scrollRight, canScrollLeft, canScrollRight } =
     useScrollCarousel();
   return (
-    <>
+    <div className="w-full">
       <div className="flex text-xl font-bold">
         <div className="ml-2 px-1 text-black dark:text-white md:ml-[270px] md:px-0">
           Top Pick for You
@@ -123,10 +123,7 @@ export function PickForYou() {
           {pickForYou.map((item, index) => (
             <div
               key={item.id}
-              className={cn(
-                "mr-1",
-                index === 0 ? "ml-2 md:ml-[270px]" : ""
-              )}
+              className={cn("mr-1", index === 0 ? "ml-2 md:ml-[270px]" : "")}
             >
               <div className="snap-start p-1">
                 <div className="mx-2 mb-1 font-apple text-sm font-medium text-zinc-500">
@@ -160,6 +157,6 @@ export function PickForYou() {
           ))}
         </div>
       </ScrollCarouselItem>
-    </>
+    </div>
   );
 }
