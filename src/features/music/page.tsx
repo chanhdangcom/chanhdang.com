@@ -24,6 +24,7 @@ export function MusicPage({ locale = "vi" }: MusicPageProps) {
   return (
     <div className="flex bg-zinc-100 font-apple dark:bg-zinc-950">
       <MotionHeaderMusic />
+
       <MenuBar />
 
       <div className="mx-auto w-full">

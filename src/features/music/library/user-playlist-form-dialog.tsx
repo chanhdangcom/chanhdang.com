@@ -104,7 +104,9 @@ export function UserPlaylistFormDialog({
   }, [allMusics, search]);
 
   const selectedMusicCovers = useMemo(() => {
-    const coversById = new Map(allMusics.map((music) => [music.id, music.cover]));
+    const coversById = new Map(
+      allMusics.map((music) => [music.id, music.cover])
+    );
 
     return selectedIds
       .map((musicId) => coversById.get(musicId))
@@ -191,8 +193,8 @@ export function UserPlaylistFormDialog({
   return (
     <div className="fixed inset-0 z-[120] bg-black/55 px-4 py-6 backdrop-blur-sm">
       <div className="mx-auto flex h-full w-full max-w-3xl flex-col overflow-hidden rounded-3xl border bg-zinc-100 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="flex items-center justify-between border-b px-4 py-2 shadow-sm dark:border-zinc-800">
-          <div className="text-xl font-semibold text-rose-600">
+        <div className="flex items-center justify-between border-b px-4 py-2 dark:border-zinc-800">
+          <div className="font-semibold">
             {playlist ? "Edit Playlist" : "Create Playlist"}
           </div>
 
@@ -202,7 +204,7 @@ export function UserPlaylistFormDialog({
             className="rounded-full text-zinc-500 transition hover:bg-zinc-100 hover:text-black dark:hover:bg-zinc-900 dark:hover:text-white"
             aria-label="Close"
           >
-            <X size={20} weight="bold" />
+            <X size={15} weight="bold" />
           </button>
         </div>
 
@@ -221,7 +223,7 @@ export function UserPlaylistFormDialog({
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
                   placeholder="My playlist"
-                  className="mt-1 w-full rounded-2xl border border-zinc-200 bg-transparent px-4 py-2 outline-none transition placeholder:text-sm focus:border-rose-400 dark:border-zinc-800"
+                  className="mt-1 w-full rounded-2xl border border-zinc-200 bg-transparent bg-zinc-50 px-4 py-2 outline-none transition placeholder:text-sm focus:border-rose-400 dark:border-zinc-800 dark:bg-zinc-950"
                 />
               </div>
 
@@ -230,7 +232,7 @@ export function UserPlaylistFormDialog({
                   Playlist cover
                 </label>
 
-                <div className="mt-2 flex items-center gap-3 rounded-3xl border border-zinc-200 bg-white/60 p-3 dark:border-zinc-800 dark:bg-zinc-950/60">
+                <div className="mt-2 flex items-center gap-3 rounded-3xl border border-zinc-200 bg-white/60 p-2 dark:border-zinc-800 dark:bg-zinc-950">
                   <PlaylistCover
                     cover={generatedCover}
                     title={title || playlist?.title || "Playlist cover"}
@@ -240,7 +242,7 @@ export function UserPlaylistFormDialog({
                   <div className="min-w-0 text-sm text-zinc-500 dark:text-zinc-400">
                     {selectedMusicCovers.length >= 2
                       ? "Cover will be generated automatically from the selected songs."
-                      : "Select at least 2 songs to create a collage cover like Apple Music."}
+                      : "Select at least 2 songs to create a collage cover."}
                   </div>
                 </div>
               </div>
@@ -252,7 +254,7 @@ export function UserPlaylistFormDialog({
               ) : null}
             </div>
 
-            <div className="flex min-h-0 flex-col overflow-hidden">
+            <div className="flex flex-col overflow-hidden">
               <div>
                 <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400">
                   Search songs
@@ -262,7 +264,7 @@ export function UserPlaylistFormDialog({
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
                   placeholder="Search by title or singer"
-                  className="mt-1 w-full rounded-2xl border border-zinc-200 bg-transparent px-4 py-2 outline-none transition dark:border-zinc-800"
+                  className="mt-1 w-full rounded-2xl border border-zinc-200 bg-transparent bg-zinc-50 px-4 py-2 outline-none transition focus:border-rose-400 dark:border-zinc-800 dark:bg-zinc-950"
                 />
               </div>
 
@@ -310,31 +312,29 @@ export function UserPlaylistFormDialog({
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-3 border-t px-4 py-2 shadow-sm dark:border-zinc-800">
+          <div className="flex items-center justify-between border-t px-4 py-2 shadow-sm dark:border-zinc-800">
             <div className="text-xs text-zinc-500 dark:text-zinc-400">
               {selectedIds.length} song{selectedIds.length === 1 ? "" : "s"}{" "}
               selected
             </div>
 
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-full border border-zinc-200 px-4 py-2 text-sm font-medium transition hover:bg-zinc-100 dark:border-zinc-800 dark:hover:bg-zinc-900"
-            >
-              Cancel
-            </button>
-
-            <button
-              type="submit"
-              disabled={isSaving}
-              className="rounded-full bg-rose-500 px-5 py-2 text-sm font-semibold text-white transition hover:bg-rose-600 disabled:opacity-60"
-            >
-              {isSaving
-                ? "Saving..."
-                : playlist
-                  ? "Save changes"
-                  : "Create playlist"}
-            </button>
+            <div className="flex gap-4">
+              {" "}
+              <button
+                type="button"
+                onClick={onClose}
+                className="rounded-full border border-zinc-200 px-4 py-2 text-sm font-medium transition hover:bg-zinc-100 dark:border-zinc-800 dark:hover:bg-zinc-900"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isSaving}
+                className="rounded-full bg-rose-500 px-5 py-2 text-sm font-semibold text-white transition hover:bg-rose-600 disabled:opacity-60"
+              >
+                {isSaving ? "Saving..." : playlist ? "Save changes" : "Create"}
+              </button>
+            </div>
           </div>
         </form>
       </div>

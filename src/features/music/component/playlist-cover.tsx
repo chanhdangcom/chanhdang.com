@@ -32,7 +32,7 @@ export function PlaylistCover({
 
   if (tiles.length <= 1) {
     return (
-      <div className={cn("overflow-hidden bg-zinc-200", className)}>
+      <div className={cn("overflow-hidden", className)}>
         <img
           src={tiles[0] || DEFAULT_PLAYLIST_COVER}
           alt={title || "Playlist cover"}
@@ -46,7 +46,7 @@ export function PlaylistCover({
     return (
       <div
         className={cn(
-          "grid size-full grid-cols-2 gap-px overflow-hidden bg-black/10 dark:bg-white/10",
+          "grid size-full grid-cols-2 gap-px overflow-hidden",
           className
         )}
       >
@@ -66,7 +66,7 @@ export function PlaylistCover({
     return (
       <div
         className={cn(
-          "grid size-full grid-cols-2 grid-rows-2 gap-px overflow-hidden bg-black/10 dark:bg-white/10",
+          "grid size-full grid-cols-2 grid-rows-2 gap-px overflow-hidden",
           className
         )}
       >
@@ -85,7 +85,7 @@ export function PlaylistCover({
   return (
     <div
       className={cn(
-        "grid size-full grid-cols-6 grid-rows-6 gap-px overflow-hidden bg-black/10 dark:bg-white/10",
+        "grid size-full grid-cols-6 grid-rows-6 gap-px overflow-hidden",
         className
       )}
     >
@@ -95,7 +95,7 @@ export function PlaylistCover({
           src={tile}
           alt={`${title || "Playlist cover"} ${index + 1}`}
           className={cn(
-            "size-full object-cover",
+            "size-full shrink-0 object-cover",
             fiveTileLayout[index],
             imageClassName
           )}

@@ -458,7 +458,7 @@ export function MenuBar() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.18 }}
-              className="flex items-center justify-between gap-16 px-4 py-2"
+              className="flex items-center justify-between gap-8 px-4 py-2"
             >
               <div
                 className=""

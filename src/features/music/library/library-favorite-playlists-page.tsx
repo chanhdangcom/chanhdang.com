@@ -533,7 +533,7 @@ export function LibraryFavoritePlaylistsPage() {
         ) : (
           <div className="space-y-4">
             <section className="space-y-2">
-              <div className="absolute right-8 top-8 z-50">
+              <div className="absolute right-4 top-2 z-50 md:right-8 md:top-8">
                 {user?.id ? (
                   <button
                     type="button"

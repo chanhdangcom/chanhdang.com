@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { usePermissions } from "@/hooks/use-permissions";
 import { useParams, useRouter } from "next/navigation";
-import { CheckCircle, Star } from "@phosphor-icons/react/dist/ssr";
+import { Star } from "@phosphor-icons/react/dist/ssr";
+import { cn } from "@/utils/cn";
 
 interface LibraryTrackButtonProps {
   music: IMusic;
@@ -72,10 +73,10 @@ export function LibraryTrackButton({
 }: LibraryTrackButtonProps) {
   const [isInLibrary, setIsInLibrary] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-   const { canUseLibrary } = usePermissions();
-   const params = useParams();
-   const router = useRouter();
-   const locale = (params?.locale as string) || "en";
+  const { canUseLibrary } = usePermissions();
+  const params = useParams();
+  const router = useRouter();
+  const locale = (params?.locale as string) || "en";
 
   // Kiểm tra xem bài hát có trong Library hay không
   useEffect(() => {
@@ -199,19 +200,14 @@ export function LibraryTrackButton({
       } ${isLoading ? "cursor-not-allowed opacity-50" : ""}`}
       title={isInLibrary ? "Gỡ khỏi Library" : "Thêm vào Library"}
     >
-      {isInLibrary ? (
-        <CheckCircle
-          size={iconSize[size]}
-          weight="fill"
-          className="text-rose-500 drop-shadow-sm transition-colors duration-200 group-hover:text-rose-400"
-        />
-      ) : (
-        <Star
-          size={iconSize[size]}
-          weight="regular"
-          className="text-white transition-colors duration-200 group-hover:scale-125"
-        />
-      )}
+      <Star
+        size={iconSize[size]}
+        weight={isInLibrary ? "fill" : "regular"}
+        className={cn(
+          "text-white transition-colors duration-200 group-hover:scale-125",
+          isInLibrary ? "text-rose-500" : ""
+        )}
+      />
     </button>
   );
 }
