@@ -77,6 +77,7 @@ async function getSinger(id: string): Promise<ISingerItem | null> {
               srt: 1,
               beat: 1,
               createdAt: 1,
+              playCount: 1,
             },
           }
         )
@@ -125,6 +126,7 @@ async function getSinger(id: string): Promise<ISingerItem | null> {
                 srt: 1,
                 beat: 1,
                 createdAt: 1,
+                playCount: 1,
               },
             }
           )
@@ -150,6 +152,12 @@ async function getSinger(id: string): Promise<ISingerItem | null> {
       topic: item.topic ? String(item.topic) : undefined,
       srt: item.srt ? String(item.srt) : undefined,
       beat: item.beat ? String(item.beat) : undefined,
+      playCount:
+        typeof item.playCount === "number"
+          ? item.playCount
+          : typeof item.playCount === "string"
+            ? Number(item.playCount)
+            : undefined,
       createdAt:
         item.createdAt instanceof Date
           ? item.createdAt

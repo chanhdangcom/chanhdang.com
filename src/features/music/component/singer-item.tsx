@@ -34,7 +34,12 @@ export function SingerItem({ music, onClick }: IProp) {
   const hasValidCover = music.cover && isValidUrl(music.cover);
 
   return (
-    <motion.div whileTap={{ scale: 0.8 }} onClick={handleClick}>
+    <motion.div
+      whileTap={{ scale: 0.8 }}
+      whileHover={{ scale: 1.03 }}
+      onClick={handleClick}
+      className="py-1"
+    >
       {hasValidCover ? (
         <BorderPro roundedSize="rounded-full">
           <Image

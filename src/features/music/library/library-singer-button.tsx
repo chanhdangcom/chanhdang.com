@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { CheckCircle, Star } from "@phosphor-icons/react/dist/ssr";
+import { Star } from "@phosphor-icons/react/dist/ssr";
 import { usePermissions } from "@/hooks/use-permissions";
 import { ISingerItem } from "../type/singer";
 import { cn } from "@/utils/cn";
@@ -210,19 +210,11 @@ export function LibrarySingerButton({
         isLoading ? "cursor-not-allowed opacity-50" : "hover:scale-105"
       } ${isInLibrary ? "border-rose-500/40" : ""} ${className}`}
     >
-      {isInLibrary ? (
-        <CheckCircle
-          size={iconSize[size]}
-          weight="fill"
-          className="text-rose-500"
-        />
-      ) : (
-        <Star
-          size={iconSize[size]}
-          weight="regular"
-          className={cn("text-white")}
-        />
-      )}
+      <Star
+        size={iconSize[size]}
+        weight={isInLibrary ? "fill" : "regular"}
+        className={cn("text-white", isInLibrary ? "text-rose-500" : "")}
+      />
 
       {showLabel ? (
         <span className="text-sm font-medium md:text-base">

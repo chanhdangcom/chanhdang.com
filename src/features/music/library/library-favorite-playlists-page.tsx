@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
 import {
   CaretRight,
+  DotsThree,
   PencilSimple,
   Plus,
   Trash,
@@ -189,11 +190,11 @@ function OwnedPlaylistItem({
   };
 
   const renderMenuContent = () => (
-    <div className="px-4 py-2">
+    <div className="px-3 py-2">
       <div className="space-y-2">
         <button
           type="button"
-          className="flex w-full items-center gap-2 rounded-xl text-left text-sm hover:bg-black/5 dark:hover:bg-white/5"
+          className="flex w-full items-center gap-1 rounded-xl p-1 text-left text-sm hover:bg-black/5 dark:hover:bg-white/5"
           onClick={() => {
             closeMenu();
             onEdit(playlist);
@@ -205,10 +206,10 @@ function OwnedPlaylistItem({
         </button>
       </div>
 
-      <div className="mt-2 border-t border-black/10 pt-2 dark:border-white/10">
+      <div className="mt-2 border-t border-black/10 pt-1 dark:border-white/10">
         <button
           type="button"
-          className="flex w-full items-center gap-2 rounded-xl text-left text-sm text-rose-500 hover:bg-rose-500/10"
+          className="flex w-full items-center gap-2 rounded-xl p-1 text-left text-sm text-rose-500 hover:bg-rose-500/10"
           onClick={() => {
             closeMenu();
             onDelete(playlist.id);
@@ -228,14 +229,14 @@ function OwnedPlaylistItem({
         isDesktop &&
         typeof document !== "undefined" &&
         createPortal(
-          <div className="fixed inset-0 z-[80] bg-black/45 backdrop-blur-[4px]" />,
+          <div className="fixed inset-0 z-[80] bg-black/45 backdrop-blur-sm" />,
           document.body
         )}
 
       {showMenu &&
         typeof document !== "undefined" &&
         createPortal(
-          <div className="fixed inset-0 z-[120] bg-black/45 backdrop-blur-[4px]">
+          <div className="fixed inset-0 z-[120] bg-black/45 backdrop-blur-sm">
             <div
               ref={overlayRef}
               className={cn(
@@ -260,7 +261,7 @@ function OwnedPlaylistItem({
                 className="w-[min(88vw,28rem)] rounded-3xl md:w-[26rem]"
               >
                 <div
-                  className="flex items-center gap-3 rounded-2xl bg-white/70 p-2 dark:bg-zinc-950/60"
+                  className="flex items-center gap-3 rounded-2xl bg-white/70 p-2 backdrop-blur-md dark:bg-zinc-950/60"
                   onClick={handleOpenPlaylist}
                 >
                   <BorderPro roundedSize="rounded-xl">
@@ -533,16 +534,22 @@ export function LibraryFavoritePlaylistsPage() {
         ) : (
           <div className="space-y-4">
             <section className="space-y-2">
-              <div className="absolute right-4 top-2 z-50 md:right-8 md:top-8">
+              <div className="absolute right-4 top-2 z-50 flex items-center gap-4 rounded-full bg-black/30 p-2 backdrop-blur-sm dark:bg-white/20 md:right-8 md:top-8">
                 {user?.id ? (
                   <button
                     type="button"
                     onClick={handleCreatePlaylist}
-                    className="rounded-md bg-black/10 p-1.5 shadow-sm dark:bg-white/10"
+                    className=""
                   >
-                    <Plus size={25} weight="bold" className="text-rose-600" />
+                    <Plus
+                      size={20}
+                      weight="bold"
+                      className="text-white hover:text-rose-500"
+                    />
                   </button>
                 ) : null}
+
+                <DotsThree size={22} weight="bold" className="text-white" />
               </div>
 
               {ownedPlaylists.length === 0 ? (

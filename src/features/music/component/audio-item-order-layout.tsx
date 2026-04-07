@@ -73,6 +73,7 @@ export function AudioItemOrderLayout({
           open={menu.showMenu}
           isDesktop={menu.isDesktop}
           desktopOverlayPosition={menu.desktopOverlayPosition}
+          menuPlacement={menu.menuPlacement}
           menuRef={menu.menuRef}
           overlayRef={menu.overlayRef}
           onClose={menu.closeMenu}

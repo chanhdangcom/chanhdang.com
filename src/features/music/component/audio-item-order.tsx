@@ -75,6 +75,7 @@ export function AudioItemOrder({
           open={menu.showMenu}
           isDesktop={menu.isDesktop}
           desktopOverlayPosition={menu.desktopOverlayPosition}
+          menuPlacement={menu.menuPlacement}
           menuRef={menu.menuRef}
           overlayRef={menu.overlayRef}
           onClose={menu.closeMenu}
@@ -191,7 +192,27 @@ export function AudioItemOrder({
                   color={waveColor}
                 />
               ) : (
-                item && <div className="">{item}</div>
+                item && (
+                  <button
+                    type="button"
+                    className="flex items-center"
+                    onPointerDown={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                    }}
+                    onPointerUp={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                    }}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      menu.openMenu();
+                    }}
+                  >
+                    {item}
+                  </button>
+                )
               )}
             </div>
           </div>

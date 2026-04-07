@@ -193,7 +193,7 @@ export function MenuBarMobile() {
   const currentRoute = getCurrentRouteIcon();
 
   return (
-    <div className="fixed inset-x-4 bottom-6 z-10 flex items-center justify-between font-apple sm:hidden">
+    <div className="fixed inset-x-4 bottom-6 z-50 flex items-center justify-between font-apple sm:hidden">
       <AnimatePresence>
         {show ? (
           <motion.div

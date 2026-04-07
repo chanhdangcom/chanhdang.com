@@ -4,14 +4,16 @@ import { useParams } from "next/navigation";
 
 import { IPlaylistItem } from "./type/playlist";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
-import { AuidoItem } from "./component/audio-item";
 import Link from "next/link";
 import { cn } from "@/utils/cn";
+import { useUser } from "@/hooks/use-user";
+import { PlaylistItem } from "./component/playlist-item";
 
 export function NewCarouselAudioPlaylist() {
   const ref = React.useRef<HTMLDivElement>(null);
   const [playlists, setPlaylists] = React.useState<IPlaylistItem[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
+  const { user } = useUser();
   const params = useParams();
   const locale = (params?.locale as string) || "en";
   const withLocale = (path: string) => `/${locale}${path}`;
@@ -24,7 +26,10 @@ export function NewCarouselAudioPlaylist() {
         const res = await fetch("/api/playlists?lite=1&limit=24");
         if (res.ok) {
           const data = (await res.json()) as IPlaylistItem[];
-          if (isMounted) setPlaylists(data);
+          const visiblePlaylists = data.filter(
+            (playlist) => !playlist.isUserPlaylist || playlist.ownerId === user?.id
+          );
+          if (isMounted) setPlaylists(visiblePlaylists);
         }
       } catch (e) {
         console.error("Failed to load playlists", e);
@@ -35,7 +40,7 @@ export function NewCarouselAudioPlaylist() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [user?.id]);
 
   if (loading) {
     return (
@@ -81,14 +86,13 @@ export function NewCarouselAudioPlaylist() {
           .map((music, index) => (
             <div key={music.id} className="shrink-0 snap-start">
               <Link href={`${withLocale("/music/playlist")}/${music.id}`}>
-                {" "}
                 <div
                   className={cn(
                     "",
                     `${index === 0 ? "ml-2 md:ml-[270px]" : ""} `
                   )}
                 >
-                  <AuidoItem music={music} />
+                  <PlaylistItem music={music} />
                 </div>
               </Link>
             </div>

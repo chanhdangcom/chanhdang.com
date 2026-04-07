@@ -16,6 +16,8 @@ export default function MusicLayout({ children }: Props) {
       <div className="my-40">
         <AudioBar />
         <MenuBarMobile />
+
+        <div className="pointer-events-none fixed bottom-0 z-10 h-24 w-full bg-zinc-950 opacity-70 blur-3xl dark:bg-zinc-600" />
       </div>
     </>
   );

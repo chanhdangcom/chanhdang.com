@@ -1,6 +1,6 @@
 "use client";
-import { CaretRight, Play } from "@phosphor-icons/react/dist/ssr";
-import { useEffect, useState } from "react";
+import { CaretRight, ChartLine, Play } from "@phosphor-icons/react/dist/ssr";
+import { useEffect, useMemo, useState } from "react";
 
 import { AudioSingerItem } from "./component/audio-singer-item";
 
@@ -30,6 +30,15 @@ export function SingerPageClient({ singer }: IProp) {
   const { handlePlayAudio } = useAudio();
   const { user } = useUser();
   const [isMobile, setIsMobile] = useState(false);
+  const totalPlayCount = useMemo(
+    () =>
+      singer.musics?.reduce(
+        (total, music) => total + (typeof music.playCount === "number" ? music.playCount : 0),
+        0
+      ) ?? 0,
+    [singer.musics]
+  );
+  const totalPlayCountLabel = `${totalPlayCount.toLocaleString("vi-VN")} lượt nghe`;
 
   const handleRandomAudio = () => {
     const musics = singer.musics;
@@ -83,6 +92,7 @@ export function SingerPageClient({ singer }: IProp) {
         <AnimatePresence>
           <motion.div className="mb-8 w-full" layoutId="singer">
             <AudioBar />
+
             <MenuBarMobile />
 
             <div>
@@ -124,15 +134,30 @@ export function SingerPageClient({ singer }: IProp) {
 
                     <motion.div
                       style={{ opacity: smoothOpacity }}
-                      whileTap={{ scale: 0.9 }}
+                      className="absolute bottom-4 right-4 z-50 hidden items-center gap-2 md:flex"
+                    >
+                      <ChartLine
+                        size={22}
+                        weight="bold"
+                        className="mb-0.5 text-white/40"
+                      />
+
+                      <div className="text-sm text-white/40">
+                        {totalPlayCountLabel}
+                      </div>
+                    </motion.div>
+
+                    <motion.div
+                      style={{ opacity: smoothOpacity }}
                       className="absolute inset-x-8 bottom-6 flex items-center justify-between bg-fixed text-3xl font-semibold text-white md:ml-[270px] md:justify-start md:gap-4"
                     >
-                      <div
+                      <motion.div
                         className="hidden rounded-full bg-rose-500 p-3 md:flex"
                         onClick={() => handleRandomAudio()}
+                        whileTap={{ scale: 0.5 }}
                       >
                         <Play size={22} weight="fill" className="text-white" />
-                      </div>
+                      </motion.div>
 
                       <div className="">{singer.singer}</div>
 
@@ -156,15 +181,29 @@ export function SingerPageClient({ singer }: IProp) {
 
             <div className="mx-4 items-center md:mx-8 md:ml-[270px] md:flex">
               <div className="justify-centers mt-4 w-full max-w-full space-y-4 px-3 md:max-w-full md:justify-center">
-                <h2 className="flex items-center gap-1 px-1 text-xl font-bold text-black dark:text-white">
-                  <div>Top Songs</div>
+                <div className="flex items-center justify-between">
+                  <h2 className="flex items-center gap-1 px-1 text-xl font-bold text-black dark:text-white">
+                    <div>Top Songs</div>
 
-                  <CaretRight
-                    size={20}
-                    weight="bold"
-                    className="text-zinc-500 md:mt-1"
-                  />
-                </h2>
+                    <CaretRight
+                      size={20}
+                      weight="bold"
+                      className="text-zinc-500 md:mt-1"
+                    />
+                  </h2>
+
+                  <div className="z-50 flex items-center gap-2 md:hidden">
+                    <ChartLine
+                      size={20}
+                      weight="bold"
+                      className="mb-0.5 text-zinc-500"
+                    />
+
+                    <div className="text-xs text-zinc-500">
+                      {totalPlayCountLabel}
+                    </div>
+                  </div>
+                </div>
 
                 <AudioSingerItem music={singer} />
               </div>

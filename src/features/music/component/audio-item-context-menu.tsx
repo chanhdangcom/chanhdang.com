@@ -24,6 +24,12 @@ type UseAudioItemContextMenuOptions = {
   disabled?: boolean;
 };
 
+type MenuPlacement = {
+  desktopSide: "left" | "right";
+  desktopMenuTop: number;
+  mobileTop: number;
+};
+
 export function useAudioItemContextMenu({
   onTap,
   disabled = false,
@@ -35,6 +41,11 @@ export function useAudioItemContextMenu({
     left: number;
     top: number;
   } | null>(null);
+  const [menuPlacement, setMenuPlacement] = useState<MenuPlacement>({
+    desktopSide: "left",
+    desktopMenuTop: 0,
+    mobileTop: 112,
+  });
   const longPressTimerRef = useRef<number | null>(null);
   const didOpenMenuRef = useRef(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -54,6 +65,12 @@ export function useAudioItemContextMenu({
     setShowMenu(false);
   }, []);
 
+  const openMenu = useCallback(() => {
+    clearLongPressTimer();
+    didOpenMenuRef.current = true;
+    setShowMenu(true);
+  }, []);
+
   const handlePointerDown = (event: React.PointerEvent<HTMLElement>) => {
     if (disabled) return;
 
@@ -61,8 +78,7 @@ export function useAudioItemContextMenu({
     clearLongPressTimer();
     didOpenMenuRef.current = false;
     longPressTimerRef.current = window.setTimeout(() => {
-      didOpenMenuRef.current = true;
-      setShowMenu(true);
+      openMenu();
     }, 500);
   };
 
@@ -85,9 +101,7 @@ export function useAudioItemContextMenu({
     if (disabled) return;
 
     event.preventDefault();
-    clearLongPressTimer();
-    didOpenMenuRef.current = true;
-    setShowMenu(true);
+    openMenu();
   };
 
   useEffect(() => {
@@ -146,23 +160,69 @@ export function useAudioItemContextMenu({
 
     const updateDesktopOverlayPosition = () => {
       const rect = rootRef.current?.getBoundingClientRect();
+      const menuRect = menuRef.current?.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const viewportPadding = 16;
+      const gap = 8;
 
-      if (!rect || window.innerWidth < 768) {
+      if (!rect) {
         setDesktopOverlayPosition(null);
         return;
       }
+
+      if (viewportWidth < 768) {
+        const estimatedMenuHeight = menuRect?.height ?? 360;
+        const estimatedCardHeight = rect.height || 208;
+        const overlayHeight = estimatedCardHeight + gap + estimatedMenuHeight;
+        const desiredTop = rect.top - 24;
+        const maxTop = Math.max(
+          viewportPadding,
+          viewportHeight - overlayHeight - viewportPadding
+        );
+
+        setMenuPlacement((prev) => ({
+          ...prev,
+          mobileTop: Math.max(viewportPadding, Math.min(desiredTop, maxTop)),
+        }));
+        setDesktopOverlayPosition(null);
+        return;
+      }
+
+      const menuWidth = menuRect?.width ?? 320;
+      const menuHeight = menuRect?.height ?? 320;
+      const canPlaceLeft = rect.left - gap - menuWidth >= viewportPadding;
+      const canPlaceRight =
+        rect.right + gap + menuWidth <= viewportWidth - viewportPadding;
+      const desktopSide = canPlaceLeft || !canPlaceRight ? "left" : "right";
+
+      const desiredMenuTop = rect.top + rect.height / 2 - menuHeight / 2;
+      const maxMenuTop = Math.max(
+        viewportPadding,
+        viewportHeight - menuHeight - viewportPadding
+      );
+      const clampedMenuTop = Math.max(
+        viewportPadding,
+        Math.min(desiredMenuTop, maxMenuTop)
+      );
 
       setDesktopOverlayPosition({
         left: rect.left,
         top: rect.top,
       });
+      setMenuPlacement({
+        desktopSide,
+        desktopMenuTop: clampedMenuTop - rect.top,
+        mobileTop: 112,
+      });
     };
 
-    updateDesktopOverlayPosition();
+    const rafId = window.requestAnimationFrame(updateDesktopOverlayPosition);
     window.addEventListener("resize", updateDesktopOverlayPosition);
     document.addEventListener("scroll", updateDesktopOverlayPosition, true);
 
     return () => {
+      window.cancelAnimationFrame(rafId);
       window.removeEventListener("resize", updateDesktopOverlayPosition);
       document.removeEventListener(
         "scroll",
@@ -177,9 +237,11 @@ export function useAudioItemContextMenu({
     showMenu,
     isDesktop,
     desktopOverlayPosition,
+    menuPlacement,
     rootRef,
     menuRef,
     overlayRef,
+    openMenu,
     closeMenu,
     handlePointerDown,
     handlePointerUp,
@@ -195,6 +257,7 @@ type AudioItemContextMenuProps = {
   cardLayoutId?: string;
   isDesktop: boolean;
   desktopOverlayPosition: { left: number; top: number } | null;
+  menuPlacement: MenuPlacement;
   menuRef: React.RefObject<HTMLDivElement | null>;
   overlayRef: React.RefObject<HTMLDivElement | null>;
   onClose: () => void;
@@ -208,6 +271,7 @@ export function AudioItemContextMenu({
   cardLayoutId,
   isDesktop,
   desktopOverlayPosition,
+  menuPlacement,
   menuRef,
   overlayRef,
   onClose,
@@ -265,8 +329,8 @@ export function AudioItemContextMenu({
           className={cn(
             "fixed inset-0 z-[120]",
             isDesktop
-              ? "bg-black/15 backdrop-blur-[2px]"
-              : "bg-black/45 backdrop-blur-[4px]"
+              ? "bg-black/45 backdrop-blur-sm"
+              : "bg-black/45 backdrop-blur-sm"
           )}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -280,12 +344,16 @@ export function AudioItemContextMenu({
               isDesktop ? "" : "left-1/2 top-28 -translate-x-1/2"
             )}
             style={
-              isDesktop && desktopOverlayPosition
-                ? {
-                    left: desktopOverlayPosition.left,
-                    top: desktopOverlayPosition.top,
+              isDesktop
+                ? desktopOverlayPosition
+                  ? {
+                      left: desktopOverlayPosition.left,
+                      top: desktopOverlayPosition.top,
+                    }
+                  : undefined
+                : {
+                    top: menuPlacement.mobileTop,
                   }
-                : undefined
             }
           >
             <motion.div
@@ -298,20 +366,20 @@ export function AudioItemContextMenu({
               }}
               className="rounded-xl bg-zinc-300 dark:bg-zinc-900"
             >
-              <div className="w-44 space-y-1 rounded-xl p-1.5 text-zinc-50 md:w-52">
+              <div className="w-52 space-y-1 rounded-xl p-1.5 text-zinc-50">
                 <div className="relative">
                   {music.cover ? (
                     <BorderPro roundedSize="rounded-lg">
                       <img
                         src={music.cover}
                         alt="cover"
-                        className="mx-auto size-44 shrink-0 cursor-pointer justify-center rounded-lg object-cover md:size-52"
+                        className="mx-auto size-52 shrink-0 cursor-pointer justify-center rounded-lg object-cover"
                         onClick={handlePlayClick}
                       />
                     </BorderPro>
                   ) : (
                     <div
-                      className="size-40 cursor-pointer rounded-xl bg-zinc-800 md:size-52"
+                      className="size-52 cursor-pointer rounded-xl bg-zinc-800"
                       onClick={handlePlayClick}
                     />
                   )}
@@ -333,95 +401,119 @@ export function AudioItemContextMenu({
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: isDesktop ? 10 : 0, y: isDesktop ? 0 : 8 }}
+              initial={{
+                opacity: 0,
+                x: isDesktop ? 10 : 0,
+                y: isDesktop ? 0 : 8,
+              }}
               animate={{ opacity: 1, x: 0, y: 0 }}
               exit={{ opacity: 0, x: isDesktop ? 6 : 0, y: isDesktop ? 0 : 6 }}
-              transition={{ duration: isDesktop ? 0.14 : 0.22, ease: "easeOut" }}
+              transition={{
+                duration: isDesktop ? 0.14 : 0.22,
+                ease: "easeOut",
+              }}
               ref={menuRef}
               className={cn(
                 "z-[130] max-h-[calc(100dvh-320px)] w-full overflow-y-auto rounded-3xl border border-white/15 bg-white/70 px-4 py-2 pb-4 text-black shadow-2xl backdrop-blur-md dark:bg-zinc-950/70 dark:text-white",
                 isDesktop
-                  ? "absolute right-[calc(100%+8px)] top-1/2 mt-0 -translate-y-1/2"
+                  ? menuPlacement.desktopSide === "left"
+                    ? "absolute right-[calc(100%+8px)] mt-0"
+                    : "absolute left-[calc(100%+8px)] mt-0"
                   : "mt-2"
               )}
+              style={
+                isDesktop
+                  ? {
+                      top: menuPlacement.desktopMenuTop,
+                    }
+                  : undefined
+              }
             >
-          <div className="flex justify-between gap-8 border-b border-black/10 px-2 py-2 pb-4 dark:border-white/10">
-            <button
-              type="button"
-              className="flex flex-col items-center justify-center gap-0.5"
-              onClick={handleAddToQueue}
-            >
-              <PlusCircle size={18} weight="fill" />
-              <div className="text-xs font-medium">Add</div>
-            </button>
+              <div className="flex items-end justify-between gap-8 border-b border-black/10 px-1 py-4 dark:border-white/10">
+                <button
+                  type="button"
+                  className="flex flex-col items-center justify-center"
+                  onClick={handleAddToQueue}
+                >
+                  <PlusCircle size={28} weight="fill" />
 
-            <div className="flex flex-col items-center justify-center gap-0.5">
-              <LibraryTrackButton music={music} userId={userId} size="sm" />
-              <div className="text-xs font-medium">Favorite</div>
-            </div>
+                  <div className="text-xs font-medium">Add</div>
+                </button>
 
-            <button
-              type="button"
-              className="flex flex-col items-center justify-center gap-0.5"
-              onClick={handleShare}
-            >
-              <Export size={18} weight="fill" />
-              <div className="text-xs font-medium">Share</div>
-            </button>
-          </div>
+                <div className="flex flex-col items-center justify-center gap-0.5">
+                  <LibraryTrackButton music={music} userId={userId} size="sm" />
 
-          <div className="space-y-4 border-b border-black/10 py-2 dark:border-white/10">
-            <button
-              type="button"
-              className="flex w-full items-center gap-2 rounded-xl text-left text-sm hover:bg-zinc-800/5 dark:hover:bg-white/5"
-              onClick={handlePlayClick}
-            >
-              <Play size={16} weight="regular" />
-              <span className="font-medium">Play</span>
-            </button>
+                  <div className="text-xs font-medium">Favorite</div>
+                </div>
 
-            <button
-              type="button"
-              className="flex w-full items-center gap-2 rounded-xl text-left text-sm hover:bg-zinc-800/5 dark:hover:bg-white/5"
-              onClick={handleShuffle}
-            >
-              <Shuffle size={16} weight="regular" />
-              <span className="font-medium">Shuffle</span>
-            </button>
-          </div>
+                <button
+                  type="button"
+                  className="flex flex-col items-center justify-center"
+                  onClick={handleShare}
+                >
+                  <Export size={28} weight="fill" />
 
-          <div className="border-b border-black/10 py-4 dark:border-white/10">
-            <button
-              type="button"
-              className="flex w-full items-center gap-2 rounded-xl text-left text-sm hover:bg-zinc-800/5 dark:hover:bg-white/5"
-              onClick={handlePlaceholderAction}
-            >
-              <ListPlus size={16} weight="regular" />
-              <span className="font-medium">Add to a Playlist</span>
-            </button>
-          </div>
+                  <div className="text-xs font-medium">Share</div>
+                </button>
+              </div>
 
-          <div className="border-b border-black/10 py-4 dark:border-white/10">
-            <button
-              type="button"
-              className="flex w-full items-center gap-2 rounded-xl text-left text-sm hover:bg-zinc-800/5 dark:hover:bg-white/5"
-              onClick={handleAddToQueue}
-            >
-              <Queue size={16} weight="regular" />
-              <span className="font-medium">Add to Queue</span>
-            </button>
-          </div>
+              <div className="space-y-2 border-b border-black/10 py-1 dark:border-white/10">
+                <button
+                  type="button"
+                  className="flex w-full items-center gap-2 rounded-xl p-1 text-left text-sm hover:bg-zinc-800/5 dark:hover:bg-white/5"
+                  onClick={handlePlayClick}
+                >
+                  <Play size={16} weight="regular" />
 
-          <div className="pt-4">
-            <button
-              type="button"
-              className="flex w-full items-center gap-2 rounded-xl text-left text-sm hover:bg-zinc-800/5 dark:hover:bg-white/5"
-              onClick={handlePlaceholderAction}
-            >
-              <ThumbsDown size={16} weight="regular" />
-              <span className="font-medium">Suggest Less</span>
-            </button>
-          </div>
+                  <span className="font-medium">Play</span>
+                </button>
+
+                <button
+                  type="button"
+                  className="flex w-full items-center gap-2 rounded-xl p-1 text-left text-sm hover:bg-zinc-800/5 dark:hover:bg-white/5"
+                  onClick={handleShuffle}
+                >
+                  <Shuffle size={16} weight="regular" />
+
+                  <span className="font-medium">Shuffle</span>
+                </button>
+              </div>
+
+              <div className="border-b border-black/10 py-2 dark:border-white/10">
+                <button
+                  type="button"
+                  className="flex w-full items-center gap-2 rounded-xl p-1 text-left text-sm hover:bg-zinc-800/5 dark:hover:bg-white/5"
+                  onClick={handlePlaceholderAction}
+                >
+                  <ListPlus size={16} weight="regular" />
+
+                  <span className="font-medium">Add to a Playlist</span>
+                </button>
+              </div>
+
+              <div className="border-b border-black/10 py-2 dark:border-white/10">
+                <button
+                  type="button"
+                  className="flex w-full items-center gap-2 rounded-xl p-1 text-left text-sm hover:bg-zinc-800/5 dark:hover:bg-white/5"
+                  onClick={handleAddToQueue}
+                >
+                  <Queue size={16} weight="regular" />
+
+                  <span className="font-medium">Add to Queue</span>
+                </button>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="button"
+                  className="flex w-full items-center gap-2 rounded-xl p-1 text-left text-sm hover:bg-zinc-800/5 dark:hover:bg-white/5"
+                  onClick={handlePlaceholderAction}
+                >
+                  <ThumbsDown size={16} weight="regular" />
+
+                  <span className="font-medium">Suggest Less</span>
+                </button>
+              </div>
             </motion.div>
           </div>
         </motion.div>

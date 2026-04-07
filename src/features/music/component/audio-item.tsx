@@ -53,6 +53,7 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
           cardLayoutId={menu.cardLayoutId}
           isDesktop={menu.isDesktop}
           desktopOverlayPosition={menu.desktopOverlayPosition}
+          menuPlacement={menu.menuPlacement}
           menuRef={menu.menuRef}
           overlayRef={menu.overlayRef}
           onClose={menu.closeMenu}
@@ -107,7 +108,7 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2, ease: "easeIn" }}
-                    className="pointer-events-none absolute inset-0 z-50 flex h-full w-full items-center justify-center bg-zinc-900/60"
+                    className="pointer-events-none absolute inset-0 z-50 flex h-full w-full items-center justify-center rounded-md bg-zinc-900/60"
                   >
                     <DynamicIslandWave
                       isPlay={isPlaying}
