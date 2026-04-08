@@ -1,8 +1,6 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useTranslations } from "next-intl";
-import { useParams } from "next/navigation";
-import Link from "next/link";
 import { HeaderMusicPage } from "./header-music-page";
 import { Button } from "@/components/ui/button";
 import { MotionHeaderMusic } from "./component/motion-header-music";
@@ -10,16 +8,21 @@ import { ISingerItem } from "./type/singer";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { useUser } from "@/hooks/use-user";
 import { usePermissions } from "@/hooks/use-permissions";
+import { useMusicAccessRedirect } from "@/hooks/use-music-access-redirect";
 import { MenuBar } from "./menu-bar";
 
 export default function AddMusicForm() {
   const t = useTranslations("musicForm.addMusic");
-  const params = useParams();
-  const locale = (params?.locale as string) || "vi";
+
   const { user } = useUser();
-  const { role, canAddMusic } = usePermissions();
+  const { role, canAddMusic, isLoading: isPermissionsLoading } =
+    usePermissions();
   const isAdmin = role === "admin";
   const isRegularUser = role === "user";
+  const isAccessBlocked = useMusicAccessRedirect(
+    isRegularUser && !canAddMusic,
+    isPermissionsLoading
+  );
 
   const [form, setForm] = useState({
     title: "",
@@ -48,6 +51,8 @@ export default function AddMusicForm() {
   const [userMusics, setUserMusics] = useState<IMusic[]>([]);
   const [adminMusics, setAdminMusics] = useState<IMusic[]>([]);
   const [selectedMusicId, setSelectedMusicId] = useState<string>("");
+  const [manageTitleQuery, setManageTitleQuery] = useState("");
+  const [manageSingerQuery, setManageSingerQuery] = useState("");
   const [hasManualTopic, setHasManualTopic] = useState(false);
   const [isSuggestingTopic, setIsSuggestingTopic] = useState(false);
   const resetFormState = useCallback(() => {
@@ -73,6 +78,20 @@ export default function AddMusicForm() {
     setHasManualTopic(false);
     setIsSuggestingTopic(false);
   }, []);
+
+  const getAuthHeaders = useCallback(
+    (includeJsonContentType = false) => {
+      const headers: Record<string, string> = {};
+      if (includeJsonContentType) {
+        headers["Content-Type"] = "application/json";
+      }
+      if (user?.id) {
+        headers.Authorization = `Bearer ${user.id}`;
+      }
+      return headers;
+    },
+    [user?.id]
+  );
 
   const fetchPresignedUrl = useCallback(async (file: File) => {
     const presignedRes = await fetch(
@@ -192,7 +211,7 @@ export default function AddMusicForm() {
       try {
         const profileRes = await fetch("/api/singers/create-artist-profile", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: getAuthHeaders(true),
           body: JSON.stringify({
             singer: user?.displayName || user?.username || "Unknown Artist",
             cover: user?.avatarUrl || form.cover || "",
@@ -338,7 +357,7 @@ export default function AddMusicForm() {
 
         res = await fetch(`/api/singers/${targetSingerId}/musics`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: getAuthHeaders(true),
           body: JSON.stringify(bodyData),
         });
         data = await res.json();
@@ -423,6 +442,38 @@ export default function AddMusicForm() {
       fetchUserArtistProfile();
     }
   }, [isRegularUser, user?.id, fetchUserArtistProfile]);
+
+  const filteredAdminMusics = useMemo(() => {
+    const titleQuery = manageTitleQuery.trim().toLowerCase();
+    const singerQuery = manageSingerQuery.trim().toLowerCase();
+
+    return adminMusics.filter((music) => {
+      const title = String(music.title || "").toLowerCase();
+      const singer = String((music as { singer?: unknown }).singer || "")
+        .trim()
+        .toLowerCase();
+
+      if (titleQuery && !title.includes(titleQuery)) {
+        return false;
+      }
+
+      if (singerQuery && !singer.includes(singerQuery)) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [adminMusics, manageSingerQuery, manageTitleQuery]);
+
+  useEffect(() => {
+    if (!selectedMusicId) return;
+    const stillVisible = filteredAdminMusics.some(
+      (music) => (music._id || music.id || "") === selectedMusicId
+    );
+    if (!stillVisible) {
+      setSelectedMusicId("");
+    }
+  }, [filteredAdminMusics, selectedMusicId]);
 
   // Auto-suggest topic from song title
   useEffect(() => {
@@ -541,7 +592,7 @@ export default function AddMusicForm() {
           `/api/singers/${singerId}/musics/${selectedMusicId}`,
           {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: getAuthHeaders(true),
             body: JSON.stringify({
               ...form,
               audio: audioUrl,
@@ -603,6 +654,7 @@ export default function AddMusicForm() {
           `/api/singers/${singerId}/musics/${selectedMusicId}`,
           {
             method: "DELETE",
+            headers: getAuthHeaders(),
           }
         );
       }
@@ -685,6 +737,10 @@ export default function AddMusicForm() {
     }
   };
 
+  if (isAccessBlocked) {
+    return null;
+  }
+
   return (
     <div>
       <MotionHeaderMusic name={t("title")} />
@@ -696,21 +752,6 @@ export default function AddMusicForm() {
       <MenuBar />
 
       <div className="">
-        {isRegularUser && !canAddMusic ? (
-          <div className="left-6 z-30 mx-4 space-y-4 rounded-3xl border border-amber-300 bg-amber-50/80 p-6 font-apple dark:border-amber-700 dark:bg-amber-950/30 md:ml-[270px]">
-            <div className="text-center text-xl font-bold text-amber-800 dark:text-amber-200">
-              Cần gói Premium Creator
-            </div>
-            <p className="text-center text-sm text-amber-700 dark:text-amber-300">
-              Chỉ gói Premium Creator mới có thể thêm bài hát và tạo kênh ca sĩ riêng. Nâng cấp để sử dụng tính năng này.
-            </p>
-            <div className="flex justify-center">
-              <Button asChild className="rounded-xl bg-amber-600 hover:bg-amber-700">
-                <Link href={`/${locale}/music/premium`}>Nâng cấp Premium Creator</Link>
-              </Button>
-            </div>
-          </div>
-        ) : (
         <form
           className="left-6 z-30 mx-4 space-y-4 rounded-3xl border border-zinc-300 p-4 font-apple backdrop-blur-2xl dark:border-zinc-700 dark:to-white/10 md:ml-[270px]"
           onSubmit={handleSubmit}
@@ -725,13 +766,9 @@ export default function AddMusicForm() {
               </div>
 
               <div className="space-y-1">
-                <div>
-                  • {t("chooseExistingSinger")}
-                </div>
+                <div>• {t("chooseExistingSinger")}</div>
 
-                <div>
-                  • {t("enterNewSinger")}
-                </div>
+                <div>• {t("enterNewSinger")}</div>
               </div>
             </div>
           )}
@@ -745,7 +782,8 @@ export default function AddMusicForm() {
               ) : userArtistProfile ? (
                 <div className="space-y-1">
                   <div>
-                    <strong>{t("singerName")}</strong> {userArtistProfile.singer}
+                    <strong>{t("singerName")}</strong>{" "}
+                    {userArtistProfile.singer}
                   </div>
 
                   {userArtistProfile.cover && (
@@ -770,9 +808,26 @@ export default function AddMusicForm() {
 
           {isAdmin && adminMusics.length > 0 && (
             <div className="rounded-xl border border-blue-400/30 bg-blue-50 p-3 dark:border-blue-300/30 dark:bg-blue-900/20">
-              <label className="mb-2 block text-sm font-semibold text-blue-700 dark:text-blue-300">
+              <label className="mb-2 block text-sm font-semibold text-blue-800 dark:text-blue-300">
                 {t("selectSongToEdit")}
               </label>
+
+              <div className="mb-3 grid gap-2 md:grid-cols-2">
+                <input
+                  value={manageTitleQuery}
+                  onChange={(e) => setManageTitleQuery(e.target.value)}
+                  placeholder="Filter by song title"
+                  disabled={isLoading}
+                  className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+                />
+                <input
+                  value={manageSingerQuery}
+                  onChange={(e) => setManageSingerQuery(e.target.value)}
+                  placeholder="Filter by singer"
+                  disabled={isLoading}
+                  className="rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+                />
+              </div>
               <select
                 value={selectedMusicId}
                 onChange={(e) => handleSelectMusicToManage(e.target.value)}
@@ -780,15 +835,23 @@ export default function AddMusicForm() {
                 className="w-full rounded-xl border px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
               >
                 <option value="">{t("selectASong")}</option>
-                {adminMusics.map((music) => {
+                {filteredAdminMusics.map((music) => {
                   const id = music._id || music.id || "";
                   return (
                     <option key={id} value={id}>
                       {music.title}
+                      {(music as { singer?: unknown }).singer
+                        ? ` - ${String((music as { singer?: unknown }).singer)}`
+                        : ""}
                     </option>
                   );
                 })}
               </select>
+              {filteredAdminMusics.length === 0 && (
+                <p className="mt-2 text-sm text-blue-700 dark:text-blue-300">
+                  Không có bài hát nào khớp bộ lọc.
+                </p>
+              )}
             </div>
           )}
 
@@ -1151,7 +1214,6 @@ export default function AddMusicForm() {
             {message && <p className="text-center font-semibold">{message}</p>}
           </div>
         </form>
-        )}
       </div>
     </div>
   );

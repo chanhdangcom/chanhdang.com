@@ -12,15 +12,25 @@ import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useAudio } from "@/components/music-provider";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { BackButton } from "@/features/music/component/back-button";
+import { usePermissions } from "@/hooks/use-permissions";
+import { useMusicAccessRedirect } from "@/hooks/use-music-access-redirect";
 
 export default function LibraryFavoriteSongsPage() {
   const t = useTranslations("musicDetail.favorites");
   const { user } = useUser();
+  const { canUseLibrary, isLoading: isPermissionsLoading } = usePermissions();
+  const isAccessBlocked = useMusicAccessRedirect(
+    !canUseLibrary,
+    isPermissionsLoading
+  );
   const { handlePlayAudio } = useAudio();
   const [tracks, setTracks] = useState<IMusic[]>([]);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    if (!canUseLibrary) {
+      return;
+    }
     if (!user?.id) {
       return;
     }
@@ -40,7 +50,7 @@ export default function LibraryFavoriteSongsPage() {
     };
 
     void fetchTracks();
-  }, [user?.id]);
+  }, [canUseLibrary, user?.id]);
 
   const handlePlayFirstAudio = () => {
     if (!tracks.length) return;
@@ -85,6 +95,10 @@ export default function LibraryFavoriteSongsPage() {
     mediaQuery.addListener(update);
     return () => mediaQuery.removeListener(update);
   }, []);
+
+  if (isAccessBlocked) {
+    return null;
+  }
 
   return (
     <div className="font-apple">

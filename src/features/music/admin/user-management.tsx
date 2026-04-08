@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ShieldCheck, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsAdmin } from "@/hooks/use-permissions";
@@ -18,6 +18,8 @@ interface UserData {
   isPremium?: boolean;
   isPremiumCreator?: boolean;
   createdAt?: string;
+  firstLoginAt?: string;
+  lastLoginAt?: string;
 }
 
 export function UserManagement() {
@@ -27,10 +29,31 @@ export function UserManagement() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [updating, setUpdating] = useState<string | null>(null);
+  const [emailQuery, setEmailQuery] = useState("");
+  const [dateField, setDateField] = useState<"createdAt" | "firstLoginAt">(
+    "createdAt"
+  );
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [sortBy, setSortBy] = useState<
+    | "createdAt-desc"
+    | "createdAt-asc"
+    | "firstLoginAt-desc"
+    | "firstLoginAt-asc"
+    | "email-asc"
+    | "email-desc"
+  >("createdAt-desc");
   const { isAdmin, isLoading: isAuthLoading } = useIsAdmin();
   const { user: currentUser } = useUser();
   const { refresh } = usePremium();
   const router = useRouter();
+
+  const formatDate = (value?: string) => {
+    if (!value) return "Chưa có";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "Chưa có";
+    return date.toLocaleString("vi-VN");
+  };
 
   useEffect(() => {
     if (isAuthLoading) return;
@@ -85,6 +108,62 @@ export function UserManagement() {
     }
   };
 
+  const filteredUsers = useMemo(() => {
+    const query = emailQuery.trim().toLowerCase();
+    const fromDate = dateFrom ? new Date(`${dateFrom}T00:00:00`) : null;
+    const toDate = dateTo ? new Date(`${dateTo}T23:59:59.999`) : null;
+
+    const nextUsers = users.filter((user) => {
+      const email = (user.email || "").toLowerCase();
+      if (query && !email.includes(query)) {
+        return false;
+      }
+
+      const rawDate = user[dateField];
+      if (fromDate || toDate) {
+        if (!rawDate) {
+          return false;
+        }
+        const userDate = new Date(rawDate);
+        if (Number.isNaN(userDate.getTime())) {
+          return false;
+        }
+        if (fromDate && userDate < fromDate) {
+          return false;
+        }
+        if (toDate && userDate > toDate) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+
+    nextUsers.sort((a, b) => {
+      if (sortBy === "email-asc" || sortBy === "email-desc") {
+        const compare =
+          (a.email || a.username || "").localeCompare(
+            b.email || b.username || "",
+            "vi",
+            { sensitivity: "base" }
+          ) ||
+          a.username.localeCompare(b.username, "vi", { sensitivity: "base" });
+        return sortBy === "email-asc" ? compare : -compare;
+      }
+
+      const [field, direction] = sortBy.split("-") as [
+        "createdAt" | "firstLoginAt",
+        "asc" | "desc",
+      ];
+      const aValue = a[field] ? new Date(a[field] as string).getTime() : 0;
+      const bValue = b[field] ? new Date(b[field] as string).getTime() : 0;
+      const compare = aValue - bValue;
+      return direction === "asc" ? compare : -compare;
+    });
+
+    return nextUsers;
+  }, [dateField, dateFrom, dateTo, emailQuery, sortBy, users]);
+
   if (isAuthLoading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -119,13 +198,82 @@ export function UserManagement() {
         <div className="border-b border-zinc-200 bg-zinc-100 p-4 dark:border-zinc-800 dark:bg-zinc-900">
           <h2 className="text-xl font-semibold">Management Users</h2>
 
-          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            Tổng số users: {users.length}
+          <p className="mt-1 text-sm font-medium text-zinc-600 dark:text-zinc-400">
+            {filteredUsers.length} / {users.length} users
           </p>
+
+          <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+            <input
+              value={emailQuery}
+              onChange={(event) => setEmailQuery(event.target.value)}
+              placeholder="Search by email"
+              className="rounded-xl border bg-white px-3 py-2 text-sm shadow-sm outline-none ring-0 transition placeholder:text-black focus:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-950"
+            />
+
+            <select
+              value={dateField}
+              onChange={(event) =>
+                setDateField(event.target.value as "createdAt" | "firstLoginAt")
+              }
+              className="rounded-xl border bg-white px-3 py-2 text-sm shadow-sm outline-none ring-0 transition focus:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-950"
+            >
+              <option value="createdAt">Filter by registration date</option>
+
+              <option value="firstLoginAt">Filter by first login date</option>
+            </select>
+
+            <input
+              type="date"
+              value={dateFrom}
+              onChange={(event) => setDateFrom(event.target.value)}
+              className="rounded-xl border bg-white px-3 py-2 text-sm shadow-sm outline-none ring-0 transition focus:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-950"
+            />
+
+            <input
+              type="date"
+              value={dateTo}
+              onChange={(event) => setDateTo(event.target.value)}
+              className="rounded-xl border bg-white px-3 py-2 text-sm shadow-sm outline-none ring-0 transition focus:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-950"
+            />
+
+            <select
+              value={sortBy}
+              onChange={(event) =>
+                setSortBy(
+                  event.target.value as
+                    | "createdAt-desc"
+                    | "createdAt-asc"
+                    | "firstLoginAt-desc"
+                    | "firstLoginAt-asc"
+                    | "email-asc"
+                    | "email-desc"
+                )
+              }
+              className="rounded-xl border bg-white px-3 py-2 text-sm shadow-sm outline-none ring-0 transition focus:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-950"
+            >
+              <option value="createdAt-desc">Newest registration</option>
+
+              <option value="createdAt-asc">Oldest registration</option>
+
+              <option value="firstLoginAt-desc">Newest first login</option>
+
+              <option value="firstLoginAt-asc">Oldest first login</option>
+
+              <option value="email-asc">Email A-Z</option>
+
+              <option value="email-desc">Email Z-A</option>
+            </select>
+          </div>
         </div>
 
         <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
-          {users.map((user) => (
+          {filteredUsers.length === 0 ? (
+            <div className="p-6 text-sm text-zinc-500 dark:text-zinc-400">
+              Không có user nào khớp với bộ lọc hiện tại.
+            </div>
+          ) : null}
+
+          {filteredUsers.map((user) => (
             <div
               key={user.id}
               className="flex items-center justify-between p-4 hover:bg-zinc-100 dark:hover:bg-zinc-800/50"
@@ -140,8 +288,17 @@ export function UserManagement() {
                   <div className="font-medium">
                     {user.displayName || user.username}
                   </div>
+
                   <div className="text-sm text-zinc-600 dark:text-zinc-400">
                     {user.email || user.username}
+                  </div>
+
+                  <div className="mt-1 text-xs text-zinc-500 dark:text-zinc-500">
+                    Đăng ký: {formatDate(user.createdAt)}
+                  </div>
+
+                  <div className="text-xs text-zinc-500 dark:text-zinc-500">
+                    Đăng nhập đầu tiên: {formatDate(user.firstLoginAt)}
                   </div>
                 </div>
               </div>

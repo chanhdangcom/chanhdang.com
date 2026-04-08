@@ -1,9 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { ISingerItem } from "./type/singer";
 import { useUser } from "@/hooks/use-user";
 import { usePermissions } from "@/hooks/use-permissions";
+import { useMusicAccessRedirect } from "@/hooks/use-music-access-redirect";
 import { Button } from "@/components/ui/button";
 import { MotionHeaderMusic } from "./component/motion-header-music";
 import { HeaderMusicPage } from "./header-music-page";
@@ -46,8 +48,16 @@ function StatusBadge({
 
 export function MyMusicManagement() {
   const { user } = useUser();
-  const { role } = usePermissions();
+  const {
+    role,
+    canAddMusic,
+    isLoading: isPermissionsLoading,
+  } = usePermissions();
   const isRegularUser = role === "user";
+  const isAccessBlocked = useMusicAccessRedirect(
+    isRegularUser && !canAddMusic,
+    isPermissionsLoading
+  );
 
   const [userArtistProfile, setUserArtistProfile] =
     useState<ISingerItem | null>(null);
@@ -56,6 +66,15 @@ export function MyMusicManagement() {
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
   const [message, setMessage] = useState("");
   const { handlePlayAudio } = useAudio();
+
+  const getAuthHeaders = useCallback(() => {
+    if (!user?.id) {
+      return undefined;
+    }
+    return {
+      Authorization: `Bearer ${user.id}`,
+    };
+  }, [user?.id]);
 
   const fetchUserArtistProfile = useCallback(async () => {
     if (!user?.id) {
@@ -66,8 +85,13 @@ export function MyMusicManagement() {
     try {
       // Lấy profile ca sĩ và danh sách bài đã gửi (pending/approved/rejected)
       const [profileRes, musicsRes] = await Promise.all([
-        fetch("/api/singers/my-profile"),
-        fetch("/api/musics?addedBy=me", { cache: "no-store" }),
+        fetch("/api/singers/my-profile", {
+          headers: getAuthHeaders(),
+        }),
+        fetch("/api/musics?addedBy=me", {
+          cache: "no-store",
+          headers: getAuthHeaders(),
+        }),
       ]);
 
       if (profileRes.ok) {
@@ -95,7 +119,7 @@ export function MyMusicManagement() {
     } finally {
       setIsLoadingProfile(false);
     }
-  }, [user?.id]);
+  }, [getAuthHeaders, user?.id]);
 
   useEffect(() => {
     if (isRegularUser && user?.id) {
@@ -103,46 +127,54 @@ export function MyMusicManagement() {
     }
   }, [isRegularUser, user?.id, fetchUserArtistProfile]);
 
-  const handleDeleteMusic = async (musicId: string) => {
-    const rawSingerId =
-      userArtistProfile?._id ||
-      userArtistProfile?.id ||
-      (musics[0] as { singerId?: unknown })?.singerId;
-    const singerId = rawSingerId ? String(rawSingerId) : null;
-    if (!singerId) {
-      setMessage("Không tìm thấy profile ca sĩ!");
-      return;
-    }
-
-    if (!confirm("Bạn có chắc muốn xóa bài hát này?")) return;
-
-    setIsLoading(true);
-    setMessage("");
-
-    try {
-      const response = await fetch(
-        `/api/singers/${singerId}/musics/${musicId}`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        setMessage("Xóa bài hát thành công!");
-        // Refresh musics list
-        await fetchUserArtistProfile();
-      } else {
-        setMessage(data.error || "Có lỗi xảy ra khi xóa!");
+  const handleDeleteMusic = useCallback(
+    async (musicId: string) => {
+      const rawSingerId =
+        userArtistProfile?._id ||
+        userArtistProfile?.id ||
+        (musics[0] as { singerId?: unknown })?.singerId;
+      const singerId = rawSingerId ? String(rawSingerId) : null;
+      if (!singerId) {
+        setMessage("Không tìm thấy profile ca sĩ!");
+        return;
       }
-    } catch (error) {
-      console.error("Error deleting music:", error);
-      setMessage("Có lỗi xảy ra khi xóa!");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+
+      if (!confirm("Bạn có chắc muốn xóa bài hát này?")) return;
+
+      setIsLoading(true);
+      setMessage("");
+
+      try {
+        const response = await fetch(
+          `/api/singers/${singerId}/musics/${musicId}`,
+          {
+            method: "DELETE",
+            headers: getAuthHeaders(),
+          }
+        );
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          setMessage("Xóa bài hát thành công!");
+          // Refresh musics list
+          await fetchUserArtistProfile();
+        } else {
+          setMessage(data.error || "Có lỗi xảy ra khi xóa!");
+        }
+      } catch (error) {
+        console.error("Error deleting music:", error);
+        setMessage("Có lỗi xảy ra khi xóa!");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [fetchUserArtistProfile, getAuthHeaders, musics, userArtistProfile]
+  );
+
+  if (isAccessBlocked) {
+    return null;
+  }
 
   if (!isRegularUser) {
     return (
@@ -181,7 +213,8 @@ export function MyMusicManagement() {
   return (
     <div>
       <MotionHeaderMusic name="Quản Lý Nhạc Của Tôi" />
-      <div className="md:ml-6">
+
+      <div className="md:ml-[270px]">
         <HeaderMusicPage name="Quản Lý Nhạc Của Tôi" />
       </div>
 
@@ -190,7 +223,7 @@ export function MyMusicManagement() {
       <div className="mx-4 md:ml-[270px] md:mr-4">
         <div className="rounded-3xl border p-4 font-apple shadow-sm dark:border-zinc-800">
           {userArtistProfile && (
-            <div className="mb-4 rounded-xl bg-green-50 p-3 text-sm text-green-800 dark:bg-green-900/20 dark:text-green-300">
+            <div className="mb-4 rounded-xl border border-green-300 bg-green-50 p-3 text-sm text-green-800 dark:bg-green-900/20 dark:text-green-300">
               <div className="mb-1 font-semibold">Thông tin ca sĩ của bạn:</div>
 
               <div>
@@ -203,7 +236,7 @@ export function MyMusicManagement() {
             </div>
           )}
 
-          <div className="mb-4 rounded-xl bg-blue-50 p-3 text-sm text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
+          <div className="mb-4 rounded-xl border border-blue-300 bg-blue-50 p-3 text-sm text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
             <div className="mb-1 font-semibold"> Trạng thái bài hát:</div>
             <div className="flex flex-wrap gap-2">
               <span className="rounded-full bg-amber-200 px-2 py-0.5 text-xs dark:bg-amber-800/50">
@@ -247,18 +280,31 @@ export function MyMusicManagement() {
                     className="rounded-xl border p-4 shadow-sm dark:border-zinc-800"
                   >
                     <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
+                      <div className="space-y-2">
                         <div className="flex items-center gap-2">
-                          <h3 className="text-lg font-semibold">
-                            {music.title}
-                          </h3>
-                          <StatusBadge status={music.status} />
+                          <img
+                            src={music.cover}
+                            alt={music.title}
+                            className="size-14 rounded-lg object-cover"
+                          />
+
+                          <div>
+                            <h3 className="text-lg font-semibold">
+                              {music.title}
+                            </h3>
+
+                            <div>
+                              <StatusBadge status={music.status} />
+                            </div>
+                          </div>
                         </div>
+
                         {music.type && (
                           <p className="text-sm text-zinc-500">
                             Thể loại: {music.type}
                           </p>
                         )}
+
                         {music.youtube && (
                           <a
                             href={music.youtube}
@@ -284,7 +330,6 @@ export function MyMusicManagement() {
                           className="flex items-center gap-1 rounded-xl shadow-sm"
                         >
                           <Play size={16} weight="fill" />
-                          Nghe
                         </Button>
 
                         <Button

@@ -113,6 +113,14 @@ export async function POST(request: Request) {
         },
       }
     );
+    await db.collection("users").updateOne(
+      { _id: user._id, firstLoginAt: { $exists: false } },
+      {
+        $set: {
+          firstLoginAt: new Date(),
+        },
+      }
+    );
 
     // Return user info (never return password)
     return NextResponse.json({

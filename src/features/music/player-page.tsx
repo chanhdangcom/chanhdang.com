@@ -1553,7 +1553,7 @@ export function PlayerPage({ setIsClick }: IProp) {
   const [singerId, setSingerId] = useState<string | null>(null);
   const [isQueueDragging, setIsQueueDragging] = useState(false);
   const [isOpenQueue, setIsOpenQueue] = useState(false);
-  const { canUseLibrary } = usePermissions();
+  const { canUseLibrary, isLoading: isPermissionsLoading } = usePermissions();
 
   const handlePlayNextFromQueue = () => {
     if (queue.length > 0) {
@@ -1631,6 +1631,9 @@ export function PlayerPage({ setIsClick }: IProp) {
 
   // Xử lý thêm/xóa khỏi Favorites
   const handleToggleFavorites = async () => {
+    if (isPermissionsLoading) {
+      return;
+    }
     if (!canUseLibrary) {
       router.push(`/${locale}/music/premium`);
       return;

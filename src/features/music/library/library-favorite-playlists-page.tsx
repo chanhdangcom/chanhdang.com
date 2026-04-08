@@ -17,6 +17,7 @@ import { MotionHeaderMusic } from "@/features/music/component/motion-header-musi
 import { BackButton } from "@/features/music/component/back-button";
 import { usePermissions } from "@/hooks/use-permissions";
 import { useUser } from "@/hooks/use-user";
+import { useMusicAccessRedirect } from "@/hooks/use-music-access-redirect";
 import { IPlaylistItem } from "../type/playlist";
 import { UserPlaylistFormDialog } from "./user-playlist-form-dialog";
 import { HeaderMusicPage } from "../header-music-page";
@@ -357,7 +358,11 @@ function OwnedPlaylistItem({
 
 export function LibraryFavoritePlaylistsPage() {
   const { user } = useUser();
-  const { canUseLibrary } = usePermissions();
+  const { canUseLibrary, isLoading: isPermissionsLoading } = usePermissions();
+  const isAccessBlocked = useMusicAccessRedirect(
+    !canUseLibrary,
+    isPermissionsLoading
+  );
   const params = useParams();
   const locale = (params?.locale as string) || "en";
   const [favoritePlaylists, setFavoritePlaylists] = useState<
@@ -506,6 +511,10 @@ export function LibraryFavoritePlaylistsPage() {
     </div>
   );
 
+  if (isAccessBlocked) {
+    return null;
+  }
+
   return (
     <div className="font-apple">
       <MenuBar />
@@ -519,17 +528,7 @@ export function LibraryFavoritePlaylistsPage() {
       </div>
 
       <div className="mx-4 mt-16 md:mx-8 md:ml-[270px] md:mt-0">
-        {!canUseLibrary ? (
-          <div className="py-8 text-center text-zinc-500">
-            You need Premium to use your playlist library.
-            <Link
-              href={`/${locale}/music/premium`}
-              className="ml-1 font-semibold text-amber-700 underline"
-            >
-              Upgrade now
-            </Link>
-          </div>
-        ) : isLoading ? (
+        {isLoading ? (
           <div className="py-8 text-center text-zinc-500">Loading...</div>
         ) : (
           <div className="space-y-4">

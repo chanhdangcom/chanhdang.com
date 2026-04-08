@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ISingerItem } from "./type/singer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,12 +19,27 @@ export function SingerManagement() {
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [isUploadingCover, setIsUploadingCover] = useState(false);
+  const [coverPreviewUrl, setCoverPreviewUrl] = useState("");
 
   // Form states
   const [formData, setFormData] = useState({
     singer: "",
     cover: "",
   });
+
+  useEffect(() => {
+    if (!coverFile) {
+      setCoverPreviewUrl(formData.cover || "");
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(coverFile);
+    setCoverPreviewUrl(previewUrl);
+
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [coverFile, formData.cover]);
 
   useEffect(() => {
     fetchSingers();
@@ -42,17 +57,57 @@ export function SingerManagement() {
     }
   };
 
+  const fetchPresignedAvatarUrl = useCallback(async (file: File) => {
+    const response = await fetch(
+      `/api/upload-avatar?fileName=${encodeURIComponent(
+        file.name
+      )}&contentType=${encodeURIComponent(file.type || "application/octet-stream")}`
+    );
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || "Không lấy được URL upload ảnh");
+    }
+    const data = await response.json();
+    return data as { presignedUrl: string; publicUrl: string };
+  }, []);
+
+  const uploadCoverToCloud = useCallback(
+    async (file: File) => {
+      const { presignedUrl, publicUrl } = await fetchPresignedAvatarUrl(file);
+      const uploadResponse = await fetch(presignedUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type || "application/octet-stream",
+        },
+        body: file,
+      });
+      if (!uploadResponse.ok) {
+        throw new Error("Upload ảnh ca sĩ thất bại");
+      }
+      return publicUrl;
+    },
+    [fetchPresignedAvatarUrl]
+  );
+
   const handleAddSinger = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      setIsUploadingCover(true);
+      const coverUrl = coverFile
+        ? await uploadCoverToCloud(coverFile)
+        : formData.cover;
       const response = await fetch("/api/singers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          cover: coverUrl,
+        }),
       });
 
       if (response.ok) {
         setFormData({ singer: "", cover: "" });
+        setCoverFile(null);
         setShowAddForm(false);
         fetchSingers();
       } else {
@@ -62,20 +117,30 @@ export function SingerManagement() {
     } catch (error) {
       console.error("Error adding singer:", error);
       alert("Failed to add singer");
+    } finally {
+      setIsUploadingCover(false);
     }
   };
 
   const handleUpdateSinger = async (id: string) => {
     try {
+      setIsUploadingCover(true);
+      const coverUrl = coverFile
+        ? await uploadCoverToCloud(coverFile)
+        : formData.cover;
       const response = await fetch(`/api/singers/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          cover: coverUrl,
+        }),
       });
 
       if (response.ok) {
         setEditingId(null);
         setFormData({ singer: "", cover: "" });
+        setCoverFile(null);
         fetchSingers();
       } else {
         const error = await response.json();
@@ -84,6 +149,8 @@ export function SingerManagement() {
     } catch (error) {
       console.error("Error updating singer:", error);
       alert("Failed to update singer");
+    } finally {
+      setIsUploadingCover(false);
     }
   };
 
@@ -109,6 +176,7 @@ export function SingerManagement() {
 
   const startEdit = (singer: ISingerItem) => {
     setEditingId(singer._id || singer.id || null);
+    setCoverFile(null);
     setFormData({
       singer: singer.singer,
       cover: singer.cover,
@@ -117,6 +185,13 @@ export function SingerManagement() {
 
   const cancelEdit = () => {
     setEditingId(null);
+    setCoverFile(null);
+    setFormData({ singer: "", cover: "" });
+  };
+
+  const handleCloseAddForm = () => {
+    setShowAddForm(false);
+    setCoverFile(null);
     setFormData({ singer: "", cover: "" });
   };
 
@@ -181,17 +256,23 @@ export function SingerManagement() {
                             className="rounded-xl border bg-white px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
                           />
 
-                          <Input
-                            value={formData.cover}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                cover: e.target.value,
-                              })
-                            }
-                            placeholder="URL ảnh bìa"
-                            className="rounded-xl border bg-white px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
-                          />
+                          <div className="space-y-2">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) =>
+                                setCoverFile(e.target.files?.[0] ?? null)
+                              }
+                              disabled={isUploadingCover}
+                              className="w-full rounded-xl border bg-white px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+                            />
+
+                            {coverFile ? (
+                              <div className="text-sm text-green-600">
+                                Đã chọn ảnh mới: {coverFile.name}
+                              </div>
+                            ) : null}
+                          </div>
                         </div>
                       ) : (
                         <div>
@@ -210,6 +291,7 @@ export function SingerManagement() {
                             onClick={() =>
                               handleUpdateSinger(singer._id || singer.id || "")
                             }
+                            disabled={isUploadingCover}
                             className="flex items-center gap-1 rounded-full border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
                           >
                             <FloppyDisk
@@ -308,24 +390,41 @@ export function SingerManagement() {
 
               <div className="space-y-2">
                 <label htmlFor="cover" className="text-sm font-medium">
-                  URL Ảnh Bìa
+                  Ảnh Bìa
                 </label>
 
-                <Input
+                <input
                   id="cover"
-                  value={formData.cover}
-                  onChange={(e) =>
-                    setFormData({ ...formData, cover: e.target.value })
-                  }
-                  placeholder="https://example.com/avatar.jpg"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setCoverFile(e.target.files?.[0] ?? null)}
                   required
-                  className="rounded-xl border bg-white px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
+                  disabled={isUploadingCover}
+                  className="w-full rounded-xl border bg-white px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-950"
                 />
+
+                {coverFile ? (
+                  <div className="text-sm text-green-600">
+                    Đã chọn ảnh: {coverFile.name}
+                  </div>
+                ) : null}
+
+                {coverPreviewUrl ? (
+                  <div className="pt-2">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={coverPreviewUrl}
+                      alt={formData.singer || "Singer cover preview"}
+                      className="size-24 rounded-2xl object-cover"
+                    />
+                  </div>
+                ) : null}
               </div>
 
               <div className="flex gap-2">
                 <Button
                   type="submit"
+                  disabled={isUploadingCover}
                   className="flex items-center gap-1 rounded-xl border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-950"
                 >
                   <FloppyDisk
@@ -333,11 +432,12 @@ export function SingerManagement() {
                     weight="regular"
                     className="text-blue-500"
                   />
-                  Save
+                  {isUploadingCover ? "Uploading..." : "Save"}
                 </Button>
 
                 <Button
-                  onClick={() => setShowAddForm(false)}
+                  type="button"
+                  onClick={handleCloseAddForm}
                   className="flex items-center gap-1 rounded-xl border bg-zinc-50 p-2 text-rose-500 dark:border-zinc-800 dark:bg-zinc-950"
                 >
                   Cancel

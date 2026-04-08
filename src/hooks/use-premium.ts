@@ -13,16 +13,18 @@ const STORAGE_KEY = "music_premium_demo";
 const STORAGE_KEY_CREATOR = "music_premium_creator_demo";
 
 export function usePremium() {
-  const { user, isAuthenticated } = useUser();
+  const { user, isAuthenticated, isLoading: isUserLoading } = useUser();
   const [isPremium, setIsPremium] = useState(false);
   const [isPremiumCreator, setIsPremiumCreator] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isStatusLoading, setIsStatusLoading] = useState(true);
+  const [resolvedUserId, setResolvedUserId] = useState<string | null>(null);
 
   const refreshFromLocal = useCallback(() => {
     if (typeof window === "undefined" || !localStorage) {
       setIsPremium(false);
       setIsPremiumCreator(false);
-      setIsLoading(false);
+      setIsStatusLoading(false);
+      setResolvedUserId("__local__");
       return;
     }
     try {
@@ -32,16 +34,18 @@ export function usePremium() {
       setIsPremium(false);
       setIsPremiumCreator(false);
     } finally {
-      setIsLoading(false);
+      setIsStatusLoading(false);
+      setResolvedUserId("__local__");
     }
   }, []);
 
   const refreshFromServer = useCallback(async () => {
     try {
-      setIsLoading(true);
+      setIsStatusLoading(true);
       const res = await fetch("/api/music/premium-status", {
         method: "GET",
         cache: "no-store",
+        headers: user?.id ? { Authorization: `Bearer ${user.id}` } : undefined,
       });
       if (!res.ok) {
         refreshFromLocal();
@@ -56,17 +60,27 @@ export function usePremium() {
     } catch {
       refreshFromLocal();
     } finally {
-      setIsLoading(false);
+      setIsStatusLoading(false);
+      setResolvedUserId(user?.id ?? null);
     }
-  }, [refreshFromLocal]);
+  }, [refreshFromLocal, user?.id]);
 
   useEffect(() => {
     if (isAuthenticated && user?.id) {
+      if (resolvedUserId !== user.id) {
+        setIsStatusLoading(true);
+      }
       void refreshFromServer();
     } else {
       refreshFromLocal();
     }
-  }, [isAuthenticated, user?.id, refreshFromLocal, refreshFromServer]);
+  }, [
+    isAuthenticated,
+    refreshFromLocal,
+    refreshFromServer,
+    resolvedUserId,
+    user?.id,
+  ]);
 
   useEffect(() => {
     if (typeof window === "undefined" || !localStorage) return;
@@ -144,6 +158,11 @@ export function usePremium() {
       refreshFromLocal();
     }
   }, [isAuthenticated, user?.id, refreshFromLocal, refreshFromServer]);
+
+  const isLoading =
+    isUserLoading ||
+    isStatusLoading ||
+    (Boolean(isAuthenticated && user?.id) && resolvedUserId !== user?.id);
 
   return {
     isPremium,

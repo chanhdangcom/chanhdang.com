@@ -1,4 +1,5 @@
 import { VNPay, ProductCode, VnpLocale, HashAlgorithm } from "vnpay";
+import { MUSIC_PLAN_CONFIG } from "./music-plans";
 
 const tmnCode = process.env.VNP_TMN_CODE;
 const secureSecret = process.env.VNP_HASH_SECRET;
@@ -18,4 +19,5 @@ export const vnpay = (
 
 export { ProductCode, VnpLocale };
 
-export const PREMIUM_AMOUNT_VND = 29_000;
+export const PREMIUM_AMOUNT_VND = MUSIC_PLAN_CONFIG.premium.amount;
+export const PREMIUM_CREATOR_AMOUNT_VND = MUSIC_PLAN_CONFIG.creator.amount;

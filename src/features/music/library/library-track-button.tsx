@@ -73,7 +73,7 @@ export function LibraryTrackButton({
 }: LibraryTrackButtonProps) {
   const [isInLibrary, setIsInLibrary] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { canUseLibrary } = usePermissions();
+  const { canUseLibrary, isLoading: isPermissionsLoading } = usePermissions();
   const params = useParams();
   const router = useRouter();
   const locale = (params?.locale as string) || "en";
@@ -118,6 +118,9 @@ export function LibraryTrackButton({
   }, [userId, music.id]);
 
   const handleToggleLibrary = async () => {
+    if (isPermissionsLoading) {
+      return;
+    }
     if (!canUseLibrary) {
       router.push(`/${locale}/music/premium`);
       return;
@@ -192,12 +195,12 @@ export function LibraryTrackButton({
   return (
     <button
       onClick={handleToggleLibrary}
-      disabled={isLoading}
+      disabled={isLoading || isPermissionsLoading}
       className={`group rounded-full bg-zinc-900/60 p-1 backdrop-blur-sm transition-all duration-200 hover:scale-110 ${
         isInLibrary
           ? "text-rose-500 hover:text-rose-600"
           : "text-zinc-50 hover:text-rose-500"
-      } ${isLoading ? "cursor-not-allowed opacity-50" : ""}`}
+      } ${isLoading || isPermissionsLoading ? "cursor-not-allowed opacity-50" : ""}`}
       title={isInLibrary ? "Gỡ khỏi Library" : "Thêm vào Library"}
     >
       <Star

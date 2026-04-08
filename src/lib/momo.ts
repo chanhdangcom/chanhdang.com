@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { MUSIC_PLAN_CONFIG } from "./music-plans";
 
 const PARTNER_CODE = process.env.MOMO_PARTNER_CODE;
 const ACCESS_KEY = process.env.MOMO_ACCESS_KEY;
@@ -6,7 +7,8 @@ const SECRET_KEY = process.env.MOMO_SECRET_KEY;
 const MOMO_URI =
   process.env.MOMO_URI ?? "https://test-payment.momo.vn/v2/gateway/api/create";
 
-export const PREMIUM_AMOUNT_VND = 29_000;
+export const PREMIUM_AMOUNT_VND = MUSIC_PLAN_CONFIG.premium.amount;
+export const PREMIUM_CREATOR_AMOUNT_VND = MUSIC_PLAN_CONFIG.creator.amount;
 
 export function isMomoConfigured() {
   return !!(PARTNER_CODE && ACCESS_KEY && SECRET_KEY);

@@ -4,9 +4,6 @@ import { useState, useEffect } from "react";
 import { useAudio } from "@/components/music-provider";
 import { motion } from "framer-motion";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
-import { usePermissions } from "@/hooks/use-permissions";
-import Link from "next/link";
-import { useParams } from "next/navigation";
 import { DotsThreeVertical } from "@phosphor-icons/react/dist/ssr";
 import { AudioItemOrderLayout } from "../component/audio-item-order-layout";
 
@@ -18,9 +15,6 @@ export function LibraryTracksList({ userId }: LibraryTracksListProps) {
   const [tracks, setTracks] = useState<IMusic[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { handlePlayAudio } = useAudio();
-  const { canUseLibrary } = usePermissions();
-  const params = useParams();
-  const locale = (params?.locale as string) || "en";
 
   useEffect(() => {
     if (!userId) {
@@ -49,22 +43,6 @@ export function LibraryTracksList({ userId }: LibraryTracksListProps) {
 
     fetchLibraryTracks();
   }, [userId]);
-
-  if (!canUseLibrary) {
-    return (
-      <div className="py-8 text-center">
-        <p className="text-gray-500">
-          Bạn cần gói Premium để sử dụng Library bài hát.{" "}
-          <Link
-            href={`/${locale}/music/premium`}
-            className="font-semibold text-amber-700 underline"
-          >
-            Nâng cấp ngay
-          </Link>
-        </p>
-      </div>
-    );
-  }
 
   if (isLoading) {
     return (

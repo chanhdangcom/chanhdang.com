@@ -66,18 +66,6 @@ export async function POST(request: Request) {
       });
     }
 
-    // Check if singer name already exists
-    const existingSinger = await db.collection("singers").findOne({
-      singer: body.singer,
-    });
-
-    if (existingSinger) {
-      return NextResponse.json(
-        { error: "Tên ca sĩ này đã tồn tại" },
-        { status: 400 }
-      );
-    }
-
     // Create artist profile
     const result = await db.collection("singers").insertOne({
       ...body,

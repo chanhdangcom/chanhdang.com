@@ -13,9 +13,16 @@ import {
  * Hook to get user permissions based on role and premium tier.
  * Free (đăng nhập): không quảng cáo. Premium: đủ trừ thêm bài/tạo kênh. Premium Creator: đủ tất cả.
  */
-export function usePermissions(): UserPermissions & { role: UserRole | null } {
-  const { user } = useUser();
-  const { isPremium, isPremiumCreator } = usePremium();
+export function usePermissions(): UserPermissions & {
+  role: UserRole | null;
+  isLoading: boolean;
+} {
+  const { user, isLoading: isUserLoading } = useUser();
+  const {
+    isPremium,
+    isPremiumCreator,
+    isLoading: isPremiumLoading,
+  } = usePremium();
   const role = (user?.role || null) as UserRole | null;
   const permissions = getPermissions(role, {
     isPremium,
@@ -25,6 +32,7 @@ export function usePermissions(): UserPermissions & { role: UserRole | null } {
   return {
     ...permissions,
     role,
+    isLoading: isUserLoading || isPremiumLoading,
   };
 }
 

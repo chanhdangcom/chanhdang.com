@@ -59,8 +59,14 @@ export function MenuBar() {
   const locale = (params?.locale as string) || "vi";
   const { isAuthenticated } = useUser();
   const { isPremium } = usePremium();
-  const { canAddMusic, canAddSinger, canManageSystem, canUseLibrary, role } =
-    usePermissions();
+  const {
+    canAddMusic,
+    canAddSinger,
+    canManageSystem,
+    canUseLibrary,
+    role,
+    isLoading: isPermissionsLoading,
+  } = usePermissions();
   const isRegularUser = role === "user";
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const basePath = `/${locale}/music`;
@@ -142,7 +148,24 @@ export function MenuBar() {
   ];
 
   const libraryItems: MenuBarItemConfig[] =
-    isAuthenticated && canUseLibrary
+    isAuthenticated && isPermissionsLoading
+      ? [
+          {
+            key: "recently-played-loading",
+            label: tMenu("recentlyPlayed"),
+            href: `${basePath}/recently-played`,
+            disabled: true,
+            icon: <Clock size={25} className="text-rose-500" />,
+          },
+          {
+            key: "library-loading",
+            label: tCommon("library"),
+            href: `${basePath}/library`,
+            disabled: true,
+            icon: <BookBookmark size={25} className="text-rose-500" />,
+          },
+        ]
+      : isAuthenticated && canUseLibrary
       ? [
           {
             key: "recently-played",

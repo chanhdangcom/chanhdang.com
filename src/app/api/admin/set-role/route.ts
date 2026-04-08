@@ -110,6 +110,8 @@ export async function GET(request: Request) {
       isPremium: Boolean(user.isPremium),
       isPremiumCreator: Boolean(user.isPremiumCreator),
       createdAt: user.createdAt,
+      firstLoginAt: user.firstLoginAt,
+      lastLoginAt: user.lastLoginAt,
       updatedAt: user.updatedAt,
     }));
 

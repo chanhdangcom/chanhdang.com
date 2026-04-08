@@ -66,6 +66,7 @@ const handler = NextAuth({
 
         if (account?.provider === "google" && profile && user.email) {
           const picture = (profile as { picture?: string }).picture;
+          const now = new Date();
           await db.collection("users").updateOne(
             { email: user.email },
             {
@@ -73,16 +74,26 @@ const handler = NextAuth({
                 image: picture,
                 avatarUrl: picture,
                 name: user.name,
-                updatedAt: new Date(),
+                updatedAt: now,
+                lastLoginAt: now,
               },
               $setOnInsert: {
-                createdAt: new Date(),
+                createdAt: now,
                 role: "user",
                 username: user.email?.split("@")[0] || user.name || "user",
                 displayName: user.name,
+                firstLoginAt: now,
               },
             },
             { upsert: true }
+          );
+          await db.collection("users").updateOne(
+            { email: user.email, firstLoginAt: { $exists: false } },
+            {
+              $set: {
+                firstLoginAt: now,
+              },
+            }
           );
         }
         return true;

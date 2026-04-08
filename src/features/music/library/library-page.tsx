@@ -1,12 +1,11 @@
 "use client";
 // import { useUser } from "@/hooks/use-user";
-import { useEffect } from "react";
 import { HeaderMusicPage } from "@/features/music/header-music-page";
 import { MenuBar } from "@/features/music/menu-bar";
 import { MenuBarMobile } from "@/features/music/menu-bar-mobile";
 import { AudioBar } from "@/features/music/audio-bar";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 // import { LibraryPlaylistsList } from "@/features/music/library/library-playlists-list";
 import { MotionHeaderMusic } from "@/features/music/component/motion-header-music";
 
@@ -19,26 +18,17 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { BackButton } from "../component/back-button";
 import { usePermissions } from "@/hooks/use-permissions";
-import { usePremium } from "@/hooks/use-premium";
-import { useUser } from "@/hooks/use-user";
+import { useMusicAccessRedirect } from "@/hooks/use-music-access-redirect";
 
 export function LibraryPage() {
   // const { user } = useUser();
   const params = useParams();
-  const router = useRouter();
   const locale = (params?.locale as string) || "en";
   const withLocale = (path: string) => `/${locale}${path}`;
-  const { canUseLibrary } = usePermissions();
-  const { isLoading: isUserLoading } = useUser();
-  const { isLoading: isPremiumLoading } = usePremium();
+  const { canUseLibrary, isLoading } = usePermissions();
+  const isAccessBlocked = useMusicAccessRedirect(!canUseLibrary, isLoading);
 
-  useEffect(() => {
-    if (!isUserLoading && !isPremiumLoading && !canUseLibrary) {
-      router.replace(`/${locale}/music/premium`);
-    }
-  }, [canUseLibrary, isPremiumLoading, isUserLoading, locale, router]);
-
-  if (isUserLoading || isPremiumLoading || !canUseLibrary) {
+  if (isAccessBlocked) {
     return null;
   }
 

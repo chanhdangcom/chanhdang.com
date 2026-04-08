@@ -12,6 +12,7 @@ import { MotionHeaderMusic } from "@/features/music/component/motion-header-musi
 import { BackButton } from "@/features/music/component/back-button";
 import { usePermissions } from "@/hooks/use-permissions";
 import { useUser } from "@/hooks/use-user";
+import { useMusicAccessRedirect } from "@/hooks/use-music-access-redirect";
 import { ISingerItem } from "../type/singer";
 import { HeaderMusicPage } from "../header-music-page";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
@@ -36,13 +37,21 @@ const getCoverUrl = (cover?: string) => {
 
 export function LibraryFavoriteArtistsPage() {
   const { user } = useUser();
-  const { canUseLibrary } = usePermissions();
+  const { canUseLibrary, isLoading: isPermissionsLoading } = usePermissions();
   const params = useParams();
   const locale = (params?.locale as string) || "en";
+  const isAccessBlocked = useMusicAccessRedirect(
+    !canUseLibrary,
+    isPermissionsLoading
+  );
   const [artists, setArtists] = useState<LibrarySingerEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (!canUseLibrary) {
+      setIsLoading(false);
+      return;
+    }
     if (!user?.id) {
       setIsLoading(false);
       return;
@@ -67,6 +76,10 @@ export function LibraryFavoriteArtistsPage() {
     void fetchArtists();
   }, [user?.id]);
 
+  if (isAccessBlocked) {
+    return null;
+  }
+
   return (
     <div className="font-apple">
       <MenuBar />
@@ -80,17 +93,7 @@ export function LibraryFavoriteArtistsPage() {
       </div>
 
       <div className="mx-4 mt-16 py-6 md:mx-8 md:ml-[270px] md:mt-0">
-        {!canUseLibrary ? (
-          <div className="py-8 text-center text-zinc-500">
-            You need Premium to use your artist library.
-            <Link
-              href={`/${locale}/music/premium`}
-              className="ml-1 font-semibold text-amber-700 underline"
-            >
-              Upgrade now
-            </Link>
-          </div>
-        ) : isLoading ? (
+        {isLoading ? (
           <div className="py-8 text-center text-zinc-500">Loading...</div>
         ) : artists.length === 0 ? (
           <div className="py-8 text-center text-zinc-500">

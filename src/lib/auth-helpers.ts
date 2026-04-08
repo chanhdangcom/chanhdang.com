@@ -9,21 +9,25 @@ import { UserRole } from "./permissions";
  * Checks both NextAuth session and request headers/body
  */
 export async function getUserRole(request: Request | NextRequest): Promise<UserRole | null> {
+  let sessionUserEmail: string | null = null;
   try {
-    // Try to get from NextAuth session first
     const session = await getServerSession();
-    if (session?.user?.email) {
+    sessionUserEmail = session?.user?.email ?? null;
+  } catch (error) {
+    console.warn("getServerSession failed in getUserRole, falling back:", error);
+  }
+
+  try {
+    if (sessionUserEmail) {
       const client = await clientPromise;
       const db = client.db("musicdb");
-      const user = await db.collection("users").findOne({ email: session.user.email });
+      const user = await db.collection("users").findOne({ email: sessionUserEmail });
       if (user?.role) {
         return user.role as UserRole;
       }
-      // Default to "user" for Google login users
       return "user";
     }
 
-    // Try to get from Authorization header (for API calls with userId)
     const authHeader = request.headers.get("authorization");
     if (authHeader) {
       const userId = authHeader.replace("Bearer ", "");
@@ -60,12 +64,19 @@ export async function getUserRole(request: Request | NextRequest): Promise<UserR
  * Get user ID from request
  */
 export async function getUserId(request: Request | NextRequest): Promise<string | null> {
+  let sessionUserEmail: string | null = null;
   try {
     const session = await getServerSession();
-    if (session?.user?.email) {
+    sessionUserEmail = session?.user?.email ?? null;
+  } catch (error) {
+    console.warn("getServerSession failed in getUserId, falling back:", error);
+  }
+
+  try {
+    if (sessionUserEmail) {
       const client = await clientPromise;
       const db = client.db("musicdb");
-      const user = await db.collection("users").findOne({ email: session.user.email });
+      const user = await db.collection("users").findOne({ email: sessionUserEmail });
       if (user?._id) {
         return String(user._id);
       }

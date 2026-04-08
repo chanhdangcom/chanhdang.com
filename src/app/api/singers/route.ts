@@ -61,14 +61,6 @@ export async function POST(request: Request) {
     const client = await clientPromise;
     const db = client.db("musicdb");
 
-    const existingSinger = await db.collection("singers").findOne({
-      singer: body.singer,
-    });
-
-    if (existingSinger) {
-      return NextResponse.json({ error: "Singer already exists" }, { status: 400 });
-    }
-
     const userId = await getUserId(request);
     const result = await db.collection("singers").insertOne({
       ...body,

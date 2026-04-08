@@ -19,26 +19,30 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { useTheme } from "next-themes";
 import { ChanhdangLogotypeMusic } from "@/components/chanhdang-logotype-music";
+import { MUSIC_PLAN_CONFIG, resolveMusicPlan } from "@/lib/music-plans";
 const FREE_PLAN = "Free";
-const PRICE_MONTHLY_VND = "29.000";
-const PRICE_MONTHLY_PRO_VND = "49.000";
 
 export function PremiumPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const locale = (params?.locale as string) || "vi";
   const basePath = `/${locale}/music`;
-  const { isPremium, setPremium } = usePremium();
+  const { isPremium, isPremiumCreator, setPremium, setPremiumCreator } =
+    usePremium();
   const { theme } = useTheme();
 
-  // Sau khi thanh toán Polar redirect về ?success=1 -> kích hoạt premium (demo: localStorage)
   useEffect(() => {
     const success = searchParams.get("success");
+    const plan = resolveMusicPlan(searchParams.get("plan"));
     if (success === "1") {
-      setPremium(true);
+      if (plan === "creator") {
+        void setPremiumCreator(true);
+      } else {
+        void setPremium(true);
+      }
       window.history.replaceState({}, "", `${basePath}/premium`);
     }
-  }, [searchParams, setPremium, basePath]);
+  }, [searchParams, setPremium, setPremiumCreator, basePath]);
 
   return (
     <div className="flex font-apple">
@@ -140,7 +144,7 @@ export function PremiumPage() {
               <div className="flex flex-col items-center justify-center space-y-4">
                 <div className="flex items-end gap-1 text-center text-3xl font-semibold tabular-nums text-rose-500 dark:text-rose-600">
                   <div className="flex items-end gap-1 text-center text-3xl font-semibold tabular-nums text-rose-500 dark:text-rose-600">
-                    {PRICE_MONTHLY_VND} VND
+                    {MUSIC_PLAN_CONFIG.premium.amountLabel} VND
                   </div>
                 </div>
 
@@ -183,7 +187,16 @@ export function PremiumPage() {
                 </p>
 
                 <div className="flex h-full flex-col gap-4">
-                  {isPremium ? (
+                  {isPremiumCreator ? (
+                    <p className="flex items-center justify-center gap-1 font-medium text-zinc-500">
+                      <CheckCircle
+                        weight="fill"
+                        className="text-green-700"
+                        size={23}
+                      />
+                      <div> Included in Creator</div>
+                    </p>
+                  ) : isPremium ? (
                     <p className="flex items-center justify-center gap-1 font-medium">
                       <CheckCircle
                         weight="fill"
@@ -194,7 +207,7 @@ export function PremiumPage() {
                     </p>
                   ) : (
                     <Link
-                      href={`${basePath}/checkout`}
+                      href={`${basePath}/checkout?plan=premium`}
                       className="text-center text-sm font-medium text-zinc-500"
                     >
                       <Button className="dark:rose-600 w-full rounded-xl bg-rose-500 text-white hover:opacity-90 dark:bg-rose-600">
@@ -204,7 +217,9 @@ export function PremiumPage() {
                   )}
 
                   <p className="text-balance text-center text-xs text-zinc-500">
-                    Elevate your experience with Premium for only 29,000 VND.
+                    Elevate your experience with Premium for only{" "}
+                    {MUSIC_PLAN_CONFIG.premium.amount.toLocaleString("vi-VN")}{" "}
+                    VND.
                     Unlock unlimited high-quality streaming and full library
                     access while directly supporting the platform&apos;s growth.
                     Go beyond the basics—no ads, just pure music.
@@ -240,7 +255,7 @@ export function PremiumPage() {
 
               <div className="flex flex-col items-center justify-center space-y-4">
                 <div className="flex items-end gap-1 text-center text-3xl font-semibold tabular-nums text-amber-400 dark:text-amber-500">
-                  {PRICE_MONTHLY_PRO_VND} VND
+                  {MUSIC_PLAN_CONFIG.creator.amountLabel} VND
                 </div>
 
                 <p className="space-y-4 text-sm">
@@ -291,7 +306,7 @@ export function PremiumPage() {
                 </p>
 
                 <div className="flex flex-col gap-4">
-                  {isPremium ? (
+                  {isPremiumCreator ? (
                     <div className="flex items-center justify-center gap-1 text-center text-sm font-medium text-zinc-500">
                       <CheckCircle
                         size={24}
@@ -303,7 +318,7 @@ export function PremiumPage() {
                     </div>
                   ) : (
                     <Link
-                      href={`${basePath}/checkout`}
+                      href={`${basePath}/checkout?plan=creator`}
                       className="text-center text-sm font-semibold"
                     >
                       <Button className="w-full rounded-xl border-none bg-gradient-to-tr from-[#996515] via-[#F1E5AC] to-[#D4AF37] text-white shadow-[0_4px_15px_0_rgba(212,175,55,0.4)] hover:brightness-110 dark:bg-gradient-to-tr dark:from-[#996515] dark:via-[#F1E5AC] dark:to-[#D4AF37]">
@@ -313,9 +328,10 @@ export function PremiumPage() {
                   )}
 
                   <p className="text-balance text-center text-xs text-zinc-500">
-                    Upgrade to Premium Creator for just 49,000 VND. Enjoy
-                    ad-free, high-quality streaming and full library access.
-                    Support the platform while you create your own music
+                    Upgrade to Premium Creator for just{" "}
+                    {MUSIC_PLAN_CONFIG.creator.amount.toLocaleString("vi-VN")}{" "}
+                    VND. Enjoy ad-free, high-quality streaming and full library
+                    access. Support the platform while you create your own music
                     channel—no interruptions, just pure sound.
                   </p>
                 </div>

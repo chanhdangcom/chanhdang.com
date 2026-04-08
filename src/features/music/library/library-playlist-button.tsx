@@ -79,7 +79,7 @@ export function LibraryPlaylistButton({
 }: LibraryPlaylistButtonProps) {
   const [isInLibrary, setIsInLibrary] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { canUseLibrary } = usePermissions();
+  const { canUseLibrary, isLoading: isPermissionsLoading } = usePermissions();
   const params = useParams();
   const router = useRouter();
   const locale = (params?.locale as string) || "en";
@@ -130,6 +130,9 @@ export function LibraryPlaylistButton({
   }, [playlist.id, userId]);
 
   const handleToggleLibrary = async () => {
+    if (isPermissionsLoading) {
+      return;
+    }
     if (!canUseLibrary) {
       router.push(`/${locale}/music/premium`);
       return;
@@ -195,12 +198,12 @@ export function LibraryPlaylistButton({
     <button
       type="button"
       onClick={handleToggleLibrary}
-      disabled={isLoading}
+      disabled={isLoading || isPermissionsLoading}
       aria-label={
         isInLibrary ? "Remove playlist from Library" : "Add playlist to Library"
       }
       className={`group relative flex items-center justify-center gap-2 rounded-full transition-all duration-200 ease-in-out active:scale-90 ${
-        isLoading ? "pointer-events-none opacity-40" : ""
+        isLoading || isPermissionsLoading ? "pointer-events-none opacity-40" : ""
       } ${className}`}
     >
       {isInLibrary ? (

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { ReturnQueryFromVNPay } from "vnpay";
 import { vnpay } from "@/lib/vnpay";
+import { resolveMusicPlan } from "@/lib/music-plans";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://chanhdang.com";
 
@@ -32,10 +33,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Thành công: redirect về premium với success=1 để frontend kích hoạt Premium (demo: localStorage; production: ghi DB từ IPN)
     const locale = searchParams.get("locale") ?? "vi";
+    const plan = resolveMusicPlan(searchParams.get("plan"));
     return NextResponse.redirect(
-      `${APP_URL}/${locale}/music/premium?success=1&gateway=vnpay`,
+      `${APP_URL}/${locale}/music/premium?success=1&gateway=vnpay&plan=${plan}`,
       302
     );
   } catch {

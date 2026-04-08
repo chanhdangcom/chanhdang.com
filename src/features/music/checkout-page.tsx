@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MotionHeaderMusic } from "./component/motion-header-music";
 import { MenuBar } from "./menu-bar";
 import { MenuBarMobile } from "./menu-bar-mobile";
@@ -15,8 +15,10 @@ import {
   BookmarksSimple,
   CreditCard,
   NotSupersetOf,
+  UsersThree,
 } from "@phosphor-icons/react/dist/ssr";
 import { ChanhdangLogotypeMusic } from "@/components/chanhdang-logotype-music";
+import { getMusicPlanConfig, resolveMusicPlan } from "@/lib/music-plans";
 
 /** Hiển thị mã QR từ URL thanh toán (dùng API ảnh, không cần package qrcode.react). */
 function PaymentQRImage({
@@ -38,22 +40,24 @@ function PaymentQRImage({
   );
 }
 
-const PRICE_MONTHLY_VND = "29.000";
-const PRICE_NUM = 29_000;
-
 type QrPayload = {
-  gateway: "vnpay" | "momo";
+  gateway: "vnpay";
   paymentUrl: string;
   orderId: string;
   amount: number;
+  plan: "premium" | "creator";
 };
 
 export function CheckoutPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const locale = (params?.locale as string) || "vi";
+  const plan = resolveMusicPlan(searchParams.get("plan"));
+  const planConfig = getMusicPlanConfig(plan);
+  const isCreatorPlan = plan === "creator";
 
   const [qrPayload, setQrPayload] = useState<QrPayload | null>(null);
-  const [qrLoading, setQrLoading] = useState<"vnpay" | "momo" | null>(null);
+  const [qrLoading, setQrLoading] = useState<"vnpay" | null>(null);
   const [qrError, setQrError] = useState<string | null>(null);
 
   const createVnpayQr = async () => {
@@ -63,7 +67,7 @@ export function CheckoutPage() {
       const res = await fetch("/api/music/payment/vnpay", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ locale }),
+        body: JSON.stringify({ locale, plan }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -74,34 +78,8 @@ export function CheckoutPage() {
         gateway: "vnpay",
         paymentUrl: data.paymentUrl,
         orderId: data.orderId,
-        amount: data.amount ?? PRICE_NUM,
-      });
-    } catch {
-      setQrError("Lỗi kết nối. Thử lại sau.");
-    } finally {
-      setQrLoading(null);
-    }
-  };
-
-  const createMomoQr = async () => {
-    setQrError(null);
-    setQrLoading("momo");
-    try {
-      const res = await fetch("/api/music/payment/momo", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ locale }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setQrError(data.error ?? "Không tạo được mã Momo");
-        return;
-      }
-      setQrPayload({
-        gateway: "momo",
-        paymentUrl: data.payUrl,
-        orderId: data.orderId,
-        amount: data.amount ?? PRICE_NUM,
+        amount: data.amount ?? planConfig.amount,
+        plan: data.plan ?? plan,
       });
     } catch {
       setQrError("Lỗi kết nối. Thử lại sau.");
@@ -114,6 +92,10 @@ export function CheckoutPage() {
     setQrPayload(null);
     setQrError(null);
   };
+
+  useEffect(() => {
+    clearQr();
+  }, [plan]);
 
   return (
     <div className="flex font-apple">
@@ -132,13 +114,23 @@ export function CheckoutPage() {
                 <ChanhdangLogotypeMusic height={28} className="w-auto" />
               </div>
 
-              <div className="mt-2 rounded-2xl border border-rose-500/40 bg-zinc-100 p-4 dark:bg-zinc-950">
+              <div
+                className={`mt-2 rounded-2xl border bg-zinc-100 p-4 dark:bg-zinc-950 ${
+                  isCreatorPlan
+                    ? "border-amber-500/40"
+                    : "border-rose-500/40"
+                }`}
+              >
                 <div className="items-center justify-between space-y-4 md:flex md:space-y-0">
                   <p className="space-y-2 text-sm">
                     <p className="flex items-center gap-1 font-medium">
                       <NotSupersetOf
                         weight="fill"
-                        className="text-rose-500 dark:text-rose-600"
+                        className={
+                          isCreatorPlan
+                            ? "text-amber-400 dark:text-amber-500"
+                            : "text-rose-500 dark:text-rose-600"
+                        }
                         size={23}
                       />
                       <div>No ad interruptions.</div>
@@ -147,7 +139,11 @@ export function CheckoutPage() {
                     <p className="flex items-center gap-1 font-medium">
                       <HighDefinition
                         weight="fill"
-                        className="text-rose-500 dark:text-rose-600"
+                        className={
+                          isCreatorPlan
+                            ? "text-amber-400 dark:text-amber-500"
+                            : "text-rose-500 dark:text-rose-600"
+                        }
                         size={23}
                       />
                       <div>Unlimited listening, high quality.</div>
@@ -156,7 +152,11 @@ export function CheckoutPage() {
                     <p className="flex items-center gap-1 font-medium">
                       <BookmarksSimple
                         weight="fill"
-                        className="text-rose-500 dark:text-rose-600"
+                        className={
+                          isCreatorPlan
+                            ? "text-amber-400 dark:text-amber-500"
+                            : "text-rose-500 dark:text-rose-600"
+                        }
                         size={23}
                       />
                       <div>Use library.</div>
@@ -165,30 +165,49 @@ export function CheckoutPage() {
                     <p className="flex items-center gap-1 font-medium">
                       <CreditCard
                         weight="fill"
-                        className="text-rose-500 dark:text-rose-600"
+                        className={
+                          isCreatorPlan
+                            ? "text-amber-400 dark:text-amber-500"
+                            : "text-rose-500 dark:text-rose-600"
+                        }
                         size={23}
                       />
                       <div>Support platform development fee.</div>
                     </p>
+
+                    {isCreatorPlan && (
+                      <p className="flex items-center gap-1 font-medium">
+                        <UsersThree
+                          weight="fill"
+                          className="text-amber-400 dark:text-amber-500"
+                          size={23}
+                        />
+                        <div>Start creating a music channel.</div>
+                      </p>
+                    )}
                   </p>
 
-                  <p className="flex items-center justify-center gap-1 text-2xl font-semibold tabular-nums text-rose-500 dark:text-rose-600 md:text-right">
-                    {PRICE_MONTHLY_VND} VND
+                  <p
+                    className={`flex items-center justify-center gap-1 text-2xl font-semibold tabular-nums md:text-right ${
+                      isCreatorPlan
+                        ? "text-amber-400 dark:text-amber-500"
+                        : "text-rose-500 dark:text-rose-600"
+                    }`}
+                  >
+                    {planConfig.amountLabel} VND
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Thanh toán bằng QR – VNPay / Momo */}
+            {/* Thanh toán bằng QR - VNPay */}
             <div className="space-y-2 rounded-3xl border p-4 shadow-sm dark:border-zinc-800">
-              <h2 className="font-bold">Pay with QR – VNPay / Momo</h2>
+              <h2 className="font-bold">Pay with QR - VNPay</h2>
 
               <p className="flex items-center gap-1 text-sm font-medium">
                 <QrCode weight="fill" className="text-rose-500" size={23} />
 
-                <div>
-                  Create a QR code, open the VNPay or Momo app to scan and pay.
-                </div>
+                <div>Create a QR code, open the VNPay app to scan and pay.</div>
               </p>
 
               {!qrPayload ? (
@@ -208,21 +227,6 @@ export function CheckoutPage() {
                         {qrLoading === "vnpay" ? "Đang tạo..." : "VNPay"}
                       </span>
                     </div>
-
-                    <div
-                      className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-rose-500/40 bg-zinc-100 text-rose-500 hover:bg-pink-50 dark:bg-zinc-950 dark:hover:bg-pink-950/50"
-                      onClick={createMomoQr}
-                    >
-                      <img
-                        src="/img/momo-icon.png"
-                        alt="Momo"
-                        className="size-6 rounded-lg"
-                      />
-
-                      <span className="font-semibold">
-                        {qrLoading === "momo" ? "Đang tạo..." : "Momo"}
-                      </span>
-                    </div>
                   </div>
 
                   {qrError && (
@@ -235,7 +239,7 @@ export function CheckoutPage() {
                 <div className="relative overflow-hidden rounded-2xl border border-rose-500/40 p-4">
                   <div className="justify-between md:flex">
                     <div className="text-xs font-semibold">
-                      {qrPayload.gateway.toUpperCase()} – {qrPayload.orderId}
+                      {qrPayload.gateway.toUpperCase()} - {qrPayload.orderId}
                     </div>
 
                     <div className="text-sm text-zinc-500" onClick={clearQr}>
@@ -249,6 +253,9 @@ export function CheckoutPage() {
                     </div>
 
                     <p className="flex items-center gap-1.5 text-lg font-semibold text-black dark:text-white">
+                      {qrPayload.plan === "creator"
+                        ? "Premium Creator - "
+                        : "Premium - "}
                       {qrPayload.amount.toLocaleString("vi-VN")} đ
                     </p>
 
@@ -260,15 +267,11 @@ export function CheckoutPage() {
                     >
                       <div className="flex w-full items-center justify-center gap-2 rounded-2xl bg-rose-500 p-2 text-white hover:opacity-90 dark:bg-rose-600">
                         <img
-                          src={
-                            qrPayload.gateway === "vnpay"
-                              ? "/img/VNPay-icon.jpg"
-                              : "/img/momo-icon.png"
-                          }
-                          alt={qrPayload.gateway === "vnpay" ? "VNPay" : "Momo"}
+                          src="/img/VNPay-icon.jpg"
+                          alt="VNPay"
                           className="size-6 rounded-md"
                         />
-                        Open {qrPayload.gateway === "vnpay" ? "VNPay" : "Momo"}
+                        Open VNPay
                       </div>
                     </a>
                   </div>

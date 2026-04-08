@@ -80,7 +80,7 @@ export function LibrarySingerButton({
 }: LibrarySingerButtonProps) {
   const [isInLibrary, setIsInLibrary] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { canUseLibrary } = usePermissions();
+  const { canUseLibrary, isLoading: isPermissionsLoading } = usePermissions();
   const params = useParams();
   const router = useRouter();
   const locale = (params?.locale as string) || "en";
@@ -132,6 +132,9 @@ export function LibrarySingerButton({
   }, [singerId, userId]);
 
   const handleToggleLibrary = async () => {
+    if (isPermissionsLoading) {
+      return;
+    }
     if (!canUseLibrary) {
       router.push(`/${locale}/music/premium`);
       return;
@@ -202,12 +205,14 @@ export function LibrarySingerButton({
     <button
       type="button"
       onClick={handleToggleLibrary}
-      disabled={isLoading}
+      disabled={isLoading || isPermissionsLoading}
       aria-label={
         isInLibrary ? "Remove artist from Library" : "Add artist to Library"
       }
       className={`flex items-center justify-center gap-2 rounded-full border border-white/15 bg-black/25 p-2 text-white backdrop-blur-sm transition ${
-        isLoading ? "cursor-not-allowed opacity-50" : "hover:scale-105"
+        isLoading || isPermissionsLoading
+          ? "cursor-not-allowed opacity-50"
+          : "hover:scale-105"
       } ${isInLibrary ? "border-rose-500/40" : ""} ${className}`}
     >
       <Star
