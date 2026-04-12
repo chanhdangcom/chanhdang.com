@@ -238,6 +238,7 @@ export function MyMusicManagement() {
 
           <div className="mb-4 rounded-xl border border-blue-300 bg-blue-50 p-3 text-sm text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
             <div className="mb-1 font-semibold"> Trạng thái bài hát:</div>
+
             <div className="flex flex-wrap gap-2">
               <span className="rounded-full bg-amber-200 px-2 py-0.5 text-xs dark:bg-amber-800/50">
                 Chờ duyệt
