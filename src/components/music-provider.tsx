@@ -248,7 +248,13 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     null
   );
   const playCountedRef = useRef<boolean>(false);
+  /** Tổng thời gian thực tế đang phát (ms), không tính lúc pause; tua seek không cộng ảo. */
+  const listenAccumMsRef = useRef(0);
+  const lastListenSampleRef = useRef<number | null>(null);
   const currentMusicIdRef = useRef<string | null>(null);
+
+  const MIN_LISTEN_FOR_PLAY_COUNT_MS = 50_000;
+  const MAX_PLAY_COUNT_DELTA_MS = 3000;
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const mixAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -347,6 +353,8 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     currentMusicIdRef.current = currentMusic?.id ?? null;
     playCountedRef.current = false;
+    listenAccumMsRef.current = 0;
+    lastListenSampleRef.current = null;
   }, [currentMusic?.id]);
   // ----------------------------
   // Audio control functions
@@ -907,18 +915,11 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     const audioEl = audioRef.current;
     if (!audioEl) return;
 
-    const handlePlay = () => {
-      if (audioEl.currentTime < 1) {
-        playCountedRef.current = false;
-      }
-    };
-
-    const handleTimeUpdate = () => {
+    const submitPlayCount = () => {
       if (playCountedRef.current) return;
-      if (audioEl.currentTime < 50) return;
-
       const musicId = currentMusicIdRef.current;
       if (!musicId) return;
+      if (listenAccumMsRef.current < MIN_LISTEN_FOR_PLAY_COUNT_MS) return;
 
       playCountedRef.current = true;
       fetch(`/api/musics/${musicId}/play`, {
@@ -929,12 +930,50 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       });
     };
 
+    const sampleListenProgress = () => {
+      if (playCountedRef.current) return;
+      if (audioEl.paused) {
+        lastListenSampleRef.current = null;
+        return;
+      }
+
+      const now = performance.now();
+      if (lastListenSampleRef.current === null) {
+        lastListenSampleRef.current = now;
+        return;
+      }
+
+      let delta = now - lastListenSampleRef.current;
+      lastListenSampleRef.current = now;
+      if (delta > MAX_PLAY_COUNT_DELTA_MS) {
+        delta = MAX_PLAY_COUNT_DELTA_MS;
+      }
+      if (delta < 0) {
+        delta = 0;
+      }
+
+      listenAccumMsRef.current += delta;
+      if (listenAccumMsRef.current >= MIN_LISTEN_FOR_PLAY_COUNT_MS) {
+        submitPlayCount();
+      }
+    };
+
+    const handlePause = () => {
+      lastListenSampleRef.current = null;
+    };
+
+    const handlePlay = () => {
+      lastListenSampleRef.current = null;
+    };
+
+    audioEl.addEventListener("timeupdate", sampleListenProgress);
+    audioEl.addEventListener("pause", handlePause);
     audioEl.addEventListener("play", handlePlay);
-    audioEl.addEventListener("timeupdate", handleTimeUpdate);
 
     return () => {
+      audioEl.removeEventListener("timeupdate", sampleListenProgress);
+      audioEl.removeEventListener("pause", handlePause);
       audioEl.removeEventListener("play", handlePlay);
-      audioEl.removeEventListener("timeupdate", handleTimeUpdate);
     };
   }, []);
 

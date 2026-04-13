@@ -695,6 +695,9 @@ const ContentPage = ({
     setQueue,
     handleToggleRepeat,
     isRepeat,
+    handlePlayRandomAudio,
+    isLoop,
+    handleToggleLoop,
   } = useAudio();
 
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
@@ -968,11 +971,8 @@ const ContentPage = ({
               <div className="flex items-center gap-4">
                 <motion.div
                   whileTap={{ scale: 0.2 }}
-                  className={cn(
-                    "cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white",
-                    isMixMode ? "bg-white/50 text-zinc-600" : "bg-white/10"
-                  )}
-                  onClick={() => handleToggleMixMode()}
+                  className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white"
+                  onClick={() => handlePlayRandomAudio()}
                 >
                   <Shuffle size={22} weight="bold" />
                 </motion.div>
@@ -981,11 +981,11 @@ const ContentPage = ({
                   whileTap={{ scale: 0.2 }}
                   className={cn(
                     "cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white",
-                    isMixMode ? "bg-white/50 text-zinc-600" : "bg-white/10"
+                    isLoop ? "bg-white/50 text-zinc-600" : "bg-white/10"
                   )}
-                  onClick={() => handleToggleMixMode()}
+                  onClick={handleToggleLoop}
                 >
-                  <Infinity size={22} weight={"bold"} />
+                  <Infinity size={22} weight="bold" />
                 </motion.div>
 
                 <motion.div
