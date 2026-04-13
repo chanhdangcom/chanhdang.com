@@ -27,8 +27,7 @@ export function NewAuidoListClient({ musics }: { musics: IMusic[] }) {
         }}
       >
         {musics
-          .slice(-8)
-          .reverse()
+          .slice(0, 8)
           .map((music, index) => (
             <div key={music.id} className="snap-start">
               <div
