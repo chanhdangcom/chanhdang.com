@@ -21,7 +21,7 @@ export function ScrollCarouselItem({
       {canScrollLeft && (
         <div
           onClick={scrollLeft}
-          className="group absolute left-1 top-1/2 z-40 flex h-16 -translate-y-1/2 cursor-pointer items-center justify-center rounded-3xl bg-zinc-500/50 opacity-0 backdrop-blur-xl transition-all duration-200 hover:scale-105 group-hover/carousel:opacity-100 xl:left-[260px]"
+          className="music-carousel-left-control group absolute left-1 top-1/2 z-40 flex h-16 -translate-y-1/2 cursor-pointer items-center justify-center rounded-3xl bg-zinc-500/50 opacity-0 backdrop-blur-xl transition-all duration-200 hover:scale-105 group-hover/carousel:opacity-100"
         >
           <CaretLeft
             size={32}

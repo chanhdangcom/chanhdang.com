@@ -118,14 +118,17 @@ export function PickForYou() {
       >
         <div
           ref={scrollRef}
-          className="mt-2 flex w-full snap-x snap-mandatory overflow-x-auto scroll-smooth text-white scrollbar-hide"
+          className="ml-2 flex snap-x snap-mandatory overflow-x-auto scroll-smooth text-white scrollbar-hide md:ml-0 md:snap-none"
         >
           {pickForYou.map((item, index) => (
             <div
               key={item.id}
-              className={cn("mr-1", index === 0 ? "ml-2 md:ml-[270px]" : "")}
+              className={cn(
+                "mr-1 snap-start",
+                index === 0 ? "md:ml-[270px]" : ""
+              )}
             >
-              <div className="snap-start p-1">
+              <div className="p-1">
                 <div className="mx-2 mb-1 font-apple text-sm font-medium text-zinc-500">
                   Make for you
                 </div>
@@ -141,7 +144,9 @@ export function PickForYou() {
                   <div className="absolute inset-0 flex h-full flex-col justify-between">
                     <div className="px-4 pb-4">
                       <ChanhdangLogotype className="w-24 text-white" />
+
                       <div className="text-4xl font-bold">New Music</div>
+
                       <div className="text-3xl">Mix</div>
                     </div>
 

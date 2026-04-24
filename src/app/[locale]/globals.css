@@ -205,8 +205,16 @@
       will-change: padding-left;
     }
 
+    .music-carousel-left-control {
+      left: 260px;
+    }
+
     html.music-menu-bar-closed .music-motion-header {
       display: none;
+    }
+
+    html.music-menu-bar-closed .music-carousel-left-control {
+      left: 4px;
     }
 
     html.music-menu-bar-closed .md\:ml-\[270px\] {
