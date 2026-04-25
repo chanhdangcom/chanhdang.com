@@ -14,6 +14,7 @@ import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { BackButton } from "@/features/music/component/back-button";
 import { usePermissions } from "@/hooks/use-permissions";
 import { useMusicAccessRedirect } from "@/hooks/use-music-access-redirect";
+import { buildUserAuthHeaders } from "@/lib/client-auth";
 
 export default function LibraryFavoriteSongsPage() {
   const t = useTranslations("musicDetail.favorites");
@@ -37,7 +38,9 @@ export default function LibraryFavoriteSongsPage() {
 
     const fetchTracks = async () => {
       try {
-        const res = await fetch(`/api/library?userId=${user.id}&type=music`);
+        const res = await fetch(`/api/library?userId=${user.id}&type=music`, {
+          headers: buildUserAuthHeaders(user.id),
+        });
         if (!res.ok) return;
         const data = await res.json();
         const normalized: IMusic[] = data

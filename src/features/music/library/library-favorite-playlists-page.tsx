@@ -26,6 +26,7 @@ import { PlaylistCover } from "../component/playlist-cover";
 import { useImageHoverColor } from "@/hooks/use-image-hover-color";
 import { cn } from "@/lib/utils";
 import { getPlaylistCoverPreviewUrl } from "../utils/playlist-cover";
+import { buildUserAuthHeaders } from "@/lib/client-auth";
 
 type LibraryPlaylistEntry = {
   _id: string;
@@ -384,7 +385,9 @@ export function LibraryFavoritePlaylistsPage() {
     const fetchPlaylists = async () => {
       try {
         const [favoriteResponse, ownedResponse] = await Promise.all([
-          fetch(`/api/library?userId=${user.id}&type=playlist`),
+          fetch(`/api/library?userId=${user.id}&type=playlist`, {
+            headers: buildUserAuthHeaders(user.id),
+          }),
           fetch(`/api/playlists?ownerId=${user.id}&userId=${user.id}&lite=1`),
         ]);
 
@@ -414,7 +417,9 @@ export function LibraryFavoritePlaylistsPage() {
     setIsLoading(true);
     try {
       const [favoriteResponse, ownedResponse] = await Promise.all([
-        fetch(`/api/library?userId=${user.id}&type=playlist`),
+        fetch(`/api/library?userId=${user.id}&type=playlist`, {
+          headers: buildUserAuthHeaders(user.id),
+        }),
         fetch(`/api/playlists?ownerId=${user.id}&userId=${user.id}&lite=1`),
       ]);
 

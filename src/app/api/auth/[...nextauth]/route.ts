@@ -2,6 +2,11 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "@/lib/mongodb";
+import {
+  createUniqueFriendCode,
+  DEFAULT_LIBRARY_VISIBILITY,
+  ensureUserSocialFields,
+} from "@/lib/social-graph";
 
 /**
  * Cần có trong .env.local cho Google login:
@@ -82,6 +87,11 @@ const handler = NextAuth({
                 role: "user",
                 username: user.email?.split("@")[0] || user.name || "user",
                 displayName: user.name,
+                friendCode: await createUniqueFriendCode(db),
+                friends: [],
+                incomingFriendRequests: [],
+                outgoingFriendRequests: [],
+                libraryVisibility: DEFAULT_LIBRARY_VISIBILITY,
                 firstLoginAt: now,
               },
             },
@@ -95,6 +105,8 @@ const handler = NextAuth({
               },
             }
           );
+          const dbUser = await db.collection("users").findOne({ email: user.email });
+          await ensureUserSocialFields(db, dbUser);
         }
         return true;
       } catch (err) {
@@ -116,12 +128,19 @@ const handler = NextAuth({
           try {
             const client = await clientPromise;
             const db = client.db("musicdb");
-            const dbUser = await db.collection("users").findOne({ email: p.email });
+            const rawDbUser = await db.collection("users").findOne({ email: p.email });
+            const dbUser = await ensureUserSocialFields(db, rawDbUser);
             if (dbUser?.role) {
               token.role = dbUser.role;
             } else {
               token.role = "user"; // Default role
             }
+            token.friendCode = dbUser?.friendCode;
+            token.bio = dbUser?.bio;
+            token.location = dbUser?.location;
+            token.favoriteGenres = dbUser?.favoriteGenres;
+            token.favoriteArtists = dbUser?.favoriteArtists;
+            token.libraryVisibility = dbUser?.libraryVisibility;
           } catch (error) {
             console.error("Error fetching user role:", error);
             token.role = "user"; // Default on error
@@ -146,6 +165,14 @@ const handler = NextAuth({
         // Add role to session (mở rộng kiểu session.user)
         (session.user as { role?: string }).role =
           (token.role as string) || "user";
+        session.user.friendCode = (token.friendCode as string) || null;
+        session.user.bio = (token.bio as string) || null;
+        session.user.location = (token.location as string) || null;
+        session.user.favoriteGenres = (token.favoriteGenres as string) || null;
+        session.user.favoriteArtists =
+          (token.favoriteArtists as string) || null;
+        session.user.libraryVisibility =
+          (token.libraryVisibility as string) || null;
       }
       return session;
     },

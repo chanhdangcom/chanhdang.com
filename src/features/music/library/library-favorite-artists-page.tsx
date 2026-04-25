@@ -16,6 +16,7 @@ import { useMusicAccessRedirect } from "@/hooks/use-music-access-redirect";
 import { ISingerItem } from "../type/singer";
 import { HeaderMusicPage } from "../header-music-page";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
+import { buildUserAuthHeaders } from "@/lib/client-auth";
 
 type LibrarySingerEntry = {
   _id: string;
@@ -60,7 +61,10 @@ export function LibraryFavoriteArtistsPage() {
     const fetchArtists = async () => {
       try {
         const response = await fetch(
-          `/api/library?userId=${user.id}&type=singer`
+          `/api/library?userId=${user.id}&type=singer`,
+          {
+            headers: buildUserAuthHeaders(user.id),
+          }
         );
         if (!response.ok) return;
 
@@ -74,7 +78,7 @@ export function LibraryFavoriteArtistsPage() {
     };
 
     void fetchArtists();
-  }, [user?.id]);
+  }, [canUseLibrary, user?.id]);
 
   if (isAccessBlocked) {
     return null;

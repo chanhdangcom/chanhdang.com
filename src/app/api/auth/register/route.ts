@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import bcrypt from "bcryptjs";
+import {
+  createUniqueFriendCode,
+  DEFAULT_LIBRARY_VISIBILITY,
+} from "@/lib/social-graph";
 
 export async function POST(request: Request) {
   try {
@@ -76,6 +80,11 @@ export async function POST(request: Request) {
       email: email || null,
       password: hash,
       displayName: username,
+      friendCode: await createUniqueFriendCode(db),
+      friends: [],
+      incomingFriendRequests: [],
+      outgoingFriendRequests: [],
+      libraryVisibility: DEFAULT_LIBRARY_VISIBILITY,
       role: "user", // Default role for new users
       createdAt: new Date(),
       updatedAt: new Date(),

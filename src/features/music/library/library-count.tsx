@@ -2,6 +2,7 @@
 
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { useState, useEffect } from "react";
+import { buildUserAuthHeaders } from "@/lib/client-auth";
 
 interface LibraryCountProps {
   userId?: string;
@@ -26,7 +27,9 @@ export function LibraryCount({ userId }: LibraryCountProps) {
 
     const fetchLibraryCount = async () => {
       try {
-        const response = await fetch(`/api/library?userId=${userId}`);
+        const response = await fetch(`/api/library?userId=${userId}`, {
+          headers: buildUserAuthHeaders(userId),
+        });
         if (response.ok) {
           const items: LibraryItem[] = await response.json();
           setCount(items.length);

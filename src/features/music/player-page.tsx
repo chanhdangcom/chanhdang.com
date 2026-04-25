@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useUser } from "@/hooks/use-user";
 import { VolumeBar } from "./volume-bar";
+import { buildUserAuthHeaders } from "@/lib/client-auth";
 import { AudioItemOrder } from "./component/audio-item-order";
 import Link from "next/link";
 import { useImageHoverColor } from "@/hooks/use-image-hover-color";
@@ -210,7 +211,9 @@ const fetchFavoriteMusicIds = async (
   }
 
   const request = (async () => {
-    const response = await fetch(`/api/library?userId=${userId}&type=music`);
+    const response = await fetch(`/api/library?userId=${userId}&type=music`, {
+      headers: buildUserAuthHeaders(userId),
+    });
     if (!response.ok) {
       throw new Error("Failed to fetch favorite musics");
     }
@@ -1656,6 +1659,7 @@ export function PlayerPage({ setIsClick }: IProp) {
           `/api/library?userId=${user.id}&resourceId=${currentMusic.id}&type=music`,
           {
             method: "DELETE",
+            headers: buildUserAuthHeaders(user.id),
           }
         );
 
@@ -1670,9 +1674,9 @@ export function PlayerPage({ setIsClick }: IProp) {
         // Thêm vào Favorites
         const response = await fetch("/api/library", {
           method: "POST",
-          headers: {
+          headers: buildUserAuthHeaders(user.id, {
             "Content-Type": "application/json",
-          },
+          }),
           body: JSON.stringify({
             userId: user.id,
             resourceId: currentMusic.id,

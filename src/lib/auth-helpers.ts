@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { UserRole } from "./permissions";
+import { ensureUserSocialFields } from "./social-graph";
 
 /**
  * Get user role from request
@@ -108,6 +109,29 @@ export async function getUserById(userId: string) {
     return user;
   } catch (error) {
     console.error("Error getting user by ID:", error);
+    return null;
+  }
+}
+
+/**
+ * Resolve the authenticated/current user from session or Bearer token.
+ */
+export async function getCurrentUser(request: Request | NextRequest) {
+  try {
+    const userId = await getUserId(request);
+    if (userId && ObjectId.isValid(userId)) {
+      const client = await clientPromise;
+      const db = client.db("musicdb");
+      const user = await db.collection("users").findOne({
+        _id: new ObjectId(userId),
+      });
+
+      return ensureUserSocialFields(db, user);
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Error getting current user:", error);
     return null;
   }
 }

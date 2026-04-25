@@ -5,6 +5,7 @@ import { IPlaylistItem } from "../type/playlist";
 import { CheckCircle, Star } from "@phosphor-icons/react/dist/ssr";
 import { usePermissions } from "@/hooks/use-permissions";
 import { useParams, useRouter } from "next/navigation";
+import { buildUserAuthHeaders } from "@/lib/client-auth";
 
 type LibraryPlaylistButtonProps = {
   playlist: IPlaylistItem;
@@ -26,7 +27,9 @@ const fetchLibraryPlaylistIds = async (userId: string) => {
   if (inFlight) return inFlight;
 
   const request = (async () => {
-    const response = await fetch(`/api/library?userId=${userId}&type=playlist`);
+    const response = await fetch(`/api/library?userId=${userId}&type=playlist`, {
+      headers: buildUserAuthHeaders(userId),
+    });
     if (!response.ok) return new Set<string>();
 
     const entries = (await response.json()) as Array<{ resourceId?: string }>;
@@ -153,7 +156,10 @@ export function LibraryPlaylistButton({
       if (isInLibrary) {
         const response = await fetch(
           `/api/library?userId=${userId}&resourceId=${playlist.id}&type=playlist`,
-          { method: "DELETE" }
+          {
+            method: "DELETE",
+            headers: buildUserAuthHeaders(userId),
+          }
         );
         if (!response.ok) {
           const error = await response.json();
@@ -164,7 +170,9 @@ export function LibraryPlaylistButton({
       } else {
         const response = await fetch("/api/library", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: buildUserAuthHeaders(userId, {
+            "Content-Type": "application/json",
+          }),
           body: JSON.stringify({
             userId,
             resourceId: playlist.id,

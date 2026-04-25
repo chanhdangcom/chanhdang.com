@@ -6,6 +6,7 @@ import { Star } from "@phosphor-icons/react/dist/ssr";
 import { usePermissions } from "@/hooks/use-permissions";
 import { ISingerItem } from "../type/singer";
 import { cn } from "@/utils/cn";
+import { buildUserAuthHeaders } from "@/lib/client-auth";
 
 type LibrarySingerButtonProps = {
   singer: ISingerItem;
@@ -27,7 +28,9 @@ const fetchLibrarySingerIds = async (userId: string) => {
   if (inFlight) return inFlight;
 
   const request = (async () => {
-    const response = await fetch(`/api/library?userId=${userId}&type=singer`);
+    const response = await fetch(`/api/library?userId=${userId}&type=singer`, {
+      headers: buildUserAuthHeaders(userId),
+    });
     if (!response.ok) return new Set<string>();
 
     const entries = (await response.json()) as Array<{ resourceId?: string }>;
@@ -156,7 +159,10 @@ export function LibrarySingerButton({
       if (isInLibrary) {
         const response = await fetch(
           `/api/library?userId=${userId}&resourceId=${singerId}&type=singer`,
-          { method: "DELETE" }
+          {
+            method: "DELETE",
+            headers: buildUserAuthHeaders(userId),
+          }
         );
 
         if (!response.ok) {
@@ -168,9 +174,9 @@ export function LibrarySingerButton({
       } else {
         const response = await fetch("/api/library", {
           method: "POST",
-          headers: {
+          headers: buildUserAuthHeaders(userId, {
             "Content-Type": "application/json",
-          },
+          }),
           body: JSON.stringify({
             userId,
             resourceId: singerId,

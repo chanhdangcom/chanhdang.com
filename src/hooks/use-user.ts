@@ -11,6 +11,12 @@ interface User {
   displayName?: string;
   avatarUrl?: string;
   email?: string;
+  friendCode?: string;
+  bio?: string;
+  location?: string;
+  favoriteGenres?: string;
+  favoriteArtists?: string;
+  libraryVisibility?: string;
   role?: UserRole;
 }
 
@@ -45,6 +51,12 @@ export function useUser() {
         displayName: session.user.name,
         avatarUrl: session.user.image || undefined,
         email: session.user.email || undefined,
+        friendCode: session.user.friendCode || undefined,
+        bio: session.user.bio || undefined,
+        location: session.user.location || undefined,
+        favoriteGenres: session.user.favoriteGenres || undefined,
+        favoriteArtists: session.user.favoriteArtists || undefined,
+        libraryVisibility: session.user.libraryVisibility || undefined,
         role: ((session.user as { role?: string }).role || "user") as UserRole,
       }
     : null;

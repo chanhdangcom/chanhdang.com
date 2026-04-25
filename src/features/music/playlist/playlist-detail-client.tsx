@@ -17,6 +17,7 @@ import { useUser } from "@/hooks/use-user";
 import { BackButton } from "../component/back-button";
 import { useScroll, useSpring, useTransform, motion } from "framer-motion";
 import { useImageHoverColor } from "@/hooks/use-image-hover-color";
+import { AudioItemOrder } from "../component/audio-item-order";
 import { AudioItemOrderLayout } from "../component/audio-item-order-layout";
 import { PlaylistCover } from "../component/playlist-cover";
 import { getPlaylistCoverPreviewUrl } from "../utils/playlist-cover";
@@ -201,21 +202,38 @@ export function PlaylistDetailClient({ playlist }: Props) {
                     key={music.id}
                     className="flex items-center gap-4 rounded-2xl bg-transparent p-1"
                   >
-                    <div className="font-apple font-medium text-zinc-500">
+                    <div className="hidden font-apple font-medium text-zinc-500 md:block">
                       {index + 1}
                     </div>
 
-                    <AudioItemOrderLayout
-                      music={music}
-                      handlePlay={() => handlePlayAudio(music)}
-                      border
-                      date={
-                        music.createdAt
-                          ? new Date(music.createdAt as Date).toISOString()
-                          : undefined
-                      }
-                      item={<DotsThree size={22} weight="bold" />}
-                    />
+                    <div className="w-full md:hidden">
+                      <AudioItemOrder
+                        music={music}
+                        handlePlay={() => handlePlayAudio(music)}
+                        className="w-full"
+                        border
+                        date={
+                          music.createdAt
+                            ? new Date(music.createdAt as Date).toISOString()
+                            : undefined
+                        }
+                        item={<DotsThree size={22} weight="bold" />}
+                      />
+                    </div>
+
+                    <div className="hidden w-full md:block">
+                      <AudioItemOrderLayout
+                        music={music}
+                        handlePlay={() => handlePlayAudio(music)}
+                        border
+                        date={
+                          music.createdAt
+                            ? new Date(music.createdAt as Date).toISOString()
+                            : undefined
+                        }
+                        item={<DotsThree size={22} weight="bold" />}
+                      />
+                    </div>
                   </div>
                 ))
               )}

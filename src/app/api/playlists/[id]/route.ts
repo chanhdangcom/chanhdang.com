@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
-import { getUserRole } from "@/lib/auth-helpers";
+import { getCurrentUser, getUserRole } from "@/lib/auth-helpers";
 import {
   normalizeDocument,
   normalizeMusic,
   normalizeObjectIds,
   parseObjectIds,
 } from "@/lib/mongodb-helpers";
+import { areUsersFriends } from "@/lib/social-graph";
 
 type PlaylistDocument = {
   _id: ObjectId;
@@ -55,13 +56,23 @@ export async function GET(
     }
 
     const role = await getUserRole(request);
+    const currentUser = await getCurrentUser(request);
     const requesterUserId =
       new URL(request.url).searchParams.get("userId")?.trim() || undefined;
+    const ownerUser =
+      doc.ownerId && ObjectId.isValid(doc.ownerId)
+        ? await db.collection("users").findOne({
+            _id: new ObjectId(doc.ownerId),
+          })
+        : null;
+    const canViewAsFriend =
+      ownerUser && currentUser ? areUsersFriends(ownerUser, currentUser) : false;
 
     if (
       doc.isUserPlaylist &&
       role !== "admin" &&
-      (!requesterUserId || doc.ownerId !== requesterUserId)
+      (!requesterUserId || doc.ownerId !== requesterUserId) &&
+      !canViewAsFriend
     ) {
       return NextResponse.json({ error: "Playlist not found" }, { status: 404 });
     }

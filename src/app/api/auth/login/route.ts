@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import bcrypt from "bcryptjs";
+import { ensureUserSocialFields } from "@/lib/social-graph";
 
 // Simple in-memory rate limiting (in production, use Redis or similar)
 const loginAttempts = new Map<string, { count: number; resetTime: number }>();
@@ -82,7 +83,8 @@ export async function POST(request: Request) {
 
     const client = await clientPromise;
     const db = client.db("musicdb");
-    const user = await db.collection("users").findOne({ username });
+    const rawUser = await db.collection("users").findOne({ username });
+    const user = await ensureUserSocialFields(db, rawUser);
 
     if (!user) {
       recordFailedAttempt(username);
@@ -131,6 +133,12 @@ export async function POST(request: Request) {
         displayName: user.displayName || user.username,
         avatarUrl: user.avatarUrl,
         email: user.email,
+        friendCode: user.friendCode,
+        bio: user.bio,
+        location: user.location,
+        favoriteGenres: user.favoriteGenres,
+        favoriteArtists: user.favoriteArtists,
+        libraryVisibility: user.libraryVisibility,
         role: user.role || "user", // Default to "user" if role not set
       },
       rememberMe,

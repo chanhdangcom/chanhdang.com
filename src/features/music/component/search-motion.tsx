@@ -9,6 +9,7 @@ import { SingerItem } from "./singer-item";
 import { useParams, useRouter } from "next/navigation";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { ISingerItem } from "../type/singer";
+import { FriendCodeSearch } from "../social/friend-code-search";
 
 type SearchMotionProps = {
   onQueryChange?: (value: string) => void;
@@ -86,6 +87,10 @@ export function SearchMotion({ onQueryChange }: SearchMotionProps) {
                   }}
                   autoFocus
                 />
+
+                <div className="ml-3 shrink-0">
+                  <FriendCodeSearch />
+                </div>
               </motion.div>
 
               {/* singer */}

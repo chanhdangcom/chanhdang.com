@@ -1,6 +1,66 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
+import { getCurrentUser } from "@/lib/auth-helpers";
+import {
+  ensureUserSocialFields,
+  getRelationshipStatus,
+  toPublicUser,
+} from "@/lib/social-graph";
+
+type UserPublicDocument = {
+  _id: ObjectId;
+  username?: string;
+  displayName?: string;
+  name?: string;
+  email?: string;
+  avatarUrl?: string;
+  image?: string;
+  friendCode?: string;
+};
+
+export async function GET(request: Request) {
+  try {
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split("/");
+    const userIdFromPath = pathParts[pathParts.length - 1];
+
+    if (!ObjectId.isValid(userIdFromPath)) {
+      return NextResponse.json({ error: "Invalid user id" }, { status: 400 });
+    }
+
+    const client = await clientPromise;
+    const db = client.db("musicdb");
+    const users = db.collection<UserPublicDocument>("users");
+    const rawUser = await users.findOne({
+      _id: new ObjectId(userIdFromPath),
+    });
+
+    if (!rawUser) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const targetUser = await ensureUserSocialFields(db, rawUser);
+    if (!targetUser) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+    const currentUser = await getCurrentUser(request);
+
+    return NextResponse.json({
+      success: true,
+      user: {
+        ...toPublicUser(targetUser),
+        relationshipStatus: getRelationshipStatus(currentUser, targetUser),
+      },
+    });
+  } catch (error) {
+    console.error("[users:GET] ERROR", error);
+    return NextResponse.json(
+      { error: "Failed to fetch user" },
+      { status: 500 }
+    );
+  }
+}
 
 // PATCH /api/users/:id
 export async function PATCH(request: Request) {
@@ -19,6 +79,9 @@ export async function PATCH(request: Request) {
       displayName,
       bio,
       avatarUrl,
+      location,
+      favoriteGenres,
+      favoriteArtists,
       isPremium,
       isPremiumCreator,
       userId: bodyUserId,
@@ -31,6 +94,11 @@ export async function PATCH(request: Request) {
     if (typeof displayName === "string") update.displayName = displayName;
     if (typeof bio === "string") update.bio = bio;
     if (typeof avatarUrl === "string") update.avatarUrl = avatarUrl;
+    if (typeof location === "string") update.location = location;
+    if (typeof favoriteGenres === "string")
+      update.favoriteGenres = favoriteGenres;
+    if (typeof favoriteArtists === "string")
+      update.favoriteArtists = favoriteArtists;
     if (typeof isPremium === "boolean") update.isPremium = isPremium;
     if (typeof isPremiumCreator === "boolean")
       update.isPremiumCreator = isPremiumCreator;

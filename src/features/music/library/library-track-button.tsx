@@ -6,6 +6,7 @@ import { usePermissions } from "@/hooks/use-permissions";
 import { useParams, useRouter } from "next/navigation";
 import { Star } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "@/utils/cn";
+import { buildUserAuthHeaders } from "@/lib/client-auth";
 
 interface LibraryTrackButtonProps {
   music: IMusic;
@@ -25,7 +26,9 @@ const fetchLibraryMusicIds = async (userId: string) => {
   if (inFlight) return inFlight;
 
   const request = (async () => {
-    const response = await fetch(`/api/library?userId=${userId}&type=music`);
+    const response = await fetch(`/api/library?userId=${userId}&type=music`, {
+      headers: buildUserAuthHeaders(userId),
+    });
     if (!response.ok) return new Set<string>();
     const entries = (await response.json()) as Array<{ resourceId?: string }>;
     const ids = new Set(
@@ -142,6 +145,7 @@ export function LibraryTrackButton({
           `/api/library?userId=${userId}&resourceId=${music.id}&type=music`,
           {
             method: "DELETE",
+            headers: buildUserAuthHeaders(userId),
           }
         );
 
@@ -158,7 +162,9 @@ export function LibraryTrackButton({
         const response = await fetch("/api/library", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
+            ...buildUserAuthHeaders(userId, {
+              "Content-Type": "application/json",
+            }),
           },
           body: JSON.stringify({
             userId,

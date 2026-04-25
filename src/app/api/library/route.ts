@@ -1,12 +1,17 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { Db, ObjectId } from "mongodb";
+import { getCurrentUser } from "@/lib/auth-helpers";
 import {
   normalizeDocument,
   normalizeMusic,
   normalizeObjectIds,
-
 } from "@/lib/mongodb-helpers";
+import {
+  areUsersFriends,
+  ensureUserSocialFields,
+  normalizeId,
+} from "@/lib/social-graph";
 
 // API quản lý Library (bài hát & playlist đã lưu của user)
 type LibraryDoc = {
@@ -141,6 +146,33 @@ export async function GET(request: Request) {
 
     const client = await clientPromise;
     const db = client.db("musicdb");
+    const currentUser = await getCurrentUser(request);
+
+    if (!currentUser?._id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (normalizeId(currentUser._id) !== userId) {
+      if (!ObjectId.isValid(userId)) {
+        return NextResponse.json({ error: "Invalid user id" }, { status: 400 });
+      }
+
+      const rawOwner = await db.collection("users").findOne({
+        _id: new ObjectId(userId),
+      });
+
+      if (!rawOwner) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
+      }
+
+      const owner = await ensureUserSocialFields(db, rawOwner);
+      if (!areUsersFriends(owner, currentUser)) {
+        return NextResponse.json(
+          { error: "Bạn chưa có quyền xem library này" },
+          { status: 403 }
+        );
+      }
+    }
 
     // Lấy danh sách Library của user
     const query: Record<string, unknown> = { userId };
@@ -187,6 +219,14 @@ export async function POST(request: Request) {
         { error: "Thiếu userId hoặc resourceId" },
         { status: 400 }
       );
+    }
+
+    const currentUser = await getCurrentUser(request);
+    if (!currentUser?._id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    if (normalizeId(currentUser._id) !== userId) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     const client = await clientPromise;
@@ -258,6 +298,14 @@ export async function DELETE(request: Request) {
         { error: "Thiếu userId hoặc resourceId" },
         { status: 400 }
       );
+    }
+
+    const currentUser = await getCurrentUser(request);
+    if (!currentUser?._id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    if (normalizeId(currentUser._id) !== userId) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     const client = await clientPromise;

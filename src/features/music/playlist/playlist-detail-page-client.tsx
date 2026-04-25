@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { useUser } from "@/hooks/use-user";
 import { IPlaylistItem } from "../type/playlist";
 import { PlaylistDetailClient } from "./playlist-detail-client";
+import { buildUserAuthHeaders } from "@/lib/client-auth";
 
 type PlaylistDetailPageClientProps = {
   playlistId: string;
@@ -38,6 +39,7 @@ export function PlaylistDetailPageClient({
           : "";
         const response = await fetch(`/api/playlists/${playlistId}${query}`, {
           cache: "no-store",
+          headers: buildUserAuthHeaders(user?.id),
           signal: controller.signal,
         });
 

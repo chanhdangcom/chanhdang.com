@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { Db, ObjectId } from "mongodb";
-import { getUserRole } from "@/lib/auth-helpers";
+import { getCurrentUser, getUserRole } from "@/lib/auth-helpers";
 import {
   normalizeObjectIds,
   normalizeMusic,
   normalizeDocument,
 } from "@/lib/mongodb-helpers";
+import { areUsersFriends } from "@/lib/social-graph";
 
 type PlaylistDocument = {
   _id: ObjectId;
@@ -86,6 +87,7 @@ export async function GET(request: Request) {
       ? Math.min(limitParam, 50)
       : 0;
     const role = await getUserRole(request);
+    const currentUser = await getCurrentUser(request);
 
     const client = await clientPromise;
     const db = client.db("musicdb");
@@ -172,10 +174,20 @@ export async function GET(request: Request) {
     }
 
     if (ownerId && role !== "admin" && ownerId !== requesterUserId) {
-      return NextResponse.json(
-        { error: "Bạn không có quyền xem playlist cá nhân của người khác" },
-        { status: 403 }
-      );
+      const ownerUser =
+        ObjectId.isValid(ownerId)
+          ? await db.collection("users").findOne({ _id: new ObjectId(ownerId) })
+          : null;
+
+      const canViewAsFriend =
+        ownerUser && currentUser ? areUsersFriends(ownerUser, currentUser) : false;
+
+      if (!canViewAsFriend) {
+        return NextResponse.json(
+          { error: "Bạn không có quyền xem playlist cá nhân của người khác" },
+          { status: 403 }
+        );
+      }
     }
 
     const query: Record<string, unknown> = ownerId
