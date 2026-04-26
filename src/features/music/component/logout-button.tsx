@@ -2,27 +2,70 @@
 
 import * as React from "react";
 import {
+  DropdownMenuItem,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useUser } from "@/hooks/use-user";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { BorderPro } from "./border-pro";
 import {
   CardsThree,
+  ChatCircleDots,
   ChartDonut,
   Faders,
   Gear,
   SignOut,
   SketchLogo,
   UserCircle,
+  UsersThree,
 } from "@phosphor-icons/react/dist/ssr";
 import { ThemeToggleMenuBar } from "@/components/theme-toggle-menubar";
 import { SwitchLanguageMenuBar } from "@/app/[locale]/features/profile/components/swtich-language-menu-bar";
 import { usePermissions } from "@/hooks/use-permissions";
+import { FriendsPanelContent } from "../social/friends-panel";
+import { ChatbotPanel } from "@/components/chatbot/chatbot-panel";
+
+const panelVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.8,
+    y: 20,
+    filter: "blur(10px)",
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 30,
+      mass: 0.8,
+    },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.9,
+    y: 10,
+    filter: "blur(5px)",
+    transition: {
+      duration: 0.2,
+      ease: "easeIn",
+    },
+  },
+};
 
 export function LogoutButton() {
   const { user, logout } = useUser();
@@ -30,6 +73,38 @@ export function LogoutButton() {
   const locale = (params?.locale as string) || "en";
   const withLocale = (path: string) => `/${locale}${path}`;
   const { canManageSystem } = usePermissions();
+  const [isFriendsOpen, setIsFriendsOpen] = React.useState(false);
+  const [isChatbotOpen, setIsChatbotOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const body = document.body;
+    const html = document.documentElement;
+    const previousBodyOverflow = body.style.overflow;
+    const previousHtmlOverflow = html.style.overflow;
+    const previousTouchAction = body.style.touchAction;
+
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+    if (isChatbotOpen && isMobile) {
+      body.style.overflow = "hidden";
+      html.style.overflow = "hidden";
+      body.style.touchAction = "none";
+    } else {
+      body.style.overflow = previousBodyOverflow || "";
+      html.style.overflow = previousHtmlOverflow || "";
+      body.style.touchAction = previousTouchAction || "";
+    }
+
+    return () => {
+      body.style.overflow = previousBodyOverflow || "";
+      html.style.overflow = previousHtmlOverflow || "";
+      body.style.touchAction = previousTouchAction || "";
+    };
+  }, [isChatbotOpen]);
 
   const handleLogout = async () => {
     try {
@@ -55,38 +130,39 @@ export function LogoutButton() {
           </div>
         </Link>
       ) : (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <div className="my-2 flex items-center gap-2 font-apple font-semibold">
-              <BorderPro roundedSize="rounded-full">
-                {user?.avatarUrl ? (
-                  <motion.img
-                    src={user.avatarUrl || "/img/Logomark.png"}
-                    alt={user.username}
-                    className="size-10 rounded-full object-cover"
-                    whileTap={{ scale: 0.9 }}
-                  />
-                ) : (
-                  <div className="flex size-10 items-center justify-center rounded-full bg-zinc-200 font-apple text-sm font-bold uppercase text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
-                    {user?.username?.charAt(0) || <UserCircle size={20} />}
-                  </div>
-                )}
-              </BorderPro>
+        <Drawer open={isFriendsOpen} onOpenChange={setIsFriendsOpen}>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div className="my-2 flex items-center gap-2 font-apple font-semibold">
+                <BorderPro roundedSize="rounded-full">
+                  {user?.avatarUrl ? (
+                    <motion.img
+                      src={user.avatarUrl || "/img/Logomark.png"}
+                      alt={user.username}
+                      className="size-10 rounded-full object-cover"
+                      whileTap={{ scale: 0.9 }}
+                    />
+                  ) : (
+                    <div className="flex size-10 items-center justify-center rounded-full bg-zinc-200 font-apple text-sm font-bold uppercase text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
+                      {user?.username?.charAt(0) || <UserCircle size={20} />}
+                    </div>
+                  )}
+                </BorderPro>
 
-              <div className="line-clamp-1 hidden max-w-[140px] truncate font-apple text-sm md:flex">
-                {user.username}
+                <div className="line-clamp-1 hidden max-w-[140px] truncate font-apple text-sm md:flex">
+                  {user.username}
+                </div>
               </div>
-            </div>
-          </DropdownMenuTrigger>
+            </DropdownMenuTrigger>
 
-          <DropdownMenuContent className="m-2 w-60 rounded-xl border bg-zinc-50 text-lg dark:border-zinc-800 dark:bg-zinc-950">
-            <div className="text-md flex items-center gap-1 rounded-t-md bg-zinc-200 px-2.5 py-0.5 font-apple font-bold dark:bg-zinc-800">
-              <div className="line-clamp-1 w-full truncate py-1.5 font-apple text-sm md:flex">
-                {user.username}
+            <DropdownMenuContent className="m-2 w-60 rounded-xl border bg-zinc-50 text-lg dark:border-zinc-800 dark:bg-zinc-950">
+              <div className="text-md flex items-center gap-1 rounded-t-md bg-zinc-200 px-2.5 py-0.5 font-apple font-bold dark:bg-zinc-800">
+                <div className="line-clamp-1 w-full truncate py-1.5 font-apple text-sm md:flex">
+                  {user.username}
+                </div>
               </div>
-            </div>
 
-            <div className="pt-1">
+              <div className="pt-1">
               {/* <Link
                 href={`/${locale}/music/add-music`}
                 className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
@@ -131,6 +207,22 @@ export function LogoutButton() {
               </Link> */}
 
               <div className="py-1 dark:border-zinc-800 md:hidden">
+                <DropdownMenuItem
+                  onSelect={() => setIsFriendsOpen(true)}
+                  className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                >
+                  <UsersThree size={20} className="text-rose-500" />
+                  <div className="text-sm font-medium">Friends</div>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem
+                  onSelect={() => setIsChatbotOpen(true)}
+                  className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                >
+                  <ChatCircleDots size={20} className="text-rose-500" />
+                  <div className="text-sm font-medium">AI Chat</div>
+                </DropdownMenuItem>
+
                 <div className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800">
                   <ThemeToggleMenuBar className="0 size-5 text-rose-500" />
 
@@ -189,10 +281,45 @@ export function LogoutButton() {
                   <div className="text-sm font-medium">Log Out</div>
                 </div>
               </div>
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <DrawerContent className="md:hidden dark:border-zinc-800 dark:bg-zinc-950">
+            <DrawerHeader className="border-b dark:border-zinc-900">
+              <DrawerTitle>Friends</DrawerTitle>
+              <DrawerDescription>
+                Manage friend requests and open a friend library.
+              </DrawerDescription>
+            </DrawerHeader>
+
+            <div className="max-h-[75vh] overflow-y-auto p-4">
+              <FriendsPanelContent
+                locale={locale}
+                onNavigate={() => setIsFriendsOpen(false)}
+              />
             </div>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </DrawerContent>
+        </Drawer>
       )}
+
+      <AnimatePresence mode="wait">
+        {isChatbotOpen ? (
+          <motion.div
+            key="mobile-avatar-chatbot"
+            variants={panelVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="fixed inset-0 z-50 max-w-full font-apple md:hidden"
+          >
+            <ChatbotPanel
+              handle={() => setIsChatbotOpen(false)}
+              className="h-full rounded-none"
+            />
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 }

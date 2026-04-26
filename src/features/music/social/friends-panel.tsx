@@ -11,7 +11,7 @@ import { Ping } from "@/components/ping";
 import { FriendCodeSearch } from "./friend-code-search";
 import { BorderPro } from "../component/border-pro";
 
-type FriendUser = {
+export type FriendUser = {
   id: string;
   username: string;
   displayName: string;
@@ -78,25 +78,25 @@ function UserRow({
   );
 }
 
-export function FriendsPanel() {
+function useFriendsSocialData(enabled = true) {
   const { user } = useUser();
-  const params = useParams();
-  const locale = (params?.locale as string) || "en";
   const [incoming, setIncoming] = useState<FriendUser[]>([]);
   const [outgoing, setOutgoing] = useState<FriendUser[]>([]);
   const [friends, setFriends] = useState<FriendUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [activeUserId, setActiveUserId] = useState<string | null>(null);
-  const [isHover, setIsHover] = useState(false);
-  const totalRequests = incoming.length + outgoing.length;
-  const previewFriends = friends.slice(0, 3);
-  const collapsedWidth = 64;
-  const collapsedHeight = 232;
-  const expandedWidth = 384;
-  const expandedHeight = 560;
 
   const loadSocialData = useCallback(async () => {
+    if (!enabled) {
+      setIncoming([]);
+      setOutgoing([]);
+      setFriends([]);
+      setMessage("");
+      setIsLoading(false);
+      return;
+    }
+
     if (!user?.id) {
       setIncoming([]);
       setOutgoing([]);
@@ -143,7 +143,7 @@ export function FriendsPanel() {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id]);
+  }, [enabled, user?.id]);
 
   useEffect(() => {
     void loadSocialData();
@@ -180,6 +180,208 @@ export function FriendsPanel() {
       setActiveUserId(null);
     }
   };
+
+  return {
+    incoming,
+    outgoing,
+    friends,
+    isLoading,
+    message,
+    activeUserId,
+    handleRequestAction,
+  };
+}
+
+type FriendsPanelBodyProps = {
+  locale: string;
+  incoming: FriendUser[];
+  outgoing: FriendUser[];
+  friends: FriendUser[];
+  isLoading: boolean;
+  message: string;
+  activeUserId: string | null;
+  onNavigate?: () => void;
+  onRequestAction: (
+    endpoint: "/api/friends/accept" | "/api/friends/reject",
+    requesterUserId: string
+  ) => Promise<void>;
+};
+
+function FriendsPanelBody({
+  locale,
+  incoming,
+  outgoing,
+  friends,
+  isLoading,
+  message,
+  activeUserId,
+  onNavigate,
+  onRequestAction,
+}: FriendsPanelBodyProps) {
+  const totalRequests = incoming.length + outgoing.length;
+
+  return (
+    <div className="h-full space-y-4 overflow-y-auto">
+      <div className="flex items-center justify-between gap-3">
+        <div className="rounded-full border border-zinc-200 px-3 py-1 text-xs text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
+          {totalRequests} requests
+        </div>
+
+        <div>
+          <FriendCodeSearch />
+        </div>
+      </div>
+
+      <div>
+        <div className="mb-2 text-sm font-medium text-zinc-500">
+          Incoming requests
+        </div>
+
+        {isLoading ? (
+          <div className="text-sm text-zinc-500">Loading requests...</div>
+        ) : incoming.length === 0 ? (
+          <div className="text-sm text-zinc-500">No incoming requests yet.</div>
+        ) : (
+          <div className="space-y-3 rounded-2xl bg-white dark:bg-zinc-950">
+            {incoming.map((requestUser) => (
+              <UserRow
+                key={requestUser.id}
+                user={requestUser}
+                action={
+                  <button
+                    type="button"
+                    disabled={activeUserId === requestUser.id}
+                    onClick={() =>
+                      void onRequestAction("/api/friends/accept", requestUser.id)
+                    }
+                    className="rounded-xl bg-black px-4 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-white dark:text-black"
+                  >
+                    Accept
+                  </button>
+                }
+                secondaryAction={
+                  <button
+                    type="button"
+                    disabled={activeUserId === requestUser.id}
+                    onClick={() =>
+                      void onRequestAction("/api/friends/reject", requestUser.id)
+                    }
+                    className="rounded-xl border px-4 py-2 text-sm font-medium dark:border-zinc-800"
+                  >
+                    Reject
+                  </button>
+                }
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div>
+        <div className="mb-2 text-sm font-semibold text-zinc-500">
+          Pending requests
+        </div>
+
+        {isLoading ? (
+          <div className="text-sm text-zinc-500">
+            Loading pending requests...
+          </div>
+        ) : outgoing.length === 0 ? (
+          <div className="text-sm text-zinc-500">No pending requests.</div>
+        ) : (
+          <div className="space-y-3 bg-white dark:bg-zinc-950">
+            {outgoing.map((requestUser) => (
+              <UserRow key={requestUser.id} user={requestUser} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div>
+        <div className="mb-2 text-sm font-semibold text-zinc-500">Friends</div>
+
+        {isLoading ? (
+          <div className="text-sm text-zinc-500">Loading friends...</div>
+        ) : friends.length === 0 ? (
+          <div className="text-sm text-zinc-500">
+            You have not connected with anyone yet.
+          </div>
+        ) : (
+          <div className="space-y-3 rounded-2xl bg-white dark:bg-zinc-950">
+            {friends.map((friend) => (
+              <UserRow
+                key={friend.id}
+                user={friend}
+                action={
+                  <Link
+                    href={`/${locale}/music/friends/${friend.id}/library`}
+                    onClick={onNavigate}
+                    className="rounded-xl bg-black px-4 py-2 text-sm font-medium text-white dark:bg-white dark:text-black"
+                  >
+                    View library
+                  </Link>
+                }
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {message ? <div className="text-sm text-rose-500">{message}</div> : null}
+    </div>
+  );
+}
+
+export function FriendsPanelContent({
+  locale,
+  onNavigate,
+}: {
+  locale: string;
+  onNavigate?: () => void;
+}) {
+  const social = useFriendsSocialData(true);
+
+  return (
+    <FriendsPanelBody
+      locale={locale}
+      incoming={social.incoming}
+      outgoing={social.outgoing}
+      friends={social.friends}
+      isLoading={social.isLoading}
+      message={social.message}
+      activeUserId={social.activeUserId}
+      onNavigate={onNavigate}
+      onRequestAction={social.handleRequestAction}
+    />
+  );
+}
+
+export function FriendsPanel() {
+  const params = useParams();
+  const locale = (params?.locale as string) || "en";
+  const [isHover, setIsHover] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const social = useFriendsSocialData(isDesktop);
+  const previewFriends = social.friends.slice(0, 3);
+  const collapsedWidth = 64;
+  const collapsedHeight = 232;
+  const expandedWidth = 384;
+  const expandedHeight = 560;
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const updateIsDesktop = () => setIsDesktop(mediaQuery.matches);
+
+    updateIsDesktop();
+    mediaQuery.addEventListener("change", updateIsDesktop);
+    return () => mediaQuery.removeEventListener("change", updateIsDesktop);
+  }, []);
+
+  if (!isDesktop) {
+    return null;
+  }
 
   return (
     <div className="relative mx-4">
@@ -244,131 +446,16 @@ export function FriendsPanel() {
                 className="absolute inset-0 min-w-0 p-4"
                 aria-hidden={!isHover}
               >
-                <div className="h-full space-y-4 overflow-y-auto">
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="rounded-full border border-zinc-200 px-3 py-1 text-xs text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
-                      {totalRequests} requests
-                    </div>
-
-                    <div>
-                      <FriendCodeSearch />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="mb-2 text-sm font-medium text-zinc-500">
-                      Incoming requests
-                    </div>
-
-                    {isLoading ? (
-                      <div className="text-sm text-zinc-500">
-                        Loading requests...
-                      </div>
-                    ) : incoming.length === 0 ? (
-                      <div className="text-sm text-zinc-500">
-                        No incoming requests yet.
-                      </div>
-                    ) : (
-                      <div className="space-y-3 rounded-2xl bg-white dark:bg-zinc-950">
-                        {incoming.map((requestUser) => (
-                          <UserRow
-                            key={requestUser.id}
-                            user={requestUser}
-                            action={
-                              <button
-                                type="button"
-                                disabled={activeUserId === requestUser.id}
-                                onClick={() =>
-                                  handleRequestAction(
-                                    "/api/friends/accept",
-                                    requestUser.id
-                                  )
-                                }
-                                className="rounded-xl bg-black px-4 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-white dark:text-black"
-                              >
-                                Accept
-                              </button>
-                            }
-                            secondaryAction={
-                              <button
-                                type="button"
-                                disabled={activeUserId === requestUser.id}
-                                onClick={() =>
-                                  handleRequestAction(
-                                    "/api/friends/reject",
-                                    requestUser.id
-                                  )
-                                }
-                                className="rounded-xl border px-4 py-2 text-sm font-medium dark:border-zinc-800"
-                              >
-                                Reject
-                              </button>
-                            }
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  <div>
-                    <div className="mb-2 text-sm font-semibold text-zinc-500">
-                      Pending requests
-                    </div>
-
-                    {isLoading ? (
-                      <div className="text-sm text-zinc-500">
-                        Loading pending requests...
-                      </div>
-                    ) : outgoing.length === 0 ? (
-                      <div className="text-sm text-zinc-500">
-                        No pending requests.
-                      </div>
-                    ) : (
-                      <div className="space-y-3 bg-white dark:bg-zinc-950">
-                        {outgoing.map((requestUser) => (
-                          <UserRow key={requestUser.id} user={requestUser} />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  <div>
-                    <div className="mb-2 text-sm font-semibold text-zinc-500">
-                      Friends
-                    </div>
-
-                    {isLoading ? (
-                      <div className="text-sm text-zinc-500">
-                        Loading friends...
-                      </div>
-                    ) : friends.length === 0 ? (
-                      <div className="text-sm text-zinc-500">
-                        You have not connected with anyone yet.
-                      </div>
-                    ) : (
-                      <div className="space-y-3 rounded-2xl bg-white dark:bg-zinc-950">
-                        {friends.map((friend) => (
-                          <UserRow
-                            key={friend.id}
-                            user={friend}
-                            action={
-                              <Link
-                                href={`/${locale}/music/friends/${friend.id}/library`}
-                                className="rounded-xl bg-black px-4 py-2 text-sm font-medium text-white dark:bg-white dark:text-black"
-                              >
-                                View library
-                              </Link>
-                            }
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {message ? (
-                    <div className="text-sm text-rose-500">{message}</div>
-                  ) : null}
-                </div>
+                <FriendsPanelBody
+                  locale={locale}
+                  incoming={social.incoming}
+                  outgoing={social.outgoing}
+                  friends={social.friends}
+                  isLoading={social.isLoading}
+                  message={social.message}
+                  activeUserId={social.activeUserId}
+                  onRequestAction={social.handleRequestAction}
+                />
               </motion.div>
             ) : (
               <motion.div
@@ -380,7 +467,7 @@ export function FriendsPanel() {
                 style={{ transformOrigin: "bottom right" }}
                 className="flex h-full w-14 shrink-0 flex-col items-center justify-center"
               >
-                {isLoading ? (
+                {social.isLoading ? (
                   <div className="text-center text-[11px] text-zinc-500">
                     Loading...
                   </div>
