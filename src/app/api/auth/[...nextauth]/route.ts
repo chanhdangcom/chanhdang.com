@@ -8,6 +8,15 @@ import {
   ensureUserSocialFields,
 } from "@/lib/social-graph";
 
+const getDbUserByEmail = async (email?: string | null) => {
+  if (!email) return null;
+
+  const client = await clientPromise;
+  const db = client.db("musicdb");
+  const rawDbUser = await db.collection("users").findOne({ email });
+  return ensureUserSocialFields(db, rawDbUser);
+};
+
 /**
  * Cần có trong .env.local cho Google login:
  * - NEXTAUTH_SECRET (bất kỳ chuỗi bí mật, ví dụ: openssl rand -base64 32)
@@ -118,45 +127,41 @@ const handler = NextAuth({
       // Khi đăng nhập lần đầu: lưu data từ Google
       if (account && profile) {
         const p = profile as { name?: string; email?: string; picture?: string };
-        token.id = token.sub;
         token.name = p.name ?? token.name;
         token.picture = p.picture ?? token.picture;
         token.email = p.email ?? token.email;
-        
-        // Fetch role from database
-        if (p.email) {
-          try {
-            const client = await clientPromise;
-            const db = client.db("musicdb");
-            const rawDbUser = await db.collection("users").findOne({ email: p.email });
-            const dbUser = await ensureUserSocialFields(db, rawDbUser);
-            if (dbUser?.role) {
-              token.role = dbUser.role;
-            } else {
-              token.role = "user"; // Default role
-            }
-            token.friendCode = dbUser?.friendCode;
-            token.bio = dbUser?.bio;
-            token.location = dbUser?.location;
-            token.favoriteGenres = dbUser?.favoriteGenres;
-            token.favoriteArtists = dbUser?.favoriteArtists;
-            token.libraryVisibility = dbUser?.libraryVisibility;
-          } catch (error) {
-            console.error("Error fetching user role:", error);
-            token.role = "user"; // Default on error
-          }
-        }
       }
-      // Giữ lại picture từ token (cho các request tiếp theo)
-      // Nếu không có, thử lấy từ user object (từ adapter)
+
       if (!token.picture && user?.image) {
         token.picture = user.image;
       }
+
+      try {
+        const dbUser = await getDbUserByEmail(
+          (token.email as string | undefined) ?? user?.email ?? null
+        );
+
+        if (dbUser?._id) {
+          token.dbUserId = dbUser._id.toString();
+        }
+        token.role = (dbUser?.role as string | undefined) || "user";
+        token.friendCode = dbUser?.friendCode;
+        token.bio = dbUser?.bio;
+        token.location = dbUser?.location;
+        token.favoriteGenres = dbUser?.favoriteGenres;
+        token.favoriteArtists = dbUser?.favoriteArtists;
+        token.libraryVisibility = dbUser?.libraryVisibility;
+      } catch (error) {
+        console.error("Error syncing user into JWT:", error);
+        token.role = (token.role as string | undefined) || "user";
+      }
+
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.sub || "";
+        session.user.id =
+          (token.dbUserId as string | undefined) || token.sub || "";
         session.user.name = token.name ?? session.user.name;
         session.user.email = token.email ?? session.user.email;
         // Ưu tiên picture từ token, fallback về image từ session

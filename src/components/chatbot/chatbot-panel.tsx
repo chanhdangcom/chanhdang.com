@@ -1,18 +1,14 @@
 "use client";
 
 import { cn } from "@/utils/cn";
-import {
-  PaperPlaneRight,
-  Pause,
-  Play,
-  X,
-} from "@phosphor-icons/react/dist/ssr";
+import { PaperPlaneRight, Play, X } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import { useTheme } from "next-themes";
-import React, { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import React, { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Ping } from "../ping";
 import { useAudio } from "@/components/music-provider";
 import type { IMusic } from "@/app/[locale]/features/profile/types/music";
+import type { ChatAction, ChatApiResponse, ChatMusic } from "@/lib/chatbot/contracts";
 
 type ChatRole = "user" | "bot";
 
@@ -20,15 +16,7 @@ interface ChatMessage {
   id: string;
   role: ChatRole;
   content: string;
-  audioUrl?: string;
-  autoPlay?: boolean;
-  music?: {
-    id: string;
-    title: string;
-    singer: string;
-    cover: string;
-    youtube?: string;
-  };
+  actions?: ChatAction[];
 }
 
 type IProp = {
@@ -55,16 +43,14 @@ const createId = () => {
 
 const CHAT_ENDPOINT = "/api/ncdang-chat";
 
-type ChatApiResponse = {
-  answer?: string;
-  error?: string;
-  audio?: {
-    url: string;
-    autoPlay?: boolean;
-  };
+type LegacyChatApiResponse = ChatApiResponse & {
   action?: {
     type: "theme";
     value: "light" | "dark";
+  };
+  audio?: {
+    url: string;
+    autoPlay?: boolean;
   };
   music?: {
     id: string;
@@ -75,6 +61,63 @@ type ChatApiResponse = {
     youtube?: string;
   };
 };
+
+const toPlayerMusic = (track: ChatMusic): IMusic => ({
+  id: track.id,
+  title: track.title,
+  singer: track.singer,
+  cover: track.cover,
+  audio: track.audio,
+  youtube: track.youtube || "",
+  content: track.content || "",
+  type: track.type,
+  srt: undefined,
+  beat: undefined,
+});
+
+function MusicSuggestionCard({
+  track,
+  label,
+  onPlay,
+}: {
+  track: ChatMusic;
+  label?: string;
+  onPlay: (track: ChatMusic) => void;
+}) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-black/20 p-2">
+      <div className="flex items-center gap-3">
+        <Image
+          src={track.cover || "/img/default-music-cover.png"}
+          alt={track.title}
+          width={56}
+          height={56}
+          className="size-14 rounded-xl object-cover"
+        />
+
+        <div className="min-w-0 flex-1">
+          {label ? (
+            <p className="mb-1 text-[11px] font-medium uppercase tracking-wide text-cyan-300">
+              {label}
+            </p>
+          ) : null}
+
+          <p className="truncate font-medium text-white">{track.title}</p>
+          <p className="truncate text-xs text-zinc-300">{track.singer}</p>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => onPlay(track)}
+          className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+          aria-label={`Phát ${track.title}`}
+        >
+          <Play size={20} weight="fill" />
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export function ChatbotPanel({ className, handle }: IProp) {
   const { setTheme } = useTheme();
@@ -92,8 +135,6 @@ export function ChatbotPanel({ className, handle }: IProp) {
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
-  const audioRefs = useRef<Record<string, HTMLAudioElement | null>>({});
-  const [playingId, setPlayingId] = useState<string | null>(null);
 
   useEffect(() => {
     const container = scrollRef.current;
@@ -111,6 +152,67 @@ export function ChatbotPanel({ className, handle }: IProp) {
     () => Boolean(input.trim()) && !isSubmitting,
     [input, isSubmitting]
   );
+
+  const playTrack = useCallback(
+    (track: ChatMusic) => {
+      handlePlayAudio(toPlayerMusic(track));
+    },
+    [handlePlayAudio]
+  );
+
+  const applyActions = useCallback(
+    (actions: ChatAction[]) => {
+      actions.forEach((action) => {
+        if (action.type === "theme") {
+          if (document.startViewTransition) {
+            document.startViewTransition(() => {
+              setTheme(action.value);
+            });
+          } else {
+            setTheme(action.value);
+          }
+        }
+
+        if (action.type === "play-music" && action.autoPlay) {
+          playTrack(action.track);
+        }
+      });
+    },
+    [playTrack, setTheme]
+  );
+
+  const normalizeActions = useCallback((data: LegacyChatApiResponse): ChatAction[] => {
+    const nextActions = [...(data.actions ?? [])];
+
+    if (data.action && !nextActions.some((action) => action.type === "theme")) {
+      nextActions.push({
+        type: "theme",
+        value: data.action.value,
+      });
+    }
+
+    const legacyAudioUrl = data.music?.audio || data.audio?.url;
+    if (
+      data.music &&
+      legacyAudioUrl &&
+      !nextActions.some((action) => action.type === "play-music")
+    ) {
+      nextActions.push({
+        type: "play-music",
+        track: {
+          id: data.music.id,
+          title: data.music.title,
+          singer: data.music.singer,
+          cover: data.music.cover,
+          audio: legacyAudioUrl,
+          youtube: data.music.youtube,
+        },
+        autoPlay: data.audio?.autoPlay ?? Boolean(legacyAudioUrl),
+      });
+    }
+
+    return nextActions;
+  }, []);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -147,52 +249,13 @@ export function ChatbotPanel({ className, handle }: IProp) {
         );
       }
 
-      const data = (await response.json()) as ChatApiResponse;
+      const data = (await response.json()) as LegacyChatApiResponse;
       const content =
         data.answer?.trim() ??
         data.error?.trim() ??
         "Xin lỗi, mình chưa thể trả lời câu này. Bạn thử lại sau nhé.";
-
-      // Handle theme action
-      if (data.action?.type === "theme" && data.action.value) {
-        const themeValue = data.action.value;
-        // Use view transition if available
-        if (document.startViewTransition) {
-          document.startViewTransition(() => {
-            setTheme(themeValue);
-          });
-        } else {
-          setTheme(themeValue);
-        }
-      }
-
-      // Handle music playback - sync with header-motion
-      let shouldPlayInHeader = false;
-      if (data.music) {
-        try {
-          const audioUrl = data.music.audio || data.audio?.url;
-          if (audioUrl) {
-            const musicData: IMusic = {
-              id: data.music.id,
-              title: data.music.title,
-              singer: data.music.singer,
-              cover: data.music.cover,
-              audio: audioUrl,
-              youtube: data.music.youtube || "",
-              content: "",
-              type: undefined,
-              srt: undefined,
-              beat: undefined,
-            };
-
-            // Play music in header-motion player
-            handlePlayAudio(musicData);
-            shouldPlayInHeader = true;
-          }
-        } catch (err) {
-          console.error("[chatbot-panel] Error playing music:", err);
-        }
-      }
+      const actions = normalizeActions(data);
+      applyActions(actions);
 
       setMessages((prev) => [
         ...prev,
@@ -200,10 +263,7 @@ export function ChatbotPanel({ className, handle }: IProp) {
           id: createId(),
           role: "bot",
           content,
-          // Only set audioUrl if not playing in header-motion
-          audioUrl: shouldPlayInHeader ? undefined : data.audio?.url,
-          autoPlay: shouldPlayInHeader ? false : data.audio?.autoPlay,
-          music: data.music,
+          actions,
         },
       ]);
     } catch (err) {
@@ -224,32 +284,6 @@ export function ChatbotPanel({ className, handle }: IProp) {
         ?.querySelector<HTMLInputElement>('input[name="message"]')
         ?.focus();
     }
-  };
-
-  const handleToggleAudio = (messageId: string) => {
-    const target = audioRefs.current[messageId];
-    if (!target) {
-      return;
-    }
-
-    if (playingId && playingId !== messageId) {
-      audioRefs.current[playingId]?.pause();
-    }
-
-    if (!target.paused) {
-      target.pause();
-      setPlayingId(null);
-      return;
-    }
-
-    target
-      .play()
-      .then(() => {
-        setPlayingId(messageId);
-      })
-      .catch((error) => {
-        console.error("[chatbot-panel] audio play error", error);
-      });
   };
 
   return (
@@ -324,77 +358,46 @@ export function ChatbotPanel({ className, handle }: IProp) {
               >
                 <p>{message.content}</p>
 
-                {/* Only show audio player if not synced with header-motion */}
-                {message.audioUrl && !message.music && (
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 rounded-full border border-white/10 bg-black/30 p-1">
-                      <button
-                        type="button"
-                        onClick={() => handleToggleAudio(message.id)}
-                        className="flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
-                        aria-label={
-                          playingId === message.id
-                            ? "Tạm dừng phát audio"
-                            : "Phát audio"
-                        }
+                {message.actions?.map((action, actionIndex) => {
+                  if (action.type === "play-music") {
+                    return (
+                      <MusicSuggestionCard
+                        key={`${message.id}-action-${actionIndex}`}
+                        track={action.track}
+                        label={action.autoPlay ? "Đang phát" : "Bài hát"}
+                        onPlay={playTrack}
+                      />
+                    );
+                  }
+
+                  if (action.type === "suggest-music") {
+                    return (
+                      <div
+                        key={`${message.id}-action-${actionIndex}`}
+                        className="space-y-2"
                       >
-                        {playingId === message.id ? (
-                          <Pause size={22} weight="fill" />
-                        ) : (
-                          <Play size={22} weight="fill" />
-                        )}
-                      </button>
+                        {action.reason ? (
+                          <p className="text-xs text-zinc-300">
+                            {action.reason === "fallback"
+                              ? "Mình chưa thấy đúng bài bạn yêu cầu, thử một trong các bài này nhé."
+                              : "Mấy bài này có thể hợp với bạn."}
+                          </p>
+                        ) : null}
 
-                      <div className="flex-1 text-zinc-200">
-                        <p className="font-medium text-white">
-                          Mõi Người Một Suy Nghĩ
-                        </p>
-
-                        <p className="text-xs">Khầy Trí Tín</p>
+                        {action.tracks.map((track) => (
+                          <MusicSuggestionCard
+                            key={`${message.id}-${track.id}`}
+                            track={track}
+                            label="Gợi ý"
+                            onPlay={playTrack}
+                          />
+                        ))}
                       </div>
-                    </div>
+                    );
+                  }
 
-                    <audio
-                      ref={(node) => {
-                        if (node) {
-                          audioRefs.current[message.id] = node;
-                        } else {
-                          delete audioRefs.current[message.id];
-                        }
-                      }}
-                      autoPlay={message.autoPlay}
-                      className="hidden"
-                      src={message.audioUrl}
-                      onPlay={() => {
-                        if (playingId && playingId !== message.id) {
-                          audioRefs.current[playingId]?.pause();
-                        }
-                        setPlayingId(message.id);
-                      }}
-                      onPause={() => {
-                        setPlayingId((current) =>
-                          current === message.id ? null : current
-                        );
-                      }}
-                      onEnded={() => setPlayingId(null)}
-                    >
-                      Trình duyệt của bạn không hỗ trợ phát audio.
-                    </audio>
-                  </div>
-                )}
-
-                {/* Show music info if synced with header-motion */}
-                {message.music && !message.audioUrl && (
-                  <div className="mt-2 rounded-full border border-white/10 bg-black/20 px-4 py-2">
-                    <p className="font-medium text-white">
-                      {message.music.title}
-                    </p>
-
-                    <p className="text-xs text-zinc-300">
-                      {message.music.singer}
-                    </p>
-                  </div>
-                )}
+                  return null;
+                })}
               </article>
 
               {isUser && <div className="hidden h-8 w-8 sm:block" />}

@@ -34,6 +34,15 @@ const normalizeMusic = (music: Record<string, unknown>): MusicResult => {
   };
 };
 
+const normalizeForSearch = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
 /**
  * Escape special regex characters
  */
@@ -41,14 +50,110 @@ const escapeRegex = (text: string): string => {
   return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 };
 
-/**
- * Search for a specific song by title
- * Uses case-insensitive matching (MongoDB regex with "i" flag handles case-insensitive)
- * Works with: "Hồng Nhan", "HỒNG NHAN", "hong nhan", "HONG NHAN", etc.
- */
-export async function searchMusicByTitle(searchQuery: string): Promise<MusicResult | null> {
+const levenshteinDistance = (a: string, b: string) => {
+  if (a === b) return 0;
+  if (!a.length) return b.length;
+  if (!b.length) return a.length;
+
+  const rows = a.length + 1;
+  const cols = b.length + 1;
+  const matrix = Array.from({ length: rows }, () => Array<number>(cols).fill(0));
+
+  for (let i = 0; i < rows; i += 1) matrix[i][0] = i;
+  for (let j = 0; j < cols; j += 1) matrix[0][j] = j;
+
+  for (let i = 1; i < rows; i += 1) {
+    for (let j = 1; j < cols; j += 1) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1,
+        matrix[i][j - 1] + 1,
+        matrix[i - 1][j - 1] + cost
+      );
+    }
+  }
+
+  return matrix[rows - 1][cols - 1];
+};
+
+const similarityScore = (a: string, b: string) => {
+  const normalizedA = normalizeForSearch(a);
+  const normalizedB = normalizeForSearch(b);
+  if (!normalizedA || !normalizedB) return 0;
+
+  const maxLength = Math.max(normalizedA.length, normalizedB.length);
+  if (!maxLength) return 1;
+
+  return 1 - levenshteinDistance(normalizedA, normalizedB) / maxLength;
+};
+
+const buildMusicScore = (music: MusicResult, query: string) => {
+  const normalizedQuery = normalizeForSearch(query);
+  const normalizedTitle = normalizeForSearch(music.title);
+  const normalizedSinger = normalizeForSearch(music.singer);
+
+  if (!normalizedQuery) {
+    return 0;
+  }
+
+  let score = 0;
+
+  if (normalizedTitle === normalizedQuery) score += 120;
+  if (normalizedSinger === normalizedQuery) score += 80;
+  if (normalizedTitle.startsWith(normalizedQuery)) score += 90;
+  if (normalizedTitle.includes(normalizedQuery)) score += 70;
+  if (normalizedSinger.includes(normalizedQuery)) score += 40;
+
+  const titleSimilarity = similarityScore(normalizedTitle, normalizedQuery);
+  const singerSimilarity = similarityScore(normalizedSinger, normalizedQuery);
+  score += Math.round(titleSimilarity * 90);
+  score += Math.round(singerSimilarity * 40);
+
+  const queryTokens = normalizedQuery.split(" ").filter(Boolean);
+  const titleTokens = normalizedTitle.split(" ").filter(Boolean);
+  const singerTokens = normalizedSinger.split(" ").filter(Boolean);
+
+  for (const token of queryTokens) {
+    if (normalizedTitle.includes(token)) score += 16;
+    if (normalizedSinger.includes(token)) score += 8;
+
+    const bestTitleTokenScore = titleTokens.reduce((best, titleToken) => {
+      return Math.max(best, similarityScore(token, titleToken));
+    }, 0);
+    const bestSingerTokenScore = singerTokens.reduce((best, singerToken) => {
+      return Math.max(best, similarityScore(token, singerToken));
+    }, 0);
+
+    if (bestTitleTokenScore >= 0.72) {
+      score += Math.round(bestTitleTokenScore * 22);
+    }
+    if (bestSingerTokenScore >= 0.72) {
+      score += Math.round(bestSingerTokenScore * 10);
+    }
+  }
+
+  return score;
+};
+
+const dedupeMusicResults = (docs: unknown[]) => {
+  const deduped = new Map<string, MusicResult>();
+
+  for (const doc of docs) {
+    const normalized = normalizeMusic(doc as Record<string, unknown>);
+    if (normalized.id && normalized.audio) {
+      deduped.set(normalized.id, normalized);
+    }
+  }
+
+  return Array.from(deduped.values());
+};
+
+export async function searchMusicCandidates(
+  searchQuery: string,
+  limit: number = 5
+): Promise<MusicResult[]> {
   if (!searchQuery || !searchQuery.trim()) {
-    return null;
+    return [];
   }
 
   try {
@@ -58,46 +163,74 @@ export async function searchMusicByTitle(searchQuery: string): Promise<MusicResu
 
     const trimmedQuery = searchQuery.trim();
     const escapedQuery = escapeRegex(trimmedQuery);
+    const tokens = normalizeForSearch(trimmedQuery).split(" ").filter(Boolean);
 
-    // Try exact match first (case-insensitive)
-    // MongoDB regex with "i" flag is case-insensitive
-    let music = await collection.findOne({
-      title: { $regex: new RegExp(`^${escapedQuery}$`, "i") },
-    });
+    const regexQueries = [
+      { title: { $regex: new RegExp(escapedQuery, "i") } },
+      { singer: { $regex: new RegExp(escapedQuery, "i") } },
+      ...tokens.flatMap((token) => [
+        { title: { $regex: new RegExp(escapeRegex(token), "i") } },
+        { singer: { $regex: new RegExp(escapeRegex(token), "i") } },
+      ]),
+    ];
 
-    if (music) {
-      return normalizeMusic(music as Record<string, unknown>);
-    }
-
-    // Try partial match in title (case-insensitive)
-    music = await collection.findOne({
-      title: { $regex: new RegExp(escapedQuery, "i") },
-    });
-
-    if (music) {
-      return normalizeMusic(music as Record<string, unknown>);
-    }
-
-    // Try searching in both title and singer (case-insensitive)
-    const musics = await collection
-      .find({
-        $or: [
-          { title: { $regex: new RegExp(escapedQuery, "i") } },
-          { singer: { $regex: new RegExp(escapedQuery, "i") } },
-        ],
-      })
-      .limit(1)
+    const docs = await collection
+      .find({ $or: regexQueries })
+      .limit(30)
       .toArray();
 
-    if (musics.length > 0) {
-      return normalizeMusic(musics[0] as Record<string, unknown>);
+    let candidates = dedupeMusicResults(docs);
+
+    const scoredInitial = candidates
+      .map((music) => ({
+        music,
+        score: buildMusicScore(music, trimmedQuery),
+      }))
+      .sort((a, b) => b.score - a.score);
+
+    const topInitialScore = scoredInitial[0]?.score ?? 0;
+
+    if (candidates.length === 0 || topInitialScore < 70) {
+      const fallbackDocs = await collection
+        .find({ audio: { $type: "string", $ne: "" } })
+        .project({
+          title: 1,
+          singer: 1,
+          cover: 1,
+          audio: 1,
+          youtube: 1,
+          content: 1,
+          type: 1,
+        })
+        .limit(250)
+        .toArray();
+
+      candidates = dedupeMusicResults([...docs, ...fallbackDocs]);
     }
 
-    return null;
+    return candidates
+      .map((music) => ({
+        music,
+        score: buildMusicScore(music, trimmedQuery),
+      }))
+      .filter((item) => item.score >= 35)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit)
+      .map((item) => item.music);
   } catch (error) {
-    console.error("[music-search-service] Error searching music:", error);
-    return null;
+    console.error("[music-search-service] Error searching music candidates:", error);
+    return [];
   }
+}
+
+/**
+ * Search for a specific song by title
+ * Uses case-insensitive matching (MongoDB regex with "i" flag handles case-insensitive)
+ * Works with: "Hồng Nhan", "HỒNG NHAN", "hong nhan", "HONG NHAN", etc.
+ */
+export async function searchMusicByTitle(searchQuery: string): Promise<MusicResult | null> {
+  const [firstMatch] = await searchMusicCandidates(searchQuery, 1);
+  return firstMatch ?? null;
 }
 
 /**
@@ -119,6 +252,25 @@ export async function getRandomMusic(): Promise<MusicResult | null> {
   } catch (error) {
     console.error("[music-search-service] Error getting random music:", error);
     return null;
+  }
+}
+
+export async function getMusicRecommendations(limit: number = 3): Promise<MusicResult[]> {
+  try {
+    const client = await clientPromise;
+    const db = client.db("musicdb");
+    const collection = db.collection("musics");
+
+    const musics = await collection
+      .aggregate([{ $match: { audio: { $type: "string", $ne: "" } } }, { $sample: { size: limit } }])
+      .toArray();
+
+    return musics
+      .map((music) => normalizeMusic(music as Record<string, unknown>))
+      .filter((music) => Boolean(music.id && music.audio));
+  } catch (error) {
+    console.error("[music-search-service] Error getting music recommendations:", error);
+    return [];
   }
 }
 

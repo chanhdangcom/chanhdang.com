@@ -19,6 +19,21 @@ const MUSIC_KEYWORDS = [
   "sing a song",
 ];
 
+const MUSIC_RECOMMENDATION_KEYWORDS = [
+  "goi y nhac",
+  "goi y bai hat",
+  "de xuat nhac",
+  "de xuat bai hat",
+  "recommend music",
+  "recommend a song",
+  "suggest music",
+  "suggest a song",
+  "nghe gi bay gio",
+  "bai nao hay",
+  "nhac nao hay",
+  "co bai nao hay",
+];
+
 const normalize = (value: string) =>
   value
     .toLowerCase()
@@ -40,6 +55,7 @@ export const MUSIC_AUDIO_PAYLOAD = {
 
 export type MusicIntentResult = {
   isMusicRequest: boolean;
+  intent: "play" | "recommend" | "none";
   songTitle?: string; // Tên bài hát nếu được yêu cầu cụ thể
 };
 
@@ -77,7 +93,7 @@ const extractSongTitle = (message: string): string | null => {
 export const detectMusicIntent = async (message: string): Promise<MusicIntentResult> => {
   const text = message.trim();
   if (!text) {
-    return { isMusicRequest: false };
+    return { isMusicRequest: false, intent: "none" };
   }
 
   // Try to extract song title first
@@ -87,72 +103,88 @@ export const detectMusicIntent = async (message: string): Promise<MusicIntentRes
   if (songTitle) {
     return {
       isMusicRequest: true,
+      intent: "play",
       songTitle,
     };
   }
 
+  const normalizedText = normalize(text);
+  const isRecommendationRequest = MUSIC_RECOMMENDATION_KEYWORDS.some((keyword) =>
+    normalizedText.includes(keyword)
+  );
+  if (isRecommendationRequest) {
+    return { isMusicRequest: true, intent: "recommend" };
+  }
+
   // Fast path: keyword matching for common cases
   if (hasKeywordMatch(text)) {
-    return { isMusicRequest: true };
+    return { isMusicRequest: true, intent: "play" };
   }
 
   // Use AI for natural language understanding
   if (!isGeminiConfigured()) {
-    return { isMusicRequest: false };
+    return { isMusicRequest: false, intent: "none" };
   }
 
   try {
     const result = await geminiGenerateAnswer({
       context:
-        "Bạn là bộ phân loại ý định người dùng. Nhiệm vụ của bạn là xác định xem người dùng có muốn nghe nhạc, hát, rap, hoặc phát audio không.\n\n" +
+        "Bạn là bộ phân loại ý định người dùng cho chatbot âm nhạc.\n\n" +
+        "Phân loại đúng một trong 3 nhãn sau:\n" +
+        "- play: người dùng muốn phát một bài hoặc mở nhạc ngay bây giờ\n" +
+        "- recommend: người dùng muốn được gợi ý, đề xuất nhạc\n" +
+        "- no: không liên quan đến hành động âm nhạc\n\n" +
         "Các ví dụ yêu cầu phát nhạc:\n" +
         "- 'Cho mình nghe nhạc đi', 'Muốn nghe bài hát', 'Có thể hát cho mình nghe không?', 'Mở nhạc lên đi', 'Play music', 'Sing a song'\n" +
         "- 'Bạn có thể hát không?', 'Hát một bài đi', 'Rap cho mình nghe', 'Phát nhạc đi'\n" +
         "- 'Mở bài Hồng Nhan', 'Phát Bạc Phận', 'Cho nghe Sóng Gió' (yêu cầu bài hát cụ thể)\n\n" +
+        "Các ví dụ yêu cầu gợi ý nhạc:\n" +
+        "- 'Gợi ý nhạc cho mình đi', 'Có bài nào hay không?', 'Đề xuất vài bài chill nhé', 'Recommend some songs'\n\n" +
         "Các ví dụ KHÔNG phải yêu cầu phát nhạc:\n" +
         "- 'Bạn thích nhạc gì?', 'Giới thiệu bài hát', 'Nhạc của ai hay?', 'Mình thích nhạc pop'\n" +
         "- 'Bạn có biết hát không?', 'Bạn có nghe nhạc không?' (chỉ là câu hỏi, không phải yêu cầu)\n\n" +
-        "Nếu người dùng yêu cầu một bài hát cụ thể, trả lời theo format: 'Có: [tên bài hát]'\n" +
-        "Nếu chỉ là yêu cầu phát nhạc chung, trả lời 'Có'\n" +
-        "Nếu không phải yêu cầu phát nhạc, trả lời 'Không'",
-      question: `Người dùng nói: "${text}"\n\nĐây có phải là yêu cầu phát nhạc, hát, hoặc rap không? Nếu có bài hát cụ thể, hãy trích xuất tên bài hát.`,
+        "Nếu là play với bài cụ thể, trả lời theo format: 'play: [tên bài hát]'\n" +
+        "Nếu là play chung, trả lời 'play'\n" +
+        "Nếu là recommend, trả lời 'recommend'\n" +
+        "Nếu không liên quan, trả lời 'no'",
+      question: `Người dùng nói: "${text}"\n\nHãy phân loại đúng một nhãn theo hướng dẫn.`,
       language: "vi",
       allowGeneral: true,
     });
 
     if (!result) {
-      return { isMusicRequest: false };
+      return { isMusicRequest: false, intent: "none" };
     }
 
     const answer = normalize(result.trim());
     
     // Check if AI detected a specific song
-    if (answer.includes("co:") || answer.includes("yes:")) {
+    if (answer.startsWith("play:")) {
       const parts = answer.split(":");
       if (parts.length > 1) {
         const extractedTitle = parts.slice(1).join(":").trim();
         if (extractedTitle.length > 0) {
           return {
             isMusicRequest: true,
+            intent: "play",
             songTitle: extractedTitle,
           };
         }
       }
     }
 
-    // Check if it's a general music request
-    const isMusicRequest =
-      answer === "co" ||
-      answer === "yes" ||
-      answer.includes("co") ||
-      answer.includes("yes") ||
-      answer.startsWith("co") ||
-      answer.startsWith("yes");
+    if (answer.startsWith("recommend")) {
+      return { isMusicRequest: true, intent: "recommend" };
+    }
 
-    return { isMusicRequest };
+    if (answer.startsWith("play")) {
+      return { isMusicRequest: true, intent: "play" };
+    }
+
+    return { isMusicRequest: false, intent: "none" };
   } catch (error) {
     console.error("[intent-service] detectMusicIntent error:", error);
-    return { isMusicRequest: false };
+    return { isMusicRequest: false, intent: "none" };
   }
 };
 

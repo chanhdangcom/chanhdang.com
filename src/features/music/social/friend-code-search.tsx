@@ -146,7 +146,7 @@ export function FriendCodeSearch() {
 
       {isOpen ? (
         <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/45 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-lg rounded-3xl bg-zinc-100 p-5 shadow-sm backdrop-blur-xl dark:bg-zinc-950">
+          <div className="w-full max-w-lg rounded-3xl bg-zinc-100 p-5 shadow-xl backdrop-blur-xl dark:bg-zinc-950">
             <div className="flex items-start justify-between gap-4">
               <div className="text-lg font-semibold">Find friends by code</div>
 

@@ -7,7 +7,7 @@ import { useUser } from "@/hooks/use-user";
 import { buildUserAuthHeaders } from "@/lib/client-auth";
 import { HeaderMusicPage } from "../music/header-music-page";
 import { MenuBar } from "../music/menu-bar";
-import { FriendsPanel } from "../music/social/friends-panel";
+
 import { BorderPro } from "../music/component/border-pro";
 import { useImageHoverColor } from "@/hooks/use-image-hover-color";
 import { Check, Copy } from "@phosphor-icons/react/dist/ssr";
@@ -242,14 +242,14 @@ export default function ProfileSettings() {
   const bg = useImageHoverColor(avatarUrl, { alpha: 0.5 });
 
   return (
-    <div className="w-full justify-between gap-4 font-apple md:flex">
+    <div className="font-apple">
       <MenuBar />
 
       <div className="md:hidden">
         <HeaderMusicPage />
       </div>
 
-      <div className="relative z-30 mx-4 mt-4 space-y-4 rounded-3xl border px-4 py-8 font-apple shadow-sm dark:border-zinc-800 dark:bg-zinc-900 md:mx-0 md:ml-[270px] md:w-full">
+      <div className="relative z-30 mx-4 mt-4 space-y-4 rounded-3xl border px-4 py-8 font-apple shadow-sm dark:border-zinc-800 dark:bg-zinc-900 md:ml-[270px]">
         <div
           className="absolute left-0 top-0 -z-10 h-44 w-full rounded-t-3xl"
           style={{
@@ -398,12 +398,6 @@ export default function ProfileSettings() {
         </button>
 
         {message && <div className="mt-3 text-sm text-zinc-500">{message}</div>}
-      </div>
-
-      <div className="mx-4 mt-4 h-fit rounded-3xl border p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 md:mx-0 md:mr-4 md:w-full">
-        <div className="mb-3 text-lg font-semibold">Friends</div>
-
-        <FriendsPanel />
       </div>
     </div>
   );
