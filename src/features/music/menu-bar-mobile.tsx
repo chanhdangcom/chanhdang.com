@@ -1,5 +1,5 @@
 "use client";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -15,6 +15,25 @@ import {
   MenuBarMobileItem,
   type MenuBarMobileItemConfig,
 } from "./component/menu-bar-mobile-item";
+
+const expandedMenuMotion = {
+  initial: { opacity: 0, y: 18, scale: 0.92, filter: "blur(8px)" },
+  animate: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" },
+  exit: { opacity: 0, y: 18, scale: 0.94, filter: "blur(6px)" },
+};
+
+const compactMenuMotion = {
+  initial: { opacity: 0, y: 14, scale: 0.82, filter: "blur(8px)" },
+  animate: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" },
+  exit: { opacity: 0, y: 14, scale: 0.88, filter: "blur(6px)" },
+};
+
+const springTransition = {
+  type: "spring",
+  stiffness: 320,
+  damping: 30,
+  mass: 0.7,
+} as const;
 
 export function MenuBarMobile() {
   const params = useParams();
@@ -194,100 +213,100 @@ export function MenuBarMobile() {
 
   return (
     <div className="fixed inset-x-4 bottom-6 z-50 flex items-center justify-between font-apple sm:hidden">
-      <AnimatePresence>
-        {show ? (
-          <motion.div
-            whileTap={{ scale: 1.05 }}
-            className="relative overflow-hidden rounded-[50px] border border-white/20 bg-white/70 px-0.5 py-1 backdrop-blur-sm dark:border-white/10 dark:bg-black/70"
-          >
+      <LayoutGroup>
+        <AnimatePresence mode="popLayout" initial={false}>
+          {show ? (
             <motion.div
+              key="mobile-menu-expanded"
+              whileTap={{ scale: 1.05 }}
               layout
-              transition={{
-                type: "spring",
-                stiffness: 320,
-                damping: 30,
-                mass: 0.7,
-              }}
               layoutId="item"
-              className="relative z-10 flex items-center justify-between rounded-full border border-transparent px-0.5 dark:text-white"
+              initial={expandedMenuMotion.initial}
+              animate={expandedMenuMotion.animate}
+              exit={expandedMenuMotion.exit}
+              transition={springTransition}
+              className="relative overflow-hidden rounded-[50px] border border-white/20 bg-white/70 px-0.5 py-1 backdrop-blur-sm dark:border-white/10 dark:bg-black/70"
             >
-              {mainItems.map((item, index) => (
-                <div key={item.key} className={index === 0 ? "" : ""}>
-                  <MenuBarMobileItem item={item} />
-                </div>
-              ))}
-            </motion.div>
-          </motion.div>
-        ) : (
-          <motion.div
-            layout
-            transition={{
-              type: "spring",
-              stiffness: 320,
-              damping: 30,
-              mass: 0.7,
-            }}
-            layoutId="item"
-            className="rounded-full border border-white/20 bg-zinc-300/80 p-4 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset] backdrop-blur-lg dark:border-white/10 dark:bg-zinc-950/80 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset]"
-          >
-            <Link href={currentRoute.href}>
-              <div
-                className={
-                  currentRoute.isActive
-                    ? "text-rose-600"
-                    : "text-black dark:text-white"
-                }
+              <motion.div
+                layout
+                transition={springTransition}
+                className="relative z-10 flex items-center justify-between rounded-full border border-transparent px-0.5 dark:text-white"
               >
-                {currentRoute.icon}
-              </div>
-            </Link>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                {mainItems.map((item, index) => (
+                  <div key={item.key} className={index === 0 ? "" : ""}>
+                    <MenuBarMobileItem item={item} />
+                  </div>
+                ))}
+              </motion.div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="mobile-menu-compact"
+              layout
+              layoutId="item"
+              initial={compactMenuMotion.initial}
+              animate={compactMenuMotion.animate}
+              exit={compactMenuMotion.exit}
+              transition={springTransition}
+              className="rounded-full border border-white/20 bg-zinc-300/80 p-4 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset] backdrop-blur-lg dark:border-white/10 dark:bg-zinc-950/80 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset]"
+            >
+              <Link href={currentRoute.href}>
+                <div
+                  className={
+                    currentRoute.isActive
+                      ? "text-rose-600"
+                      : "text-black dark:text-white"
+                  }
+                >
+                  {currentRoute.icon}
+                </div>
+              </Link>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-      <AnimatePresence>
-        {!show ? (
-          <motion.div
-            layout
-            layoutId="Search"
-            transition={{
-              type: "spring",
-              stiffness: 320,
-              damping: 30,
-              mass: 0.7,
-            }}
-            className="rounded-full border border-white/20 bg-zinc-300/80 p-4 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset] backdrop-blur-lg dark:border-white/10 dark:bg-zinc-950/80 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset]"
-          >
-            <Link href={`${basePath}/search`}>
-              <MagnifyingGlass
-                size={30}
-                weight="bold"
-                className="text-black dark:text-white"
-              />
-            </Link>
-          </motion.div>
-        ) : (
-          <motion.div
-            layout
-            layoutId="Search"
-            transition={{
-              type: "spring",
-              stiffness: 320,
-              damping: 30,
-              mass: 0.7,
-            }}
-            className="rounded-full border border-white/20 bg-zinc-300/80 p-3 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset] backdrop-blur-lg dark:border-white/10 dark:bg-zinc-950/80 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset]"
-          >
-            <Link href={`${basePath}/search`}>
-              <MagnifyingGlass
-                size={30}
-                weight="bold"
-                className="text-black dark:text-white"
-              />
-            </Link>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        <AnimatePresence mode="popLayout" initial={false}>
+          {!show ? (
+            <motion.div
+              key="mobile-search-compact"
+              layout
+              layoutId="Search"
+              initial={compactMenuMotion.initial}
+              animate={compactMenuMotion.animate}
+              exit={compactMenuMotion.exit}
+              transition={springTransition}
+              className="rounded-full border border-white/20 bg-zinc-300/80 p-4 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset] backdrop-blur-lg dark:border-white/10 dark:bg-zinc-950/80 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset]"
+            >
+              <Link href={`${basePath}/search`}>
+                <MagnifyingGlass
+                  size={30}
+                  weight="bold"
+                  className="text-black dark:text-white"
+                />
+              </Link>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="mobile-search-expanded"
+              layout
+              layoutId="Search"
+              initial={expandedMenuMotion.initial}
+              animate={expandedMenuMotion.animate}
+              exit={expandedMenuMotion.exit}
+              transition={springTransition}
+              className="rounded-full border border-white/20 bg-zinc-300/80 p-3 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset] backdrop-blur-lg dark:border-white/10 dark:bg-zinc-950/80 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset]"
+            >
+              <Link href={`${basePath}/search`}>
+                <MagnifyingGlass
+                  size={30}
+                  weight="bold"
+                  className="text-black dark:text-white"
+                />
+              </Link>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </LayoutGroup>
     </div>
   );
 }

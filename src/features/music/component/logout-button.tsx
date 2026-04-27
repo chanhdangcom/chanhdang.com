@@ -18,6 +18,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useUser } from "@/hooks/use-user";
 import { AnimatePresence, motion } from "framer-motion";
+import { createPortal } from "react-dom";
 import { BorderPro } from "./border-pro";
 import {
   CardsThree,
@@ -29,6 +30,7 @@ import {
   SketchLogo,
   UserCircle,
   UsersThree,
+  X,
 } from "@phosphor-icons/react/dist/ssr";
 import { ThemeToggleMenuBar } from "@/components/theme-toggle-menubar";
 import { SwitchLanguageMenuBar } from "@/app/[locale]/features/profile/components/swtich-language-menu-bar";
@@ -75,6 +77,21 @@ export function LogoutButton() {
   const { canManageSystem } = usePermissions();
   const [isFriendsOpen, setIsFriendsOpen] = React.useState(false);
   const [isChatbotOpen, setIsChatbotOpen] = React.useState(false);
+  const [isDesktopViewport, setIsDesktopViewport] = React.useState(false);
+  const friendsPanelRef = React.useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const updateViewport = () => setIsDesktopViewport(mediaQuery.matches);
+
+    updateViewport();
+    mediaQuery.addEventListener("change", updateViewport);
+    return () => mediaQuery.removeEventListener("change", updateViewport);
+  }, []);
 
   React.useEffect(() => {
     if (typeof window === "undefined") {
@@ -106,6 +123,34 @@ export function LogoutButton() {
     };
   }, [isChatbotOpen]);
 
+  React.useEffect(() => {
+    if (!isFriendsOpen || !isDesktopViewport) {
+      return;
+    }
+
+    const handlePointerDown = (event: MouseEvent) => {
+      if (friendsPanelRef.current?.contains(event.target as Node)) {
+        return;
+      }
+
+      setIsFriendsOpen(false);
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsFriendsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isFriendsOpen, isDesktopViewport]);
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -119,6 +164,49 @@ export function LogoutButton() {
     }
   };
 
+  const desktopFriendsPanel =
+    isDesktopViewport && isFriendsOpen && typeof document !== "undefined"
+      ? createPortal(
+          <AnimatePresence>
+            <motion.div
+              ref={friendsPanelRef}
+              key="desktop-friends-panel"
+              variants={panelVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="fixed bottom-24 right-4 z-[70] hidden w-[420px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-3xl border border-zinc-200 bg-white/95 shadow-2xl backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/95 md:block"
+            >
+              <div className="flex items-start justify-between border-b p-4 dark:border-zinc-900">
+                <div>
+                  <div className="text-lg font-semibold">Friends</div>
+                  <div className="text-sm text-zinc-500 dark:text-zinc-400">
+                    Manage friend requests and open a friend library.
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsFriendsOpen(false)}
+                  className="rounded-full p-2 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-900 dark:hover:text-zinc-100"
+                  aria-label="Close friends panel"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              <div className="max-h-[65vh] overflow-y-auto p-4">
+                <FriendsPanelContent
+                  locale={locale}
+                  onNavigate={() => setIsFriendsOpen(false)}
+                />
+              </div>
+            </motion.div>
+          </AnimatePresence>,
+          document.body
+        )
+      : null;
+
   return (
     <div>
       {!user ? (
@@ -130,7 +218,7 @@ export function LogoutButton() {
           </div>
         </Link>
       ) : (
-        <Drawer open={isFriendsOpen} onOpenChange={setIsFriendsOpen}>
+        <>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div className="my-2 flex items-center gap-2 font-apple font-semibold">
@@ -206,7 +294,7 @@ export function LogoutButton() {
                 <div className="text-sm font-medium">Add Artists</div>
               </Link> */}
 
-              <div className="py-1 dark:border-zinc-800 md:hidden">
+              <div className="py-1 dark:border-zinc-800">
                 <DropdownMenuItem
                   onSelect={() => setIsFriendsOpen(true)}
                   className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
@@ -215,21 +303,23 @@ export function LogoutButton() {
                   <div className="text-sm font-medium">Friends</div>
                 </DropdownMenuItem>
 
-                <DropdownMenuItem
-                  onSelect={() => setIsChatbotOpen(true)}
-                  className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
-                >
-                  <ChatCircleDots size={20} className="text-rose-500" />
-                  <div className="text-sm font-medium">AI Chat</div>
-                </DropdownMenuItem>
+                <div className="md:hidden">
+                  <DropdownMenuItem
+                    onSelect={() => setIsChatbotOpen(true)}
+                    className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                  >
+                    <ChatCircleDots size={20} className="text-rose-500" />
+                    <div className="text-sm font-medium">AI Chat</div>
+                  </DropdownMenuItem>
+                </div>
 
-                <div className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                <div className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800 md:hidden">
                   <ThemeToggleMenuBar className="0 size-5 text-rose-500" />
 
                   <div className="text-sm font-medium">Theme</div>
                 </div>
 
-                <div className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                <div className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-200 dark:hover:bg-zinc-800 md:hidden">
                   <SwitchLanguageMenuBar className="" />
                 </div>
               </div>
@@ -285,23 +375,30 @@ export function LogoutButton() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <DrawerContent className="md:hidden dark:border-zinc-800 dark:bg-zinc-950">
-            <DrawerHeader className="border-b dark:border-zinc-900">
-              <DrawerTitle>Friends</DrawerTitle>
-              <DrawerDescription>
-                Manage friend requests and open a friend library.
-              </DrawerDescription>
-            </DrawerHeader>
+          <Drawer
+            open={!isDesktopViewport && isFriendsOpen}
+            onOpenChange={setIsFriendsOpen}
+          >
+            <DrawerContent className="border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 md:hidden">
+              <DrawerHeader className="border-b dark:border-zinc-900">
+                <DrawerTitle>Friends</DrawerTitle>
+                <DrawerDescription>
+                  Manage friend requests and open a friend library.
+                </DrawerDescription>
+              </DrawerHeader>
 
-            <div className="max-h-[75vh] overflow-y-auto p-4">
-              <FriendsPanelContent
-                locale={locale}
-                onNavigate={() => setIsFriendsOpen(false)}
-              />
-            </div>
-          </DrawerContent>
-        </Drawer>
+              <div className="max-h-[75vh] overflow-y-auto p-4">
+                <FriendsPanelContent
+                  locale={locale}
+                  onNavigate={() => setIsFriendsOpen(false)}
+                />
+              </div>
+            </DrawerContent>
+          </Drawer>
+        </>
       )}
+
+      {desktopFriendsPanel}
 
       <AnimatePresence mode="wait">
         {isChatbotOpen ? (

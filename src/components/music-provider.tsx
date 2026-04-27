@@ -11,6 +11,7 @@ import React, {
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { useUser } from "@/hooks/use-user";
 import { usePermissions } from "@/hooks/use-permissions";
+import { buildUserAuthHeaders } from "@/lib/client-auth";
 import { AdModal } from "@/features/music/component/ad-modal";
 
 // ----------------------------
@@ -23,9 +24,19 @@ type Subtitle = {
   text: string;
 };
 
+type SavedPlaybackResume = {
+  musicId: string;
+  musicData: IMusic;
+  positionSec: number;
+  durationSec?: number;
+  updatedAt?: string | Date | null;
+};
+
 type IMusicContext = {
   audioRef: React.RefObject<HTMLAudioElement | null>;
   currentMusic: IMusic | null;
+  savedPlaybackResume: SavedPlaybackResume | null;
+  isResumePlaybackLoading: boolean;
   queue: IMusic[];
   isPlaying: boolean;
   isPaused: boolean;
@@ -38,6 +49,7 @@ type IMusicContext = {
   isKaraokeMode: boolean;
 
   handlePlayAudio: (music: IMusic) => void;
+  handleResumeSavedPlayback: () => void;
   handlePlayRandomAudio: () => void;
   handlePauseAudio: () => void;
   handleResumeAudio: () => void;
@@ -243,6 +255,9 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   );
   const [isKaraokeMode, setIsKaraokeMode] = useState<boolean>(false);
   const [isPlayerPageOpen, setIsPlayerPageOpen] = useState<boolean>(false);
+  const [savedPlaybackResume, setSavedPlaybackResume] =
+    useState<SavedPlaybackResume | null>(null);
+  const [isResumePlaybackLoading, setIsResumePlaybackLoading] = useState(false);
   const [showAd, setShowAd] = useState(false);
   const [pendingNextTrack, setPendingNextTrack] = useState<(() => void) | null>(
     null
@@ -252,9 +267,15 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
   const listenAccumMsRef = useRef(0);
   const lastListenSampleRef = useRef<number | null>(null);
   const currentMusicIdRef = useRef<string | null>(null);
+  const pendingResumePositionRef = useRef<number | null>(null);
+  const pendingResumeMusicIdRef = useRef<string | null>(null);
+  const lastResumeSyncedAtRef = useRef<number>(0);
 
   const MIN_LISTEN_FOR_PLAY_COUNT_MS = 50_000;
   const MAX_PLAY_COUNT_DELTA_MS = 3000;
+  const MIN_RESUME_POSITION_SEC = 5;
+  const MIN_REMAINING_DURATION_SEC = 10;
+  const RESUME_SYNC_INTERVAL_MS = 10_000;
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const mixAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -355,7 +376,161 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     playCountedRef.current = false;
     listenAccumMsRef.current = 0;
     lastListenSampleRef.current = null;
+    lastResumeSyncedAtRef.current = 0;
   }, [currentMusic?.id]);
+
+  const clearSavedPlaybackResume = useCallback(
+    async (persist = true) => {
+      setSavedPlaybackResume(null);
+      pendingResumeMusicIdRef.current = null;
+      pendingResumePositionRef.current = null;
+
+      if (!persist || !user?.id) return;
+
+      try {
+        await fetch("/api/playback-resume", {
+          method: "DELETE",
+          headers: buildUserAuthHeaders(user.id),
+          cache: "no-store",
+        });
+      } catch (error) {
+        console.warn("Không thể xóa trạng thái resume:", error);
+      }
+    },
+    [user?.id]
+  );
+
+  const savePlaybackResume = useCallback(
+    async (force = false) => {
+      const audioEl = audioRef.current;
+      if (!user?.id || !currentMusic || !audioEl) return;
+      if (!force && crossfadeInProgressRef.current) return;
+
+      const positionSec = audioEl.currentTime;
+      const durationSec = Number.isFinite(audioEl.duration)
+        ? audioEl.duration
+        : undefined;
+
+      if (!Number.isFinite(positionSec) || positionSec < MIN_RESUME_POSITION_SEC) {
+        return;
+      }
+
+      if (
+        durationSec !== undefined &&
+        durationSec - positionSec < MIN_REMAINING_DURATION_SEC
+      ) {
+        return;
+      }
+
+      try {
+        await fetch("/api/playback-resume", {
+          method: "PUT",
+          headers: buildUserAuthHeaders(user.id, {
+            "Content-Type": "application/json",
+          }),
+          body: JSON.stringify({
+            musicId: currentMusic.id,
+            musicData: currentMusic,
+            positionSec,
+            durationSec,
+          }),
+          cache: "no-store",
+        });
+
+        setSavedPlaybackResume({
+          musicId: currentMusic.id,
+          musicData: currentMusic,
+          positionSec,
+          durationSec,
+          updatedAt: new Date().toISOString(),
+        });
+        lastResumeSyncedAtRef.current = Date.now();
+      } catch (error) {
+        console.warn("Không thể lưu trạng thái resume:", error);
+      }
+    },
+    [currentMusic, user?.id]
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    if (!user?.id) {
+      setSavedPlaybackResume(null);
+      setIsResumePlaybackLoading(false);
+      return;
+    }
+
+    const loadSavedPlaybackResume = async () => {
+      setIsResumePlaybackLoading(true);
+      try {
+        const response = await fetch("/api/playback-resume", {
+          headers: buildUserAuthHeaders(user.id),
+          cache: "no-store",
+        });
+        const data = (await response.json()) as {
+          resume?: {
+            musicId?: string;
+            musicData?: IMusic;
+            positionSec?: number;
+            durationSec?: number;
+            updatedAt?: string | null;
+          } | null;
+        };
+
+        if (!response.ok || cancelled) {
+          return;
+        }
+
+        const resume = data.resume;
+        if (
+          !resume ||
+          !resume.musicId ||
+          !resume.musicData ||
+          typeof resume.positionSec !== "number" ||
+          !resume.musicData.id ||
+          !resume.musicData.audio
+        ) {
+          if (!cancelled) {
+            setSavedPlaybackResume(null);
+          }
+          return;
+        }
+
+        if (
+          typeof resume.durationSec === "number" &&
+          resume.durationSec - resume.positionSec < MIN_REMAINING_DURATION_SEC
+        ) {
+          if (!cancelled) {
+            void clearSavedPlaybackResume(true);
+          }
+          return;
+        }
+
+        if (!cancelled) {
+          setSavedPlaybackResume({
+            musicId: resume.musicId,
+            musicData: resume.musicData,
+            positionSec: resume.positionSec,
+            durationSec: resume.durationSec,
+            updatedAt: resume.updatedAt ?? null,
+          });
+        }
+      } catch (error) {
+        console.warn("Không thể tải trạng thái resume:", error);
+      } finally {
+        if (!cancelled) {
+          setIsResumePlaybackLoading(false);
+        }
+      }
+    };
+
+    void loadSavedPlaybackResume();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [clearSavedPlaybackResume, user?.id]);
   // ----------------------------
   // Audio control functions
   // ----------------------------
@@ -371,6 +546,66 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     },
     [currentMusic]
   );
+
+  const handleResumeSavedPlayback = useCallback(() => {
+    if (!savedPlaybackResume) return;
+
+    const { musicId, musicData, positionSec, durationSec } = savedPlaybackResume;
+    if (
+      !musicId ||
+      !musicData?.id ||
+      !musicData.audio ||
+      positionSec < MIN_RESUME_POSITION_SEC
+    ) {
+      void clearSavedPlaybackResume(true);
+      return;
+    }
+
+    if (
+      typeof durationSec === "number" &&
+      durationSec - positionSec < MIN_REMAINING_DURATION_SEC
+    ) {
+      void clearSavedPlaybackResume(true);
+      return;
+    }
+
+    pendingResumeMusicIdRef.current = musicId;
+    pendingResumePositionRef.current = positionSec;
+
+    if (currentMusic?.id === musicId && audioRef.current) {
+      const audioEl = audioRef.current;
+      const applySeek = () => {
+        const nextPosition =
+          Number.isFinite(audioEl.duration) && audioEl.duration > 0
+            ? Math.min(positionSec, Math.max(0, audioEl.duration - 1))
+            : positionSec;
+        audioEl.currentTime = nextPosition;
+        void audioEl.play().catch((error) => {
+          console.error("Lỗi resume bài hát đã lưu:", error);
+        });
+        setIsPlaying(true);
+        setIsPaused(false);
+        setSavedPlaybackResume(null);
+        pendingResumeMusicIdRef.current = null;
+        pendingResumePositionRef.current = null;
+      };
+
+      if (Number.isFinite(audioEl.duration) && audioEl.duration > 0) {
+        applySeek();
+      } else {
+        audioEl.addEventListener("loadedmetadata", applySeek, { once: true });
+      }
+      return;
+    }
+
+    setCurrentMusic(musicData);
+    setIsPlaying(true);
+    setIsPaused(false);
+    setCurrentLyrics(null);
+    setCurrentSubtitleId(null);
+    setIsKaraokeMode(false);
+    setSavedPlaybackResume(null);
+  }, [clearSavedPlaybackResume, currentMusic?.id, savedPlaybackResume]);
 
   // Effect để load audio khi đổi bài mới hoặc toggle karaoke
   const previousMusicIdRef = useRef<string | null>(null);
@@ -493,9 +728,26 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     // Đổi bài mới: reset time và play với fade in
     if (isNewTrack) {
       const audioEl = audioRef.current;
-      audioEl.src = audioSource;
-      audioEl.currentTime = 0;
-      audioEl.volume = 0;
+      const hasPendingResume =
+        pendingResumeMusicIdRef.current === currentMusic.id &&
+        pendingResumePositionRef.current !== null;
+
+      const applyPendingResumePosition = () => {
+        if (!hasPendingResume || pendingResumePositionRef.current === null) return;
+
+        const requestedPosition = pendingResumePositionRef.current;
+        const nextPosition =
+          Number.isFinite(audioEl.duration) && audioEl.duration > 0
+            ? Math.min(requestedPosition, Math.max(0, audioEl.duration - 1))
+            : requestedPosition;
+
+        if (Number.isFinite(nextPosition) && nextPosition > 0) {
+          audioEl.currentTime = nextPosition;
+        }
+
+        pendingResumeMusicIdRef.current = null;
+        pendingResumePositionRef.current = null;
+      };
 
       const handleCanPlay = async () => {
         if (!audioEl) return;
@@ -506,10 +758,28 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         } catch (error) {
           console.error("Lỗi phát nhạc:", error);
         }
+        audioEl.removeEventListener("error", handleResumeLoadError);
         audioEl.removeEventListener("canplay", handleCanPlay);
       };
 
+      const handleLoadedMetadata = () => {
+        applyPendingResumePosition();
+        audioEl.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      };
+
+      const handleResumeLoadError = () => {
+        if (hasPendingResume) {
+          void clearSavedPlaybackResume(true);
+        }
+        audioEl.removeEventListener("error", handleResumeLoadError);
+      };
+
+      audioEl.addEventListener("loadedmetadata", handleLoadedMetadata);
+      audioEl.addEventListener("error", handleResumeLoadError);
       audioEl.addEventListener("canplay", handleCanPlay);
+      audioEl.src = audioSource;
+      audioEl.currentTime = 0;
+      audioEl.volume = 0;
       // Ghi lịch sử phát nhạc (fire-and-forget)
       (async () => {
         try {
@@ -671,7 +941,8 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     audioRef.current.pause();
     setIsPlaying(false);
     setIsPaused(true);
-  }, []);
+    void savePlaybackResume(true);
+  }, [savePlaybackResume]);
 
   const handleResumeAudio = useCallback(() => {
     if (audioRef.current && isPaused) {
@@ -977,6 +1248,46 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
+  useEffect(() => {
+    const audioEl = audioRef.current;
+    if (!audioEl || !user?.id) return;
+
+    const handleTimeUpdate = () => {
+      if (audioEl.paused) return;
+      const now = Date.now();
+      if (now - lastResumeSyncedAtRef.current < RESUME_SYNC_INTERVAL_MS) {
+        return;
+      }
+      void savePlaybackResume(false);
+    };
+
+    const handleEnded = () => {
+      void clearSavedPlaybackResume(true);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        void savePlaybackResume(true);
+      }
+    };
+
+    const handlePageHide = () => {
+      void savePlaybackResume(true);
+    };
+
+    audioEl.addEventListener("timeupdate", handleTimeUpdate);
+    audioEl.addEventListener("ended", handleEnded);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("pagehide", handlePageHide);
+
+    return () => {
+      audioEl.removeEventListener("timeupdate", handleTimeUpdate);
+      audioEl.removeEventListener("ended", handleEnded);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("pagehide", handlePageHide);
+    };
+  }, [clearSavedPlaybackResume, savePlaybackResume, user?.id]);
+
   // Handle ad modal close/continue
   const handleAdClose = () => {
     // Khi đóng quảng cáo, không phát bài tiếp theo
@@ -1006,6 +1317,8 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     <Provider
       audioRef={audioRef}
       currentMusic={currentMusic}
+      savedPlaybackResume={savedPlaybackResume}
+      isResumePlaybackLoading={isResumePlaybackLoading}
       queue={queue}
       isPlaying={isPlaying}
       isPaused={isPaused}
@@ -1017,6 +1330,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       currentSubtitleId={currentSubtitleId}
       isKaraokeMode={isKaraokeMode}
       handlePlayAudio={handlePlayAudio}
+      handleResumeSavedPlayback={handleResumeSavedPlayback}
       handlePlayRandomAudio={handlePlayRandomAudio}
       handlePauseAudio={handlePauseAudio}
       handleResumeAudio={handleResumeAudio}

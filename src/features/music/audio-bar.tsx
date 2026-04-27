@@ -13,6 +13,7 @@ import { useTranslations } from "next-intl";
 
 import { DurationAudio } from "./component/duration-audio";
 import {
+  Anchor,
   ArrowsOutSimple,
   RepeatOnce,
   SpeakerHigh,
@@ -37,13 +38,34 @@ const PlayerPage = dynamic(
   }
 );
 
+const formatResumeTime = (seconds: number) => {
+  if (!Number.isFinite(seconds) || seconds <= 0) return "0:00";
+
+  const totalSeconds = Math.floor(seconds);
+  const minutes = Math.floor(totalSeconds / 60);
+  const remainingSeconds = totalSeconds % 60;
+
+  if (minutes < 60) {
+    return `${minutes}:${String(remainingSeconds).padStart(2, "0")}`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  return `${hours}:${String(remainingMinutes).padStart(2, "0")}:${String(
+    remainingSeconds
+  ).padStart(2, "0")}`;
+};
+
 export function AudioBar() {
   const {
     currentMusic,
+    savedPlaybackResume,
+    isResumePlaybackLoading,
     isPlaying,
     isMuted,
     handlePlayRandomAudio,
     handleResumeAudio,
+    handleResumeSavedPlayback,
     handlePauseAudio,
     handleAudioSkip,
     handAudioForward,
@@ -69,6 +91,16 @@ export function AudioBar() {
   const titleMeasureRef = useRef<HTMLSpanElement>(null);
   const [shouldMarqueeTitle, setShouldMarqueeTitle] = useState(false);
   const playerUnmountTimerRef = useRef<number | null>(null);
+  const shouldShowResumeAction = Boolean(
+    savedPlaybackResume &&
+      !isResumePlaybackLoading &&
+      (!currentMusic || currentMusic.id !== savedPlaybackResume.musicId)
+  );
+  const displayMusic =
+    currentMusic ??
+    (shouldShowResumeAction && savedPlaybackResume
+      ? savedPlaybackResume.musicData
+      : null);
 
   const updateScrollVisibility = useCallback((isVisible: boolean) => {
     if (scrollStateRef.current === isVisible) return;
@@ -236,7 +268,7 @@ export function AudioBar() {
 
     window.addEventListener("resize", checkOverflow);
     return () => window.removeEventListener("resize", checkOverflow);
-  }, [currentMusic?.title, scroll]);
+  }, [displayMusic?.title, scroll]);
 
   useEffect(() => {
     return () => {
@@ -274,7 +306,8 @@ export function AudioBar() {
           scroll ? "inset-x-4 bottom-[88px]" : "inset-x-24 bottom-[32px]"
         }`}
       >
-        <div className="relative w-full overflow-hidden rounded-[50px] border border-black/10 bg-white/70 px-3 py-1 backdrop-blur-md dark:border-white/10 dark:bg-black/50 md:rounded-[55px]">
+        <div className="relative w-full overflow-hidden rounded-[50px] border border-black/10 px-3 py-1 dark:border-white/10 md:rounded-[55px]">
+          <div className="pointer-events-none absolute inset-0 rounded-[inherit] bg-white/70 backdrop-blur-md dark:bg-black/70" />
           <div
             onClick={() => {
               if (window.innerWidth < 768) {
@@ -351,7 +384,7 @@ export function AudioBar() {
             </div>
 
             <div className="flex min-w-0 flex-1 items-center justify-start gap-2 pr-1 md:ml-6 md:gap-2">
-              {!currentMusic?.cover ? (
+              {!displayMusic?.cover ? (
                 <div className="flex size-8 items-center justify-center rounded-xl bg-zinc-700 md:rounded-lg">
                   <MusicNotes size={18} weight="fill" className="text-white" />
                 </div>
@@ -359,7 +392,7 @@ export function AudioBar() {
                 <div className="shrink-0">
                   <BorderPro roundedSize="rounded-lg">
                     <img
-                      src={currentMusic?.cover}
+                      src={displayMusic.cover}
                       alt="cover"
                       className="flex size-8 transform-gpu items-center justify-center rounded-lg object-cover [backface-visibility:hidden] md:rounded-lg"
                     />
@@ -368,7 +401,7 @@ export function AudioBar() {
               )}
 
               <div className="flex min-w-0 flex-1 items-center gap-4">
-                <div className="min-w-0 flex-1">
+                <div className="flex-1">
                   <div
                     ref={titleContainerRef}
                     className="relative min-h-[1.25em] w-full overflow-hidden whitespace-nowrap font-apple text-sm font-semibold text-black dark:text-white"
@@ -377,12 +410,12 @@ export function AudioBar() {
                       ref={titleMeasureRef}
                       className="pointer-events-none invisible absolute left-0 top-0 whitespace-nowrap"
                     >
-                      {currentMusic?.title || t("titleSong")}
+                      {displayMusic?.title || t("titleSong")}
                     </span>
 
                     <AnimatePresence mode="wait" initial={false}>
                       <motion.div
-                        key={currentMusic?.id ?? "title"}
+                        key={displayMusic?.id ?? "title"}
                         initial={{ x: "100%" }}
                         animate={{ x: 0 }}
                         exit={{ x: "-100%" }}
@@ -404,16 +437,16 @@ export function AudioBar() {
                             }}
                           >
                             <span className="pr-4">
-                              {currentMusic?.title || t("titleSong")}
+                              {displayMusic?.title || t("titleSong")}
                             </span>
 
                             <span aria-hidden="true" className="pr-4">
-                              {currentMusic?.title || t("titleSong")}
+                              {displayMusic?.title || t("titleSong")}
                             </span>
                           </motion.div>
                         ) : (
                           <span className="block truncate">
-                            {currentMusic?.title || t("titleSong")}
+                            {displayMusic?.title || t("titleSong")}
                           </span>
                         )}
                       </motion.div>
@@ -423,7 +456,7 @@ export function AudioBar() {
                   <div className="relative min-h-[1.25rem] overflow-hidden font-apple text-xs font-medium text-zinc-500">
                     <AnimatePresence mode="wait" initial={false}>
                       <motion.div
-                        key={currentMusic?.id ?? "singer"}
+                        key={displayMusic?.id ?? "singer"}
                         initial={{ x: "100%" }}
                         animate={{ x: 0 }}
                         exit={{ x: "-100%" }}
@@ -433,7 +466,7 @@ export function AudioBar() {
                         }}
                         className="absolute inset-0 line-clamp-1 transform-gpu will-change-transform"
                       >
-                        {currentMusic?.singer || t("singer")}
+                        {displayMusic?.singer || t("singer")}
                       </motion.div>
                     </AnimatePresence>
                   </div>
@@ -539,6 +572,38 @@ export function AudioBar() {
           </div>
         </div>
       </motion.div>
+
+      {shouldShowResumeAction && savedPlaybackResume ? (
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          transition={{
+            type: "spring",
+            stiffness: 320,
+            damping: 30,
+            mass: 0.7,
+          }}
+          layout
+          layoutId="resume-action"
+          type="button"
+          onClick={handleResumeSavedPlayback}
+          className={cn(
+            "fixed right-6 z-50 flex items-center justify-center gap-1 rounded-full border border-black/10 bg-white/60 p-1 text-xs font-semibold leading-none text-black shadow-sm backdrop-blur-sm transition hover:bg-white dark:border-white/10 dark:bg-black/70 dark:text-white dark:hover:bg-black/60",
+            scroll
+              ? "bottom-[144px] md:bottom-24"
+              : "bottom-[96px] md:bottom-24"
+          )}
+        >
+          <div className="flex items-center gap-1">
+            <Anchor size={22} weight="fill" className="text-rose-600" />
+
+            <div>Continue in</div>
+          </div>
+
+          <div className="text-zinc-500">
+            {formatResumeTime(savedPlaybackResume.positionSec)}
+          </div>
+        </motion.button>
+      ) : null}
 
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-50 bg-black/65" />
