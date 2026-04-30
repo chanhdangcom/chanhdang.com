@@ -1,24 +1,18 @@
 "use client";
-// import { useUser } from "@/hooks/use-user";
+
 import { HeaderMusicPage } from "@/features/music/header-music-page";
 import { MenuBar } from "@/features/music/menu-bar";
-import { MenuBarMobile } from "@/features/music/menu-bar-mobile";
-import { AudioBar } from "@/features/music/audio-bar";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-// import { LibraryPlaylistsList } from "@/features/music/library/library-playlists-list";
 import { MotionHeaderMusic } from "@/features/music/component/motion-header-music";
-
-import {
-  CardsThree,
-  CaretRight,
-  MicrophoneStage,
-  MusicNote,
-  Playlist,
-} from "@phosphor-icons/react/dist/ssr";
 import { BackButton } from "../component/back-button";
 import { usePermissions } from "@/hooks/use-permissions";
 import { useMusicAccessRedirect } from "@/hooks/use-music-access-redirect";
+import { MusicNote } from "@/components/icon/music-note";
+import { CaretRight } from "@phosphor-icons/react/dist/ssr";
+import { MusicNoteSquareStackFill } from "@/components/icon/music-note-square-stack-fill";
+import { MusicMicrophone } from "@/components/icon/music-microphone";
+import { MusicNoteList } from "@/components/icon/music-note-list";
 
 export function LibraryPage() {
   // const { user } = useUser();
@@ -48,48 +42,13 @@ export function LibraryPage() {
 
           <BackButton />
 
-          <div className="mx-4 space-y-4 md:ml-[270px]">
-            {/* <div className="gap-4 space-y-4 md:space-y-8">
-              <Link
-                href={withLocale("/music/library/favorites")}
-                className="flex items-center justify-between rounded-lg md:mt-8"
-              >
-                <div className="flex items-center gap-2">
-                  <Star weight="fill" className="text-rose-500" size={10} />
-
-                  <img
-                    src="/img/favorites-icon.jpg"
-                    alt="favorites"
-                    className="size-14 items-center justify-center rounded-xl border border-zinc-200 hover:scale-105 dark:border-none md:size-24"
-                  />
-
-                  <div className="ml-2 font-semibold text-black dark:text-white">
-                    Favorite Songs
-                  </div>
-                </div>
-
-                <CaretRight
-                  size={15}
-                  weight="bold"
-                  className="text-zinc-500 md:hidden"
-                />
-              </Link>
-
-              <div className="mt-4 md:mt-0">
-                <LibraryPlaylistsList userId={user?.id} />
-              </div>
-            </div> */}
-
+          <div className="mx-4 space-y-6 md:ml-[270px]">
             <Link
               href={withLocale("/music/library/playlists")}
               className="flex items-center justify-between"
             >
               <div className="flex flex-1 items-center gap-2">
-                <Playlist
-                  size={28}
-                  weight="regular"
-                  className="text-rose-500 dark:text-rose-600"
-                />
+                <MusicNoteList className="size-8 text-rose-500 dark:text-rose-600" />
 
                 <div className="flex-1 flex-row space-y-2 font-apple">
                   <div className="flex items-center justify-between">
@@ -112,11 +71,7 @@ export function LibraryPage() {
               className="flex items-center justify-between"
             >
               <div className="flex flex-1 items-center gap-2">
-                <MicrophoneStage
-                  size={28}
-                  weight="regular"
-                  className="text-rose-500 dark:text-rose-600"
-                />
+                <MusicMicrophone className="size-8 text-rose-500 dark:text-rose-600" />
 
                 <div className="flex-1 flex-row space-y-2 font-apple">
                   <div className="flex items-center justify-between">
@@ -136,11 +91,7 @@ export function LibraryPage() {
 
             <div className="flex items-center justify-between">
               <div className="flex flex-1 items-center gap-2">
-                <CardsThree
-                  size={28}
-                  weight="regular"
-                  className="text-rose-500 dark:text-rose-600"
-                />
+                <MusicNoteSquareStackFill className="size-8 text-rose-500 dark:text-rose-600" />
 
                 <div className="flex-1 flex-row space-y-2 font-apple">
                   <div className="flex items-center justify-between">
@@ -163,11 +114,7 @@ export function LibraryPage() {
               className="flex items-center justify-between"
             >
               <div className="flex flex-1 items-center gap-2">
-                <MusicNote
-                  size={28}
-                  weight="fill"
-                  className="text-rose-500 dark:text-rose-600"
-                />
+                <MusicNote className="size-8 text-rose-500 dark:text-rose-600" />
 
                 <div className="flex-1 flex-row space-y-2 font-apple">
                   <div className="flex items-center justify-between">
@@ -185,11 +132,6 @@ export function LibraryPage() {
               </div>
             </Link>
           </div>
-        </div>
-
-        <div className="my-40">
-          <AudioBar />
-          <MenuBarMobile />
         </div>
       </div>
     </div>

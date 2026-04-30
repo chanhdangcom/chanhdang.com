@@ -1,5 +1,3 @@
-import { AudioBar } from "../audio-bar";
-import { MenuBarMobile } from "../menu-bar-mobile";
 import { MotionHeaderMusic } from "../component/motion-header-music";
 import { MenuBar } from "../menu-bar";
 import { SearchSection } from "./search-section";
@@ -21,13 +19,7 @@ export function PageSearch() {
               <SearchSection />
 
               <SearchClient />
-
             </>
-          </div>
-
-          <div className="my-40">
-            <AudioBar />
-            <MenuBarMobile />
           </div>
         </div>
       </div>

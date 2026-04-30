@@ -21,6 +21,7 @@ import { useAudio } from "@/components/music-provider";
 
 type UseAudioItemContextMenuOptions = {
   onTap?: () => void;
+  onOpenMenu?: () => void;
   disabled?: boolean;
 };
 
@@ -32,6 +33,7 @@ type MenuPlacement = {
 
 export function useAudioItemContextMenu({
   onTap,
+  onOpenMenu,
   disabled = false,
 }: UseAudioItemContextMenuOptions = {}) {
   const instanceId = useId();
@@ -66,10 +68,14 @@ export function useAudioItemContextMenu({
   }, []);
 
   const openMenu = useCallback(() => {
+    requestAnimationFrame(() => {
+      onOpenMenu?.();
+    });
+
     clearLongPressTimer();
     didOpenMenuRef.current = true;
     setShowMenu(true);
-  }, []);
+  }, [onOpenMenu]);
 
   const handlePointerDown = (event: React.PointerEvent<HTMLElement>) => {
     if (disabled) return;

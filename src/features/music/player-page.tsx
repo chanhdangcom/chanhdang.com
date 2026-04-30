@@ -3,24 +3,24 @@ import { useTranslations } from "next-intl";
 import { useAudio } from "@/components/music-provider";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import {
-  DotsThree,
-  Infinity,
-  FastForward,
-  ListBullets,
-  Pause,
-  Play,
-  Repeat,
-  Rewind,
-  Shuffle,
   Exclude,
-  MagicWand,
   RepeatOnce,
-  ChatTeardropText,
   ArrowsInSimple,
   ArrowsCounterClockwise,
-  Star,
 } from "@phosphor-icons/react/dist/ssr";
-
+import { BackwardFill } from "@/components/icon/backward-fill";
+import { Ellipsis } from "@/components/icon/ellipsis";
+import { ForwardFill } from "@/components/icon/forward-fill";
+import { InfinityIcon } from "@/components/icon/infinity-icon";
+import { ListBullet } from "@/components/icon/list-bullet";
+import { PauseFill } from "@/components/icon/pause-fill";
+import { PlayFill } from "@/components/icon/play-fill";
+import { QuoteBubble } from "@/components/icon/quote-bubble";
+import { QuoteBubbleFill } from "@/components/icon/quote-bubble-fill";
+import { Repeat } from "@/components/icon/repeat";
+import { Shuffle } from "@/components/icon/shuffle";
+import { StarFill } from "@/components/icon/star-fill";
+import { Star } from "@/components/icon/star";
 import { useCallback, useEffect, useState, useRef, memo } from "react";
 import { useSpringScroll } from "@/hooks/use-spring-scroll";
 import { useRouter, useParams } from "next/navigation";
@@ -44,6 +44,8 @@ import Link from "next/link";
 import { useImageHoverColor } from "@/hooks/use-image-hover-color";
 import { cn } from "@/utils/cn";
 import { usePermissions } from "@/hooks/use-permissions";
+import { WandAndSparkles } from "@/components/icon/wand-and-sparkles";
+import { IpadLandscapeAndIpod } from "@/components/icon/ipad-landscape-and-ipod";
 
 type IProp = {
   setIsClick: () => void;
@@ -351,8 +353,8 @@ const useMusicActionsMenu = ({
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="cursor-pointer rounded-full bg-white/10 p-0.5">
-            <DotsThree size={30} weight="bold" className="text-white" />
+          <button className="cursor-pointer rounded-full bg-white/10 p-2">
+            <Ellipsis className="size-5 text-white" />
           </button>
         </DropdownMenuTrigger>
 
@@ -424,10 +426,10 @@ const SubtitleItem = memo(
     return (
       <p
         id={`subtitle-${id}`}
-        className={`z-40 mb-6 text-balance font-apple md:mb-8 ${
+        className={`z-40 mb-6 text-balance font-apple text-[32px] md:mb-8 md:text-5xl ${
           isActive
-            ? "text-balance leading-snug text-white md:text-5xl"
-            : "text-balance leading-snug text-white/20 md:text-5xl"
+            ? "text-balance leading-snug text-white"
+            : "text-balance leading-snug text-white/20 blur-[2px]"
         }`}
       >
         {text}
@@ -592,8 +594,13 @@ const LyricPage = ({
               touchDeltaYRef.current = 0;
             }}
           >
-            <div className="mx-auto my-4 h-1 w-16 rounded-full bg-white/20 md:hidden" />
+            <div className="z-50 mx-auto my-4 h-1 w-16 rounded-full bg-white/20 md:hidden" />
           </header>
+
+          <div
+            style={{ backgroundColor: hoverBgSolid }}
+            className="pointer-events-none absolute left-0 top-0 z-10 h-[15vh] w-full scale-150 blur-xl brightness-50 md:bg-black/60 md:blur-3xl"
+          />
 
           <div className="absolute inset-x-8 z-50 rounded-2xl p-1">
             <div>
@@ -633,12 +640,17 @@ const LyricPage = ({
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <Star
-                    size={25}
-                    weight={sharedActions.isInFavorites ? "fill" : "regular"}
-                    className={cn("cursor-pointer text-white")}
-                    onClick={sharedActions.onToggleFavorites}
-                  />
+                  {sharedActions.isInFavorites ? (
+                    <StarFill
+                      className="size-6 cursor-pointer text-white"
+                      onClick={sharedActions.onToggleFavorites}
+                    />
+                  ) : (
+                    <Star
+                      className="size-6 cursor-pointer text-white"
+                      onClick={sharedActions.onToggleFavorites}
+                    />
+                  )}
 
                   <MusicActionsMenu />
                 </div>
@@ -874,7 +886,7 @@ const ContentPage = ({
               isOpenQueue ? "bg-white/20" : "bg-transparent"
             } `}
           >
-            <ListBullets size={28} weight="regular" />
+            <ListBullet className="h-[20px] w-auto text-white" />
           </motion.button>
 
           <ArrowsInSimple
@@ -977,7 +989,7 @@ const ContentPage = ({
                   className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white"
                   onClick={() => handlePlayRandomAudio()}
                 >
-                  <Shuffle size={22} weight="bold" />
+                  <Shuffle className="size-6 text-white" />
                 </motion.div>
 
                 <motion.div
@@ -988,7 +1000,7 @@ const ContentPage = ({
                   )}
                   onClick={handleToggleLoop}
                 >
-                  <Infinity size={22} weight="bold" />
+                  <InfinityIcon className="size-6 text-white" />
                 </motion.div>
 
                 <motion.div
@@ -1000,7 +1012,7 @@ const ContentPage = ({
                   onClick={() => handleToggleRepeat()}
                 >
                   {!isRepeat ? (
-                    <Repeat size={22} weight="bold" />
+                    <Repeat className="size-6 text-white" />
                   ) : (
                     <RepeatOnce size={22} weight="bold" />
                   )}
@@ -1017,27 +1029,19 @@ const ContentPage = ({
                   <Exclude size={22} weight={isMixMode ? "fill" : "regular"} />
                 </motion.div>
 
-                {!isKaraokeMode ? (
-                  <motion.div
-                    whileTap={{ scale: 0.2 }}
-                    onClick={() => handleToggleKaraoke()}
-                    className={cn(
-                      "hidden cursor-pointer rounded-full bg-white/10 p-2 md:block",
-                      !currentMusic?.beat
-                        ? "pointer-events-none opacity-40"
-                        : ""
-                    )}
-                  >
-                    <MagicWand size={25} className="text-white" />
-                  </motion.div>
-                ) : (
-                  <div
-                    onClick={() => handleToggleKaraoke()}
-                    className="cursor-pointer rounded-full bg-white/10 p-2"
-                  >
-                    <MagicWand size={25} weight="fill" className="text-white" />
-                  </div>
-                )}
+                <motion.div
+                  whileTap={{ scale: 0.2 }}
+                  onClick={() => handleToggleKaraoke()}
+                  className={cn(
+                    "hidden cursor-pointer rounded-full p-2 md:block",
+                    isKaraokeMode
+                      ? "bg-white/50 text-zinc-600"
+                      : "bg-white/10 text-white",
+                    !currentMusic?.beat ? "pointer-events-none opacity-40" : ""
+                  )}
+                >
+                  <WandAndSparkles className="size-6" />
+                </motion.div>
               </div>
             </div>
 
@@ -1321,7 +1325,7 @@ const FeaturedPage = ({
 
           <div className="absolute inset-x-4 z-50 mx-4 mt-8 rounded-2xl">
             <div>
-              <div className="flex items-center justify-between">
+              <div className="z-20 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   {currentMusic?.cover ? (
                     <div
@@ -1361,12 +1365,17 @@ const FeaturedPage = ({
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <Star
-                    size={25}
-                    weight={sharedActions.isInFavorites ? "fill" : "regular"}
-                    className={cn("cursor-pointer text-white")}
-                    onClick={sharedActions.onToggleFavorites}
-                  />
+                  {sharedActions.isInFavorites ? (
+                    <StarFill
+                      className="size-6 cursor-pointer text-white"
+                      onClick={sharedActions.onToggleFavorites}
+                    />
+                  ) : (
+                    <Star
+                      className="size-6 cursor-pointer text-white"
+                      onClick={sharedActions.onToggleFavorites}
+                    />
+                  )}
 
                   <MusicActionsMenu />
                 </div>
@@ -1378,7 +1387,7 @@ const FeaturedPage = ({
                   className="cursor-pointer rounded-full bg-white/10 px-6 py-2 text-white"
                   onClick={() => handlePlayRandomAudio()}
                 >
-                  <Shuffle size={22} weight="bold" />
+                  <Shuffle className="size-5 text-white" />
                 </motion.div>
 
                 <motion.div
@@ -1390,7 +1399,7 @@ const FeaturedPage = ({
                   onClick={() => handleToggleRepeat()}
                 >
                   {!isRepeat ? (
-                    <Repeat size={22} weight="bold" />
+                    <Repeat className="size-5 text-white" />
                   ) : (
                     <RepeatOnce size={22} weight="bold" />
                   )}
@@ -1404,7 +1413,7 @@ const FeaturedPage = ({
                   )}
                   onClick={handleToggleLoop}
                 >
-                  <Infinity size={22} weight="bold" />
+                  <InfinityIcon className="size-5 text-white" />
                 </motion.div>
 
                 <motion.div
@@ -1415,7 +1424,11 @@ const FeaturedPage = ({
                   )}
                   onClick={() => handleToggleMixMode()}
                 >
-                  <Exclude size={22} weight={isMixMode ? "fill" : "regular"} />
+                  <Exclude
+                    size={22}
+                    className="size-5"
+                    weight={isMixMode ? "fill" : "regular"}
+                  />
                 </motion.div>
               </div>
 
@@ -1791,23 +1804,18 @@ export function PlayerPage({ setIsClick }: IProp) {
         >
           {isClickLyric && (
             <>
-              {!isKaraokeMode ? (
-                <motion.div
-                  whileTap={{ scale: 0.2 }}
-                  onClick={() => handleToggleKaraoke()}
-                  className="absolute -top-8 right-8 cursor-pointer rounded-full bg-white/10 p-2"
-                >
-                  <MagicWand size={25} className="text-white" />
-                </motion.div>
-              ) : (
-                <motion.div
-                  whileTap={{ scale: 0.2 }}
-                  onClick={() => handleToggleKaraoke()}
-                  className="absolute -top-8 right-8 cursor-pointer rounded-full bg-white/10 p-2"
-                >
-                  <MagicWand size={25} weight="fill" className="text-white" />
-                </motion.div>
-              )}
+              <motion.div
+                whileTap={{ scale: 0.2 }}
+                onClick={() => handleToggleKaraoke()}
+                className={cn(
+                  "absolute -top-8 right-8 cursor-pointer rounded-full p-2",
+                  isKaraokeMode
+                    ? "bg-white/50 text-zinc-600"
+                    : "bg-white/10 text-white"
+                )}
+              >
+                <WandAndSparkles className="size-6" />
+              </motion.div>
             </>
           )}
 
@@ -1840,12 +1848,17 @@ export function PlayerPage({ setIsClick }: IProp) {
                 </motion.div>
 
                 <div className="flex items-center gap-4">
-                  <Star
-                    size={25}
-                    weight={sharedActions.isInFavorites ? "fill" : "regular"}
-                    className={cn("cursor-pointer text-white")}
-                    onClick={sharedActions.onToggleFavorites}
-                  />
+                  {sharedActions.isInFavorites ? (
+                    <StarFill
+                      className="size-6 cursor-pointer text-white"
+                      onClick={sharedActions.onToggleFavorites}
+                    />
+                  ) : (
+                    <Star
+                      className="size-6 cursor-pointer text-white"
+                      onClick={sharedActions.onToggleFavorites}
+                    />
+                  )}
 
                   <MusicActionsMenu />
                 </div>
@@ -1871,13 +1884,13 @@ export function PlayerPage({ setIsClick }: IProp) {
 
           {!isQueueDragging && (
             <div className="flex items-center justify-center">
-              <div className="mx-12 mb-2 flex w-full items-center justify-between text-white md:mx-16">
+              <div className="mx-10 mb-2 flex w-full items-center justify-between text-white md:mx-16">
                 <motion.button
                   whileTap={{ scale: 0.2 }}
                   onClick={handlePlayPrevFromQueue}
                   className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full active:bg-white/10"
                 >
-                  <Rewind size={35} weight="fill" />
+                  <BackwardFill className="size-10 text-white" />
                 </motion.button>
 
                 <motion.button
@@ -1892,9 +1905,9 @@ export function PlayerPage({ setIsClick }: IProp) {
                   className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-full active:bg-white/10"
                 >
                   {isPlaying ? (
-                    <Pause size={40} weight="fill" />
+                    <PauseFill className="size-10 text-white" />
                   ) : (
-                    <Play size={40} weight="fill" />
+                    <PlayFill className="size-10 text-white" />
                   )}
                 </motion.button>
 
@@ -1903,7 +1916,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                   onClick={handlePlayNextFromQueue}
                   className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full active:bg-white/10"
                 >
-                  <FastForward size={35} weight="fill" />
+                  <ForwardFill className="size-10 text-white" />
                 </motion.button>
               </div>
             </div>
@@ -1929,11 +1942,14 @@ export function PlayerPage({ setIsClick }: IProp) {
                     !currentMusic?.srt ? "pointer-events-none opacity-40" : ""
                   }`}
                 >
-                  <ChatTeardropText
-                    size={25}
-                    weight={isClickLyric ? "fill" : "regular"}
-                  />
+                  {isClickLyric ? (
+                    <QuoteBubbleFill className="size-6 text-white" />
+                  ) : (
+                    <QuoteBubble className="size-6 text-white" />
+                  )}
                 </motion.button>
+
+                <IpadLandscapeAndIpod className="size-8 text-white" />
 
                 <motion.button
                   whileTap={{ scale: 0.2 }}
@@ -1943,10 +1959,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                   }}
                   className={`hidden h-12 w-12 items-center justify-center rounded-full transition-colors active:bg-white/10 md:flex`}
                 >
-                  <Shuffle
-                    size={25}
-                    weight={isClickLyric ? "fill" : "regular"}
-                  />
+                  <Shuffle className="size-6 text-white" />
                 </motion.button>
 
                 <motion.button
@@ -1959,10 +1972,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                     isClickLyric ? "bg-white/20" : "bg-transparent"
                   }`}
                 >
-                  <Infinity
-                    size={25}
-                    weight={isClickLyric ? "fill" : "regular"}
-                  />
+                  <InfinityIcon className="size-6 text-white" />
                 </motion.button>
 
                 <motion.button
@@ -1976,7 +1986,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                     isClickFeatured ? "bg-white/20" : "bg-transparent"
                   }`}
                 >
-                  <ListBullets size={25} weight="bold" />
+                  <ListBullet className="size-6 text-white" />
                 </motion.button>
               </div>
             </div>

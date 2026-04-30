@@ -1,8 +1,9 @@
-import { SpeakerHigh, SpeakerNone } from "@phosphor-icons/react/dist/ssr";
 import Slider from "@mui/material/Slider";
 import { useTranslations } from "next-intl";
 import { useAudio } from "@/components/music-provider";
 import { type SyntheticEvent, useEffect, useRef, useState } from "react";
+import { SpeakerFill } from "@/components/icon/speaker-fill";
+import { SpeakerWave3Fill } from "@/components/icon/speaker-wave-3-fill";
 
 export function VolumeBar() {
   const { audioRef, isMuted } = useAudio();
@@ -82,7 +83,7 @@ export function VolumeBar() {
         onClick={handleMinSpeakerClick}
         className="flex items-center justify-start text-zinc-200/90 transition hover:text-white"
       >
-        <SpeakerNone size={15} weight="fill" />
+        <SpeakerFill className="h-[14px] w-auto" />
       </button>
 
       <div className="flex flex-1 items-center">
@@ -129,7 +130,7 @@ export function VolumeBar() {
       </div>
 
       <div className="flex items-center justify-end text-zinc-200/90">
-        <SpeakerHigh size={15} weight="fill" className="ml-2" />
+        <SpeakerWave3Fill className="ml-1 h-[16px] w-auto" />
       </div>
     </div>
   );

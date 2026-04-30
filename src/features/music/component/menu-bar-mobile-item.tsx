@@ -30,7 +30,7 @@ export function MenuBarMobileItem({ item }: MenuBarMobileItemProps) {
     >
       {item.icon}
 
-      <div className="text-center font-apple text-[10px] font-medium leading-none">
+      <div className="mt-0.5 text-center font-apple text-[10px] font-medium leading-none">
         {item.label}
       </div>
     </div>

@@ -1,10 +1,7 @@
 "use client";
 import { CaretRight, ChartLine, Play } from "@phosphor-icons/react/dist/ssr";
 import { useEffect, useMemo, useState } from "react";
-
 import { AudioSingerItem } from "./component/audio-singer-item";
-
-import { AudioBar } from "./audio-bar";
 import {
   AnimatePresence,
   useScroll,
@@ -13,7 +10,6 @@ import {
   motion,
 } from "framer-motion";
 import { MenuBar } from "./menu-bar";
-import { MenuBarMobile } from "./menu-bar-mobile";
 import { MotionHeaderMusic } from "./component/motion-header-music";
 import { ISingerItem } from "./type/singer";
 import { useAudio } from "@/components/music-provider";
@@ -33,7 +29,8 @@ export function SingerPageClient({ singer }: IProp) {
   const totalPlayCount = useMemo(
     () =>
       singer.musics?.reduce(
-        (total, music) => total + (typeof music.playCount === "number" ? music.playCount : 0),
+        (total, music) =>
+          total + (typeof music.playCount === "number" ? music.playCount : 0),
         0
       ) ?? 0,
     [singer.musics]
@@ -91,10 +88,6 @@ export function SingerPageClient({ singer }: IProp) {
 
         <AnimatePresence>
           <motion.div className="mb-8 w-full" layoutId="singer">
-            <AudioBar />
-
-            <MenuBarMobile />
-
             <div>
               <BackButton />
 

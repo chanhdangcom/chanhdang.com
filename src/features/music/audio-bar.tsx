@@ -1,32 +1,28 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import {
-  FastForward,
-  MusicNotes,
-  Pause,
-  Play,
-  Repeat,
-  Rewind,
-  Shuffle,
-} from "phosphor-react";
+import { MusicNotes } from "phosphor-react";
 import { useTranslations } from "next-intl";
 
 import { DurationAudio } from "./component/duration-audio";
-import {
-  Anchor,
-  ArrowsOutSimple,
-  RepeatOnce,
-  SpeakerHigh,
-  SpeakerSlash,
-} from "@phosphor-icons/react/dist/ssr";
+import { RepeatOnce } from "@phosphor-icons/react/dist/ssr";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { BackwardFill } from "@/components/icon/backward-fill";
 import { useAudio } from "@/components/music-provider";
 import { BorderPro } from "./component/border-pro";
+import { ForwardFill } from "@/components/icon/forward-fill";
 import dynamic from "next/dynamic";
 import { Drawer } from "vaul";
 import { AnimatePresence, motion } from "framer-motion";
+import { PauseFill } from "@/components/icon/pause-fill";
+import { PlayFill } from "@/components/icon/play-fill";
+import { Repeat } from "@/components/icon/repeat";
+import { SpeakerSlashFill } from "@/components/icon/speaker-slash-fill";
+import { SpeakerWave3Fill } from "@/components/icon/speaker-wave-3-fill";
 import { cn } from "@/utils/cn";
+import { Shuffle } from "@/components/icon/shuffle";
+import { IpadLandscapeAndIpod } from "@/components/icon/ipad-landscape-and-ipod";
+import { ArrowDownLeftAndArrowUpRightRectangle } from "@/components/icon/arrow-down-left-and-arrow-up-right-rectangle";
 
 const PlayerPage = dynamic(
   () => import("./player-page").then((mod) => mod.PlayerPage),
@@ -324,51 +320,41 @@ export function AudioBar() {
                   if (!scroll) e.stopPropagation();
                   handlePlayRandomAudio();
                 }}
-                size={18}
-                weight="bold"
-                className={`${tapFeedbackClass} text-zinc-500`}
+                className={`${tapFeedbackClass} size-4 text-zinc-500`}
               />
 
-              <Rewind
-                size={20}
+              <BackwardFill
+                className={`${tapFeedbackClass} size-6`}
                 onClick={(e) => {
                   if (!scroll) e.stopPropagation();
                   handAudioForward();
                 }}
-                weight="fill"
-                className={tapFeedbackClass}
               />
 
               {isPlaying ? (
-                <Pause
+                <PauseFill
                   onClick={(e) => {
                     if (!scroll) e.stopPropagation();
                     handlePauseAudio();
                   }}
-                  weight="fill"
-                  size={25}
-                  className={tapFeedbackClass}
+                  className={`${tapFeedbackClass} size-5`}
                 />
               ) : (
-                <Play
+                <PlayFill
                   onClick={(e) => {
                     if (!scroll) e.stopPropagation();
                     handleResumeAudio();
                   }}
-                  weight="fill"
-                  size={25}
-                  className={tapFeedbackClass}
+                  className={`${tapFeedbackClass} size-5`}
                 />
               )}
 
-              <FastForward
+              <ForwardFill
                 onClick={(e) => {
                   if (!scroll) e.stopPropagation();
                   handleAudioSkip();
                 }}
-                weight="fill"
-                size={20}
-                className={tapFeedbackClass}
+                className={`${tapFeedbackClass} size-6`}
               />
 
               <div
@@ -378,7 +364,7 @@ export function AudioBar() {
                 {isRepeat ? (
                   <RepeatOnce size={18} weight="bold" />
                 ) : (
-                  <Repeat size={18} weight="bold" />
+                  <Repeat className="size-4" />
                 )}
               </div>
             </div>
@@ -480,44 +466,36 @@ export function AudioBar() {
 
             <div className="hidden items-center gap-8 text-black dark:text-white md:flex">
               {isMuted ? (
-                <SpeakerSlash
-                  size={20}
-                  weight="fill"
+                <SpeakerSlashFill
                   onClick={(e) => {
                     if (!scroll) e.stopPropagation();
                     handleMute();
                   }}
-                  className={tapFeedbackClass}
+                  className={`${tapFeedbackClass} h-[18px] w-auto`}
                 />
               ) : (
-                <SpeakerHigh
-                  size={20}
-                  weight="fill"
+                <SpeakerWave3Fill
                   onClick={(e) => {
                     if (!scroll) e.stopPropagation();
                     handleMute();
                   }}
-                  className={cn(tapFeedbackClass)}
+                  className={cn(tapFeedbackClass, "h-[16px] w-auto")}
                 />
               )}
 
               {currentMusic ? (
-                <ArrowsOutSimple
-                  size={20}
-                  weight="fill"
-                  className={tapFeedbackClass}
+                <ArrowDownLeftAndArrowUpRightRectangle
+                  className={cn(tapFeedbackClass, "size-6")}
                   onClick={(e) => {
                     if (!scroll) e.stopPropagation();
                     setIsClick(true);
                   }}
                 />
               ) : (
-                <ArrowsOutSimple
-                  size={20}
-                  weight="fill"
+                <ArrowDownLeftAndArrowUpRightRectangle
                   className={cn(
                     tapFeedbackClass,
-                    "pointer-events-none opacity-30"
+                    "pointer-events-none size-6 opacity-30"
                   )}
                   onClick={(e) => {
                     if (!scroll) e.stopPropagation();
@@ -527,7 +505,7 @@ export function AudioBar() {
               )}
             </div>
 
-            <div className="right-2 z-10 ml-0.5 flex shrink-0 items-center md:hidden md:gap-4">
+            <div className="right-2 z-10 ml-0.5 flex shrink-0 items-center gap-2 md:hidden md:gap-4">
               {isPlaying ? (
                 <div
                   onClick={(e) => {
@@ -536,11 +514,7 @@ export function AudioBar() {
                   }}
                   className={`mr-2 ${tapFeedbackClass}`}
                 >
-                  <Pause
-                    weight="fill"
-                    size={23}
-                    className="text-black dark:text-white"
-                  />
+                  <PauseFill className="text-6 text-black dark:text-white" />
                 </div>
               ) : (
                 <div
@@ -550,21 +524,15 @@ export function AudioBar() {
                   }}
                   className={`mr-2 ${tapFeedbackClass}`}
                 >
-                  <Play
-                    weight="fill"
-                    size={23}
-                    className="text-black dark:text-white"
-                  />
+                  <PlayFill className="text-6 text-black dark:text-white" />
                 </div>
               )}
 
               {scroll && (
                 <div className={tapFeedbackClass}>
-                  <FastForward
+                  <ForwardFill
                     onClick={handleAudioSkip}
-                    weight="fill"
-                    size={23}
-                    className="text-black dark:text-white"
+                    className="size-6 text-black dark:text-white"
                   />
                 </div>
               )}
@@ -594,7 +562,7 @@ export function AudioBar() {
           )}
         >
           <div className="flex items-center gap-1">
-            <Anchor size={22} weight="fill" className="text-rose-600" />
+            <IpadLandscapeAndIpod className="text-whilte/30 size-6" />
 
             <div>Continue in</div>
           </div>

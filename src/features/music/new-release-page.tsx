@@ -1,8 +1,6 @@
 import clientPromise from "@/lib/mongodb";
-import { AudioBar } from "./audio-bar";
 import { MotionHeaderMusic } from "./component/motion-header-music";
 import { MenuBar } from "./menu-bar";
-import { MenuBarMobile } from "./menu-bar-mobile";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { NewReleaseList } from "./new-release-list";
 import { BackButton } from "./component/back-button";
@@ -60,13 +58,7 @@ export async function NewReleasePage({ searchPage }: IProp) {
 
             <div className="mt-2">
               <NewReleaseList musics={musics} />
-
             </div>
-          </div>
-
-          <div className="my-40">
-            <AudioBar />
-            <MenuBarMobile />
           </div>
         </div>
       </div>
@@ -74,7 +66,9 @@ export async function NewReleasePage({ searchPage }: IProp) {
   } catch (error) {
     console.error("❌ Failed to fetch musics:", error);
     return (
-      <div className="text-center text-rose-500">Failed to load music data.</div>
+      <div className="text-center text-rose-500">
+        Failed to load music data.
+      </div>
     );
   }
 }

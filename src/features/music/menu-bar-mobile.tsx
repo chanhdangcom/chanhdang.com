@@ -3,14 +3,12 @@ import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { House, MagnifyingGlass } from "phosphor-react";
+import { House } from "phosphor-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useUser } from "@/hooks/use-user";
-import {
-  CardsThree,
-  PlusSquare,
-  SquaresFour,
-} from "@phosphor-icons/react/dist/ssr";
+import { PlusSquare, SquaresFour } from "@phosphor-icons/react/dist/ssr";
+import { Magnifyingglass } from "@/components/icon/magnifyingglass";
+import { MusicNoteSquareStackFill } from "@/components/icon/music-note-square-stack-fill";
 import {
   MenuBarMobileItem,
   type MenuBarMobileItemConfig,
@@ -167,7 +165,7 @@ export function MenuBarMobile() {
       href: `${basePath}/library`,
       isActive: isPathActive(`${basePath}/library`),
       disabled: !isAuthenticated,
-      icon: <CardsThree size={30} weight="fill" />,
+      icon: <MusicNoteSquareStackFill className="size-7" />,
     },
   ];
 
@@ -175,7 +173,7 @@ export function MenuBarMobile() {
   const getCurrentRouteIcon = () => {
     if (isPathActive(`${basePath}/search`)) {
       return {
-        icon: <MagnifyingGlass size={30} weight="bold" />,
+        icon: <Magnifyingglass className="size-7" />,
         href: `${basePath}/search`,
         isActive: true,
       };
@@ -196,7 +194,7 @@ export function MenuBarMobile() {
     }
     if (isPathActive(`${basePath}/library`)) {
       return {
-        icon: <CardsThree size={30} weight="fill" />,
+        icon: <MusicNoteSquareStackFill className="size-7" />,
         href: `${basePath}/library`,
         isActive: true,
       };
@@ -212,7 +210,7 @@ export function MenuBarMobile() {
   const currentRoute = getCurrentRouteIcon();
 
   return (
-    <div className="fixed inset-x-4 bottom-6 z-50 flex items-center justify-between font-apple sm:hidden">
+    <div className="fixed inset-x-4 bottom-6 z-40 flex items-center justify-between font-apple sm:hidden">
       <LayoutGroup>
         <AnimatePresence mode="popLayout" initial={false}>
           {show ? (
@@ -278,11 +276,7 @@ export function MenuBarMobile() {
               className="rounded-full border border-white/20 bg-zinc-300/80 p-4 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset] backdrop-blur-lg dark:border-white/10 dark:bg-zinc-950/80 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset]"
             >
               <Link href={`${basePath}/search`}>
-                <MagnifyingGlass
-                  size={30}
-                  weight="bold"
-                  className="text-black dark:text-white"
-                />
+                <Magnifyingglass className="size-7 text-black dark:text-white" />
               </Link>
             </motion.div>
           ) : (
@@ -297,11 +291,7 @@ export function MenuBarMobile() {
               className="rounded-full border border-white/20 bg-zinc-300/80 p-3 shadow-[0_16px_34px_-14px_rgba(0,0,0,0.42),0_1px_0_rgba(255,255,255,0.55)_inset] backdrop-blur-lg dark:border-white/10 dark:bg-zinc-950/80 dark:shadow-[0_18px_38px_-14px_rgba(0,0,0,0.78),0_1px_0_rgba(255,255,255,0.12)_inset]"
             >
               <Link href={`${basePath}/search`}>
-                <MagnifyingGlass
-                  size={30}
-                  weight="bold"
-                  className="text-black dark:text-white"
-                />
+                <Magnifyingglass className="size-7 text-black dark:text-white" />
               </Link>
             </motion.div>
           )}

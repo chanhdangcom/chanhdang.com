@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { IMusic } from "@/app/[locale]/features/profile/types/music";
 import { useUser } from "@/hooks/use-user";
@@ -17,6 +17,7 @@ import {
   AudioItemContextMenu,
   useAudioItemContextMenu,
 } from "./audio-item-context-menu";
+import { haptic } from "@/lib/haptic/haptic";
 
 type IProp = {
   music: IMusic | IPlaylistItem;
@@ -35,8 +36,12 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
   const [isEnter, setIsEnter] = useState(false);
   const hoverBg = useImageHoverColor(music.cover, { alpha: 0.3 });
   const isTrack = isMusicItem(music);
+
+  const hapticRef = useRef<HTMLButtonElement>(null);
+
   const menu = useAudioItemContextMenu({
     onTap: handlePlay,
+    onOpenMenu: () => hapticRef.current?.click(),
     disabled: !isTrack,
   });
 
@@ -87,7 +92,10 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
           ref={menu.rootRef}
           onMouseEnter={() => setIsEnter(true)}
           onMouseLeave={() => setIsEnter(false)}
-          onPointerDown={menu.handlePointerDown}
+          onPointerDown={(e) => {
+            haptic();
+            menu.handlePointerDown(e);
+          }}
           onPointerUp={menu.handlePointerUp}
           onPointerLeave={menu.handlePointerLeave}
           onContextMenu={menu.handleContextMenu}
@@ -95,6 +103,7 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
             "w-44 shrink-0 space-y-1 rounded-xl p-1.5 text-zinc-50 md:w-52",
             className
           )}
+          // onClick={() => haptic()}
           style={{
             backgroundColor: isEnter ? hoverBg : "transparent",
             transition: "background-color 150ms ease",
@@ -122,14 +131,14 @@ export function AuidoItem({ music, handlePlay, className }: IProp) {
                   <img
                     src={music.cover}
                     alt="cover"
-                    className="mx-auto size-44 shrink-0 cursor-pointer justify-center rounded-lg object-cover md:size-52"
+                    className="mx-auto aspect-square w-full shrink-0 cursor-pointer justify-center rounded-lg object-cover"
                     onClick={handlePlay}
                   />
                 </BorderPro>
               </div>
             ) : (
               <div
-                className="size-40 cursor-pointer rounded-xl bg-zinc-800"
+                className="aspect-square w-full cursor-pointer rounded-xl bg-zinc-800"
                 onClick={handlePlay}
               />
             )}
