@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
-import { getCurrentUser } from "@/lib/auth-helpers";
+import { getCurrentUser, getUserRole } from "@/lib/auth-helpers";
 import {
   ensureUserSocialFields,
   getRelationshipStatus,
@@ -18,6 +18,47 @@ type UserPublicDocument = {
   image?: string;
   friendCode?: string;
 };
+
+function serializeMongoValue(value: unknown): unknown {
+  if (value instanceof Date) {
+    return value.toISOString();
+  }
+
+  if (value instanceof ObjectId) {
+    return value.toString();
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => serializeMongoValue(item));
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, nestedValue]) => [
+        key,
+        serializeMongoValue(nestedValue),
+      ])
+    );
+  }
+
+  return value;
+}
+
+function toAdminUserResponse(user: Record<string, unknown>) {
+  const safeUser = Object.fromEntries(
+    Object.entries(user).filter(([key]) => key !== "password")
+  );
+  const serializedUser = serializeMongoValue(safeUser) as Record<string, unknown>;
+  const normalizedId =
+    typeof serializedUser._id === "string"
+      ? serializedUser._id
+      : String(user._id ?? "");
+
+  return {
+    id: normalizedId,
+    ...serializedUser,
+  };
+}
 
 export async function GET(request: Request) {
   try {
@@ -40,10 +81,19 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
+    const requesterRole = await getUserRole(request);
     const targetUser = await ensureUserSocialFields(db, rawUser);
     if (!targetUser) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
+
+    if (requesterRole === "admin") {
+      return NextResponse.json({
+        success: true,
+        user: toAdminUserResponse(targetUser as Record<string, unknown>),
+      });
+    }
+
     const currentUser = await getCurrentUser(request);
 
     return NextResponse.json({

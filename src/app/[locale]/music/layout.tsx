@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { AudioBar } from "@/features/music/audio-bar";
 import { MenuBarMobile } from "@/features/music/menu-bar-mobile";
-
 import { ScrollChatBot } from "@/components/scroll-chat-bot";
 
 type Props = {

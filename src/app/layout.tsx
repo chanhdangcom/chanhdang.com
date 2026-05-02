@@ -1,6 +1,8 @@
 // Root layout - provides html/body
 // Fonts loaded via link to avoid build-time fetch (fixes Vercel/build when Google Fonts is unreachable)
+import { cn } from "@/lib/utils";
 import { ClientRoot } from "./ClientRoot";
+import { fonts } from "@/lib/fonts";
 
 export default function RootLayout({
   children,
@@ -8,19 +10,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="light scroll-smooth" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Pacifico&family=Roboto+Condensed:wght@400;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html
+      lang="en"
+      className={cn("scroll-smooth", fonts)}
+      suppressHydrationWarning
+    >
       <body>
         <ClientRoot>{children}</ClientRoot>
       </body>

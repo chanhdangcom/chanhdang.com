@@ -58,7 +58,9 @@ const config: Config = {
     deepsky: "#00bfff",
   },
   fontFamily: {
+    sans: 'var(--font-sans)',
     body: 'var(--font-body)',
+    heading: 'var(--font-heading)',
     handwritten: 'var(--font-handwritten)',
     mono: 'var(--font-mono)',
     sf: [/*...*/],
