@@ -279,8 +279,8 @@ const getSubtitleStackMotion = (itemIndex: number, activeIndex: number) => {
   const isBelow = delta > 0;
   const belowOffset = isBelow ? delta : 0;
 
-  const lift = isBelow ? Math.max(28 - belowOffset * 2.4, 10) : 0;
-  const delay = isBelow ? 0.22 + (belowOffset - 1) * 0.14 : 0;
+  const lift = isBelow ? Math.max(40 - belowOffset * 3.2, 14) : 0;
+  const delay = isBelow ? 0.28 + (belowOffset - 1) * 0.18 : 0;
 
   return {
     y: isBelow ? [lift, 0] : 0,
@@ -289,7 +289,7 @@ const getSubtitleStackMotion = (itemIndex: number, activeIndex: number) => {
     transition: {
       y: {
         delay,
-        duration: isBelow ? 0.72 : 0.2,
+        duration: isBelow ? 0.82 : 0.2,
         times: isBelow ? [0, 1] : undefined,
         ease: [0.22, 1, 0.36, 1],
       },
