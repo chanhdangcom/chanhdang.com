@@ -21,7 +21,15 @@ import { Repeat } from "@/components/icon/repeat";
 import { Shuffle } from "@/components/icon/shuffle";
 import { StarFill } from "@/components/icon/star-fill";
 import { Star } from "@/components/icon/star";
-import { useCallback, useEffect, useState, useRef, memo } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+  useRef,
+  memo,
+} from "react";
 import { useSpringScroll } from "@/hooks/use-spring-scroll";
 import { useRouter, useParams } from "next/navigation";
 import { AudioTimeLine } from "./component/audio-time-line";
@@ -126,6 +134,172 @@ const useDeferredRender = (isDesktop: boolean, delayMs = 220) => {
   }, [delayMs, isDesktop]);
 
   return isReady;
+};
+
+type SubtitleLine = {
+  id: number;
+  start?: number;
+  end?: number;
+  text: string;
+};
+
+const getSubtitleProgress = (
+  subtitle: SubtitleLine | undefined,
+  currentTime: number
+) => {
+  if (
+    !subtitle ||
+    subtitle.start === undefined ||
+    subtitle.end === undefined ||
+    subtitle.end <= subtitle.start
+  ) {
+    return 1;
+  }
+
+  return Math.min(
+    Math.max(
+      (currentTime - subtitle.start) / (subtitle.end - subtitle.start),
+      0
+    ),
+    1
+  );
+};
+
+const useActiveSubtitleProgress = (
+  audioRef: React.RefObject<HTMLAudioElement | null>,
+  subtitles: SubtitleLine[],
+  currentSubtitleId: number | null
+) => {
+  const [activeProgress, setActiveProgress] = useState(0);
+
+  useEffect(() => {
+    if (!currentSubtitleId) {
+      setActiveProgress(0);
+      return;
+    }
+
+    const currentSubtitle = subtitles.find(
+      (line) => line.id === currentSubtitleId
+    );
+    if (!currentSubtitle) {
+      setActiveProgress(0);
+      return;
+    }
+
+    const updateProgress = () => {
+      const nextProgress = getSubtitleProgress(
+        currentSubtitle,
+        audioRef.current?.currentTime ?? 0
+      );
+
+      setActiveProgress((prev) =>
+        Math.abs(prev - nextProgress) < 0.01 ? prev : nextProgress
+      );
+    };
+
+    updateProgress();
+    const intervalId = window.setInterval(updateProgress, 50);
+
+    return () => window.clearInterval(intervalId);
+  }, [audioRef, currentSubtitleId, subtitles]);
+
+  return activeProgress;
+};
+
+const splitRenderedTextIntoLines = (element: HTMLElement, text: string) => {
+  const textNode = element.firstChild;
+  if (!textNode || textNode.nodeType !== Node.TEXT_NODE || !text.trim()) {
+    return [text];
+  }
+
+  const range = document.createRange();
+  range.setStart(textNode, 0);
+
+  const lines: string[] = [];
+  let currentLine = "";
+  let currentTop: number | null = null;
+
+  for (let index = 1; index <= text.length; index += 1) {
+    range.setEnd(textNode, index);
+    const rects = range.getClientRects();
+    const lastRect = rects.item(rects.length - 1);
+    const currentChar = text[index - 1];
+
+    if (!lastRect) {
+      currentLine += currentChar;
+      continue;
+    }
+
+    if (currentTop === null) {
+      currentTop = lastRect.top;
+      currentLine += currentChar;
+      continue;
+    }
+
+    if (Math.abs(lastRect.top - currentTop) > 1) {
+      lines.push(currentLine.trimEnd());
+      currentLine = currentChar;
+      currentTop = lastRect.top;
+      continue;
+    }
+
+    currentLine += currentChar;
+  }
+
+  if (currentLine) {
+    lines.push(currentLine.trimEnd());
+  }
+
+  return lines.filter(Boolean);
+};
+
+const getSubtitleStackMotion = (itemIndex: number, activeIndex: number) => {
+  if (activeIndex < 0) {
+    return {
+      y: 0,
+      scale: 1,
+      zIndex: 1,
+      transition: { duration: 0.2 },
+    };
+  }
+
+  const delta = itemIndex - activeIndex;
+  const distance = Math.abs(delta);
+
+  if (distance > 7) {
+    return {
+      y: 0,
+      scale: 1,
+      zIndex: 1,
+      transition: { duration: 0.2 },
+    };
+  }
+
+  const isActive = delta === 0;
+  const isBelow = delta > 0;
+  const belowOffset = isBelow ? delta : 0;
+
+  const lift = isBelow ? Math.max(28 - belowOffset * 2.4, 10) : 0;
+  const delay = isBelow ? 0.22 + (belowOffset - 1) * 0.14 : 0;
+
+  return {
+    y: isBelow ? [lift, 0] : 0,
+    scale: 1,
+    zIndex: isActive ? 30 : Math.max(1, 20 - distance),
+    transition: {
+      y: {
+        delay,
+        duration: isBelow ? 0.72 : 0.2,
+        times: isBelow ? [0, 1] : undefined,
+        ease: [0.22, 1, 0.36, 1],
+      },
+      scale: {
+        delay,
+        duration: 0.2,
+        ease: "linear",
+      },
+    },
+  };
 };
 
 const QueueItem = ({
@@ -422,24 +596,133 @@ const useMusicActionsMenu = ({
 
 // Memoized SubtitleItem để tránh re-render không cần thiết
 const SubtitleItem = memo(
-  ({ id, text, isActive }: { id: number; text: string; isActive: boolean }) => {
+  ({
+    id,
+    text,
+    isActive,
+    progress,
+    itemIndex,
+    activeIndex,
+  }: {
+    id: number;
+    text: string;
+    isActive: boolean;
+    progress: number;
+    itemIndex: number;
+    activeIndex: number;
+  }) => {
+    const activeProgress = Math.min(Math.max(progress, 0), 1);
+    const measureRef = useRef<HTMLSpanElement>(null);
+    const [displayLines, setDisplayLines] = useState<string[]>([text]);
+    const stackMotion = useMemo(
+      () => getSubtitleStackMotion(itemIndex, activeIndex),
+      [activeIndex, itemIndex]
+    );
+
+    useLayoutEffect(() => {
+      if (!isActive) {
+        setDisplayLines([text]);
+        return;
+      }
+
+      const measureElement = measureRef.current;
+      if (!measureElement) return;
+
+      const updateLines = () => {
+        const nextLines = splitRenderedTextIntoLines(measureElement, text);
+        setDisplayLines(nextLines.length > 0 ? nextLines : [text]);
+      };
+
+      updateLines();
+
+      const resizeObserver = new ResizeObserver(() => {
+        updateLines();
+      });
+
+      resizeObserver.observe(measureElement);
+      return () => resizeObserver.disconnect();
+    }, [isActive, text]);
+
+    const totalChars = Math.max(
+      displayLines.reduce((sum, line) => sum + Math.max(line.length, 1), 0),
+      1
+    );
+
     return (
-      <p
+      <motion.p
+        initial={false}
+        animate={{
+          y: stackMotion.y,
+          scale: stackMotion.scale,
+        }}
+        transition={stackMotion.transition}
         id={`subtitle-${id}`}
-        className={`z-40 mb-6 text-balance font-apple text-[32px] md:mb-8 md:text-5xl ${
+        className={`relative z-40 mb-6 text-balance font-apple text-[32px] md:mb-8 md:text-5xl ${
           isActive
-            ? "text-balance leading-snug text-white"
+            ? "text-balance leading-snug text-white/30"
             : "text-balance leading-snug text-white/20 blur-[2px]"
         }`}
+        style={{ zIndex: stackMotion.zIndex }}
       >
-        {text}
-      </p>
+        <span className="block">{text}</span>
+
+        {isActive ? (
+          <>
+            <span
+              ref={measureRef}
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 block whitespace-normal text-balance opacity-0"
+            >
+              {text}
+            </span>
+
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 block text-balance text-transparent"
+            >
+              {displayLines.map((line, index) => {
+                const previousChars = displayLines
+                  .slice(0, index)
+                  .reduce((sum, item) => sum + Math.max(item.length, 1), 0);
+                const lineChars = Math.max(line.length, 1);
+                const startProgress = previousChars / totalChars;
+                const endProgress = (previousChars + lineChars) / totalChars;
+                const lineProgress = Math.min(
+                  Math.max(
+                    (activeProgress - startProgress) /
+                      (endProgress - startProgress),
+                    0
+                  ),
+                  1
+                );
+
+                return (
+                  <span
+                    key={`${id}-${index}-${line}`}
+                    className="block"
+                    style={{
+                      backgroundImage: `linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) ${lineProgress * 100}%, rgba(255, 255, 255, 0.28) ${lineProgress * 100}%, rgba(255, 255, 255, 0.28) 100%)`,
+                      WebkitBackgroundClip: "text",
+                      backgroundClip: "text",
+                    }}
+                  >
+                    {line}
+                  </span>
+                );
+              })}
+            </span>
+          </>
+        ) : null}
+      </motion.p>
     );
   },
   (prevProps, nextProps) => {
     // Chỉ re-render nếu isActive thay đổi hoặc text thay đổi
     return (
+      prevProps.itemIndex === nextProps.itemIndex &&
+      prevProps.activeIndex === nextProps.activeIndex &&
       prevProps.isActive === nextProps.isActive &&
+      prevProps.progress === nextProps.progress &&
       prevProps.text === nextProps.text &&
       prevProps.id === nextProps.id
     );
@@ -457,7 +740,7 @@ const LyricPage = ({
 }) => {
   const {
     currentMusic,
-
+    audioRef,
     handleToggleKaraoke,
     currentSubtitleId,
     subtitles,
@@ -471,6 +754,15 @@ const LyricPage = ({
   const touchDeltaYRef = useRef(0);
   const subtitleScrollRef = useRef<HTMLDivElement>(null);
   const isDesktop = useIsDesktop();
+  const activeSubtitleProgress = useActiveSubtitleProgress(
+    audioRef,
+    subtitles,
+    currentSubtitleId
+  );
+  const activeSubtitleIndex = useMemo(
+    () => subtitles.findIndex((line) => line.id === currentSubtitleId),
+    [currentSubtitleId, subtitles]
+  );
 
   // Thêm hiệu ứng scroll lò xo
   useSpringScroll(subtitleScrollRef);
@@ -506,16 +798,16 @@ const LyricPage = ({
       const elementTop =
         elementRect.top - containerRect.top + containerScrollTop;
 
-      // Vị trí mục tiêu: 20% từ trên viewport (cố định)
-      const targetOffset = viewportHeight * 0.2;
+      // Vị trí mục tiêu: giữ active line cố định gần phía trên như Apple Music
+      const targetOffset = viewportHeight * 0.22;
       const targetScrollTop = elementTop - targetOffset;
 
       // Kiểm tra xem element có đang ở vị trí tốt không (tolerance ±50px để tránh scroll liên tục)
       const currentOffset = elementRect.top - containerRect.top;
       const offsetDifference = Math.abs(currentOffset - targetOffset);
 
-      // Nếu đã ở vị trí tốt (sai lệch < 50px), không cần scroll
-      if (offsetDifference < 50 && currentOffset >= 0) {
+      // Chỉ bỏ qua khi active line đã gần đúng vị trí đích
+      if (offsetDifference < 16 && currentOffset >= 0) {
         return;
       }
 
@@ -553,7 +845,7 @@ const LyricPage = ({
       <div className="fixed inset-0 z-50 flex justify-between space-y-0 px-8 md:rounded-3xl md:border md:border-white/10">
         <div
           style={{ backgroundColor: hoverBgSolid }}
-          className="pointer-events-none absolute -bottom-16 left-0 z-10 h-[40vh] w-full scale-150 blur-xl brightness-50 md:bg-black/60 md:blur-3xl"
+          className="pointer-events-none absolute -bottom-16 left-0 z-50 h-[40vh] w-full scale-150 blur-xl brightness-50 md:bg-black/60 md:blur-3xl"
         />
 
         <div className="w-full">
@@ -599,7 +891,7 @@ const LyricPage = ({
 
           <div
             style={{ backgroundColor: hoverBgSolid }}
-            className="pointer-events-none absolute left-0 top-0 z-10 h-[15vh] w-full scale-150 blur-xl brightness-50 md:bg-black/60 md:blur-3xl"
+            className="pointer-events-none absolute left-0 top-0 z-50 h-[15vh] w-full scale-150 blur-xl brightness-50 md:bg-black/60 md:blur-3xl"
           />
 
           <div className="absolute inset-x-8 z-50 rounded-2xl p-1">
@@ -668,12 +960,17 @@ const LyricPage = ({
             }}
           >
             <div className="px-2 pt-32 font-apple text-3xl font-bold leading-loose text-zinc-300">
-              {subtitles.map((line) => (
+              {subtitles.map((line, index) => (
                 <SubtitleItem
                   key={line.id}
                   id={line.id}
                   text={line.text}
                   isActive={currentSubtitleId === line.id}
+                  itemIndex={index}
+                  activeIndex={activeSubtitleIndex}
+                  progress={
+                    currentSubtitleId === line.id ? activeSubtitleProgress : 0
+                  }
                 />
               ))}
             </div>
@@ -698,6 +995,7 @@ const ContentPage = ({
   const {
     currentMusic,
     isPaused,
+    audioRef,
     currentSubtitleId,
     subtitles,
     isKaraokeMode,
@@ -721,6 +1019,15 @@ const ContentPage = ({
   const isDesktop = useIsDesktop();
   const isHeavyReady = useDeferredRender(isDesktop, 180);
   const tPlayer = useTranslations("music.player");
+  const activeSubtitleProgress = useActiveSubtitleProgress(
+    audioRef,
+    subtitles,
+    currentSubtitleId
+  );
+  const activeSubtitleIndex = useMemo(
+    () => subtitles.findIndex((line) => line.id === currentSubtitleId),
+    [currentSubtitleId, subtitles]
+  );
 
   // Thêm hiệu ứng scroll lò xo
   useSpringScroll(subtitleScrollRef);
@@ -756,16 +1063,16 @@ const ContentPage = ({
       const elementTop =
         elementRect.top - containerRect.top + containerScrollTop;
 
-      // Vị trí mục tiêu: 20% từ trên viewport (cố định)
-      const targetOffset = viewportHeight * 0.2;
+      // Vị trí mục tiêu: giữ active line cố định gần phía trên như Apple Music
+      const targetOffset = viewportHeight * 0.22;
       const targetScrollTop = elementTop - targetOffset;
 
       // Kiểm tra xem element có đang ở vị trí tốt không (tolerance ±50px để tránh scroll liên tục)
       const currentOffset = elementRect.top - containerRect.top;
       const offsetDifference = Math.abs(currentOffset - targetOffset);
 
-      // Nếu đã ở vị trí tốt (sai lệch < 50px), không cần scroll
-      if (offsetDifference < 50 && currentOffset >= 0) {
+      // Chỉ bỏ qua khi active line đã gần đúng vị trí đích
+      if (offsetDifference < 16 && currentOffset >= 0) {
         return;
       }
 
@@ -945,16 +1252,21 @@ const ContentPage = ({
           >
             <div
               style={{ backgroundColor: hoverBgSolid }}
-              className="pointer-events-none absolute -bottom-16 left-0 z-10 h-[25vh] w-full scale-150 blur-xl brightness-50 md:bg-black/60 md:blur-3xl"
+              className="pointer-events-none absolute -bottom-16 left-0 z-50 h-[25vh] w-full scale-150 blur-xl brightness-50 md:bg-black/60 md:blur-3xl"
             />
 
             <div className="px-4 py-12 text-left font-apple font-bold text-zinc-300">
-              {subtitles.map((line) => (
+              {subtitles.map((line, index) => (
                 <SubtitleItem
                   key={line.id}
                   id={line.id}
                   text={line.text}
                   isActive={currentSubtitleId === line.id}
+                  itemIndex={index}
+                  activeIndex={activeSubtitleIndex}
+                  progress={
+                    currentSubtitleId === line.id ? activeSubtitleProgress : 0
+                  }
                 />
               ))}
             </div>
@@ -1047,7 +1359,7 @@ const ContentPage = ({
 
             <div
               style={{ backgroundColor: hoverBgSolid }}
-              className="pointer-events-none absolute -bottom-16 left-0 z-10 h-[20vh] w-full scale-150 blur-xl brightness-50 md:bg-black/60 md:blur-3xl"
+              className="pointer-events-none absolute -bottom-16 left-0 z-50 h-[20vh] w-full scale-150 blur-xl brightness-50 md:bg-black/60 md:blur-3xl"
             />
 
             <div className="px-4 text-left font-apple font-bold text-zinc-300">
@@ -1101,6 +1413,7 @@ const FeaturedPage = ({
 }) => {
   const {
     currentMusic,
+    audioRef,
     handleToggleKaraoke,
     isKaraokeMode,
     handlePlayAudio,
@@ -1129,6 +1442,15 @@ const FeaturedPage = ({
   const isDesktop = useIsDesktop();
   const isHeavyReady = useDeferredRender(isDesktop, 220);
   const tPlayer = useTranslations("music.player");
+  const activeSubtitleProgress = useActiveSubtitleProgress(
+    audioRef,
+    subtitles,
+    currentSubtitleId
+  );
+  const activeSubtitleIndex = useMemo(
+    () => subtitles.findIndex((line) => line.id === currentSubtitleId),
+    [currentSubtitleId, subtitles]
+  );
   const tCommon = useTranslations("music.common");
   const [isQueueDragging, setIsQueueDragging] = useState(false);
 
@@ -1167,24 +1489,18 @@ const FeaturedPage = ({
       const containerScrollTop = scrollContainer.scrollTop;
       const viewportHeight = containerRect.height;
 
-      // Kiểm tra xem element có đang ở vị trí tốt trong viewport không
-      const elementTopInView = elementRect.top - containerRect.top;
-      const elementBottomInView = elementRect.bottom - containerRect.top;
+      const targetOffset = viewportHeight * 0.22;
+      const currentOffset = elementRect.top - containerRect.top;
 
-      // Kiểm tra nếu element đã ở vị trí tốt (giữa 15% và 50% viewport - ở phía trên)
-      const isElementInGoodPosition =
-        elementTopInView >= viewportHeight * 0.15 &&
-        elementBottomInView <= viewportHeight * 0.5 &&
-        elementTopInView >= 0 &&
-        elementBottomInView <= viewportHeight;
+      // Nếu active line đã gần đúng vị trí đích thì không cần scroll
+      if (Math.abs(currentOffset - targetOffset) < 16 && currentOffset >= 0) {
+        return;
+      }
 
-      // Nếu đã ở vị trí tốt, không cần scroll
-      if (isElementInGoodPosition) return;
-
-      // Tính toán vị trí để subtitle active ở 20% từ trên (ở phía trên viewport)
+      // Tính toán vị trí để subtitle active bám sát target offset
       const elementTop =
         elementRect.top - containerRect.top + containerScrollTop;
-      const targetScrollTop = elementTop - viewportHeight * 0.2;
+      const targetScrollTop = elementTop - targetOffset;
 
       // Scroll mượt mà với easing
       scrollContainer.scrollTo({
@@ -1521,12 +1837,17 @@ const FeaturedPage = ({
               }}
             >
               <div className="text-balance px-4 py-12 text-right font-apple text-4xl font-bold leading-loose text-zinc-300">
-                {subtitles.map((line) => (
+                {subtitles.map((line, index) => (
                   <SubtitleItem
                     key={line.id}
                     id={line.id}
                     text={line.text}
                     isActive={currentSubtitleId === line.id}
+                    itemIndex={index}
+                    activeIndex={activeSubtitleIndex}
+                    progress={
+                      currentSubtitleId === line.id ? activeSubtitleProgress : 0
+                    }
                   />
                 ))}
               </div>
