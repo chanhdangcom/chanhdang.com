@@ -864,6 +864,14 @@ const LyricPage = ({
             />
           </div>
 
+          {/* <div className="absolute inset-0 -z-10 flex justify-center gap-8">
+            <img
+              src={currentMusic?.cover}
+              alt="cover"
+              className="size-full origin-bottom-right scale-[3.5] object-cover opacity-90 blur-3xl"
+            />
+          </div> */}
+
           <header
             className="flex items-center justify-start p-1 text-white md:py-4"
             onTouchStart={(e) => {
@@ -1167,6 +1175,14 @@ const ContentPage = ({
               }}
             />
           </div>
+
+          {/* <div className="absolute inset-0 -z-10 flex justify-center gap-8">
+            <img
+              src={currentMusic?.cover}
+              alt="cover"
+              className="size-full origin-bottom-right scale-[3.5] object-cover opacity-90 blur-3xl"
+            />
+          </div> */}
 
           <header
             className="flex w-full items-center justify-start p-1 text-white"
