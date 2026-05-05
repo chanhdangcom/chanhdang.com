@@ -845,7 +845,7 @@ const LyricPage = ({
       <div className="fixed inset-0 z-50 flex justify-between space-y-0 px-8 md:rounded-3xl md:border md:border-white/10">
         <div
           style={{ backgroundColor: hoverBgSolid }}
-          className="pointer-events-none absolute -bottom-16 left-0 z-50 h-[30vh] w-full scale-150 blur-xl brightness-50 md:bg-black/60 md:blur-3xl"
+          className="pointer-events-none absolute -bottom-16 left-0 z-50 h-[35vh] w-full scale-150 blur-xl brightness-50 md:bg-black/60 md:blur-3xl"
         />
 
         <div className="w-full">

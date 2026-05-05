@@ -285,10 +285,16 @@ export function AudioTimeLine({ coverUrl }: IProp) {
         />
       </div>
 
-      <div className="-mt-4 mb-0 flex items-center justify-between md:mt-1">
+      <div className="-mt-4 mb-0 flex items-center justify-between md:mt-0">
         <div className="font-apple text-xs font-semibold text-zinc-400">
           {formatTime(currentTimeSec)}
         </div>
+
+        <img
+          src="/img/dolby-atmos-icon.png"
+          alt="Dolby Atmos"
+          className="h-16 w-auto"
+        />
 
         <div className="font-apple text-xs font-semibold text-zinc-400">
           {formatTime(durationSec)}
