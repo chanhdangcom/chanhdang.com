@@ -294,7 +294,7 @@ export function AudioTimeLine({ coverUrl }: IProp) {
         <img
           src="/img/dolby-atmos-icon.png"
           alt="Dolby Atmos"
-          className="h-14 w-auto"
+          className="h-14 w-auto opacity-60"
         />
 
         <div className="font-apple text-xs font-semibold text-zinc-400">

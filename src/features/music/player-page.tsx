@@ -143,6 +143,8 @@ type SubtitleLine = {
   text: string;
 };
 
+const SUBTITLE_LEAD_IN_SECONDS = 3;
+
 const getSubtitleProgress = (
   subtitle: SubtitleLine | undefined,
   currentTime: number
@@ -204,6 +206,49 @@ const useActiveSubtitleProgress = (
   }, [audioRef, currentSubtitleId, subtitles]);
 
   return activeProgress;
+};
+
+const useAudioCurrentTime = (
+  audioRef: React.RefObject<HTMLAudioElement | null>
+) => {
+  const [currentTime, setCurrentTime] = useState(0);
+
+  useEffect(() => {
+    const updateTime = () => {
+      setCurrentTime(audioRef.current?.currentTime ?? 0);
+    };
+
+    updateTime();
+    const intervalId = window.setInterval(updateTime, 50);
+    return () => window.clearInterval(intervalId);
+  }, [audioRef]);
+
+  return currentTime;
+};
+
+const getFirstLyricLeadInState = (
+  subtitles: SubtitleLine[],
+  currentTime: number
+) => {
+  const firstStart = subtitles.reduce<number | null>((minStart, line) => {
+    if (line.start === undefined) return minStart;
+    if (minStart === null) return line.start;
+    return line.start < minStart ? line.start : minStart;
+  }, null);
+
+  if (firstStart === null || currentTime >= firstStart) {
+    return { showDots: false, progress: 0 };
+  }
+
+  const timeUntilStart = firstStart - currentTime;
+  if (timeUntilStart > SUBTITLE_LEAD_IN_SECONDS) {
+    return { showDots: true, progress: 0 };
+  }
+
+  return {
+    showDots: true,
+    progress: 1 - timeUntilStart / SUBTITLE_LEAD_IN_SECONDS,
+  };
 };
 
 const splitRenderedTextIntoLines = (element: HTMLElement, text: string) => {
@@ -601,6 +646,8 @@ const SubtitleItem = memo(
     text,
     isActive,
     progress,
+    preActiveProgress,
+    showLeadInDots,
     itemIndex,
     activeIndex,
   }: {
@@ -608,10 +655,14 @@ const SubtitleItem = memo(
     text: string;
     isActive: boolean;
     progress: number;
+    preActiveProgress: number;
+    showLeadInDots: boolean;
     itemIndex: number;
     activeIndex: number;
   }) => {
     const activeProgress = Math.min(Math.max(progress, 0), 1);
+    const leadInProgress = Math.min(Math.max(preActiveProgress, 0), 1);
+    const isLeadIn = !isActive && showLeadInDots;
     const measureRef = useRef<HTMLSpanElement>(null);
     const [displayLines, setDisplayLines] = useState<string[]>([text]);
     const stackMotion = useMemo(
@@ -660,10 +711,36 @@ const SubtitleItem = memo(
         className={`relative z-40 mb-6 text-balance font-apple text-[32px] md:mb-8 md:text-5xl ${
           isActive
             ? "text-balance leading-snug text-white/30"
-            : "text-balance leading-snug text-white/20 blur-[2px]"
+            : isLeadIn
+              ? "text-balance leading-snug text-white/25"
+              : "text-balance leading-snug text-white/20 blur-[2px]"
         }`}
         style={{ zIndex: stackMotion.zIndex }}
       >
+        {isLeadIn ? (
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-9 left-0 flex items-center gap-1.5"
+          >
+            {[0, 1, 2].map((index) => {
+              const dotProgress = Math.min(
+                Math.max(leadInProgress * 3 - index, 0),
+                1
+              );
+              return (
+                <span
+                  key={`${id}-lead-dot-${index}`}
+                  className="size-4 rounded-full bg-white"
+                  style={{
+                    opacity: 0.25 + dotProgress * 0.75,
+                    transform: `scale(${0.8 + dotProgress * 0.2})`,
+                  }}
+                />
+              );
+            })}
+          </span>
+        ) : null}
+
         <span className="block">{text}</span>
 
         {isActive ? (
@@ -723,6 +800,8 @@ const SubtitleItem = memo(
       prevProps.activeIndex === nextProps.activeIndex &&
       prevProps.isActive === nextProps.isActive &&
       prevProps.progress === nextProps.progress &&
+      prevProps.preActiveProgress === nextProps.preActiveProgress &&
+      prevProps.showLeadInDots === nextProps.showLeadInDots &&
       prevProps.text === nextProps.text &&
       prevProps.id === nextProps.id
     );
@@ -758,6 +837,11 @@ const LyricPage = ({
     audioRef,
     subtitles,
     currentSubtitleId
+  );
+  const currentAudioTime = useAudioCurrentTime(audioRef);
+  const firstLyricLeadIn = useMemo(
+    () => getFirstLyricLeadInState(subtitles, currentAudioTime),
+    [currentAudioTime, subtitles]
   );
   const activeSubtitleIndex = useMemo(
     () => subtitles.findIndex((line) => line.id === currentSubtitleId),
@@ -954,7 +1038,7 @@ const LyricPage = ({
 
           <div
             ref={subtitleScrollRef}
-            className="scroll-spring pointer-events-none relative h-full overflow-y-auto scrollbar-hide"
+            className="scroll-spring relative h-full overflow-y-auto scrollbar-hide"
             style={{
               scrollBehavior: "smooth",
               WebkitOverflowScrolling: "touch",
@@ -968,6 +1052,12 @@ const LyricPage = ({
                   id={line.id}
                   text={line.text}
                   isActive={currentSubtitleId === line.id}
+                  showLeadInDots={index === 0 && firstLyricLeadIn.showDots}
+                  preActiveProgress={
+                    index === 0 && firstLyricLeadIn.showDots
+                      ? firstLyricLeadIn.progress
+                      : 0
+                  }
                   itemIndex={index}
                   activeIndex={activeSubtitleIndex}
                   progress={
@@ -1025,6 +1115,11 @@ const ContentPage = ({
     audioRef,
     subtitles,
     currentSubtitleId
+  );
+  const currentAudioTime = useAudioCurrentTime(audioRef);
+  const firstLyricLeadIn = useMemo(
+    () => getFirstLyricLeadInState(subtitles, currentAudioTime),
+    [currentAudioTime, subtitles]
   );
   const activeSubtitleIndex = useMemo(
     () => subtitles.findIndex((line) => line.id === currentSubtitleId),
@@ -1178,6 +1273,11 @@ const ContentPage = ({
             />
           </div> */}
 
+          <div
+            style={{ backgroundColor: hoverBgSolid }}
+            className="pointer-events-none absolute -top-20 left-0 z-30 h-[25vh] w-full scale-150 blur-xl brightness-50 md:bg-black/60 md:blur-3xl"
+          />
+
           <header
             className="flex w-full items-center justify-start text-white"
             onTouchStart={(e) => {
@@ -1192,14 +1292,14 @@ const ContentPage = ({
               touchDeltaYRef.current = currentY - touchStartY;
             }}
           >
-            <div className="mx-auto mb-6 mt-4 h-[5px] w-16 rounded-full bg-white/20" />
+            <div className="z-50 mx-auto mb-6 mt-4 h-[5px] w-16 rounded-full bg-white/20" />
           </header>
 
           <motion.button
             whileTap={{ scale: 0.2 }}
             type="button"
             onClick={() => setIsOpenQueue(!isOpenQueue)}
-            className={`absolute bottom-[22px] right-24 z-50 ml-4 hidden h-12 w-12 cursor-pointer items-center justify-center rounded-full text-white md:flex ${
+            className={`absolute bottom-[22px] right-24 z-[60] ml-4 hidden h-12 w-12 cursor-pointer items-center justify-center rounded-full text-white md:flex ${
               isOpenQueue ? "bg-white/20" : "bg-transparent"
             } `}
           >
@@ -1208,7 +1308,7 @@ const ContentPage = ({
 
           <ArrowsInSimple
             size={28}
-            className="absolute bottom-8 right-8 z-50 ml-4 hidden cursor-pointer text-white md:flex"
+            className="absolute bottom-8 right-8 z-[60] ml-4 hidden cursor-pointer text-white md:flex"
             weight="fill"
             onClick={onRequestClose}
           />
@@ -1224,7 +1324,7 @@ const ContentPage = ({
                     : "md:justify-center"
                 )}
               >
-                <div className="relative">
+                <div className="relative z-50">
                   <motion.img
                     src={currentMusic?.cover}
                     alt="cover"
@@ -1251,7 +1351,7 @@ const ContentPage = ({
           <div
             ref={subtitleScrollRef}
             className={cn(
-              "scroll-spring pointer-events-none ml-8 mr-16 hidden h-full w-full overflow-y-auto scrollbar-hide md:block",
+              "scroll-spring ml-8 mr-16 hidden h-full w-full overflow-y-auto scrollbar-hide md:block",
               currentMusic?.srt && !isOpenQueue ? "md:block" : "md:hidden"
             )}
             style={{
@@ -1272,6 +1372,12 @@ const ContentPage = ({
                   id={line.id}
                   text={line.text}
                   isActive={currentSubtitleId === line.id}
+                  showLeadInDots={index === 0 && firstLyricLeadIn.showDots}
+                  preActiveProgress={
+                    index === 0 && firstLyricLeadIn.showDots
+                      ? firstLyricLeadIn.progress
+                      : 0
+                  }
                   itemIndex={index}
                   activeIndex={activeSubtitleIndex}
                   progress={
@@ -1292,7 +1398,7 @@ const ContentPage = ({
             transition={{ duration: 0.5 }}
             ref={subtitleScrollRef}
             className={cn(
-              "ml-8 mr-16 hidden h-full w-full overflow-y-auto scrollbar-hide md:block"
+              "z-50 ml-8 mr-16 hidden h-full w-full overflow-y-auto scrollbar-hide md:block"
             )}
             style={{
               scrollBehavior: "smooth",
@@ -1456,6 +1562,11 @@ const FeaturedPage = ({
     audioRef,
     subtitles,
     currentSubtitleId
+  );
+  const currentAudioTime = useAudioCurrentTime(audioRef);
+  const firstLyricLeadIn = useMemo(
+    () => getFirstLyricLeadInState(subtitles, currentAudioTime),
+    [currentAudioTime, subtitles]
   );
   const activeSubtitleIndex = useMemo(
     () => subtitles.findIndex((line) => line.id === currentSubtitleId),
@@ -1625,7 +1736,7 @@ const FeaturedPage = ({
           </div>
 
           <header
-            className="absolute inset-x-0 flex items-center p-1 text-black dark:text-white md:py-4"
+            className="absolute inset-x-0 flex items-center text-black dark:text-white md:py-4"
             onTouchStart={(e) => {
               if (e.touches.length > 0) {
                 setTouchStartY(e.touches[0].clientY);
@@ -1646,7 +1757,7 @@ const FeaturedPage = ({
               touchDeltaYRef.current = 0;
             }}
           >
-            <div className="mx-auto my-4 h-1 w-16 rounded-full bg-white/20 md:hidden" />
+            <div className="mx-auto mt-4 h-[5px] w-16 rounded-full bg-white/20 md:hidden" />
           </header>
 
           <div className="absolute inset-x-4 z-50 mx-4 mt-8 rounded-2xl">
@@ -1684,6 +1795,7 @@ const FeaturedPage = ({
                     <div className="line-clamp-1 font-semibold text-white">
                       {currentMusic?.title || tPlayer("titleSong")}
                     </div>
+
                     <div className="line-clamp-1 text-zinc-300">
                       {currentMusic?.singer || tCommon("singer")}
                     </div>
@@ -1759,7 +1871,7 @@ const FeaturedPage = ({
               </div>
 
               <div className="mt-4">
-                <div className="mb-4 flex items-center justify-between">
+                <div className="flex items-center justify-between">
                   <div className="font-semibold text-white">
                     {tPlayer("continueMusic")}
 
@@ -1800,7 +1912,7 @@ const FeaturedPage = ({
                       {!isQueueDragging && (
                         <div
                           style={{ backgroundColor: hoverBgSolid }}
-                          className="pointer-events-none absolute -bottom-16 left-0 z-10 h-[20vh] w-full scale-150 blur-xl brightness-50 md:blur-3xl"
+                          className="pointer-events-none absolute -bottom-16 left-0 z-10 h-[25vh] w-full scale-150 blur-xl brightness-50 md:blur-3xl"
                         />
                       )}
 
@@ -1813,7 +1925,7 @@ const FeaturedPage = ({
                           setQueue(next);
                         }}
                         className={cn(
-                          "z-0 h-[50vh] w-full space-y-4 overflow-y-auto pb-28 pr-2 scrollbar-hide",
+                          "z-0 h-[50vh] w-full space-y-4 overflow-y-auto pb-44 pr-2 scrollbar-hide",
                           isQueueDragging && "h-full"
                         )}
                         style={{ contentVisibility: "auto" }}
@@ -1839,7 +1951,7 @@ const FeaturedPage = ({
           {isDesktop && isHeavyReady ? (
             <div
               ref={subtitleScrollRef}
-              className="scroll-spring pointer-events-none ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block"
+              className="scroll-spring ml-8 mr-20 hidden h-full w-full overflow-y-auto scrollbar-hide md:block"
               style={{
                 scrollBehavior: "smooth",
                 WebkitOverflowScrolling: "touch",
@@ -1853,6 +1965,12 @@ const FeaturedPage = ({
                     id={line.id}
                     text={line.text}
                     isActive={currentSubtitleId === line.id}
+                    showLeadInDots={index === 0 && firstLyricLeadIn.showDots}
+                    preActiveProgress={
+                      index === 0 && firstLyricLeadIn.showDots
+                        ? firstLyricLeadIn.progress
+                        : 0
+                    }
                     itemIndex={index}
                     activeIndex={activeSubtitleIndex}
                     progress={
@@ -2098,10 +2216,7 @@ export function PlayerPage({ setIsClick }: IProp) {
       }
 
       // Share already in progress in browser -> fallback to copy.
-      if (
-        error instanceof DOMException &&
-        error.name === "InvalidStateError"
-      ) {
+      if (error instanceof DOMException && error.name === "InvalidStateError") {
         await copyShareTextToClipboard(fallbackText);
         return;
       }
