@@ -845,19 +845,13 @@ const LyricPage = ({
       <div className="fixed inset-0 z-50 flex justify-between space-y-0 px-8 md:rounded-3xl md:border md:border-white/10">
         <div
           style={{ backgroundColor: hoverBgSolid }}
-          className="pointer-events-none absolute -bottom-16 left-0 z-50 h-[40vh] w-full scale-150 blur-xl brightness-50 md:bg-black/60 md:blur-3xl"
+          className="pointer-events-none absolute -bottom-16 left-0 z-50 h-[30vh] w-full scale-150 blur-xl brightness-50 md:bg-black/60 md:blur-3xl"
         />
 
         <div className="w-full">
-          <div
-            className={`absolute inset-0 -z-10 flex justify-center bg-zinc-950 ${
-              isDesktop ? "backdrop-blur-3xl" : "backdrop-blur-md"
-            }`}
-          >
+          <div className="absolute inset-0 -z-10 flex justify-center gap-8 bg-zinc-950">
             <div
-              className={`h-full w-full ${
-                isDesktop ? "saturate-125 rotate-180 scale-110" : "saturate-110"
-              }`}
+              className={`h-full w-full`}
               style={{
                 backgroundColor: hoverBg,
               }}
@@ -868,7 +862,7 @@ const LyricPage = ({
             <img
               src={currentMusic?.cover}
               alt="cover"
-              className="size-full origin-bottom-right scale-[3.5] object-cover opacity-90 blur-3xl"
+              className="size-full origin-bottom-right scale-[3.5] object-cover opacity-70 blur-3xl"
             />
           </div> */}
 
@@ -894,7 +888,7 @@ const LyricPage = ({
               touchDeltaYRef.current = 0;
             }}
           >
-            <div className="z-50 mx-auto my-4 h-1 w-16 rounded-full bg-white/20 md:hidden" />
+            <div className="z-[60] mx-auto my-4 h-1 w-16 rounded-full bg-white/20 md:hidden" />
           </header>
 
           <div
@@ -1180,7 +1174,7 @@ const ContentPage = ({
             <img
               src={currentMusic?.cover}
               alt="cover"
-              className="size-full origin-bottom-right scale-[3.5] object-cover opacity-90 blur-3xl"
+              className="size-full origin-bottom-right scale-[3.5] object-cover opacity-70 blur-3xl"
             />
           </div> */}
 

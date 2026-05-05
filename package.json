@@ -10,7 +10,8 @@
     "prettier:check": "prettier --check ./src",
     "prettier:fix": "prettier --write ./src",
     "registry:build": "shadcn build",
-    "admin:make": "pnpm dlx tsx scripts/make-admin.ts"
+    "admin:make": "pnpm dlx tsx scripts/make-admin.ts",
+    "data:backfill-singer-music-ids": "pnpm dlx tsx scripts/backfill-singer-music-ids.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.850.0",
