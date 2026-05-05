@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useAudio } from "@/components/music-provider";
 import { useCallback, useEffect, useState, useRef } from "react";
 import { FastAverageColor } from "fast-average-color";
@@ -285,7 +286,7 @@ export function AudioTimeLine({ coverUrl }: IProp) {
         />
       </div>
 
-      <div className="-mt-4 mb-0 flex items-center justify-between md:mt-0">
+      <div className="-mt-9 mb-0 flex items-center justify-between md:mt-0">
         <div className="font-apple text-xs font-semibold text-zinc-400">
           {formatTime(currentTimeSec)}
         </div>
@@ -293,7 +294,7 @@ export function AudioTimeLine({ coverUrl }: IProp) {
         <img
           src="/img/dolby-atmos-icon.png"
           alt="Dolby Atmos"
-          className="h-16 w-auto"
+          className="h-14 w-auto"
         />
 
         <div className="font-apple text-xs font-semibold text-zinc-400">

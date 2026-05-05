@@ -41,18 +41,6 @@ import { useTheme } from "next-themes";
 
 const MENU_BAR_OPEN_STORAGE_KEY = "music-menu-bar-open";
 
-function getInitialMenuBarOpen() {
-  if (typeof window === "undefined") {
-    return false;
-  }
-
-  try {
-    return window.localStorage.getItem(MENU_BAR_OPEN_STORAGE_KEY) === "true";
-  } catch {
-    return false;
-  }
-}
-
 export function MenuBar() {
   const params = useParams();
   const pathname = usePathname();
@@ -436,9 +424,25 @@ export function MenuBar() {
     },
   ];
 
-  const [isMenuBarOpen, setIsMenuBarOpen] = useState(getInitialMenuBarOpen);
+  const [isMenuBarOpen, setIsMenuBarOpen] = useState(false);
+  const [hasLoadedMenuBarPreference, setHasLoadedMenuBarPreference] =
+    useState(false);
 
   useEffect(() => {
+    try {
+      const isOpenInStorage =
+        window.localStorage.getItem(MENU_BAR_OPEN_STORAGE_KEY) === "true";
+      setIsMenuBarOpen(isOpenInStorage);
+    } catch {
+      // Ignore storage errors so the menu still works normally.
+    } finally {
+      setHasLoadedMenuBarPreference(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!hasLoadedMenuBarPreference) return;
+
     try {
       window.localStorage.setItem(
         MENU_BAR_OPEN_STORAGE_KEY,
@@ -447,7 +451,7 @@ export function MenuBar() {
     } catch {
       // Ignore storage errors so the menu still works normally.
     }
-  }, [isMenuBarOpen]);
+  }, [hasLoadedMenuBarPreference, isMenuBarOpen]);
 
   useEffect(() => {
     document.documentElement.classList.toggle(

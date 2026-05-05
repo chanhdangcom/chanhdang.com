@@ -53,7 +53,7 @@ import { useImageHoverColor } from "@/hooks/use-image-hover-color";
 import { cn } from "@/utils/cn";
 import { usePermissions } from "@/hooks/use-permissions";
 import { WandAndSparkles } from "@/components/icon/wand-and-sparkles";
-import { IpadLandscapeAndIpod } from "@/components/icon/ipad-landscape-and-ipod";
+import { AirplayAudio } from "@/components/icon/airplay-audio";
 
 type IProp = {
   setIsClick: () => void;
@@ -845,7 +845,7 @@ const LyricPage = ({
       <div className="fixed inset-0 z-50 flex justify-between space-y-0 px-8 md:rounded-3xl md:border md:border-white/10">
         <div
           style={{ backgroundColor: hoverBgSolid }}
-          className="pointer-events-none absolute -bottom-16 left-0 z-50 h-[35vh] w-full scale-150 blur-xl brightness-50 md:bg-black/60 md:blur-3xl"
+          className="pointer-events-none absolute -bottom-16 left-0 z-50 h-[40vh] w-full scale-150 blur-xl brightness-50 md:bg-black/60 md:blur-3xl"
         />
 
         <div className="w-full">
@@ -867,7 +867,7 @@ const LyricPage = ({
           </div> */}
 
           <header
-            className="flex items-center justify-start p-1 text-white md:py-4"
+            className="flex items-center justify-start text-white md:py-4"
             onTouchStart={(e) => {
               if (e.touches.length > 0) {
                 setTouchStartY(e.touches[0].clientY);
@@ -888,7 +888,7 @@ const LyricPage = ({
               touchDeltaYRef.current = 0;
             }}
           >
-            <div className="z-[60] mx-auto my-4 h-1 w-16 rounded-full bg-white/20 md:hidden" />
+            <div className="z-[60] mx-auto mb-6 mt-4 h-[5px] w-16 rounded-full bg-white/20 md:hidden" />
           </header>
 
           <div
@@ -1179,7 +1179,7 @@ const ContentPage = ({
           </div> */}
 
           <header
-            className="flex w-full items-center justify-start p-1 text-white"
+            className="flex w-full items-center justify-start text-white"
             onTouchStart={(e) => {
               if (e.touches.length > 0) {
                 setTouchStartY(e.touches[0].clientY);
@@ -1192,7 +1192,7 @@ const ContentPage = ({
               touchDeltaYRef.current = currentY - touchStartY;
             }}
           >
-            <div className="mx-auto mb-8 mt-4 h-[5px] w-16 rounded-full bg-white/20" />
+            <div className="mx-auto mb-6 mt-4 h-[5px] w-16 rounded-full bg-white/20" />
           </header>
 
           <motion.button
@@ -2049,28 +2049,67 @@ export function PlayerPage({ setIsClick }: IProp) {
     }
   };
 
+  const shareInFlightRef = useRef(false);
+
+  const copyShareTextToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      alert(tPlayer("copyLinkSuccess"));
+      return true;
+    } catch (clipboardError) {
+      console.error("Failed to copy share link:", clipboardError);
+      alert(tPlayer("errorOccurred"));
+      return false;
+    }
+  };
+
   // Xử lý Share
   const handleShare = async () => {
-    if (!currentMusic) return;
+    if (!currentMusic || shareInFlightRef.current) return;
+
+    shareInFlightRef.current = true;
 
     const shareData = {
       title: currentMusic.title || tPlayer("song"),
       text: `${currentMusic.title} - ${currentMusic.singer}`,
       url: window.location.href,
     };
+    const fallbackText = `${shareData.text}\n${shareData.url}`;
 
     try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else {
-        // Fallback: copy to clipboard
-        await navigator.clipboard.writeText(
-          `${shareData.text}\n${shareData.url}`
-        );
-        alert(tPlayer("copyLinkSuccess"));
+      const canUseWebShare =
+        typeof navigator.share === "function" &&
+        (typeof navigator.canShare !== "function" ||
+          navigator.canShare({ url: shareData.url }));
+
+      if (!canUseWebShare) {
+        await copyShareTextToClipboard(fallbackText);
+        return;
       }
+
+      await navigator.share(shareData);
     } catch (error) {
+      // User canceled share sheet: keep silent.
+      if (
+        error instanceof DOMException &&
+        (error.name === "AbortError" || error.name === "NotAllowedError")
+      ) {
+        return;
+      }
+
+      // Share already in progress in browser -> fallback to copy.
+      if (
+        error instanceof DOMException &&
+        error.name === "InvalidStateError"
+      ) {
+        await copyShareTextToClipboard(fallbackText);
+        return;
+      }
+
       console.error("Error sharing:", error);
+      await copyShareTextToClipboard(fallbackText);
+    } finally {
+      shareInFlightRef.current = false;
     }
   };
 
@@ -2259,7 +2298,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                 <VolumeBar />
               </motion.div>
 
-              <div className="mx-2 flex items-center justify-between text-base text-zinc-400">
+              <div className="mx-5 flex items-center justify-between text-base text-zinc-400">
                 <motion.button
                   whileTap={{ scale: 0.2 }}
                   type="button"
@@ -2274,13 +2313,17 @@ export function PlayerPage({ setIsClick }: IProp) {
                   }`}
                 >
                   {isClickLyric ? (
-                    <QuoteBubbleFill className="size-6 text-white" />
+                    <QuoteBubbleFill className="size-[22px] text-white" />
                   ) : (
-                    <QuoteBubble className="size-6 text-white" />
+                    <QuoteBubble className="size-[22px] text-white" />
                   )}
                 </motion.button>
 
-                <IpadLandscapeAndIpod className="size-8 text-white" />
+                {/* <IpadLandscapeAndIpod className="size-8 text-white" /> */}
+                <AirplayAudio
+                  className="size-[22px] text-white"
+                  onClick={() => handleShare()}
+                />
 
                 <motion.button
                   whileTap={{ scale: 0.2 }}
@@ -2317,7 +2360,7 @@ export function PlayerPage({ setIsClick }: IProp) {
                     isClickFeatured ? "bg-white/20" : "bg-transparent"
                   }`}
                 >
-                  <ListBullet className="size-6 text-white" />
+                  <ListBullet className="size-[22px] text-white" />
                 </motion.button>
               </div>
             </div>
