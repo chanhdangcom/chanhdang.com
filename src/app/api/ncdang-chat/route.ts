@@ -7,6 +7,10 @@ import {
   getMusicRecommendations,
   searchMusicByTitle,
   searchMusicCandidates,
+  getTrendingMusicRecommendations,
+  searchMusicBySingerName,
+  searchMusicByMoodOrGenre,
+  mergeUniqueMusicLists,
   type MusicResult,
 } from "@/lib/chatbot/music-search-service";
 
@@ -27,6 +31,66 @@ const toChatMusic = (music: MusicResult): ChatMusic => ({
   content: music.content,
   type: music.type,
 });
+
+const buildMusicActionsAndAnswer = async ({
+  message,
+  language,
+  tracks,
+  autoPlayFirst,
+  mode,
+  suggestionReason,
+  matchedTrackOverride,
+}: {
+  message: string;
+  language: string;
+  tracks: MusicResult[];
+  autoPlayFirst: boolean;
+  mode: "play" | "recommend";
+  suggestionReason: "related" | "fallback" | "recommendation";
+  matchedTrackOverride?: MusicResult | null;
+}): Promise<{ answer: string; actions: ChatAction[] }> => {
+  const actions: ChatAction[] = [];
+  const [first, ...rest] = tracks;
+  const suggestionPool = autoPlayFirst ? rest : tracks;
+  const limitedSuggestions = suggestionPool.slice(0, autoPlayFirst ? 4 : 6);
+
+  if (autoPlayFirst && first) {
+    actions.push({
+      type: "play-music",
+      track: toChatMusic(first),
+      autoPlay: true,
+    });
+  }
+
+  if (limitedSuggestions.length > 0) {
+    actions.push({
+      type: "suggest-music",
+      tracks: limitedSuggestions.map(toChatMusic),
+      reason: suggestionReason,
+    });
+  }
+
+  const matched =
+    matchedTrackOverride !== undefined
+      ? matchedTrackOverride
+      : autoPlayFirst
+        ? first ?? null
+        : null;
+  const suggestionsForText =
+    autoPlayFirst && first
+      ? [first, ...limitedSuggestions]
+      : limitedSuggestions;
+
+  const answer = await createMusicAnswer({
+    message,
+    language,
+    matchedTrack: matched,
+    suggestions: suggestionsForText,
+    mode,
+  });
+
+  return { answer, actions };
+};
 
 const createMusicAnswer = async ({
   message,
@@ -137,16 +201,112 @@ export async function POST(request: Request) {
     ]);
 
     if (musicIntent.isMusicRequest) {
-      const actions: ChatAction[] = [];
       const requestedTitle = musicIntent.songTitle?.trim();
 
+      if (musicIntent.intent === "trending") {
+        const tracks = await getTrendingMusicRecommendations(6);
+        const { answer, actions } = await buildMusicActionsAndAnswer({
+          message,
+          language,
+          tracks: tracks.length > 0 ? tracks : await getMusicRecommendations(4),
+          autoPlayFirst: true,
+          mode: "play",
+          suggestionReason: "related",
+        });
+        return Response.json({
+          answer,
+          actions,
+          meta: { intent: "music-trending" },
+        } satisfies ChatApiResponse);
+      }
+
+      if (musicIntent.intent === "by_singer") {
+        const sq = musicIntent.singerQuery?.trim();
+        let tracks = sq ? await searchMusicBySingerName(sq, 6) : [];
+        let autoPlayFirst = tracks.length > 0;
+        if (tracks.length === 0) {
+          tracks = mergeUniqueMusicLists(
+            [await getTrendingMusicRecommendations(5), await getMusicRecommendations(4)],
+            8
+          );
+          autoPlayFirst = false;
+        }
+        const { answer, actions } = await buildMusicActionsAndAnswer({
+          message,
+          language,
+          tracks,
+          autoPlayFirst,
+          mode: autoPlayFirst ? "play" : "recommend",
+          suggestionReason: autoPlayFirst ? "related" : "fallback",
+          matchedTrackOverride: autoPlayFirst ? undefined : null,
+        });
+        return Response.json({
+          answer,
+          actions,
+          meta: { intent: "music-by-singer" },
+        } satisfies ChatApiResponse);
+      }
+
+      if (musicIntent.intent === "discover") {
+        const q = musicIntent.discoverQuery?.trim() || message;
+        let tracks = await searchMusicByMoodOrGenre(q, 8);
+        if (tracks.length < 3) {
+          tracks = mergeUniqueMusicLists(
+            [tracks, await getTrendingMusicRecommendations(5), await getMusicRecommendations(3)],
+            8
+          );
+        }
+        const finalTracks =
+          tracks.length > 0 ? tracks : await getMusicRecommendations(4);
+        const { answer, actions } = await buildMusicActionsAndAnswer({
+          message,
+          language,
+          tracks: finalTracks,
+          autoPlayFirst: finalTracks.length > 0,
+          mode: "recommend",
+          suggestionReason: "recommendation",
+          matchedTrackOverride: null,
+        });
+        return Response.json({
+          answer,
+          actions,
+          meta: { intent: "music-discover" },
+        } satisfies ChatApiResponse);
+      }
+
+      if (musicIntent.intent === "recommend") {
+        const fromMood = await searchMusicByMoodOrGenre(message, 6);
+        const trending = await getTrendingMusicRecommendations(4);
+        const random = await getMusicRecommendations(3);
+        const merged = mergeUniqueMusicLists([fromMood, trending, random], 8);
+        const tracks =
+          merged.length > 0 ? merged : (await getMusicRecommendations(4));
+        const { answer, actions } = await buildMusicActionsAndAnswer({
+          message,
+          language,
+          tracks,
+          autoPlayFirst: false,
+          mode: "recommend",
+          suggestionReason: "recommendation",
+          matchedTrackOverride: null,
+        });
+        return Response.json({
+          answer,
+          actions,
+          meta: { intent: "music-suggest" },
+        } satisfies ChatApiResponse);
+      }
+
       if (musicIntent.intent === "play") {
+        const actions: ChatAction[] = [];
         const matchedTrack = requestedTitle
           ? await searchMusicByTitle(requestedTitle)
-          : (await getMusicRecommendations(1))[0] ?? null;
+          : (await getTrendingMusicRecommendations(1))[0] ??
+            (await getMusicRecommendations(1))[0] ??
+            null;
         const relatedTracks = requestedTitle
           ? await searchMusicCandidates(requestedTitle, 3)
-          : await getMusicRecommendations(3);
+          : await getTrendingMusicRecommendations(3);
         const suggestions = relatedTracks.filter((track) => track.id !== matchedTrack?.id);
 
         if (matchedTrack) {
@@ -178,32 +338,6 @@ export async function POST(request: Request) {
           answer,
           actions,
           meta: { intent: "music-play" },
-        };
-
-        return Response.json(response);
-      }
-
-      if (musicIntent.intent === "recommend") {
-        const suggestions = await getMusicRecommendations(3);
-        const answer = await createMusicAnswer({
-          message,
-          language,
-          suggestions,
-          mode: "recommend",
-        });
-
-        if (suggestions.length > 0) {
-          actions.push({
-            type: "suggest-music",
-            tracks: suggestions.map(toChatMusic),
-            reason: "recommendation",
-          });
-        }
-
-        const response: ChatApiResponse = {
-          answer,
-          actions,
-          meta: { intent: "music-suggest" },
         };
 
         return Response.json(response);

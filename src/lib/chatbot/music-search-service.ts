@@ -11,6 +11,15 @@ export interface MusicResult {
   type?: string;
 }
 
+/** Bài công khai (đồng bộ với trang nghe nhạc). */
+export const publicMusicFilter = {
+  $or: [{ status: { $exists: false } }, { status: "approved" as const }],
+};
+
+const audioReadyFilter = {
+  audio: { $type: "string" as const, $ne: "" },
+};
+
 const normalizeMusicId = (music: Record<string, unknown>): string => {
   if (typeof music.id === "string") return music.id;
   const raw = (music as { _id?: unknown })._id;
@@ -132,6 +141,13 @@ const buildMusicScore = (music: MusicResult, query: string) => {
     }
   }
 
+  const normType = normalizeForSearch(music.type ?? "");
+  const normContent = normalizeForSearch((music.content ?? "").slice(0, 200));
+  for (const token of queryTokens) {
+    if (token.length > 1 && normType.includes(token)) score += 12;
+    if (token.length > 1 && normContent.includes(token)) score += 8;
+  }
+
   return score;
 };
 
@@ -146,6 +162,10 @@ const dedupeMusicResults = (docs: unknown[]) => {
   }
 
   return Array.from(deduped.values());
+};
+
+const baseMusicMatch = {
+  $and: [publicMusicFilter, audioReadyFilter],
 };
 
 export async function searchMusicCandidates(
@@ -175,7 +195,7 @@ export async function searchMusicCandidates(
     ];
 
     const docs = await collection
-      .find({ $or: regexQueries })
+      .find({ $and: [baseMusicMatch, { $or: regexQueries }] })
       .limit(30)
       .toArray();
 
@@ -192,7 +212,7 @@ export async function searchMusicCandidates(
 
     if (candidates.length === 0 || topInitialScore < 70) {
       const fallbackDocs = await collection
-        .find({ audio: { $type: "string", $ne: "" } })
+        .find(baseMusicMatch)
         .project({
           title: 1,
           singer: 1,
@@ -242,7 +262,9 @@ export async function getRandomMusic(): Promise<MusicResult | null> {
     const db = client.db("musicdb");
     const collection = db.collection("musics");
 
-    const musics = await collection.aggregate([{ $sample: { size: 1 } }]).toArray();
+    const musics = await collection
+      .aggregate([{ $match: baseMusicMatch }, { $sample: { size: 1 } }])
+      .toArray();
 
     if (musics.length === 0) {
       return null;
@@ -262,7 +284,7 @@ export async function getMusicRecommendations(limit: number = 3): Promise<MusicR
     const collection = db.collection("musics");
 
     const musics = await collection
-      .aggregate([{ $match: { audio: { $type: "string", $ne: "" } } }, { $sample: { size: limit } }])
+      .aggregate([{ $match: baseMusicMatch }, { $sample: { size: limit } }])
       .toArray();
 
     return musics
@@ -274,3 +296,200 @@ export async function getMusicRecommendations(limit: number = 3): Promise<MusicR
   }
 }
 
+/** Bài có nhiều lượt nghe (ưu tiên demo / “đang hot”). */
+export async function getTrendingMusicRecommendations(limit: number = 5): Promise<MusicResult[]> {
+  try {
+    const client = await clientPromise;
+    const db = client.db("musicdb");
+    const collection = db.collection("musics");
+
+    const docs = await collection
+      .find(baseMusicMatch)
+      .project({
+        title: 1,
+        singer: 1,
+        cover: 1,
+        audio: 1,
+        youtube: 1,
+        content: 1,
+        type: 1,
+        playCount: 1,
+      })
+      .sort({ playCount: -1, updatedAt: -1 })
+      .limit(Math.max(limit * 4, 24))
+      .toArray();
+
+    const list = dedupeMusicResults(docs)
+      .filter((m) => m.audio)
+      .slice(0, limit);
+
+    if (list.length >= limit) {
+      return list;
+    }
+
+    const extra = await getMusicRecommendations(limit - list.length);
+    const seen = new Set(list.map((m) => m.id));
+    for (const m of extra) {
+      if (!seen.has(m.id)) {
+        list.push(m);
+        seen.add(m.id);
+      }
+    }
+    return list.slice(0, limit);
+  } catch (error) {
+    console.error("[music-search-service] trending error:", error);
+    return getMusicRecommendations(limit);
+  }
+}
+
+/** Gợi ý theo tên ca sĩ / nghệ sĩ (trường singer). */
+export async function searchMusicBySingerName(
+  singerQuery: string,
+  limit: number = 6
+): Promise<MusicResult[]> {
+  const q = singerQuery?.trim();
+  if (!q) {
+    return [];
+  }
+
+  try {
+    const client = await clientPromise;
+    const db = client.db("musicdb");
+    const collection = db.collection("musics");
+    const escaped = escapeRegex(q);
+
+    const docs = await collection
+      .find({
+        $and: [
+          baseMusicMatch,
+          { singer: { $regex: new RegExp(escaped, "i") } },
+        ],
+      })
+      .project({
+        title: 1,
+        singer: 1,
+        cover: 1,
+        audio: 1,
+        youtube: 1,
+        content: 1,
+        type: 1,
+        playCount: 1,
+      })
+      .sort({ playCount: -1, updatedAt: -1 })
+      .limit(40)
+      .toArray();
+
+    let out = dedupeMusicResults(docs).slice(0, limit);
+    if (out.length > 0) {
+      return out;
+    }
+
+    return searchMusicCandidates(q, limit);
+  } catch (error) {
+    console.error("[music-search-service] by-singer error:", error);
+    return searchMusicCandidates(singerQuery, limit);
+  }
+}
+
+/**
+ * Gợi ý theo mood / thể loại / chủ đề — khớp type, topic, title, đoạn đầu content.
+ */
+export async function searchMusicByMoodOrGenre(
+  rawQuery: string,
+  limit: number = 6
+): Promise<MusicResult[]> {
+  const trimmed = rawQuery?.trim();
+  if (!trimmed) {
+    return [];
+  }
+
+  const stop = new Set(
+    normalizeForSearch(
+      "gợi ý đề xuất cho mình muốn nghe bật mở phát nhạc bài hát some music play recommend suggest please đi nhé thử giúp tôi me i want to listen song"
+    ).split(" ")
+  );
+
+  const tokens = normalizeForSearch(trimmed)
+    .split(" ")
+    .filter((t) => t.length > 1 && !stop.has(t));
+
+  const core =
+    tokens.length > 0
+      ? tokens.join(" ")
+      : normalizeForSearch(trimmed).replace(/\s+/g, " ").trim();
+
+  if (!core) {
+    return [];
+  }
+
+  try {
+    const client = await clientPromise;
+    const db = client.db("musicdb");
+    const collection = db.collection("musics");
+
+    let searchTokens = core.split(" ").filter((t) => t.length > 0).slice(0, 8);
+    if (searchTokens.length === 0 && core.length > 0) {
+      searchTokens = [core];
+    }
+
+    const ors: Record<string, unknown>[] = [];
+    for (const token of searchTokens) {
+      const rx = new RegExp(escapeRegex(token), "i");
+      ors.push({ type: rx }, { topic: rx }, { title: rx }, { singer: rx });
+    }
+
+    if (ors.length === 0) {
+      return [];
+    }
+
+    const fullRx = new RegExp(escapeRegex(searchTokens.join("|") || core), "i");
+    ors.push({ content: fullRx });
+
+    const docs = await collection
+      .find({
+        $and: [baseMusicMatch, { $or: ors }],
+      })
+      .project({
+        title: 1,
+        singer: 1,
+        cover: 1,
+        audio: 1,
+        youtube: 1,
+        content: 1,
+        type: 1,
+        topic: 1,
+        playCount: 1,
+      })
+      .limit(48)
+      .toArray();
+
+    const candidates = dedupeMusicResults(docs);
+    return candidates
+      .map((music) => ({
+        music,
+        score: buildMusicScore(music, searchTokens.join(" ") || core),
+      }))
+      .filter((x) => x.score >= 28)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit)
+      .map((x) => x.music);
+  } catch (error) {
+    console.error("[music-search-service] mood/genre error:", error);
+    return [];
+  }
+}
+
+/** Gộp danh sách, bỏ trùng id. */
+export function mergeUniqueMusicLists(lists: MusicResult[][], max: number): MusicResult[] {
+  const seen = new Set<string>();
+  const out: MusicResult[] = [];
+  for (const list of lists) {
+    for (const m of list) {
+      if (!m.id || !m.audio || seen.has(m.id)) continue;
+      seen.add(m.id);
+      out.push(m);
+      if (out.length >= max) return out;
+    }
+  }
+  return out;
+}

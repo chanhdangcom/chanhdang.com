@@ -17,6 +17,10 @@ const MUSIC_KEYWORDS = [
   "music please",
   "sing",
   "sing a song",
+  "nghe nhạc",
+  "cho nghe nhạc",
+  "bật bài",
+  "mở bài",
 ];
 
 const MUSIC_RECOMMENDATION_KEYWORDS = [
@@ -32,6 +36,22 @@ const MUSIC_RECOMMENDATION_KEYWORDS = [
   "bai nao hay",
   "nhac nao hay",
   "co bai nao hay",
+  "playlist",
+  "danh sach nhac",
+];
+
+const TRENDING_KEYWORDS = [
+  "thinh hanh",
+  "trending",
+  "dang hot",
+  "bai hot",
+  "nhac hot",
+  "top luot nghe",
+  "nhieu luot nghe",
+  "nghe nhieu",
+  "popular",
+  "chart",
+  "bxh",
 ];
 
 const normalize = (value: string) =>
@@ -53,10 +73,20 @@ export const MUSIC_AUDIO_PAYLOAD = {
   },
 };
 
+export type MusicIntentKind =
+  | "play"
+  | "recommend"
+  | "trending"
+  | "by_singer"
+  | "discover"
+  | "none";
+
 export type MusicIntentResult = {
   isMusicRequest: boolean;
-  intent: "play" | "recommend" | "none";
-  songTitle?: string; // Tên bài hát nếu được yêu cầu cụ thể
+  intent: MusicIntentKind;
+  songTitle?: string;
+  singerQuery?: string;
+  discoverQuery?: string;
 };
 
 /**
@@ -64,9 +94,9 @@ export type MusicIntentResult = {
  * Examples: "mở bài Hồng Nhan", "phát Bạc Phận", "cho nghe Sóng Gió"
  */
 const extractSongTitle = (message: string): string | null => {
-  // Patterns to extract song title
   const patterns = [
-    /(?:mở|phát|bật|chơi|nghe|hát|rap)\s+(?:bài\s+)?(?:hát\s+)?["']?([^"']+)["']?/i,
+    /(?:mở|phát|bật|chơi|nghe|hát|rap)\s+bài\s+["']?([^"']+)["']?/i,
+    /(?:mở|phát|bật|chơi)\s+["']?([^"']+)["']?\s*(?:đi|nào|nhé|thử)?$/i,
     /(?:cho\s+)?(?:mình\s+)?(?:nghe|hát|phát|mở|bật)\s+(?:bài\s+)?["']?([^"']+)["']?/i,
     /["']([^"']+)["']\s*(?:đi|nào|nhé|thử)/i,
   ];
@@ -75,13 +105,16 @@ const extractSongTitle = (message: string): string | null => {
     const match = message.match(pattern);
     if (match && match[1]) {
       const title = match[1].trim();
-      // Remove common words that might be part of the request
       const cleaned = title
         .replace(/^(bài|bài hát|nhạc|song|music)\s+/i, "")
         .replace(/\s+(đi|nào|nhé|thử|cho mình|cho tôi)$/i, "")
         .trim();
-      
-      if (cleaned.length > 1 && cleaned.length < 100) {
+
+      if (
+        cleaned.length > 1 &&
+        cleaned.length < 100 &&
+        !/^(nhạc|của|nhà)\s/i.test(cleaned)
+      ) {
         return cleaned;
       }
     }
@@ -90,16 +123,111 @@ const extractSongTitle = (message: string): string | null => {
   return null;
 };
 
+const tailCleanup = (s: string) =>
+  s
+    .replace(/\s+(đi|nào|nhé|thử|please|giúp mình|cho mình|cho tôi|giúp tôi)\s*$/i, "")
+    .replace(/[.!?]+$/g, "")
+    .trim();
+
+/** "nhạc của X", "ca sĩ X", "songs by X" */
+const extractSingerQuery = (message: string): string | null => {
+  const patterns = [
+    /(?:nhạc|playlist)\s+(?:của|nhà|from)\s+(.+)/i,
+    /bài(?:\s+hát)?\s+(?:của|nhà|from)\s+(.+)/i,
+    /ca\s*sĩ\s+(.+)/i,
+    /nghệ\s*sĩ\s+(.+)/i,
+    /songs?\s+by\s+(.+)/i,
+    /artist\s+(.+)/i,
+  ];
+
+  for (const pattern of patterns) {
+    const match = message.match(pattern);
+    if (match?.[1]) {
+      const cleaned = tailCleanup(match[1].trim());
+      if (cleaned.length >= 2 && cleaned.length < 120) {
+        return cleaned;
+      }
+    }
+  }
+
+  return null;
+};
+
+const isTrendingRequest = (message: string) => {
+  const n = normalize(message);
+  return TRENDING_KEYWORDS.some((k) => n.includes(normalize(k)));
+};
+
+const isRecommendationKeywordMatch = (message: string) => {
+  const n = normalize(message);
+  return MUSIC_RECOMMENDATION_KEYWORDS.some((keyword) => n.includes(keyword));
+};
+
+/** Mood / thể loại / ngữ cảnh nghe — dùng để tìm trong type, topic, title. */
+const DISCOVER_HINTS = [
+  "chill",
+  "buon",
+  "buồn",
+  "vui",
+  "edm",
+  "rap",
+  "hip hop",
+  "hiphop",
+  "ballad",
+  "acoustic",
+  "remix",
+  "lofi",
+  "lo-fi",
+  "deep",
+  "study",
+  "focus",
+  "party",
+  "tinh yeu",
+  "tinhyeu",
+  "love",
+  "pop",
+  "rock",
+  "jazz",
+  "indie",
+  "karaoke",
+  "beat",
+  "night",
+  "dem khuya",
+  "lam viec",
+  "tap gym",
+  "gym",
+  "sleep",
+  "ngu",
+];
+
+const hasDiscoverHints = (message: string) => {
+  const n = normalize(message);
+  return DISCOVER_HINTS.some((h) => n.includes(normalize(h)));
+};
+
 export const detectMusicIntent = async (message: string): Promise<MusicIntentResult> => {
   const text = message.trim();
   if (!text) {
     return { isMusicRequest: false, intent: "none" };
   }
 
-  // Try to extract song title first
+  if (isTrendingRequest(text)) {
+    return { isMusicRequest: true, intent: "trending" };
+  }
+
+  const singerFirst =
+    /(?:nhạc|bài|playlist)\s+(?:của|nhà|from)\b/i.test(text) ||
+    /ca\s*sĩ\b/i.test(text) ||
+    /nghệ\s*sĩ\b/i.test(text) ||
+    /\bby\s+\w/i.test(text);
+  if (singerFirst) {
+    const singerQuery = extractSingerQuery(text);
+    if (singerQuery) {
+      return { isMusicRequest: true, intent: "by_singer", singerQuery };
+    }
+  }
+
   const songTitle = extractSongTitle(text);
-  
-  // If we found a song title, it's definitely a music request
   if (songTitle) {
     return {
       isMusicRequest: true,
@@ -108,20 +236,28 @@ export const detectMusicIntent = async (message: string): Promise<MusicIntentRes
     };
   }
 
+  const fallbackSinger = extractSingerQuery(text);
+  if (fallbackSinger) {
+    return { isMusicRequest: true, intent: "by_singer", singerQuery: fallbackSinger };
+  }
+
   const normalizedText = normalize(text);
-  const isRecommendationRequest = MUSIC_RECOMMENDATION_KEYWORDS.some((keyword) =>
-    normalizedText.includes(keyword)
-  );
+  const isRecommendationRequest = isRecommendationKeywordMatch(text);
   if (isRecommendationRequest) {
+    if (hasDiscoverHints(text)) {
+      return { isMusicRequest: true, intent: "discover", discoverQuery: text };
+    }
     return { isMusicRequest: true, intent: "recommend" };
   }
 
-  // Fast path: keyword matching for common cases
+  if (hasDiscoverHints(text) && hasKeywordMatch(text)) {
+    return { isMusicRequest: true, intent: "discover", discoverQuery: text };
+  }
+
   if (hasKeywordMatch(text)) {
     return { isMusicRequest: true, intent: "play" };
   }
 
-  // Use AI for natural language understanding
   if (!isGeminiConfigured()) {
     return { isMusicRequest: false, intent: "none" };
   }
@@ -129,25 +265,22 @@ export const detectMusicIntent = async (message: string): Promise<MusicIntentRes
   try {
     const result = await geminiGenerateAnswer({
       context:
-        "Bạn là bộ phân loại ý định người dùng cho chatbot âm nhạc.\n\n" +
-        "Phân loại đúng một trong 3 nhãn sau:\n" +
-        "- play: người dùng muốn phát một bài hoặc mở nhạc ngay bây giờ\n" +
-        "- recommend: người dùng muốn được gợi ý, đề xuất nhạc\n" +
-        "- no: không liên quan đến hành động âm nhạc\n\n" +
-        "Các ví dụ yêu cầu phát nhạc:\n" +
-        "- 'Cho mình nghe nhạc đi', 'Muốn nghe bài hát', 'Có thể hát cho mình nghe không?', 'Mở nhạc lên đi', 'Play music', 'Sing a song'\n" +
-        "- 'Bạn có thể hát không?', 'Hát một bài đi', 'Rap cho mình nghe', 'Phát nhạc đi'\n" +
-        "- 'Mở bài Hồng Nhan', 'Phát Bạc Phận', 'Cho nghe Sóng Gió' (yêu cầu bài hát cụ thể)\n\n" +
-        "Các ví dụ yêu cầu gợi ý nhạc:\n" +
-        "- 'Gợi ý nhạc cho mình đi', 'Có bài nào hay không?', 'Đề xuất vài bài chill nhé', 'Recommend some songs'\n\n" +
-        "Các ví dụ KHÔNG phải yêu cầu phát nhạc:\n" +
-        "- 'Bạn thích nhạc gì?', 'Giới thiệu bài hát', 'Nhạc của ai hay?', 'Mình thích nhạc pop'\n" +
-        "- 'Bạn có biết hát không?', 'Bạn có nghe nhạc không?' (chỉ là câu hỏi, không phải yêu cầu)\n\n" +
-        "Nếu là play với bài cụ thể, trả lời theo format: 'play: [tên bài hát]'\n" +
-        "Nếu là play chung, trả lời 'play'\n" +
-        "Nếu là recommend, trả lời 'recommend'\n" +
-        "Nếu không liên quan, trả lời 'no'",
-      question: `Người dùng nói: "${text}"\n\nHãy phân loại đúng một nhãn theo hướng dẫn.`,
+        "Bạn là bộ phân loại ý định người dùng cho chatbot âm nhạc ChanhDang Music.\n\n" +
+        "Trả lời ĐÚNG một dòng theo một trong các dạng:\n" +
+        "- trending — muốn nghe nhạc hot / nhiều lượt nghe / đang thịnh hành\n" +
+        "- singer: [tên ca sĩ hoặc nghệ sĩ] — muốn nhạc của một nghệ sĩ cụ thể\n" +
+        "- discover: [từ khóa ngắn] — gợi ý theo mood / thể loại / ngữ cảnh (chill, rap, buồn, làm việc…)\n" +
+        "- play: [tên bài hát] — muốn phát một bài cụ thể\n" +
+        "- play — mở nhạc chung, không chỉ rõ bài\n" +
+        "- recommend — muốn được gợi ý playlist / vài bài bất kỳ\n" +
+        "- no — không phải yêu cầu liên quan phát hoặc gợi ý nhạc\n\n" +
+        "Ví dụ trending: 'có bài nào đang hot không', 'top lượt nghe'\n" +
+        "Ví dụ singer: 'nhạc của Sơn Tùng', 'ca sĩ Mono'\n" +
+        "Ví dụ discover: 'gợi ý nhạc chill', 'vài bài rap hay'\n" +
+        "Ví dụ play cụ thể: 'mở bài Lạc Trôi'\n" +
+        "KHÔNG phải nhạc: 'Bạn thích nhạc gì?' (chỉ hỏi chuyện), 'Giới thiệu dự án'\n\n" +
+        "Chỉ một dòng, đúng format.",
+      question: `Người dùng nói: "${text}"`,
       language: "vi",
       allowGeneral: true,
     });
@@ -156,20 +289,35 @@ export const detectMusicIntent = async (message: string): Promise<MusicIntentRes
       return { isMusicRequest: false, intent: "none" };
     }
 
-    const answer = normalize(result.trim());
-    
-    // Check if AI detected a specific song
-    if (answer.startsWith("play:")) {
-      const parts = answer.split(":");
-      if (parts.length > 1) {
-        const extractedTitle = parts.slice(1).join(":").trim();
-        if (extractedTitle.length > 0) {
-          return {
-            isMusicRequest: true,
-            intent: "play",
-            songTitle: extractedTitle,
-          };
-        }
+    const line = result.trim();
+    const answer = normalize(line);
+
+    if (answer.startsWith("trending")) {
+      return { isMusicRequest: true, intent: "trending" };
+    }
+
+    if (/^singer\s*:/i.test(line)) {
+      const name = tailCleanup(line.replace(/^singer\s*:/i, "").trim());
+      if (name.length >= 1) {
+        return { isMusicRequest: true, intent: "by_singer", singerQuery: name };
+      }
+    }
+
+    if (/^discover\s*:/i.test(line)) {
+      const q = tailCleanup(line.replace(/^discover\s*:/i, "").trim());
+      if (q.length >= 1) {
+        return { isMusicRequest: true, intent: "discover", discoverQuery: q };
+      }
+    }
+
+    if (/^play\s*:/i.test(line)) {
+      const extractedTitle = tailCleanup(line.replace(/^play\s*:/i, "").trim());
+      if (extractedTitle.length > 0) {
+        return {
+          isMusicRequest: true,
+          intent: "play",
+          songTitle: extractedTitle,
+        };
       }
     }
 
@@ -226,7 +374,6 @@ export const detectThemeIntent = async (message: string): Promise<ThemeIntent> =
 
   const normalizedMessage = normalize(text);
 
-  // Fast path: keyword matching for common cases
   const hasLightKeyword = THEME_LIGHT_KEYWORDS.some((keyword) =>
     normalizedMessage.includes(normalize(keyword))
   );
@@ -241,7 +388,6 @@ export const detectThemeIntent = async (message: string): Promise<ThemeIntent> =
     return "dark";
   }
 
-  // Use AI for natural language understanding
   if (!isGeminiConfigured()) {
     return null;
   }
@@ -276,7 +422,6 @@ export const detectThemeIntent = async (message: string): Promise<ThemeIntent> =
     }
 
     const answer = normalize(result.trim());
-    // More flexible matching for AI responses
     if (
       answer === "light" ||
       answer.includes("light") ||
@@ -299,4 +444,3 @@ export const detectThemeIntent = async (message: string): Promise<ThemeIntent> =
     return null;
   }
 };
-

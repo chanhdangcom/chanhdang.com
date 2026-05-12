@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { usePermissions } from "@/hooks/use-permissions";
 import {
+  CurrencyCircleDollar,
   MicrophoneStage,
   MusicNotesSimple,
   UsersThree,
@@ -62,6 +63,13 @@ export function ManagementPage() {
       href: `/${locale}/music/pending-musics`,
       isAllowed: canManageSystem,
       icon: SealCheck,
+    },
+    {
+      title: t("singerEarnings"),
+      description: t("singerEarningsDesc"),
+      href: `/${locale}/music/admin/singer-earnings`,
+      isAllowed: canManageSystem,
+      icon: CurrencyCircleDollar,
     },
   ];
 

@@ -30,6 +30,13 @@ export type ChatApiResponse = {
   actions?: ChatAction[];
   error?: string;
   meta?: {
-    intent: "chat" | "theme" | "music-play" | "music-suggest";
+    intent:
+      | "chat"
+      | "theme"
+      | "music-play"
+      | "music-suggest"
+      | "music-trending"
+      | "music-by-singer"
+      | "music-discover";
   };
 };

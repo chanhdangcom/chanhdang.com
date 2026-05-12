@@ -4,11 +4,24 @@ import { cn } from "@/utils/cn";
 import { PaperPlaneRight, Play, X } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import { useTheme } from "next-themes";
-import React, { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Ping } from "../ping";
 import { useAudio } from "@/components/music-provider";
 import type { IMusic } from "@/app/[locale]/features/profile/types/music";
-import type { ChatAction, ChatApiResponse, ChatMusic } from "@/lib/chatbot/contracts";
+import type {
+  ChatAction,
+  ChatApiResponse,
+  ChatMusic,
+} from "@/lib/chatbot/contracts";
+import { useUser } from "@/hooks/use-user";
+import { buildUserAuthHeaders } from "@/lib/client-auth";
 
 type ChatRole = "user" | "bot";
 
@@ -25,9 +38,10 @@ type IProp = {
 };
 
 const SAMPLE_QUESTIONS = [
-  "Bạn đang làm gì dạo này?",
-  "Cho mình biết vài dự án nổi bật nhé?",
-  "Sở thích cá nhân của bạn là gì?",
+  "Có bài nào đang hot / nhiều lượt nghe không?",
+  "Gợi ý nhạc chill hoặc rap trong thư viện nhé.",
+  "Mở một bài bất kỳ cho mình nghe thử.",
+  "Cho mình biết vài dự án nổi bật của bạn?",
 ];
 
 const createId = () => {
@@ -42,6 +56,16 @@ const createId = () => {
 };
 
 const CHAT_ENDPOINT = "/api/ncdang-chat";
+const CHAT_HISTORY_ENDPOINT = "/api/chatbot-history";
+
+const INTRO_MESSAGES: ChatMessage[] = [
+  {
+    id: "intro",
+    role: "bot",
+    content:
+      "Mình là ChanhDang AI — có thể trò chuyện về Chánh Đang, gợi ý / mở nhạc trong thư viện ChanhDang (hot, theo ca sĩ, chill, rap…). Bạn muốn thử điều gì?",
+  },
+];
 
 type LegacyChatApiResponse = ChatApiResponse & {
   action?: {
@@ -122,19 +146,83 @@ function MusicSuggestionCard({
 export function ChatbotPanel({ className, handle }: IProp) {
   const { setTheme } = useTheme();
   const { handlePlayAudio } = useAudio();
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: "intro",
-      role: "bot",
-      content: "Mình là ChanhDang AI. Bạn muốn biết gì về Chánh Đang ?",
-    },
-  ]);
+  const { user } = useUser();
+  const [messages, setMessages] = useState<ChatMessage[]>(INTRO_MESSAGES);
   const [input, setInput] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [readyToPersist, setReadyToPersist] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    const userId = user?.id;
+    if (!userId) {
+      setReadyToPersist(false);
+      setMessages(INTRO_MESSAGES);
+      return;
+    }
+
+    setReadyToPersist(false);
+    let cancelled = false;
+
+    void (async () => {
+      try {
+        const res = await fetch(CHAT_HISTORY_ENDPOINT, {
+          headers: buildUserAuthHeaders(userId),
+          cache: "no-store",
+        });
+        if (!res.ok || cancelled) {
+          if (!cancelled) {
+            setReadyToPersist(true);
+          }
+          return;
+        }
+        const data = (await res.json()) as { messages?: ChatMessage[] };
+        if (cancelled) {
+          return;
+        }
+        if (Array.isArray(data.messages) && data.messages.length > 0) {
+          setMessages(data.messages);
+        } else {
+          setMessages(INTRO_MESSAGES);
+        }
+      } catch {
+        if (!cancelled) {
+          setMessages(INTRO_MESSAGES);
+        }
+      } finally {
+        if (!cancelled) {
+          setReadyToPersist(true);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user?.id]);
+
+  useEffect(() => {
+    const userId = user?.id;
+    if (!userId || !readyToPersist) {
+      return;
+    }
+
+    const handle = window.setTimeout(() => {
+      void fetch(CHAT_HISTORY_ENDPOINT, {
+        method: "PUT",
+        headers: {
+          ...buildUserAuthHeaders(userId),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ messages }),
+      }).catch(() => {});
+    }, 600);
+
+    return () => window.clearTimeout(handle);
+  }, [messages, user?.id, readyToPersist]);
 
   useEffect(() => {
     const container = scrollRef.current;
@@ -181,38 +269,44 @@ export function ChatbotPanel({ className, handle }: IProp) {
     [playTrack, setTheme]
   );
 
-  const normalizeActions = useCallback((data: LegacyChatApiResponse): ChatAction[] => {
-    const nextActions = [...(data.actions ?? [])];
+  const normalizeActions = useCallback(
+    (data: LegacyChatApiResponse): ChatAction[] => {
+      const nextActions = [...(data.actions ?? [])];
 
-    if (data.action && !nextActions.some((action) => action.type === "theme")) {
-      nextActions.push({
-        type: "theme",
-        value: data.action.value,
-      });
-    }
+      if (
+        data.action &&
+        !nextActions.some((action) => action.type === "theme")
+      ) {
+        nextActions.push({
+          type: "theme",
+          value: data.action.value,
+        });
+      }
 
-    const legacyAudioUrl = data.music?.audio || data.audio?.url;
-    if (
-      data.music &&
-      legacyAudioUrl &&
-      !nextActions.some((action) => action.type === "play-music")
-    ) {
-      nextActions.push({
-        type: "play-music",
-        track: {
-          id: data.music.id,
-          title: data.music.title,
-          singer: data.music.singer,
-          cover: data.music.cover,
-          audio: legacyAudioUrl,
-          youtube: data.music.youtube,
-        },
-        autoPlay: data.audio?.autoPlay ?? Boolean(legacyAudioUrl),
-      });
-    }
+      const legacyAudioUrl = data.music?.audio || data.audio?.url;
+      if (
+        data.music &&
+        legacyAudioUrl &&
+        !nextActions.some((action) => action.type === "play-music")
+      ) {
+        nextActions.push({
+          type: "play-music",
+          track: {
+            id: data.music.id,
+            title: data.music.title,
+            singer: data.music.singer,
+            cover: data.music.cover,
+            audio: legacyAudioUrl,
+            youtube: data.music.youtube,
+          },
+          autoPlay: data.audio?.autoPlay ?? Boolean(legacyAudioUrl),
+        });
+      }
 
-    return nextActions;
-  }, []);
+      return nextActions;
+    },
+    []
+  );
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -323,7 +417,7 @@ export function ChatbotPanel({ className, handle }: IProp) {
 
       <div
         ref={scrollRef}
-        className="mx-2 flex h-auto flex-col gap-3 overflow-y-auto rounded-3xl sm:h-[60vh]"
+        className="mx-2 flex h-auto flex-col gap-3 overflow-y-auto rounded-3xl sm:h-[70vh]"
       >
         {messages.map((message, index) => {
           const isUser = message.role === "user";
