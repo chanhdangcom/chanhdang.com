@@ -360,15 +360,60 @@ const QueueItem = ({
 }) => {
   const controls = useDragControls();
   const [isDragging, setIsDragging] = useState(false);
+  const autoScrollRafRef = useRef<number | null>(null);
+
+  const stopAutoScroll = useCallback(() => {
+    if (autoScrollRafRef.current !== null) {
+      cancelAnimationFrame(autoScrollRafRef.current);
+      autoScrollRafRef.current = null;
+    }
+  }, []);
+
+  const scrollQueueByDrag = useCallback(
+    (info: { point: { y: number } }) => {
+      const container = scrollContainerRef.current;
+      if (!container) return;
+
+      const rect = container.getBoundingClientRect();
+      const y = info.point.y;
+      const edgeThreshold = 56;
+      const maxSpeed = 26;
+
+      let delta = 0;
+      if (y < rect.top + edgeThreshold) {
+        const intensity = (rect.top + edgeThreshold - y) / edgeThreshold;
+        delta = -maxSpeed * intensity;
+      } else if (y > rect.bottom - edgeThreshold) {
+        const intensity = (y - (rect.bottom - edgeThreshold)) / edgeThreshold;
+        delta = maxSpeed * intensity;
+      }
+
+      if (delta === 0) return;
+
+      if (autoScrollRafRef.current !== null) {
+        cancelAnimationFrame(autoScrollRafRef.current);
+      }
+      autoScrollRafRef.current = requestAnimationFrame(() => {
+        container.scrollTop += delta;
+        autoScrollRafRef.current = null;
+      });
+    },
+    [scrollContainerRef]
+  );
 
   return (
     <Reorder.Item
-      key={music.id}
       value={music}
       dragControls={controls}
       dragListener={false}
-      dragElastic={0.08}
+      dragElastic={0}
       dragMomentum={false}
+      whileDrag={{
+        scale: 1.02,
+        boxShadow: "0 16px 40px rgba(0,0,0,0.35)",
+        zIndex: 40,
+      }}
+      transition={{ type: "spring", stiffness: 520, damping: 38 }}
       onDragStart={() => {
         setIsDragging(true);
         onDragStateChange?.(true);
@@ -376,32 +421,16 @@ const QueueItem = ({
       onDragEnd={() => {
         setIsDragging(false);
         onDragStateChange?.(false);
+        stopAutoScroll();
       }}
       onDrag={(_, info) => {
-        const container = scrollContainerRef.current;
-        if (!container) return;
-
-        const rect = container.getBoundingClientRect();
-        const y = info.point.y;
-        const edgeThreshold = 70; // px từ mép trên/dưới
-        const maxSpeed = 20; // tốc độ scroll tối đa
-
-        // Kéo gần phía trên → scroll lên
-        if (y < rect.top + edgeThreshold) {
-          const intensity = (rect.top + edgeThreshold - y) / edgeThreshold; // 0 → 1
-          container.scrollTop -= maxSpeed * intensity;
-        }
-
-        // Kéo gần phía dưới → scroll xuống
-        if (y > rect.bottom - edgeThreshold) {
-          const intensity = (y - (rect.bottom - edgeThreshold)) / edgeThreshold; // 0 → 1
-          container.scrollTop += maxSpeed * intensity;
-        }
+        scrollQueueByDrag(info);
       }}
       className={cn(
-        "relative z-0 transform rounded-xl transition-all ease-out",
-        isDragging && "shadow-3xl z-50 bg-white/10 p-1.5 backdrop-blur-xl"
+        "relative z-0 rounded-xl will-change-transform",
+        isDragging && "bg-white/10 p-1.5 backdrop-blur-xl"
       )}
+      style={{ touchAction: "manipulation" }}
     >
       <AudioItemOrder
         music={music}
@@ -410,7 +439,6 @@ const QueueItem = ({
         titleVariant="alwaysWhite"
         draggable
         onDragHandlePointerDown={(event) => {
-          // Bắt đầu drag sao cho item bám sát vị trí cảm ứng
           controls.start(event, { snapToCursor: true });
         }}
       />
@@ -1490,7 +1518,7 @@ const ContentPage = ({
                       setQueue(next);
                     }}
                     className={cn(
-                      "z-0 h-full w-full space-y-4 overflow-y-auto pb-28 pr-2 scrollbar-hide"
+                      "z-0 h-full w-full space-y-3 overflow-y-auto overscroll-y-contain pb-28 pr-2 [-webkit-overflow-scrolling:touch] touch-pan-y scrollbar-hide"
                     )}
                     style={{ contentVisibility: "auto" }}
                   >
@@ -1925,7 +1953,7 @@ const FeaturedPage = ({
                           setQueue(next);
                         }}
                         className={cn(
-                          "z-0 h-[50vh] w-full space-y-4 overflow-y-auto pb-44 pr-2 scrollbar-hide",
+                          "z-0 h-[50vh] w-full space-y-3 overflow-y-auto overscroll-y-contain pb-44 pr-2 [-webkit-overflow-scrolling:touch] touch-pan-y scrollbar-hide",
                           isQueueDragging && "h-full"
                         )}
                         style={{ contentVisibility: "auto" }}
