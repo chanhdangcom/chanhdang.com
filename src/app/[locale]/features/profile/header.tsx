@@ -89,6 +89,15 @@ export const Header = () => {
                 </Link>
               </motion.li>
 
+              <motion.li
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link href={`${locale}/magic-caro`} className="hover:underline">
+                  Magic Caro
+                </Link>
+              </motion.li>
+
               <li>
                 <ChatBox />
               </li>

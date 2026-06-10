@@ -13,6 +13,7 @@ import { ScrollChatBot } from "@/components/scroll-chat-bot";
 import { GitHubChart } from "./github-chart";
 import { ProjectList } from "./project-list";
 import { FinalBlog } from "./final-blog";
+import { MagicCaroReview } from "./magic-caro-review";
 
 export const Profile = () => {
   return (
@@ -128,6 +129,8 @@ export const Profile = () => {
         </div>
 
         <ComponentList />
+
+        <MagicCaroReview />
 
         <div className="my-8">
           <GitHubChart />

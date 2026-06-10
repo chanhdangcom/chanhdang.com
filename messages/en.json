@@ -404,5 +404,32 @@
       "errorGeneric": "Something went wrong!",
       "errorConnection": "Connection error. Please try again later."
     }
+  },
+
+  "caro": {
+    "title": "Caro",
+    "subtitle": "Connect 5 in a row to win — play against AI with skill cards!",
+    "backHome": "Back to home",
+    "newGame": "New game",
+    "cancelSkill": "Cancel skill",
+    "you": "You (O)",
+    "ai": "AI (X)",
+    "youWin": "🎉 You connected 5 in a row!",
+    "aiWin": "😔 AI wins! Try again?",
+    "playAgain": "Play again",
+    "aiThinking": "AI is thinking...",
+    "howToPlay": "How to play",
+    "rule1": "Click an empty cell to place your O stone.",
+    "rule2": "First to get 5 in a row (horizontal, vertical, or diagonal) wins.",
+    "rule3": "Use skill cards before placing to gain an edge.",
+    "skills": {
+      "handTitle": "Skill Cards",
+      "double_step": "Double",
+      "remove": "Remove",
+      "block": "Seal",
+      "shield": "Shield",
+      "undo": "Undo",
+      "swap": "Swap"
+    }
   }
 }

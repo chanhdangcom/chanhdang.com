@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
-import { getUserRole, getUserId } from "@/lib/auth-helpers";
+import { getUserRole } from "@/lib/auth-helpers";
 import { ObjectId } from "mongodb";
 
 /**

@@ -1,5 +1,5 @@
 import { Profile } from "./profile";
 
-export default function ProfilePage() {
+export default function xProfilePage() {
   return <Profile />;
 }

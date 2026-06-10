@@ -1518,7 +1518,7 @@ const ContentPage = ({
                       setQueue(next);
                     }}
                     className={cn(
-                      "z-0 h-full w-full space-y-3 overflow-y-auto overscroll-y-contain pb-28 pr-2 [-webkit-overflow-scrolling:touch] touch-pan-y scrollbar-hide"
+                      "z-0 h-full w-full touch-pan-y space-y-3 overflow-y-auto overscroll-y-contain pb-28 pr-2 scrollbar-hide [-webkit-overflow-scrolling:touch]"
                     )}
                     style={{ contentVisibility: "auto" }}
                   >
@@ -1953,7 +1953,7 @@ const FeaturedPage = ({
                           setQueue(next);
                         }}
                         className={cn(
-                          "z-0 h-[50vh] w-full space-y-3 overflow-y-auto overscroll-y-contain pb-44 pr-2 [-webkit-overflow-scrolling:touch] touch-pan-y scrollbar-hide",
+                          "z-0 h-[50vh] w-full touch-pan-y space-y-3 overflow-y-auto overscroll-y-contain pb-44 pr-2 scrollbar-hide [-webkit-overflow-scrolling:touch]",
                           isQueueDragging && "h-full"
                         )}
                         style={{ contentVisibility: "auto" }}

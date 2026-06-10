@@ -11,6 +11,15 @@ import { usePermissions } from "@/hooks/use-permissions";
 import { useMusicAccessRedirect } from "@/hooks/use-music-access-redirect";
 import { MenuBar } from "./menu-bar";
 
+/** Browsers often report .srt as text/plain or ""; R2 presign + PUT must use the same Content-Type. */
+function resolveMusicUploadContentType(file: File): string {
+  const lower = file.name.toLowerCase();
+  if (lower.endsWith(".srt")) return "application/x-subrip";
+  const t = file.type?.trim();
+  if (t) return t;
+  return "application/octet-stream";
+}
+
 export default function AddMusicForm() {
   const t = useTranslations("musicForm.addMusic");
 
@@ -94,12 +103,11 @@ export default function AddMusicForm() {
   );
 
   const fetchPresignedUrl = useCallback(async (file: File) => {
+    const contentType = resolveMusicUploadContentType(file);
     const presignedRes = await fetch(
       `/api/upload-music?fileName=${encodeURIComponent(
         file.name
-      )}&contentType=${encodeURIComponent(
-        file.type || "application/octet-stream"
-      )}`
+      )}&contentType=${encodeURIComponent(contentType)}`
     );
     if (!presignedRes.ok) {
       const errorData = await presignedRes.json().catch(() => ({}));
@@ -114,10 +122,11 @@ export default function AddMusicForm() {
 
   const uploadFileToR2 = useCallback(
     async (file: File, errorPrefix: string) => {
+      const contentType = resolveMusicUploadContentType(file);
       const { presignedUrl, publicUrl } = await fetchPresignedUrl(file);
       const uploadRes = await fetch(presignedUrl, {
         method: "PUT",
-        headers: { "Content-Type": file.type || "application/octet-stream" },
+        headers: { "Content-Type": contentType },
         body: file,
       });
       if (!uploadRes.ok) {
@@ -1078,7 +1087,7 @@ export default function AddMusicForm() {
 
               <input
                 type="file"
-                accept=".srt,application/x-subrip"
+                accept=".srt,.SRT,text/plain,text/srt,application/x-subrip"
                 onChange={handleSrtFileChange}
                 disabled={isLoading}
                 className="rounded-xl border bg-zinc-100 px-4 py-2 shadow-sm disabled:opacity-50 dark:border-zinc-900 dark:bg-zinc-800"

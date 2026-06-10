@@ -154,134 +154,136 @@ export function MenuBar() {
           },
         ]
       : isAuthenticated && canUseLibrary
-      ? [
-          {
-            key: "recently-played",
-            label: tMenu("recentlyPlayed"),
-            href: `${basePath}/recently-played`,
-            isActive: isPathActive(`${basePath}/recently-played`),
-            icon: (
-              <Clock
-                size={25}
-                weight={
-                  isPathActive(`${basePath}/recently-played`)
-                    ? "fill"
-                    : "regular"
-                }
-                className={getIconClass(
-                  isPathActive(`${basePath}/recently-played`)
-                )}
-              />
-            ),
-          },
-          {
-            key: "artists",
-            label: tCommon("artists"),
-            href: `${basePath}/library/artists`,
-            isActive: isPathActive(`${basePath}/library/artists`),
-            icon: (
-              <MicrophoneStage
-                size={25}
-                weight={
-                  isPathActive(`${basePath}/library/artists`)
-                    ? "fill"
-                    : "regular"
-                }
-                className={getIconClass(
-                  isPathActive(`${basePath}/library/artists`)
-                )}
-              />
-            ),
-          },
-          {
-            key: "playlists",
-            label: "Playlists",
-            href: `${basePath}/library/playlists`,
-            isActive: isPathActive(`${basePath}/library/playlists`),
-            icon: (
-              <Playlist
-                size={25}
-                weight={
-                  isPathActive(`${basePath}/library/playlists`)
-                    ? "fill"
-                    : "regular"
-                }
-                className={getIconClass(
-                  isPathActive(`${basePath}/library/playlists`)
-                )}
-              />
-            ),
-          },
-          {
-            key: "library",
-            label: tCommon("library"),
-            href: `${basePath}/library`,
-            isActive: isPathActive(`${basePath}/library`, true),
-            icon: (
-              <CardsThree
-                size={25}
-                weight={
-                  isPathActive(`${basePath}/library`, true) ? "fill" : "regular"
-                }
-                className={getIconClass(
-                  isPathActive(`${basePath}/library`, true)
-                )}
-              />
-            ),
-          },
-          {
-            key: "songs",
-            label: tCommon("songs"),
-            href: `${basePath}/library/favorites`,
-            isActive: isPathActive(`${basePath}/library/favorites`),
-            icon: (
-              <MusicNote
-                size={25}
-                weight={
-                  isPathActive(`${basePath}/library/favorites`)
-                    ? "fill"
-                    : "regular"
-                }
-                className={getIconClass(
-                  isPathActive(`${basePath}/library/favorites`)
-                )}
-              />
-            ),
-          },
-        ]
-      : isAuthenticated
         ? [
             {
-              key: "recently-played-disabled-premium",
+              key: "recently-played",
               label: tMenu("recentlyPlayed"),
               href: `${basePath}/recently-played`,
-              disabled: true,
-              icon: <Clock size={25} className="text-rose-500" />,
+              isActive: isPathActive(`${basePath}/recently-played`),
+              icon: (
+                <Clock
+                  size={25}
+                  weight={
+                    isPathActive(`${basePath}/recently-played`)
+                      ? "fill"
+                      : "regular"
+                  }
+                  className={getIconClass(
+                    isPathActive(`${basePath}/recently-played`)
+                  )}
+                />
+              ),
             },
             {
-              key: "library-disabled-premium",
-              label: tCommon("library"),
-              href: `${basePath}/premium`,
-              disabled: false,
-              icon: <BookBookmark size={25} className="text-rose-500" />,
+              key: "artists",
+              label: tCommon("artists"),
+              href: `${basePath}/library/artists`,
+              isActive: isPathActive(`${basePath}/library/artists`),
+              icon: (
+                <MicrophoneStage
+                  size={25}
+                  weight={
+                    isPathActive(`${basePath}/library/artists`)
+                      ? "fill"
+                      : "regular"
+                  }
+                  className={getIconClass(
+                    isPathActive(`${basePath}/library/artists`)
+                  )}
+                />
+              ),
             },
-          ]
-        : [
             {
-              key: "recently-played-disabled",
-              label: tMenu("recentlyPlayed"),
-              href: `${basePath}/recently-played`,
-              disabled: true,
-              icon: <Clock size={25} className="text-rose-500" />,
+              key: "playlists",
+              label: "Playlists",
+              href: `${basePath}/library/playlists`,
+              isActive: isPathActive(`${basePath}/library/playlists`),
+              icon: (
+                <Playlist
+                  size={25}
+                  weight={
+                    isPathActive(`${basePath}/library/playlists`)
+                      ? "fill"
+                      : "regular"
+                  }
+                  className={getIconClass(
+                    isPathActive(`${basePath}/library/playlists`)
+                  )}
+                />
+              ),
             },
             {
-              key: "library-disabled",
+              key: "library",
               label: tCommon("library"),
               href: `${basePath}/library`,
-              disabled: true,
-              icon: <BookBookmark size={25} className="text-rose-500" />,
+              isActive: isPathActive(`${basePath}/library`, true),
+              icon: (
+                <CardsThree
+                  size={25}
+                  weight={
+                    isPathActive(`${basePath}/library`, true)
+                      ? "fill"
+                      : "regular"
+                  }
+                  className={getIconClass(
+                    isPathActive(`${basePath}/library`, true)
+                  )}
+                />
+              ),
             },
-          ];
+            {
+              key: "songs",
+              label: tCommon("songs"),
+              href: `${basePath}/library/favorites`,
+              isActive: isPathActive(`${basePath}/library/favorites`),
+              icon: (
+                <MusicNote
+                  size={25}
+                  weight={
+                    isPathActive(`${basePath}/library/favorites`)
+                      ? "fill"
+                      : "regular"
+                  }
+                  className={getIconClass(
+                    isPathActive(`${basePath}/library/favorites`)
+                  )}
+                />
+              ),
+            },
+          ]
+        : isAuthenticated
+          ? [
+              {
+                key: "recently-played-disabled-premium",
+                label: tMenu("recentlyPlayed"),
+                href: `${basePath}/recently-played`,
+                disabled: true,
+                icon: <Clock size={25} className="text-rose-500" />,
+              },
+              {
+                key: "library-disabled-premium",
+                label: tCommon("library"),
+                href: `${basePath}/premium`,
+                disabled: false,
+                icon: <BookBookmark size={25} className="text-rose-500" />,
+              },
+            ]
+          : [
+              {
+                key: "recently-played-disabled",
+                label: tMenu("recentlyPlayed"),
+                href: `${basePath}/recently-played`,
+                disabled: true,
+                icon: <Clock size={25} className="text-rose-500" />,
+              },
+              {
+                key: "library-disabled",
+                label: tCommon("library"),
+                href: `${basePath}/library`,
+                disabled: true,
+                icon: <BookBookmark size={25} className="text-rose-500" />,
+              },
+            ];
 
   const manageItems: MenuBarItemConfig[] = [
     {
