@@ -10,7 +10,7 @@ import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-import { CATEGORIES } from "../constants";
+import { CategoryDropdown } from "./category-dropdown";
 
 const NAV_ITEMS = [
   { label: "Home", href: (locale: string) => `/${locale}/trangtin` },
@@ -34,6 +34,9 @@ export function TrangTinHeader() {
 
   const isActive = (href: string) =>
     href === base ? pathname === base : pathname.startsWith(href);
+
+  const categoryMatch = pathname.match(/\/trangtin\/chu-de\/([^/]+)/);
+  const activeCategorySlug = categoryMatch?.[1];
 
   if (!mounted) {
     return (
@@ -81,26 +84,12 @@ export function TrangTinHeader() {
                 );
               })}
 
-              {CATEGORIES.map((category) => {
-                const href = `${base}/chu-de/${category.slug}`;
-                return (
-                  <motion.li
-                    key={category.slug}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Link
-                      href={href}
-                      className={cn(
-                        "hover:underline",
-                        isActive(href) && "font-semibold underline"
-                      )}
-                    >
-                      {category.name}
-                    </Link>
-                  </motion.li>
-                );
-              })}
+              <motion.li whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <CategoryDropdown
+                  locale={localeStr}
+                  activeSlug={activeCategorySlug}
+                />
+              </motion.li>
 
               <motion.li
                 whileHover={{ scale: 1.05 }}
