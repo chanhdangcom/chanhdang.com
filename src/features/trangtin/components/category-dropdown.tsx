@@ -31,7 +31,7 @@ export function CategoryDropdown({
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
-          "outline-none` inline-flex items-center gap-1 hover:underline",
+          "outline-none inline-flex items-center gap-1 hover:underline",
           activeCategory && "font-semibold underline",
           className
         )}

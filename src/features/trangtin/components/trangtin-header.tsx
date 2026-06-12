@@ -10,17 +10,11 @@ import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { TRANGTIN_NAV_ITEMS } from "../nav-config";
 import { CategoryDropdown } from "./category-dropdown";
+import { TrangTinMobileNav } from "./trangtin-mobile-nav";
 
-const NAV_ITEMS = [
-  { label: "Home", href: (locale: string) => `/${locale}/trangtin` },
-  {
-    label: "Search",
-    href: (locale: string) => `/${locale}/trangtin/tim-kiem`,
-  },
-  { label: "Contact", href: (locale: string) => `/${locale}/trangtin/lien-he` },
-  { label: "Admin", href: (locale: string) => `/${locale}/trangtin/admin` },
-] as const;
+const NAV_ITEMS = TRANGTIN_NAV_ITEMS;
 
 export function TrangTinHeader() {
   const { locale } = useParams();
@@ -102,7 +96,12 @@ export function TrangTinHeader() {
             </ul>
           </nav>
 
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
+            <TrangTinMobileNav
+              locale={localeStr}
+              pathname={pathname}
+              activeCategorySlug={activeCategorySlug}
+            />
             <ThemeToggle />
           </div>
         </div>
