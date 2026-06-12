@@ -31,7 +31,7 @@ export function CategoryDropdown({
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
-          "inline-flex items-center gap-1 outline-none hover:underline",
+          "outline-none` inline-flex items-center gap-1 hover:underline",
           activeCategory && "font-semibold underline",
           className
         )}
@@ -42,7 +42,7 @@ export function CategoryDropdown({
 
       <DropdownMenuContent
         align="start"
-        className="min-w-40 bg-zinc-100 font-mono dark:bg-zinc-900"
+        className="min-w-40 bg-zinc-100 font-mono shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
       >
         <DropdownMenuItem asChild>
           <Link href={base} className={cn(!activeSlug && "font-semibold")}>
