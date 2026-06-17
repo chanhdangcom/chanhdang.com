@@ -13,7 +13,7 @@ export function MagicCaroReview() {
           text-4xl font-semibold mx-4
         </p>
 
-        <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-900" />
+        <div className="w-full border-t border-zinc-200 dark:border-zinc-900" />
 
         <Link href={`/${locale}/magic-caro`}>
           <h2
@@ -24,7 +24,7 @@ export function MagicCaroReview() {
           </h2>
         </Link>
 
-        <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-900" />
+        <div className="w-full border-t border-zinc-200 dark:border-zinc-900" />
       </div>
 
       <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-900" />

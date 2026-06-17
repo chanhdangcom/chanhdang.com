@@ -11,7 +11,7 @@ export function ComponentList() {
           text-4xl font-semibold mx-4
         </p>
 
-        <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-900" />
+        <div className="w-full border-t border-zinc-200 dark:border-zinc-900" />
 
         <h2
           id="components-heading"
@@ -20,7 +20,7 @@ export function ComponentList() {
           Component
         </h2>
 
-        <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-900" />
+        <div className="w-full border-t border-zinc-200 dark:border-zinc-900" />
       </div>
 
       <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-900" />
@@ -30,17 +30,22 @@ export function ComponentList() {
           {t("descomponent.Descriptio")}
         </p>
 
-        <div className="mb-8 mt-4 border-t border-dashed border-zinc-200 dark:border-zinc-900">
+        <div className="mb-8 mt-4 border-t border-zinc-200 dark:border-zinc-900">
           <ComponentListItem
             title="Hello-world"
             slug="/components/hello-word.mdx"
+            className="border-b border-zinc-200"
           />
 
-          <ComponentListItem title="Dynamic-island" />
+          <ComponentListItem
+            title="Dynamic-island"
+            className="border-b border-zinc-200"
+          />
 
           <ComponentListItem
             title="Switch-theme"
             slug="/components/theme-switcher.mdx"
+            className="border-b border-zinc-200"
           />
         </div>
       </div>

@@ -7,7 +7,7 @@ export function ProjectList() {
         text-4xl text-balance font-mono
       </p>
 
-      <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-900" />
+      <div className="w-full border-t border-zinc-200 dark:border-zinc-900" />
 
       <h2
         id="experience-heading"
@@ -19,7 +19,7 @@ export function ProjectList() {
         </div>
       </h2>
 
-      <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-900" />
+      <div className="w-full border-t border-zinc-200 dark:border-zinc-900" />
 
       <div className="my-8">
         <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-900" />

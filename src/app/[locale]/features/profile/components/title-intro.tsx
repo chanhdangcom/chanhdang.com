@@ -14,7 +14,7 @@ export function TitleIntro() {
           text-4xl font-semibold tracking-tight
         </p>
 
-        <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-900" />
+        <div className="w-full border-t border-zinc-200 dark:border-zinc-900" />
 
         <h1
           id="profile-intro-heading"
@@ -23,7 +23,7 @@ export function TitleIntro() {
           {t("titleintro.Title")}
         </h1>
 
-        <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-900" />
+        <div className="w-full border-t border-zinc-200 dark:border-zinc-900" />
       </div>
 
       <div>

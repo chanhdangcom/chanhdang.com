@@ -14,12 +14,13 @@ import { GitHubChart } from "./github-chart";
 import { ProjectList } from "./project-list";
 import { FinalBlog } from "./final-blog";
 import { MagicCaroReview } from "./magic-caro-review";
+import { MarqueeList } from "./marquee-list";
 
 export const Profile = () => {
   return (
     <div>
-      <div className="fixed left-0 h-screen w-px bg-zinc-200 dark:bg-zinc-900 md:left-[15vw]" />
-      <div className="fixed right-0 h-screen w-px bg-zinc-200 dark:bg-zinc-900 md:right-[15vw]" />
+      <div className="fixed left-0 z-50 h-screen w-px bg-zinc-200 dark:bg-zinc-900 md:left-[15vw]" />
+      <div className="fixed right-0 z-50 h-screen w-px bg-zinc-200 dark:bg-zinc-900 md:right-[15vw]" />
 
       <HeaderMotion />
 
@@ -50,7 +51,7 @@ export const Profile = () => {
               <Overview />
             </div>
 
-            <div className="flex-1">
+            <div className="flex-1 border-l dark:border-zinc-900">
               <h3 className="sr-only">Social profiles</h3>
 
               <ul className="flex flex-col" role="list">
@@ -60,6 +61,7 @@ export const Profile = () => {
                     title="Github"
                     accountName="chanhdangcom"
                     link="https://github.com/chanhdangcom"
+                    className="border-b"
                   />
                 </li>
 
@@ -69,6 +71,7 @@ export const Profile = () => {
                     title="Youtube"
                     accountName="@nguyenchanhdang"
                     link="https://www.youtube.com/@angnguyenchanh5942"
+                    className="border-b"
                   />
                 </li>
 
@@ -77,6 +80,7 @@ export const Profile = () => {
                     scrImg="img/tech-stack/zalo.webp"
                     title="Zalo"
                     accountName="0799.979.382"
+                    className="border-b"
                   />
                 </li>
 
@@ -86,6 +90,7 @@ export const Profile = () => {
                     title="TikTok"
                     accountName="nguyn.chnh.ang"
                     link="https://www.tiktok.com/@nguyn.chnh.ang?_r=1&_t=ZS-93VIr5WDiwX"
+                    className="border-b"
                   />
                 </li>
 
@@ -94,6 +99,7 @@ export const Profile = () => {
                     scrImg="img/tech-stack/linkedin.webp"
                     title="LinkedIn"
                     accountName="@ncdang"
+                    className="border-b"
                   />
                 </li>
 
@@ -103,6 +109,7 @@ export const Profile = () => {
                     title="ChanhDangMusic"
                     accountName=""
                     link="https://chanhdang.com/music"
+                    className=""
                   />
                 </li>
               </ul>
@@ -111,6 +118,14 @@ export const Profile = () => {
 
           <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-900" />
         </section>
+
+        <div className="relative my-8 border-x border-zinc-300 px-1 dark:border-zinc-700 md:mx-[15vw]">
+          <MarqueeList />
+
+          <div className="pointer-events-none absolute -left-3 top-0 z-10 h-full w-12 bg-zinc-50 blur-md dark:bg-black" />
+
+          <div className="pointer-events-none absolute -right-3 top-0 z-10 h-full w-12 bg-zinc-50 blur-md dark:bg-black" />
+        </div>
 
         <div className="my-8">
           <WorkExperience />

@@ -4,6 +4,7 @@ import { ArrowRight, ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import { useState } from "react";
 import { motion } from "motion/react";
+import { cn } from "@/utils/cn";
 
 /* eslint-disable @next/next/no-img-element */
 type IProp = {
@@ -11,9 +12,16 @@ type IProp = {
   title: string;
   accountName: string;
   link?: string;
+  className?: string;
 };
 
-export function SocialItem({ scrImg, title, accountName, link }: IProp) {
+export function SocialItem({
+  scrImg,
+  title,
+  accountName,
+  link,
+  className,
+}: IProp) {
   const [isHover, setIsHover] = useState(false);
 
   return (
@@ -23,7 +31,7 @@ export function SocialItem({ scrImg, title, accountName, link }: IProp) {
       onMouseLeave={() => setIsHover(false)}
       target="_blank"
     >
-      <CardSpotlight className="">
+      <CardSpotlight className={cn("", className)}>
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-4">
             <img src={scrImg} alt="icon" className="size-16" />

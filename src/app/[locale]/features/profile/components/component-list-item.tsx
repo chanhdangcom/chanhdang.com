@@ -4,14 +4,16 @@ import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { useState } from "react";
+import { cn } from "@/utils/cn";
 
 type IProp = {
   title: string;
   slug?: string;
   img?: string;
+  className?: string;
 };
 
-export function ComponentListItem({ title, slug, img }: IProp) {
+export function ComponentListItem({ title, slug, img, className }: IProp) {
   const [isHover, setIsHover] = useState<boolean>(false);
 
   return (
@@ -20,7 +22,7 @@ export function ComponentListItem({ title, slug, img }: IProp) {
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
-      <CardSpotlight>
+      <CardSpotlight className={cn("", className)}>
         <div className="flex items-center gap-2 p-4">
           <ArrowRight size={20} />
 

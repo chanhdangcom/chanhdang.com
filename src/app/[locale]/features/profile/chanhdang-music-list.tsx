@@ -2,6 +2,7 @@
 import { useAudio } from "@/components/music-provider";
 import { CardSpotlight } from "@/components/ui";
 import { MUSICS } from "@/features/music/data/music-page";
+import { cn } from "@/utils/cn";
 import { motion } from "motion/react";
 import { useState } from "react";
 
@@ -15,7 +16,7 @@ export function ChanhdangMusicList() {
         text-4xl tracking-tight font-mono
       </p>
 
-      <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-900" />
+      <div className="w-full border-t border-zinc-200 dark:border-zinc-900" />
 
       <h2
         id="music-heading"
@@ -24,7 +25,7 @@ export function ChanhdangMusicList() {
         ChanhDang Music
       </h2>
 
-      <div className="w-full border-t border-dashed border-zinc-200 dark:border-zinc-900" />
+      <div className="w-full border-t border-zinc-200 dark:border-zinc-900" />
 
       <div className="my-8">
         <div className="top-0 h-px w-full bg-zinc-200 dark:bg-zinc-900" />
@@ -32,7 +33,13 @@ export function ChanhdangMusicList() {
         <div className="mx-0 grid grid-cols-2 md:mx-[15vw] md:grid-cols-5">
           {MUSICS.map((music, index) => {
             return (
-              <div key={index} className="shrink-0 cursor-pointer">
+              <div
+                key={index}
+                className={cn(
+                  "shrink-0 cursor-pointer border-r dark:border-zinc-900",
+                  index < 5 ? "d border-b" : ""
+                )}
+              >
                 {index < 10 && (
                   <CardSpotlight
                     onClick={() => handlePlayAudio(music)}
@@ -54,6 +61,7 @@ export function ChanhdangMusicList() {
                           alt={music.title}
                           className="mt-1 h-auto w-full rounded-xl object-cover object-top"
                         />
+
                         <motion.div
                           animate={
                             hoveredIndex === index

@@ -139,7 +139,6 @@ export const Overview = () => {
         })}
       </div>
       {/* <div className="flex h-4 w-full bg-[image:repeating-linear-gradient(315deg,_var(--pattern-foreground)_0,_var(--pattern-foreground)_1px,_transparent_0,_transparent_50%)] bg-[size:10px_10px] [--pattern-foreground:#e4e4e7] dark:[--pattern-foreground:#27272a]" /> */}
-      <div className="flex h-6 w-full" />
     </div>
   );
 };
