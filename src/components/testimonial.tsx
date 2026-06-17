@@ -20,7 +20,7 @@ export function TestimonialQuote({
     <blockquote
       data-slot="testimonial-quote"
       className={cn(
-        "text-oklch(0.141 0.005 285.823) dark:text-oklch(0.985 0 0) grow text-pretty px-4 py-3 text-base",
+        "text-oklch(0.141 0.005 285.823) dark:text-oklch(0.985 0 0) w-80 grow text-balance px-4 py-3 text-base",
         className
       )}
       {...props}

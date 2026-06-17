@@ -6,7 +6,6 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { ChatBox } from "./components/chat-box";
 import { motion } from "framer-motion";
 import { useParams } from "next/navigation";
 import { ChanhdangLogotype } from "@/components/chanhdang-logotype";
@@ -48,20 +47,10 @@ export const Header = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Link href={"/"} className="hover:underline">
-                  Portfolio
-                </Link>
-              </motion.li>
-
-              <motion.li
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
                 <Link href={`/${locale}/music`} className="hover:underline">
                   Musics
                 </Link>
               </motion.li>
-
               <motion.li
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -70,16 +59,6 @@ export const Header = () => {
                   Blogs
                 </Link>
               </motion.li>
-
-              <motion.li
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Link href={"/"} className="hover:underline">
-                  Projects
-                </Link>
-              </motion.li>
-
               <motion.li
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -88,7 +67,6 @@ export const Header = () => {
                   Components
                 </Link>
               </motion.li>
-
               <motion.li
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -97,10 +75,6 @@ export const Header = () => {
                   Magic Caro
                 </Link>
               </motion.li>
-
-              <li>
-                <ChatBox />
-              </li>
             </ul>
           </nav>
 

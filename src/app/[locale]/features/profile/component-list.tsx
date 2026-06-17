@@ -7,7 +7,7 @@ export function ComponentList() {
   return (
     <section aria-labelledby="components-heading">
       <div className="mb-8">
-        <p className="top-0 mx-4 font-mono text-xs text-zinc-500 md:mx-[15vw]">
+        <p className="top-0 mx-4 font-mono text-xs text-zinc-500 md:mx-[25vw]">
           text-4xl font-semibold mx-4
         </p>
 
@@ -15,7 +15,7 @@ export function ComponentList() {
 
         <h2
           id="components-heading"
-          className="flex text-balance px-4 font-mono text-3xl font-semibold leading-tight tracking-tight md:mx-[15vw] md:px-0 md:text-4xl"
+          className="flex text-balance px-4 font-mono text-3xl font-semibold leading-tight tracking-tight md:mx-[25vw] md:px-0 md:text-4xl"
         >
           Component
         </h2>
@@ -25,7 +25,7 @@ export function ComponentList() {
 
       <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-900" />
 
-      <div className="mx-0 md:mx-[15vw]">
+      <div className="mx-0 md:mx-[25vw]">
         <p className="mx-4 mt-4 text-balance font-mono">
           {t("descomponent.Descriptio")}
         </p>
@@ -49,8 +49,6 @@ export function ComponentList() {
           />
         </div>
       </div>
-
-      <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-900" />
     </section>
   );
 }

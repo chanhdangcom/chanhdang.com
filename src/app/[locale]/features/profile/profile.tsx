@@ -3,7 +3,6 @@ import { Footer } from "./footer";
 import { Header } from "./header";
 import { Overview } from "./overview";
 import { ScrollHeaderPage } from "@/components/scroll-header-page";
-import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 import { SocialItem } from "./components/social-item";
 import { ComponentList } from "./component-list";
 import { WorkExperience } from "./work-experience";
@@ -15,12 +14,13 @@ import { ProjectList } from "./project-list";
 import { FinalBlog } from "./final-blog";
 import { MagicCaroReview } from "./magic-caro-review";
 import { MarqueeList } from "./marquee-list";
+import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 
 export const Profile = () => {
   return (
     <div>
-      <div className="fixed left-0 z-50 h-screen w-px bg-zinc-200 dark:bg-zinc-900 md:left-[15vw]" />
-      <div className="fixed right-0 z-50 h-screen w-px bg-zinc-200 dark:bg-zinc-900 md:right-[15vw]" />
+      <div className="fixed left-0 z-50 h-screen w-px bg-zinc-200 dark:bg-zinc-900 md:left-[25vw]" />
+      <div className="fixed right-0 z-50 h-screen w-px bg-zinc-200 dark:bg-zinc-900 md:right-[25vw]" />
 
       <HeaderMotion />
 
@@ -28,12 +28,12 @@ export const Profile = () => {
 
       <ScrollChatBot />
 
-      <header className="mx-0 border border-zinc-300 p-2 dark:border-zinc-900 md:mx-[15vw]">
+      <header className="mx-0 border border-zinc-200 p-2 dark:border-zinc-900 md:mx-[25vw]">
         <Header />
       </header>
 
       <main id="main-content">
-        <div className="hidden h-80 items-center justify-center pt-12 lg:flex">
+        <div className="mx-[20vw] hidden items-center justify-center pt-8 lg:flex">
           <TextHoverEffect text="DANG" />
         </div>
 
@@ -42,26 +42,30 @@ export const Profile = () => {
         <section aria-labelledby="overview-heading" className="mt-8">
           <div className="h-px w-full bg-zinc-200 dark:bg-zinc-900 md:top-0" />
 
-          <div className="mx-0 items-center justify-center md:mx-[15vw] lg:flex">
-            <div className="w-full max-w-xl">
-              <h2 id="overview-heading" className="sr-only">
-                Professional overview and contact details
-              </h2>
+          <>
+            <div className="mx-0 mb-2 md:mx-[25vw]">
+              <div className="w-full">
+                <h2 id="overview-heading" className="sr-only">
+                  Professional overview and contact details
+                </h2>
 
-              <Overview />
+                <Overview />
+              </div>
             </div>
 
-            <div className="flex-1 border-l dark:border-zinc-900">
+            <div className="w-full border-t border-zinc-200 dark:border-zinc-900" />
+
+            <div className="mx-0 flex-1 border-l dark:border-zinc-900 md:mx-[25vw]">
               <h3 className="sr-only">Social profiles</h3>
 
-              <ul className="flex flex-col" role="list">
+              <ul className="grid md:grid-cols-2" role="list">
                 <li>
                   <SocialItem
                     scrImg="img/tech-stack/github.webp"
                     title="Github"
                     accountName="chanhdangcom"
                     link="https://github.com/chanhdangcom"
-                    className="border-b"
+                    className="border-b border-r"
                   />
                 </li>
 
@@ -80,7 +84,7 @@ export const Profile = () => {
                     scrImg="img/tech-stack/zalo.webp"
                     title="Zalo"
                     accountName="0799.979.382"
-                    className="border-b"
+                    className="border-b border-r"
                   />
                 </li>
 
@@ -88,7 +92,7 @@ export const Profile = () => {
                   <SocialItem
                     scrImg="img/tech-stack/tiktok.webp"
                     title="TikTok"
-                    accountName="nguyn.chnh.ang"
+                    accountName="Nguyễn Chánh Đang"
                     link="https://www.tiktok.com/@nguyn.chnh.ang?_r=1&_t=ZS-93VIr5WDiwX"
                     className="border-b"
                   />
@@ -99,7 +103,7 @@ export const Profile = () => {
                     scrImg="img/tech-stack/linkedin.webp"
                     title="LinkedIn"
                     accountName="@ncdang"
-                    className="border-b"
+                    className="border-r"
                   />
                 </li>
 
@@ -114,12 +118,12 @@ export const Profile = () => {
                 </li>
               </ul>
             </div>
-          </div>
+          </>
 
           <div className="bottom-0 h-px w-full bg-zinc-200 dark:bg-zinc-900" />
         </section>
 
-        <div className="relative my-8 border-x border-zinc-300 px-1 dark:border-zinc-700 md:mx-[15vw]">
+        <div className="relative my-8 border-x border-zinc-200 px-1 dark:border-zinc-700 md:mx-[25vw]">
           <MarqueeList />
 
           <div className="pointer-events-none absolute -left-3 top-0 z-10 h-full w-12 bg-zinc-50 blur-md dark:bg-black" />
