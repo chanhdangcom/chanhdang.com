@@ -54,7 +54,7 @@ export function ThemeToggle({ className }: IProp) {
       )}
 
       <audio ref={audioRef}>
-        <source src="https://cdn.chanhdang.com/screenshot-sound.mp3" />
+        <source src="https://cdn.chanhdang.com/sound_theme.MP3" />
       </audio>
     </button>
   );
